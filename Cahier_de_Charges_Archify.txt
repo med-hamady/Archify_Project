@@ -18,13 +18,15 @@ Contact: contact@progertech.com
   • Accès premium sécurisé aux vidéos et PDF
 
 2) Public cible et personas
-- Cible: Étudiants universitaires (départements initiaux: notre promotion), francophones. Version arabe statique envisagée.
+- Cible: Étudiants ISCAE — filière IG (Informatique de Gestion) en priorité. Extension progressive à d’autres départements. Version arabe statique envisagée.
+- Périmètre initial des matières (IG): Algorithme, Analyse, Logique mathématiques, + 2 matières à préciser (ajout à venir).
 - Personas principaux:
-  • Étudiante “Ahmed” (L2 Informatique du Gestion): consulte vidéos, télécharge PDF, recherche les sujets d’examens
-  • Étudiant “Minetou” (L3 Informatique du Gestion): prépare ses partiels via les archives, tri par professeur
+  • Étudiante “Ahmed” (IG L2): consulte vidéos, télécharge PDF, recherche les sujets d’examens
+  • Étudiant “Minetou” (IG L3): prépare ses partiels via les archives, tri par professeur
   • Admin “Prof/Chargé de TD”: met en ligne des cours, gère corrections, modère
 
 3) Portée (MVP → V1.0 → V2.0)
+- Périmètre initial de contenu (MVP): IG/ISCAE uniquement, matières prioritaires listées ci-dessus. Prévoir extensibilité (nouvelles matières/départements).
 - MVP (prioritaire):
   • Authentification (inscription/connexion, mot de passe oublié)
   • Tableau de bord étudiant (cours suivis, progression simple, recommandations basiques)
@@ -58,6 +60,7 @@ Contact: contact@progertech.com
 
 4.2 Cours & leçons
 - Organisation: semestre → département → matière → cours → leçons
+- Hiérarchie initiale: établissement ISCAE → filière IG → matières prioritaires (Algorithme, Analyse, Logique mathématiques, + 2 à définir)
 - Contenu leçon:
   • Vidéo: Vimeo (privé; domaine autorisé, player SDK) ou YouTube (non répertoriée)
   • PDF: notes de cours, fiches, sujets d’examens (S3/Cloudinary)
@@ -73,6 +76,7 @@ Contact: contact@progertech.com
 4.3 Recherche & filtres
 - Recherche mot-clé (titre, description, professeur, tags)
 - Filtres: semestre, département, matière, type (vidéo/PDF/examens), statut (gratuit/premium)
+- Filtres prédéfinis (MVP): pré-sélection IG/ISCAE et matières prioritaires
 - Tri: plus vus, plus récents, orientés examens
 - Suggestions: cours populaires, récemment ajoutés
 
@@ -243,7 +247,7 @@ Contact: contact@progertech.com
   • Réinitialisation mot de passe aboutit à un login réussi
 - Catalogue:
   • Recherche renvoie des résultats pertinents en < 500 ms (moyenne)
-  • Filtres combinables; tri cohérent
+  • Filtres combinables; tri cohérent; pré-sélection IG/ISCAE disponible
 - Leçon:
   • Player vidéo charge et joue sur desktop et mobile
   • Filigrane dynamique visible en lecture, PiP/AirPlay désactivés, clic droit désactivé
