@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node / npm / yarn / pnpm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Logs
+logs/
+*.log
+*.log.*
+pids/
+*.pid
+*.seed
+
+# Build outputs
+/dist/
+/build/
+/out/
+/coverage/
+/.angular/
+.angular/cache/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+
+# OS / Thumbnails
+Thumbs.db
+
+# Temporary
+.tmp/
+.sass-cache/
+
+# Angular caches
+/.nx/
+
+# Misc
+*.local
