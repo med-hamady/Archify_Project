@@ -72,3 +72,8 @@ DEV_PROMPT_Backend_FR.md
 UIUX_Design_Prompt_Archify_FR.txt
 /docs-internal/**
 **/docs-internal/**
+
+# Internal spec docs (ignored)
+Cahier_de_Charges_Archify.txt
+Cahier_de_Charges_Archify.docx
+Cahier_de_Charges_Archify.*
