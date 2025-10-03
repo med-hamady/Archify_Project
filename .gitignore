@@ -63,3 +63,12 @@ id_rsa.pub
 *.p12
 *.crt
 *.der
+
+# Internal planning docs (ignored)
+PRD_Archify_FR.md
+Sprint_1_Plan_FR.md
+DEV_PROMPT_Frontend_FR.md
+DEV_PROMPT_Backend_FR.md
+UIUX_Design_Prompt_Archify_FR.txt
+/docs-internal/**
+**/docs-internal/**
