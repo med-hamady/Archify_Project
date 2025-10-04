@@ -1,11 +1,12 @@
 import { Component, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { CourseSummary, MOCK_COURSES } from '../../shared/mock-data';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   template: `
     <div class="p-6 max-w-6xl mx-auto">
       <h2 class="text-2xl font-semibold text-blue-900">Catalogue</h2>
