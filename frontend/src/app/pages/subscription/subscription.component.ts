@@ -68,7 +68,7 @@ interface SubscriptionPlan {
         <!-- Subscription Plans -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <!-- Free Plan -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 relative">
+          <div class="card p-8 relative">
             <div class="text-center">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Gratuit</h3>
               <p class="text-gray-600 mb-6">Parfait pour commencer</p>
@@ -96,7 +96,7 @@ interface SubscriptionPlan {
           </div>
 
           <!-- Premium Plan -->
-          <div class="bg-white rounded-2xl shadow-lg border-2 border-blue-500 p-8 relative">
+          <div class="card shadow-lg border-2 border-primary p-8 relative">
             <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <span class="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
                 Le plus populaire
@@ -136,7 +136,7 @@ interface SubscriptionPlan {
           </div>
 
           <!-- Enterprise Plan -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 relative">
+          <div class="card p-8 relative">
             <div class="text-center">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Entreprise</h3>
               <p class="text-gray-600 mb-6">Pour les institutions</p>

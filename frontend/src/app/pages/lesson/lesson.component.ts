@@ -1,6 +1,8 @@
-import { Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import Player from '@vimeo/player';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 interface Lesson {
   id: string;
@@ -16,7 +18,7 @@ interface Lesson {
 @Component({
   selector: 'app-lesson',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NgxExtendedPdfViewerModule],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Lesson Header -->
@@ -54,23 +56,11 @@ interface Lesson {
           <div class="lg:col-span-3">
             <!-- Video Player -->
             <div *ngIf="lesson()?.type === 'video'" 
-                 class="bg-black rounded-lg overflow-hidden aspect-video relative mb-6" 
+                 class="bg-black rounded-lg overflow-hidden aspect-video relative mb-6 card" 
                  [style.background]="'linear-gradient(45deg, #1f2937 25%, transparent 25%), linear-gradient(-45deg, #1f2937 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1f2937 75%), linear-gradient(-45deg, transparent 75%, #1f2937 75%)'"
                  [style.backgroundSize]="'20px 20px'"
                  [style.backgroundPosition]="'0 0, 0 10px, 10px -10px, -10px 0px'">
-              
-              <!-- Content Protection Overlay -->
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="text-center text-white">
-                  <div class="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M8 5v6l4 2 4-2V5l-4-2-4 2z"/>
-                    </svg>
-                  </div>
-                  <p class="text-lg font-medium">Vidéo protégée</p>
-                  <p class="text-sm opacity-75">Connectez-vous pour accéder au contenu</p>
-                </div>
-              </div>
+              <div class="absolute inset-0" #videoContainer></div>
 
               <!-- Dynamic Watermark -->
               <div class="absolute top-4 right-4 text-white text-xs opacity-50 pointer-events-none select-none">
@@ -84,20 +74,23 @@ interface Lesson {
             </div>
 
             <!-- PDF Viewer -->
-            <div *ngIf="lesson()?.type === 'pdf'" 
-                 class="bg-white rounded-lg border aspect-[4/3] flex items-center justify-center mb-6">
-              <div class="text-center text-gray-500">
-                <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
-                </svg>
-                <p class="text-lg font-medium">PDF Protégé</p>
-                <p class="text-sm">Contenu sécurisé - Téléchargement interdit</p>
-              </div>
+            <div *ngIf="lesson()?.type === 'pdf'" class="card aspect-[4/3] mb-6 overflow-hidden">
+              <ngx-extended-pdf-viewer
+                [src]="pdfUrl"
+                useBrowserLocale="true"
+                [textLayer]="true"
+                [showOpenFileButton]="false"
+                [showPrintButton]="false"
+                [showDownloadButton]="false"
+                [showSecondaryToolbarButton]="false"
+                [showSidebarButton]="true"
+                style="height:100%"
+              ></ngx-extended-pdf-viewer>
             </div>
 
             <!-- Quiz Section -->
             <div *ngIf="lesson()?.type === 'quiz'" 
-                 class="bg-white rounded-lg border p-6 mb-6">
+                 class="card p-6 mb-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Quiz interactif</h3>
               <p class="text-gray-600 mb-4">Répondez aux questions pour valider vos connaissances.</p>
               <button class="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors">
@@ -122,7 +115,7 @@ interface Lesson {
             </div>
 
             <!-- Lesson Description -->
-            <div class="bg-white rounded-lg border p-6">
+            <div class="card p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Description de la leçon</h3>
               <p class="text-gray-700 leading-relaxed">{{ lesson()?.description }}</p>
             </div>
@@ -131,7 +124,7 @@ interface Lesson {
           <!-- Sidebar -->
           <div class="lg:col-span-1">
             <!-- Progress -->
-            <div class="bg-white rounded-lg border p-4 mb-6">
+            <div class="card p-4 mb-6">
               <h3 class="font-semibold text-gray-900 mb-3">Progression</h3>
               <div class="space-y-2">
                 <div class="flex justify-between text-sm">
@@ -146,7 +139,7 @@ interface Lesson {
             </div>
 
             <!-- Related Lessons -->
-            <div class="bg-white rounded-lg border p-4">
+            <div class="card p-4">
               <h3 class="font-semibold text-gray-900 mb-3">Leçons du cours</h3>
               <div class="space-y-2">
                 <div *ngFor="let relatedLesson of relatedLessons(); trackBy: trackByLessonId" 
@@ -176,9 +169,12 @@ interface Lesson {
   `
 })
 export class LessonComponent implements OnInit, OnDestroy {
+  @ViewChild('videoContainer', { static: false }) videoContainer?: ElementRef<HTMLDivElement>;
   userEmail = signal<string>('user@example.com');
   currentTime = signal<string>('');
   private timeInterval: any;
+  private vimeoPlayer?: Player;
+  pdfUrl: string | undefined = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
 
   lesson = signal<Lesson | undefined>(undefined);
   currentLessonIndex = signal<number>(0);
@@ -218,6 +214,9 @@ export class LessonComponent implements OnInit, OnDestroy {
 
     // Setup comprehensive content protection
     this.setupContentProtection();
+
+    // Initialize player if video
+    setTimeout(() => this.initVideoPlayer(), 0);
   }
 
   ngOnDestroy() {
@@ -228,6 +227,27 @@ export class LessonComponent implements OnInit, OnDestroy {
 
   private updateTime() {
     this.currentTime.set(new Date().toLocaleTimeString('fr-FR'));
+  }
+
+  private initVideoPlayer() {
+    if (this.lesson()?.type !== 'video') return;
+    if (!this.videoContainer?.nativeElement) return;
+    // In real app, video id and options come from backend with signed URL/token
+    const options: any = {
+      id: 59777392, // placeholder sample video
+      responsive: true,
+      byline: false,
+      title: false,
+      dnt: true,
+      controls: true,
+      autopause: true,
+      pip: false
+    };
+    this.vimeoPlayer = new Player(this.videoContainer.nativeElement, options);
+    try {
+      // Disable PiP where possible
+      (this.vimeoPlayer as any).disablePictureInPicture?.();
+    } catch {}
   }
 
   private setupContentProtection() {

@@ -1,0 +1,18 @@
+{
+  "app": {
+    "brand": "Archify",
+    "nav": {
+      "catalog": "Catalogue",
+      "dashboard": "Tableau de bord",
+      "subscription": "Abonnement",
+      "signin": "Se connecter"
+    },
+    "cta": {
+      "ready": "Prêt à commencer ?",
+      "desc": "Accédez aux cours et archives d’examens en quelques clics.",
+      "browse": "Parcourir le catalogue",
+      "plans": "Voir les abonnements"
+    },
+    "footer": "© Archify — Tous droits réservés"
+  }
+}

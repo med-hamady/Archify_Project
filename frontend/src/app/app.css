@@ -1,0 +1,27 @@
+:root {
+  --color-primary: #1E3A8A;
+  --color-accent: #F97316;
+  --color-graybg: #F3F4F6;
+  --color-textdark: #111827;
+  --color-success: #10B981;
+}
+
+/* Smooth scrolling and base typography */
+html { scroll-behavior: smooth; }
+body { color: var(--color-textdark); }
+
+/* Fancy container widths */
+.container { @apply max-w-7xl mx-auto px-4; }
+
+/* Buttons */
+.btn-primary { @apply px-4 py-2 rounded bg-primary text-white hover:bg-blue-800 transition-colors; }
+.btn-secondary { @apply px-4 py-2 rounded border border-gray-300 hover:bg-gray-50 transition-colors; }
+.btn-ghost { @apply px-3 py-1 rounded hover:bg-gray-100 transition-colors; }
+
+/* Card */
+.card { @apply bg-white rounded-xl shadow-sm border border-gray-200; }
+.card-hover { @apply hover:shadow-md transition-shadow; }
+
+/* Header blur */
+.header { @apply w-full border-b bg-white/70 backdrop-blur sticky top-0 z-50; }
+

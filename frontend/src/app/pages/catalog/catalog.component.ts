@@ -8,8 +8,11 @@ import { CourseSummary, MOCK_COURSES } from '../../shared/mock-data';
   standalone: true,
   imports: [RouterLink, CommonModule],
   template: `
-    <div class="p-6 max-w-6xl mx-auto">
-      <h2 class="text-2xl font-semibold text-blue-900">Catalogue</h2>
+    <div class="container py-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-semibold text-primary">Catalogue</h2>
+        <div class="text-sm text-gray-500" *ngIf="filtered().length">{{ filtered().length }} résultats</div>
+      </div>
       <div class="mt-4 grid grid-cols-1 md:grid-cols-5 gap-3">
         <select class="p-2 border rounded" (change)="onSemesterChange($event)">
           <option value="">Semestre</option>
@@ -17,8 +20,8 @@ import { CourseSummary, MOCK_COURSES } from '../../shared/mock-data';
         </select>
         <select class="p-2 border rounded" (change)="onDeptChange($event)">
           <option value="">Département</option>
-          <option>Département A</option>
-          <option>Département B</option>
+          <option>Informatique</option>
+          <option>Gestion</option>
         </select>
         <select class="p-2 border rounded" (change)="onSubjectChange($event)">
           <option value="">Matière</option>
@@ -31,16 +34,24 @@ import { CourseSummary, MOCK_COURSES } from '../../shared/mock-data';
         <input type="text" class="p-2 border rounded" placeholder="Recherche…" (input)="onQueryChange($event)" />
       </div>
 
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a *ngFor="let c of filtered()" [routerLink]="['/course', c.id]" class="border rounded overflow-hidden shadow-sm hover:shadow p-4">
-          <div class="aspect-video bg-gray-100"></div>
-          <div class="mt-3">
-            <div class="font-medium">{{ c.title }}</div>
-            <div class="text-sm text-gray-500">{{ c.professor }} • {{ c.premium ? 'Premium' : 'Gratuit' }}</div>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a *ngFor="let c of filtered()" [routerLink]="['/course', c.id]" class="card card-hover overflow-hidden">
+          <div class="aspect-video relative bg-gray-100">
+            <span *ngIf="c.premium" class="absolute top-3 left-3 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">Premium</span>
+          </div>
+          <div class="p-4">
+            <div class="font-medium line-clamp-1">{{ c.title }}</div>
+            <div class="text-sm text-gray-500">{{ c.professor }} • {{ c.semester }}</div>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <span class="text-xs px-2 py-0.5 bg-gray-100 rounded" *ngFor="let t of c.tags">{{ t }}</span>
+            </div>
           </div>
         </a>
       </div>
-      <div *ngIf="filtered().length === 0" class="mt-8 text-center text-gray-500">Aucun résultat.</div>
+      <div *ngIf="filtered().length === 0" class="mt-16 text-center text-gray-500">
+        <div class="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-3"></div>
+        <div>Aucun résultat</div>
+      </div>
     </div>
   `
 })

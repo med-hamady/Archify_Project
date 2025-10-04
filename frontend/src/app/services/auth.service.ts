@@ -43,9 +43,6 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   user: User;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
 }
 
 @Injectable({
@@ -53,8 +50,6 @@ export interface AuthResponse {
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:3000/api'; // Will be updated for production
-  private readonly TOKEN_KEY = 'archify_access_token';
-  private readonly REFRESH_TOKEN_KEY = 'archify_refresh_token';
   private readonly USER_KEY = 'archify_user';
 
   private userSubject = new BehaviorSubject<User | null>(null);
@@ -74,22 +69,13 @@ export class AuthService {
   }
 
   private initializeAuth() {
-    const token = this.getStoredToken();
     const user = this.getStoredUser();
-    
-    if (token && user) {
-      this.tokenSubject.next(token);
+    if (user) {
       this.userSubject.next(user);
       this.user.set(user);
-      
-      // Verify token is still valid
       this.verifyToken().subscribe({
-        next: (response) => {
-          this.updateUser(response.user);
-        },
-        error: () => {
-          this.logout();
-        }
+        next: (response) => this.updateUser(response.user),
+        error: () => this.logout(),
       });
     }
   }
@@ -109,7 +95,14 @@ export class AuthService {
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, userData)
+    const payload: any = {
+      email: userData.email,
+      password: userData.password,
+      name: `${userData.firstName} ${userData.lastName}`.trim(),
+      // departmentId expects UUID; map when real departments exist
+      semester: userData.year ?? undefined
+    };
+    return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, payload)
       .pipe(
         tap(response => {
           this.setAuthData(response);
@@ -123,9 +116,8 @@ export class AuthService {
   }
 
   logout(): void {
-    // Clear stored data
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    // Inform backend and clear stored data
+    this.http.post<void>(`${this.API_URL}/auth/logout`, {}).subscribe({ next: () => {}, error: () => {} });
     localStorage.removeItem(this.USER_KEY);
     
     // Clear signals
@@ -138,17 +130,9 @@ export class AuthService {
   }
 
   refreshToken(): Observable<AuthResponse> {
-    const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    if (!refreshToken) {
-      this.logout();
-      return throwError(() => new Error('No refresh token available'));
-    }
-
-    return this.http.post<AuthResponse>(`${this.API_URL}/auth/refresh`, { refreshToken })
+    return this.http.post<AuthResponse>(`${this.API_URL}/auth/refresh`, {})
       .pipe(
-        tap(response => {
-          this.setAuthData(response);
-        }),
+        tap(response => this.setAuthData(response)),
         catchError(error => {
           this.logout();
           return throwError(() => error);
@@ -157,14 +141,7 @@ export class AuthService {
   }
 
   verifyToken(): Observable<{ user: User; valid: boolean }> {
-    const token = this.getStoredToken();
-    if (!token) {
-      return throwError(() => new Error('No token available'));
-    }
-
-    return this.http.get<{ user: User; valid: boolean }>(`${this.API_URL}/auth/verify`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    return this.http.get<{ user: User; valid: boolean }>(`${this.API_URL}/auth/verify`);
   }
 
   updateProfile(updates: Partial<User['profile']>): Observable<User> {
@@ -199,13 +176,9 @@ export class AuthService {
   }
 
   private setAuthData(response: AuthResponse): void {
-    // Store tokens
-    localStorage.setItem(this.TOKEN_KEY, response.accessToken);
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
     localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
     
     // Update signals
-    this.tokenSubject.next(response.accessToken);
     this.userSubject.next(response.user);
     this.user.set(response.user);
   }
@@ -216,18 +189,14 @@ export class AuthService {
     this.user.set(user);
   }
 
-  private getStoredToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
-
   private getStoredUser(): User | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     return userStr ? JSON.parse(userStr) : null;
   }
 
   getAuthHeaders(): { [key: string]: string } {
-    const token = this.getStoredToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    // Cookies are used for auth; return empty headers by default
+    return {};
   }
 
   // Check if user has access to premium content

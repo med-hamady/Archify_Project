@@ -75,7 +75,7 @@ interface StudyStats {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -91,7 +91,7 @@ interface StudyStats {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -107,7 +107,7 @@ interface StudyStats {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -123,7 +123,7 @@ interface StudyStats {
             </div>
           </div>
 
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -143,7 +143,7 @@ interface StudyStats {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Continue Learning -->
           <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl shadow-sm">
+            <div class="card">
               <div class="p-6 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">Continuer l'apprentissage</h2>
                 <p class="text-sm text-gray-600 mt-1">Reprenez où vous vous êtes arrêté</p>
@@ -197,7 +197,7 @@ interface StudyStats {
 
           <!-- Recent Activity -->
           <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl shadow-sm">
+            <div class="card">
               <div class="p-6 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">Activité récente</h2>
               </div>
@@ -228,7 +228,7 @@ interface StudyStats {
 
         <!-- Quick Actions -->
         <div class="mt-8">
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <a routerLink="/catalog" 

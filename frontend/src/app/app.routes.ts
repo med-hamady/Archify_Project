@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { subscriptionGuard } from './core/guards/subscription.guard';
 
 export const routes: Routes = [
   {
@@ -15,7 +18,8 @@ export const routes: Routes = [
   },
   {
     path: 'lesson/:id',
-    loadComponent: () => import('./pages/lesson/lesson.component').then(m => m.LessonComponent)
+    loadComponent: () => import('./pages/lesson/lesson.component').then(m => m.LessonComponent),
+    canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'auth',
@@ -23,15 +27,18 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'subscription',
-    loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent)
+    loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'admin',
-    loadComponent: () => import('./pages/admin/admin.component').then(m => m.AdminComponent)
+    loadComponent: () => import('./pages/admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [authGuard, roleGuard(['admin'])]
   },
   { path: '**', redirectTo: '' }
 ];

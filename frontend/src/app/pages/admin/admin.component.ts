@@ -56,7 +56,7 @@ interface RecentCourse {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div *ngFor="let stat of adminStats()" class="bg-white rounded-xl shadow-sm p-6">
+          <div *ngFor="let stat of adminStats()" class="card p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -79,7 +79,7 @@ interface RecentCourse {
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Recent Users -->
-          <div class="bg-white rounded-xl shadow-sm">
+          <div class="card">
             <div class="p-6 border-b border-gray-200">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-900">Utilisateurs récents</h2>
@@ -114,7 +114,7 @@ interface RecentCourse {
           </div>
 
           <!-- Recent Courses -->
-          <div class="bg-white rounded-xl shadow-sm">
+          <div class="card">
             <div class="p-6 border-b border-gray-200">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-900">Cours récents</h2>
@@ -155,7 +155,7 @@ interface RecentCourse {
 
         <!-- Quick Actions -->
         <div class="mt-8">
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="card p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-6">Actions rapides</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <button class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">

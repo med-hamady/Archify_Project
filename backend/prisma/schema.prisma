@@ -1,0 +1,178 @@
+// Prisma schema for Archify MVP core
+// Datasource and generator
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+
+enum Role {
+  student
+  admin
+  superadmin
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  expired
+}
+
+enum LessonType {
+  video
+  pdf
+  exam
+}
+
+enum CommentStatus {
+  visible
+  hidden
+  reported
+}
+
+enum ProgressStatus {
+  viewed
+  in_progress
+}
+
+// Models
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  departmentId  String?  @db.Uuid
+  semester      Int?
+  role          Role     @default(student)
+  createdAt     DateTime @default(now())
+  lastLoginAt   DateTime?
+  avatarUrl     String?
+
+  // Relations
+  department    Department? @relation(fields: [departmentId], references: [id])
+  subscriptions Subscription[]
+  payments      Payment[]
+  progress      Progress[]
+  comments      Comment[]
+}
+
+model Department {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  courses Course[]
+  users   User[]
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  department  Department  @relation(fields: [departmentId], references: [id])
+  departmentId String
+  title       String
+  description String
+  semester    String
+  professor   String
+  tags        String[]
+  createdAt   DateTime    @default(now())
+  isPremium   Boolean     @default(false)
+  lessons     Lesson[]
+  views       Int         @default(0)
+}
+
+model Lesson {
+  id           String    @id @default(cuid())
+  course       Course    @relation(fields: [courseId], references: [id])
+  courseId     String
+  title        String
+  type         LessonType
+  durationSec  Int       @default(0)
+  vimeoId      String?   
+  youtubeId    String?   
+  pdfUrl       String?   
+  isPremium    Boolean   @default(false)
+  orderIndex   Int       @default(0)
+  createdAt    DateTime  @default(now())
+  lessonAssets LessonAsset[]
+  comments     Comment[]
+  progresses   Progress[]
+
+  @@index([courseId, orderIndex], map: "lessons_course_order_idx")
+}
+
+model LessonAsset {
+  id        String  @id @default(cuid())
+  lesson    Lesson  @relation(fields: [lessonId], references: [id])
+  lessonId  String
+  kind      String
+  url       String
+  title     String
+}
+
+model Comment {
+  id        String         @id @default(cuid())
+  lesson    Lesson         @relation(fields: [lessonId], references: [id])
+  lessonId  String
+  user      User           @relation(fields: [userId], references: [id])
+  userId    String
+  content   String
+  status    CommentStatus  @default(visible)
+  createdAt DateTime       @default(now())
+
+  @@index([lessonId, createdAt], map: "comments_lesson_created_idx")
+}
+
+model SubscriptionPlan {
+  id           String  @id @default(cuid())
+  name         String
+  interval     String
+  priceCents   Int
+  currency     String
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id         String              @id @default(cuid())
+  user       User                @relation(fields: [userId], references: [id])
+  userId     String
+  plan       SubscriptionPlan    @relation(fields: [planId], references: [id])
+  planId     String
+  status     SubscriptionStatus  @default(active)
+  startAt    DateTime            @default(now())
+  endAt      DateTime
+  cancelAt   DateTime?
+  payments   Payment[]
+
+  @@index([userId, status], map: "subscriptions_user_status_idx")
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  user             User     @relation(fields: [userId], references: [id])
+  userId           String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  subscriptionId   String
+  provider         String
+  providerRef      String   @unique
+  amountCents      Int
+  currency         String
+  status           String
+  createdAt        DateTime @default(now())
+}
+
+model Progress {
+  id        String         @id @default(cuid())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    String
+  lesson    Lesson         @relation(fields: [lessonId], references: [id])
+  lessonId  String
+  status    ProgressStatus @default(in_progress)
+  updatedAt DateTime       @updatedAt
+}
+
+// Note: unique fields already imply indexes

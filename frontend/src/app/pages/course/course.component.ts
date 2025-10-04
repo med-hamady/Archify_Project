@@ -52,7 +52,7 @@ interface Lesson {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Video Player Section -->
           <div class="lg:col-span-2">
-            <div class="bg-black rounded-lg overflow-hidden aspect-video relative" 
+            <div class="bg-black rounded-lg overflow-hidden aspect-video relative card" 
                  [style.background]="'linear-gradient(45deg, #1f2937 25%, transparent 25%), linear-gradient(-45deg, #1f2937 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1f2937 75%), linear-gradient(-45deg, transparent 75%, #1f2937 75%)'"
                  [style.backgroundSize]="'20px 20px'"
                  [style.backgroundPosition]="'0 0, 0 10px, 10px -10px, -10px 0px'">
@@ -97,7 +97,7 @@ interface Lesson {
 
           <!-- Lessons Sidebar -->
           <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow-sm border">
+            <div class="card">
               <div class="p-4 border-b">
                 <h3 class="font-semibold text-gray-900">Leçons</h3>
                 <p class="text-sm text-gray-600">{{ lessons().length }} leçons • {{ totalDuration() }}</p>
