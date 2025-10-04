@@ -1,18 +1,38 @@
 import { Component, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 import Player from '@vimeo/player';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 interface Lesson {
   id: string;
   title: string;
-  duration: string;
-  type: 'video' | 'pdf' | 'quiz';
-  premium: boolean;
-  completed: boolean;
-  description: string;
-  content: string;
+  type: 'video' | 'pdf' | 'exam';
+  durationSec: number;
+  vimeoId?: string;
+  youtubeId?: string;
+  pdfUrl?: string;
+  isPremium: boolean;
+  orderIndex: number;
+  createdAt: string;
+  course: {
+    id: string;
+    title: string;
+    isPremium: boolean;
+    department: {
+      name: string;
+    };
+  };
+  assets: any[];
+  comments: any[];
+  commentCount: number;
+}
+
+interface LessonProgress {
+  status: 'not_started' | 'in_progress' | 'viewed';
+  updatedAt: string | null;
 }
 
 @Component({
@@ -21,33 +41,67 @@ interface Lesson {
   imports: [CommonModule, RouterLink, NgxExtendedPdfViewerModule],
   template: `
     <div class="min-h-screen bg-gray-50">
-      <!-- Lesson Header -->
-      <div class="bg-white border-b sticky top-0 z-10">
-        <div class="max-w-6xl mx-auto px-4 py-4">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-              <a routerLink="/course/1" class="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Retour au cours
-              </a>
-              <div>
-                <h1 class="text-lg sm:text-xl font-semibold text-gray-900">{{ lesson()?.title }}</h1>
-                <p class="text-sm text-gray-600">{{ lesson()?.duration }} • {{ lesson()?.type === 'video' ? 'Vidéo' : lesson()?.type === 'pdf' ? 'PDF' : 'Quiz' }}</p>
+      <!-- Loading State -->
+      <div *ngIf="isLoading()" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+          <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600 mx-auto" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p class="mt-4 text-gray-600">Chargement de la leçon...</p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error() && !isLoading()" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Erreur</h3>
+          <p class="text-gray-500 mb-4">{{ error() }}</p>
+          <button (click)="goToCatalog()" 
+                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Retour au catalogue
+          </button>
+        </div>
+      </div>
+
+      <!-- Lesson Content -->
+      <div *ngIf="lesson() && !isLoading()">
+        <!-- Lesson Header -->
+        <div class="bg-white border-b sticky top-0 z-10">
+          <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <a [routerLink]="['/course', lesson()?.course?.id]" class="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                  </svg>
+                  Retour au cours
+                </a>
+                <div>
+                  <h1 class="text-lg sm:text-xl font-semibold text-gray-900">{{ lesson()?.title }}</h1>
+                  <p class="text-sm text-gray-600">{{ formatDuration(lesson()?.durationSec || 0) }} • {{ lesson()?.type === 'video' ? 'Vidéo' : lesson()?.type === 'pdf' ? 'PDF' : 'Examen' }}</p>
+                </div>
               </div>
-            </div>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
-                Précédent
-              </button>
-              <button class="px-3 py-1 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-colors">
-                Suivant
-              </button>
+              <div class="flex gap-2">
+                <button *ngIf="currentLessonIndex() > 0" 
+                        (click)="navigateToLesson(relatedLessons()[currentLessonIndex() - 1].id)"
+                        class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
+                  Précédent
+                </button>
+                <button *ngIf="currentLessonIndex() < totalLessons() - 1" 
+                        (click)="navigateToLesson(relatedLessons()[currentLessonIndex() + 1].id)"
+                        class="px-3 py-1 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-colors">
+                  Suivant
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       <!-- Main Content -->
       <div class="max-w-6xl mx-auto px-4 py-6">
@@ -88,13 +142,13 @@ interface Lesson {
               ></ngx-extended-pdf-viewer>
             </div>
 
-            <!-- Quiz Section -->
-            <div *ngIf="lesson()?.type === 'quiz'" 
+            <!-- Exam Section -->
+            <div *ngIf="lesson()?.type === 'exam'" 
                  class="card p-6 mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Quiz interactif</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Examen</h3>
               <p class="text-gray-600 mb-4">Répondez aux questions pour valider vos connaissances.</p>
               <button class="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors">
-                Commencer le quiz
+                Commencer l'examen
               </button>
             </div>
 
@@ -117,7 +171,7 @@ interface Lesson {
             <!-- Lesson Description -->
             <div class="card p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Description de la leçon</h3>
-              <p class="text-gray-700 leading-relaxed">{{ lesson()?.description }}</p>
+              <p class="text-gray-700 leading-relaxed">Cette leçon fait partie du cours "{{ lesson()?.course?.title }}". Suivez attentivement le contenu pour bien comprendre les concepts abordés.</p>
             </div>
           </div>
 
@@ -149,13 +203,12 @@ interface Lesson {
                   <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
                       <p class="text-sm font-medium text-gray-900 truncate">{{ relatedLesson.title }}</p>
-                      <p class="text-xs text-gray-500">{{ relatedLesson.duration }}</p>
+                      <p class="text-xs text-gray-500">{{ formatDuration(relatedLesson.durationSec) }}</p>
                     </div>
                     <div class="flex items-center gap-1 ml-2">
-                      <span *ngIf="relatedLesson.premium" class="text-xs text-orange-600">🔒</span>
-                      <span *ngIf="relatedLesson.completed" class="text-xs text-green-600">✓</span>
+                      <span *ngIf="relatedLesson.isPremium" class="text-xs text-orange-600">🔒</span>
                       <span class="text-xs text-gray-400">
-                        {{ relatedLesson.type === 'video' ? '🎥' : relatedLesson.type === 'pdf' ? '📄' : '❓' }}
+                        {{ relatedLesson.type === 'video' ? '🎥' : relatedLesson.type === 'pdf' ? '📄' : '📝' }}
                       </span>
                     </div>
                   </div>
@@ -170,53 +223,132 @@ interface Lesson {
 })
 export class LessonComponent implements OnInit, OnDestroy {
   @ViewChild('videoContainer', { static: false }) videoContainer?: ElementRef<HTMLDivElement>;
-  userEmail = signal<string>('user@example.com');
+  private readonly API_URL = 'http://localhost:3000/api';
+  
+  // Signals
+  private lessonSignal = signal<Lesson | undefined>(undefined);
+  private isLoadingSignal = signal(false);
+  private errorSignal = signal<string>('');
+  private relatedLessonsSignal = signal<Lesson[]>([]);
+  private progressSignal = signal<LessonProgress>({ status: 'not_started', updatedAt: null });
+  
+  userEmail = signal<string>('');
   currentTime = signal<string>('');
   private timeInterval: any;
   private vimeoPlayer?: Player;
-  pdfUrl: string | undefined = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
+  pdfUrl: string | undefined;
 
-  lesson = signal<Lesson | undefined>(undefined);
+  // Computed properties
+  lesson = computed(() => this.lessonSignal());
+  isLoading = computed(() => this.isLoadingSignal());
+  error = computed(() => this.errorSignal());
+  relatedLessons = computed(() => this.relatedLessonsSignal());
+  progress = computed(() => this.progressSignal());
+
   currentLessonIndex = signal<number>(0);
-  totalLessons = signal<number>(5);
-
-  // Mock data for related lessons
-  relatedLessons = signal<Lesson[]>([
-    { id: '1', title: 'Introduction aux algorithmes', duration: '15:30', type: 'video', premium: true, completed: false, description: 'Découvrez les bases de l\'algorithmique', content: '' },
-    { id: '2', title: 'Variables et types de données', duration: '12:45', type: 'video', premium: true, completed: true, description: 'Apprenez les différents types de variables', content: '' },
-    { id: '3', title: 'Structures de contrôle', duration: '18:20', type: 'video', premium: true, completed: false, description: 'Maîtrisez les boucles et conditions', content: '' },
-    { id: '4', title: 'Exercices pratiques', duration: '25:00', type: 'quiz', premium: true, completed: false, description: 'Testez vos connaissances', content: '' },
-    { id: '5', title: 'Notes de cours (PDF)', duration: '5 pages', type: 'pdf', premium: false, completed: true, description: 'Résumé du cours en PDF', content: '' }
-  ]);
+  totalLessons = computed(() => this.relatedLessons().length);
 
   progressPercentage = computed(() => {
-    const completed = this.relatedLessons().filter(l => l.completed).length;
+    const completed = this.relatedLessons().filter(l => l.id === this.lesson()?.id).length;
     return Math.round((completed / this.totalLessons()) * 100);
   });
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router, 
+    private activatedRoute: ActivatedRoute,
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       const lessonId = params['id'];
-      const lesson = this.relatedLessons().find(l => l.id === lessonId);
-      this.lesson.set(lesson);
-      
-      if (lesson) {
-        const index = this.relatedLessons().findIndex(l => l.id === lessonId);
-        this.currentLessonIndex.set(index);
-      }
+      this.loadLesson(lessonId);
     });
+
+    // Set user email for watermark
+    const user = this.authService.user();
+    if (user) {
+      this.userEmail.set(user.email);
+    }
 
     // Update time for watermark
     this.updateTime();
     this.timeInterval = setInterval(() => this.updateTime(), 1000);
 
-    // Setup comprehensive content protection
-    this.setupContentProtection();
+    // Setup invisible content protection
+    this.setupInvisibleContentProtection();
 
     // Initialize player if video
     setTimeout(() => this.initVideoPlayer(), 0);
+  }
+
+  private loadLesson(lessonId: string) {
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set('');
+
+    this.http.get<Lesson>(`${this.API_URL}/lessons/${lessonId}`).subscribe({
+      next: (lesson) => {
+        this.lessonSignal.set(lesson);
+        this.pdfUrl = lesson.pdfUrl;
+        this.isLoadingSignal.set(false);
+        
+        // Load related lessons from the same course
+        this.loadRelatedLessons(lesson.course.id);
+        
+        // Load lesson progress
+        this.loadLessonProgress(lessonId);
+      },
+      error: (error) => {
+        console.error('Error loading lesson:', error);
+        this.errorSignal.set('Erreur lors du chargement de la leçon');
+        this.isLoadingSignal.set(false);
+        this.router.navigate(['/catalog']);
+      }
+    });
+  }
+
+  private loadRelatedLessons(courseId: string) {
+    this.http.get<Lesson[]>(`${this.API_URL}/courses/${courseId}/lessons`).subscribe({
+      next: (lessons) => {
+        this.relatedLessonsSignal.set(lessons);
+        
+        // Find current lesson index
+        const currentLesson = this.lesson();
+        if (currentLesson) {
+          const index = lessons.findIndex(l => l.id === currentLesson.id);
+          this.currentLessonIndex.set(index);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading related lessons:', error);
+      }
+    });
+  }
+
+  private loadLessonProgress(lessonId: string) {
+    this.http.get<LessonProgress>(`${this.API_URL}/lessons/${lessonId}/progress`).subscribe({
+      next: (progress) => {
+        this.progressSignal.set(progress);
+      },
+      error: (error) => {
+        console.error('Error loading lesson progress:', error);
+      }
+    });
+  }
+
+  private updateLessonProgress(status: 'in_progress' | 'viewed') {
+    const lesson = this.lesson();
+    if (!lesson) return;
+
+    this.http.post(`${this.API_URL}/lessons/${lesson.id}/progress`, { status }).subscribe({
+      next: () => {
+        this.progressSignal.update(p => ({ ...p, status, updatedAt: new Date().toISOString() }));
+      },
+      error: (error) => {
+        console.error('Error updating lesson progress:', error);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -232,9 +364,12 @@ export class LessonComponent implements OnInit, OnDestroy {
   private initVideoPlayer() {
     if (this.lesson()?.type !== 'video') return;
     if (!this.videoContainer?.nativeElement) return;
-    // In real app, video id and options come from backend with signed URL/token
+    
+    const lesson = this.lesson();
+    if (!lesson?.vimeoId) return;
+    
     const options: any = {
-      id: 59777392, // placeholder sample video
+      id: parseInt(lesson.vimeoId),
       responsive: true,
       byline: false,
       title: false,
@@ -243,19 +378,37 @@ export class LessonComponent implements OnInit, OnDestroy {
       autopause: true,
       pip: false
     };
+    
     this.vimeoPlayer = new Player(this.videoContainer.nativeElement, options);
+    
+    // Track progress when video is played
+    this.vimeoPlayer.on('play', () => {
+      this.updateLessonProgress('in_progress');
+    });
+    
+    this.vimeoPlayer.on('ended', () => {
+      this.updateLessonProgress('viewed');
+    });
+    
     try {
       // Disable PiP where possible
       (this.vimeoPlayer as any).disablePictureInPicture?.();
     } catch {}
   }
 
-  private setupContentProtection() {
-    // Disable right-click globally
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
+  private setupInvisibleContentProtection() {
+    // Invisible protection - no visible indicators to users
     
-    // Disable developer tools shortcuts
+    // Disable right-click silently
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, { capture: true });
+    
+    // Disable developer tools and shortcuts silently
     document.addEventListener('keydown', (e) => {
+      // F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+Shift+C, Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
       if (e.key === 'F12' || 
           (e.ctrlKey && e.shiftKey && e.key === 'I') ||
           (e.ctrlKey && e.shiftKey && e.key === 'C') ||
@@ -266,52 +419,123 @@ export class LessonComponent implements OnInit, OnDestroy {
           (e.ctrlKey && e.key === 'v') ||
           (e.ctrlKey && e.key === 'x')) {
         e.preventDefault();
-        return;
+        e.stopPropagation();
+        return false;
       }
-    });
+      return true;
+    }, { capture: true });
 
-    // Disable text selection on protected content
+    // Disable text selection silently
     document.addEventListener('selectstart', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('.bg-black') || target.closest('.bg-white.rounded-lg.border')) {
-        e.preventDefault();
-      }
-    });
-
-    // Disable drag and drop
-    document.addEventListener('dragstart', (e) => e.preventDefault());
-    document.addEventListener('drop', (e) => e.preventDefault());
-
-    // Disable print screen
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+    
+    // Disable drag and drop silently
+    document.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+    
+    document.addEventListener('drop', (e) => {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+    
+    // Disable print screen silently
     document.addEventListener('keyup', (e) => {
       if (e.key === 'PrintScreen') {
+        // Clear clipboard silently
+        navigator.clipboard.writeText('').catch(() => {});
         e.preventDefault();
-        navigator.clipboard.writeText('');
+        return false;
       }
-    });
+      return true;
+    }, { capture: true });
 
-    // Disable screenshot on mobile
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        // Clear sensitive content when tab is hidden
-        console.clear();
-      }
-    });
-
-    // Disable zoom on mobile for better security
+    // Disable mobile gestures silently
     document.addEventListener('touchstart', (e) => {
       if (e.touches.length > 1) {
         e.preventDefault();
+        e.stopPropagation();
+        return false;
       }
-    });
+      return true;
+    }, { passive: false, capture: true });
 
-    // Disable long press on mobile
-    document.addEventListener('touchstart', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('.bg-black') || target.closest('.bg-white.rounded-lg.border')) {
+    document.addEventListener('touchend', (e) => {
+      if (e.touches.length > 1) {
         e.preventDefault();
+        e.stopPropagation();
+        return false;
       }
-    });
+      return true;
+    }, { passive: false, capture: true });
+
+    // Disable pinch zoom silently
+    document.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, { capture: true });
+    
+    document.addEventListener('gesturechange', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, { capture: true });
+    
+    document.addEventListener('gestureend', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, { capture: true });
+
+    // Disable video recording attempts
+    this.disableVideoRecording();
+    
+    // Disable screenshot attempts
+    this.disableScreenshots();
+  }
+
+  private disableVideoRecording() {
+    // Monitor for screen recording attempts
+    if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+      const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+      navigator.mediaDevices.getDisplayMedia = function() {
+        return Promise.reject(new Error('Screen recording not allowed'));
+      };
+    }
+
+    // Disable canvas toDataURL for video elements
+    const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+    HTMLCanvasElement.prototype.toDataURL = function(type?: string, quality?: number) {
+      const video = document.querySelector('video');
+      if (video && this.contains(video)) {
+        throw new Error('Canvas export not allowed');
+      }
+      return originalToDataURL.call(this, type, quality);
+    };
+  }
+
+  private disableScreenshots() {
+    // Disable common screenshot methods
+    const originalCapture = (HTMLVideoElement.prototype as any).captureStream;
+    if (originalCapture) {
+      (HTMLVideoElement.prototype as any).captureStream = function() {
+        throw new Error('Video capture not allowed');
+      };
+    }
+
+    // Disable getImageData on video contexts
+    const originalGetImageData = CanvasRenderingContext2D.prototype.getImageData;
+    CanvasRenderingContext2D.prototype.getImageData = function(sx: number, sy: number, sw: number, sh: number, settings?: ImageDataSettings) {
+      const video = document.querySelector('video');
+      if (video && this.canvas.contains(video)) {
+        throw new Error('Image data access not allowed');
+      }
+      return originalGetImageData.call(this, sx, sy, sw, sh, settings);
+    };
   }
 
   navigateToLesson(lessonId: string) {
@@ -320,5 +544,25 @@ export class LessonComponent implements OnInit, OnDestroy {
 
   trackByLessonId(index: number, lesson: Lesson): string {
     return lesson.id;
+  }
+
+  formatDuration(seconds: number): string {
+    if (seconds === 0) return '0 min';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}min`;
+    } else if (minutes > 0) {
+      return remainingSeconds > 0 ? `${minutes}min ${remainingSeconds}s` : `${minutes}min`;
+    } else {
+      return `${remainingSeconds}s`;
+    }
+  }
+
+  goToCatalog(): void {
+    this.router.navigate(['/catalog']);
   }
 }

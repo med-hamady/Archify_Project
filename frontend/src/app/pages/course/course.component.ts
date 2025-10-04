@@ -1,15 +1,33 @@
 import { Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CourseSummary, MOCK_COURSES } from '../../shared/mock-data';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  professor: string;
+  department: string;
+  departmentId: string;
+  semester: string;
+  tags: string[];
+  isPremium: boolean;
+  views: number;
+  lessonCount: number;
+  lessons: Lesson[];
+  createdAt: string;
+}
 
 interface Lesson {
   id: string;
   title: string;
-  duration: string;
-  type: 'video' | 'pdf' | 'quiz';
-  premium: boolean;
-  completed: boolean;
+  type: 'video' | 'pdf' | 'exam';
+  durationSec: number;
+  isPremium: boolean;
+  orderIndex: number;
+  createdAt: string;
 }
 
 @Component({
@@ -18,34 +36,66 @@ interface Lesson {
   imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-gray-50">
-      <!-- Course Header -->
-      <div class="bg-white border-b">
-        <div class="max-w-6xl mx-auto px-4 py-6">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 class="text-2xl md:text-3xl font-semibold text-gray-900">{{ course()?.title }}</h1>
-              <p class="text-gray-600 mt-1">{{ course()?.professor }} • {{ course()?.semester }}</p>
-              <div class="flex flex-wrap gap-2 mt-3">
-                <span *ngFor="let tag of course()?.tags" 
-                      class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                  {{ tag }}
-                </span>
-                <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
-                  {{ course()?.premium ? 'Premium' : 'Gratuit' }}
-                </span>
+      <!-- Loading State -->
+      <div *ngIf="isLoading()" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+          <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600 mx-auto" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p class="mt-4 text-gray-600">Chargement du cours...</p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error() && !isLoading()" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Erreur</h3>
+          <p class="text-gray-500 mb-4">{{ error() }}</p>
+          <button (click)="goToCatalog()" 
+                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Retour au catalogue
+          </button>
+        </div>
+      </div>
+
+      <!-- Course Content -->
+      <div *ngIf="course() && !isLoading()">
+        <!-- Course Header -->
+        <div class="bg-white border-b">
+          <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 class="text-2xl md:text-3xl font-semibold text-gray-900">{{ course()?.title }}</h1>
+                <p class="text-gray-600 mt-1">{{ course()?.professor }} • {{ course()?.semester }}</p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                  <span *ngFor="let tag of course()?.tags" 
+                        class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    {{ tag }}
+                  </span>
+                  <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                    {{ course()?.isPremium ? 'Premium' : 'Gratuit' }}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div class="flex gap-2">
-              <button class="px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors">
-                Commencer
-              </button>
-              <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                Partager
-              </button>
+              <div class="flex gap-2">
+                <button *ngIf="lessons().length > 0" 
+                        (click)="selectLesson(lessons()[0])"
+                        class="px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors">
+                  Commencer
+                </button>
+                <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                  Partager
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       <!-- Course Content -->
       <div class="max-w-6xl mx-auto px-4 py-6">
@@ -110,13 +160,12 @@ interface Lesson {
                   <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
                       <p class="text-sm font-medium text-gray-900 truncate">{{ lesson.title }}</p>
-                      <p class="text-xs text-gray-500">{{ lesson.duration }}</p>
+                      <p class="text-xs text-gray-500">{{ formatDuration(lesson.durationSec) }}</p>
                     </div>
                     <div class="flex items-center gap-2 ml-2">
-                      <span *ngIf="lesson.premium" class="text-xs text-orange-600">🔒</span>
-                      <span *ngIf="lesson.completed" class="text-xs text-green-600">✓</span>
+                      <span *ngIf="lesson.isPremium" class="text-xs text-orange-600">🔒</span>
                       <span class="text-xs text-gray-400">
-                        {{ lesson.type === 'video' ? '🎥' : lesson.type === 'pdf' ? '📄' : '❓' }}
+                        {{ lesson.type === 'video' ? '🎥' : lesson.type === 'pdf' ? '📄' : '📝' }}
                       </span>
                     </div>
                   </div>
@@ -130,59 +179,79 @@ interface Lesson {
         <div class="mt-8 bg-white rounded-lg shadow-sm border p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Description du cours</h3>
           <p class="text-gray-700 leading-relaxed">
-            Ce cours couvre les concepts fondamentaux de l'algorithmique et de la programmation. 
-            Vous apprendrez les structures de données de base, les algorithmes de tri et de recherche, 
-            ainsi que les techniques d'optimisation. Le cours est conçu pour les étudiants débutants 
-            et inclut de nombreux exercices pratiques.
+            {{ course()?.description }}
           </p>
+          
+          <!-- Course Stats -->
+          <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-200">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600">{{ course()?.lessonCount }}</div>
+              <div class="text-sm text-gray-500">Leçons</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">{{ totalDuration() }}</div>
+              <div class="text-sm text-gray-500">Durée totale</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600">{{ course()?.views }}</div>
+              <div class="text-sm text-gray-500">Vues</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-600">{{ course()?.semester }}</div>
+              <div class="text-sm text-gray-500">Semestre</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   `
 })
 export class CourseComponent implements OnInit, OnDestroy {
-  private route = signal<string>('');
-  userEmail = signal<string>('user@example.com');
+  private readonly API_URL = 'http://localhost:3000/api';
+  
+  // Signals
+  private courseSignal = signal<Course | undefined>(undefined);
+  private isLoadingSignal = signal(false);
+  private errorSignal = signal<string>('');
+  userEmail = signal<string>('');
   currentTime = signal<string>('');
   private timeInterval: any;
 
-  course = signal<CourseSummary | undefined>(undefined);
-  selectedLesson = signal<Lesson | undefined>(undefined);
+  // Computed properties
+  course = computed(() => this.courseSignal());
+  isLoading = computed(() => this.isLoadingSignal());
+  error = computed(() => this.errorSignal());
 
-  lessons = signal<Lesson[]>([
-    { id: '1', title: 'Introduction aux algorithmes', duration: '15:30', type: 'video', premium: true, completed: false },
-    { id: '2', title: 'Variables et types de données', duration: '12:45', type: 'video', premium: true, completed: true },
-    { id: '3', title: 'Structures de contrôle', duration: '18:20', type: 'video', premium: true, completed: false },
-    { id: '4', title: 'Exercices pratiques', duration: '25:00', type: 'quiz', premium: true, completed: false },
-    { id: '5', title: 'Notes de cours (PDF)', duration: '5 pages', type: 'pdf', premium: false, completed: true }
-  ]);
+  lessons = computed(() => this.course()?.lessons || []);
+  selectedLesson = signal<Lesson | undefined>(undefined);
 
   totalDuration = computed(() => {
     const total = this.lessons().reduce((acc, lesson) => {
-      if (lesson.type === 'video') {
-        const [minutes, seconds] = lesson.duration.split(':').map(Number);
-        return acc + minutes * 60 + seconds;
-      }
-      return acc;
+      return acc + lesson.durationSec;
     }, 0);
     const hours = Math.floor(total / 3600);
     const minutes = Math.floor((total % 3600) / 60);
     return hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`;
   });
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router, 
+    private activatedRoute: ActivatedRoute,
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       const courseId = params['id'];
-      const course = MOCK_COURSES.find(c => c.id === courseId);
-      this.course.set(course);
-      
-      if (!course) {
-        this.router.navigate(['/catalog']);
-        return;
-      }
+      this.loadCourse(courseId);
     });
+
+    // Set user email for watermark
+    const user = this.authService.user();
+    if (user) {
+      this.userEmail.set(user.email);
+    }
 
     // Update time for watermark
     this.updateTime();
@@ -190,6 +259,24 @@ export class CourseComponent implements OnInit, OnDestroy {
 
     // Prevent right-click and other security measures
     this.setupContentProtection();
+  }
+
+  private loadCourse(courseId: string) {
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set('');
+
+    this.http.get<Course>(`${this.API_URL}/courses/${courseId}`).subscribe({
+      next: (course) => {
+        this.courseSignal.set(course);
+        this.isLoadingSignal.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading course:', error);
+        this.errorSignal.set('Erreur lors du chargement du cours');
+        this.isLoadingSignal.set(false);
+        this.router.navigate(['/catalog']);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -203,29 +290,58 @@ export class CourseComponent implements OnInit, OnDestroy {
   }
 
   private setupContentProtection() {
-    // Disable right-click
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    // Invisible protection - no visible indicators to users
     
-    // Disable F12, Ctrl+Shift+I, Ctrl+U, etc.
+    // Disable right-click silently
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }, { capture: true });
+    
+    // Disable developer tools and shortcuts silently
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F12' || 
           (e.ctrlKey && e.shiftKey && e.key === 'I') ||
           (e.ctrlKey && e.key === 'u') ||
-          (e.ctrlKey && e.key === 's')) {
+          (e.ctrlKey && e.key === 's') ||
+          (e.ctrlKey && e.key === 'a') ||
+          (e.ctrlKey && e.key === 'c') ||
+          (e.ctrlKey && e.key === 'v') ||
+          (e.ctrlKey && e.key === 'x')) {
         e.preventDefault();
+        e.stopPropagation();
+        return false;
       }
-    });
+      return true;
+    }, { capture: true });
 
-    // Disable text selection on video area
+    // Disable text selection silently
     document.addEventListener('selectstart', (e) => {
-      if ((e.target as HTMLElement).closest('.bg-black')) {
-        e.preventDefault();
-      }
-    });
+      e.preventDefault();
+      return false;
+    }, { capture: true });
 
-    // Disable drag and drop
-    document.addEventListener('dragstart', (e) => e.preventDefault());
-    document.addEventListener('drop', (e) => e.preventDefault());
+    // Disable drag and drop silently
+    document.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+    
+    document.addEventListener('drop', (e) => {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+    
+    // Disable print screen silently
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText('').catch(() => {});
+        e.preventDefault();
+        return false;
+      }
+      return true;
+    }, { capture: true });
   }
 
   selectLesson(lesson: Lesson) {
@@ -236,5 +352,25 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   trackByLessonId(index: number, lesson: Lesson): string {
     return lesson.id;
+  }
+
+  formatDuration(seconds: number): string {
+    if (seconds === 0) return '0 min';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}min`;
+    } else if (minutes > 0) {
+      return remainingSeconds > 0 ? `${minutes}min ${remainingSeconds}s` : `${minutes}min`;
+    } else {
+      return `${remainingSeconds}s`;
+    }
+  }
+
+  goToCatalog(): void {
+    this.router.navigate(['/catalog']);
   }
 }

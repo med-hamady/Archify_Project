@@ -8,6 +8,10 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
 import { authRouter } from './modules/auth';
+import { coursesRouter } from './modules/courses';
+import { lessonsRouter } from './modules/lessons';
+import { subscriptionsRouter } from './modules/subscriptions';
+import { departmentsRouter } from './modules/departments';
 
 dotenv.config();
 
@@ -47,6 +51,10 @@ app.get('/healthz', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authLimiter, authRouter);
+app.use('/api/courses', coursesRouter);
+app.use('/api/lessons', lessonsRouter);
+app.use('/api/subscriptions', subscriptionsRouter);
+app.use('/api/departments', departmentsRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

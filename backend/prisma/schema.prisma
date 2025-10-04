@@ -48,7 +48,7 @@ model User {
   email         String   @unique
   passwordHash  String
   name          String
-  departmentId  String?  @db.Uuid
+  departmentId  String?
   semester      Int?
   role          Role     @default(student)
   createdAt     DateTime @default(now())
@@ -64,7 +64,7 @@ model User {
 }
 
 model Department {
-  id      String   @id @default(uuid())
+  id      String   @id @default(cuid())
   name    String   @unique
   courses Course[]
   users   User[]

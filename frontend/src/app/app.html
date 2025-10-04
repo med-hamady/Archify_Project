@@ -2,13 +2,13 @@
   <div class="container h-16 flex items-center justify-between">
     <a routerLink="/" class="flex items-center gap-2 text-primary font-semibold">
       <span class="inline-flex w-7 h-7 rounded bg-primary"></span>
-      <span class="text-lg">{{ 'app.brand' | translate }}</span>
+      <span class="text-lg">Archify</span>
     </a>
     <nav class="hidden md:flex items-center gap-6 text-sm">
-      <a routerLink="/catalog" class="btn-ghost">{{ 'app.nav.catalog' | translate }}</a>
-      <a routerLink="/dashboard" class="btn-ghost">{{ 'app.nav.dashboard' | translate }}</a>
-      <a routerLink="/subscription" class="btn-ghost">{{ 'app.nav.subscription' | translate }}</a>
-      <a routerLink="/auth" class="btn-primary">{{ 'app.nav.signin' | translate }}</a>
+      <a routerLink="/catalog" class="btn-ghost">Catalogue</a>
+      <a routerLink="/dashboard" class="btn-ghost">Tableau de bord</a>
+      <a routerLink="/subscription" class="btn-ghost">Abonnement</a>
+      <a routerLink="/auth" class="btn-primary">Se connecter</a>
     </nav>
     <button class="md:hidden btn-ghost" aria-label="Menu">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,13 +23,13 @@
 <section class="bg-primary text-white mt-16">
   <div class="container py-10 flex flex-col md:flex-row items-center justify-between gap-4">
     <div>
-      <h3 class="text-xl font-semibold">{{ 'app.cta.ready' | translate }}</h3>
-      <p class="text-white/80">{{ 'app.cta.desc' | translate }}</p>
+      <h3 class="text-xl font-semibold">Prêt à commencer ?</h3>
+      <p class="text-white/80">Accédez aux cours et archives d'examens en quelques clics.</p>
     </div>
     <div class="flex gap-3">
-      <a routerLink="/catalog" class="px-4 py-2 bg-white text-primary rounded">{{ 'app.cta.browse' | translate }}</a>
-      <a routerLink="/subscription" class="px-4 py-2 border border-white rounded">{{ 'app.cta.plans' | translate }}</a>
+      <a routerLink="/catalog" class="px-4 py-2 bg-white text-primary rounded">Parcourir le catalogue</a>
+      <a routerLink="/subscription" class="px-4 py-2 border border-white rounded">Voir les abonnements</a>
     </div>
   </div>
 </section>
-<footer class="border-t py-8 text-center text-xs text-gray-500">{{ 'app.footer' | translate }}</footer>
+<footer class="border-t py-8 text-center text-xs text-gray-500">© Archify — Tous droits réservés</footer>
