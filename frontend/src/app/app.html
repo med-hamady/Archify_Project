@@ -2,32 +2,13 @@
   <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
     <a routerLink="/" class="flex items-center gap-2 text-blue-900 font-semibold">
       <span class="inline-flex w-6 h-6 rounded bg-blue-900"></span>
-      <span class="text-lg">Archify</span>
+      <span>Archify</span>
     </a>
-    
-    <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-4 text-sm">
-      <a routerLink="/catalog" class="hover:underline px-2 py-1 rounded hover:bg-gray-100 transition-colors">Catalogue</a>
-      <a routerLink="/dashboard" class="hover:underline px-2 py-1 rounded hover:bg-gray-100 transition-colors">Tableau de bord</a>
-      <a routerLink="/subscription" class="hover:underline px-2 py-1 rounded hover:bg-gray-100 transition-colors">Abonnement</a>
-      <a routerLink="/auth" class="px-3 py-1 rounded bg-blue-900 text-white hover:opacity-90 transition-colors">Se connecter</a>
-    </nav>
-
-    <!-- Mobile Menu Button -->
-    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" (click)="toggleMobileMenu()">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
-  </div>
-
-  <!-- Mobile Navigation -->
-  <div class="md:hidden border-t bg-white" [class.hidden]="!mobileMenuOpen()">
-    <nav class="px-4 py-3 space-y-2">
-      <a routerLink="/catalog" class="block px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" (click)="closeMobileMenu()">Catalogue</a>
-      <a routerLink="/dashboard" class="block px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" (click)="closeMobileMenu()">Tableau de bord</a>
-      <a routerLink="/subscription" class="block px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" (click)="closeMobileMenu()">Abonnement</a>
-      <a routerLink="/auth" class="block px-3 py-2 rounded-lg bg-blue-900 text-white text-center hover:opacity-90 transition-colors" (click)="closeMobileMenu()">Se connecter</a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a routerLink="/catalog" class="hover:underline">Catalogue</a>
+      <a routerLink="/dashboard" class="hover:underline">Tableau de bord</a>
+      <a routerLink="/subscription" class="hover:underline">Abonnement</a>
+      <a routerLink="/auth" class="px-3 py-1 rounded bg-blue-900 text-white hover:opacity-90">Se connecter</a>
     </nav>
   </div>
 </header>
