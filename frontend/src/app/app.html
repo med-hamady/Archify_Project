@@ -1,15 +1,30 @@
-<header class="w-full border-b bg-white/80 backdrop-blur">
+<header class="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-    <a routerLink="/" class="text-blue-900 font-semibold">Archify</a>
+    <a routerLink="/" class="flex items-center gap-2 text-blue-900 font-semibold">
+      <span class="inline-flex w-6 h-6 rounded bg-blue-900"></span>
+      <span>Archify</span>
+    </a>
     <nav class="flex items-center gap-4 text-sm">
       <a routerLink="/catalog" class="hover:underline">Catalogue</a>
       <a routerLink="/dashboard" class="hover:underline">Tableau de bord</a>
       <a routerLink="/subscription" class="hover:underline">Abonnement</a>
-      <a routerLink="/auth" class="px-3 py-1 rounded bg-blue-900 text-white">Se connecter</a>
+      <a routerLink="/auth" class="px-3 py-1 rounded bg-blue-900 text-white hover:opacity-90">Se connecter</a>
     </nav>
   </div>
 </header>
 <main>
   <router-outlet />
 </main>
-<footer class="border-t mt-10 py-6 text-center text-xs text-gray-500">© Archify</footer>
+<section class="bg-blue-900 text-white mt-16">
+  <div class="max-w-6xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div>
+      <h3 class="text-xl font-semibold">Prêt à commencer ?</h3>
+      <p class="text-white/80">Accédez aux cours et archives d’examens en quelques clics.</p>
+    </div>
+    <div class="flex gap-3">
+      <a routerLink="/catalog" class="px-4 py-2 bg-white text-blue-900 rounded">Parcourir le catalogue</a>
+      <a routerLink="/subscription" class="px-4 py-2 border border-white rounded">Voir les abonnements</a>
+    </div>
+  </div>
+</section>
+<footer class="border-t py-6 text-center text-xs text-gray-500">© Archify</footer>
