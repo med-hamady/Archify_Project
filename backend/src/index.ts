@@ -12,6 +12,8 @@ import { coursesRouter } from './modules/courses';
 import { lessonsRouter } from './modules/lessons';
 import { subscriptionsRouter } from './modules/subscriptions';
 import { departmentsRouter } from './modules/departments';
+import { usersRouter } from './modules/users';
+import { adminRouter } from './modules/admin';
 
 dotenv.config();
 
@@ -55,6 +57,8 @@ app.use('/api/courses', coursesRouter);
 app.use('/api/lessons', lessonsRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/departments', departmentsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/admin', adminRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

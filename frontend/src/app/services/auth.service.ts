@@ -7,22 +7,21 @@ import { map, catchError, tap } from 'rxjs/operators';
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  role: 'student' | 'admin' | 'professor';
-  subscription: {
+  name: string;
+  role: 'student' | 'admin' | 'superadmin';
+  subscription?: {
     type: 'free' | 'premium' | 'enterprise';
     expiresAt: Date | null;
     isActive: boolean;
   };
-  profile: {
+  profile?: {
     avatar?: string;
     university?: string;
     department?: string;
     year?: number;
   };
   createdAt: Date;
-  lastLoginAt: Date;
+  lastLoginAt?: Date;
 }
 
 export interface LoginRequest {
@@ -222,13 +221,17 @@ export class AuthService {
   getDisplayName(): string {
     const user = this.user();
     if (!user) return '';
-    return `${user.firstName} ${user.lastName}`;
+    return user.name;
   }
 
   // Get user's initials for avatar
   getInitials(): string {
     const user = this.user();
     if (!user) return '';
-    return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    const nameParts = user.name.split(' ');
+    if (nameParts.length >= 2) {
+      return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+    }
+    return user.name.charAt(0).toUpperCase();
   }
 }

@@ -198,7 +198,14 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
                 [class.border-red-500]="authForm.get('terms')?.invalid && authForm.get('terms')?.touched"
               />
               <label for="terms" class="ml-2 block text-sm text-gray-700">
-                J'accepte les <a href="#" class="text-blue-600 hover:text-blue-800">conditions d'utilisation</a>
+                J'accepte les 
+                <a routerLink="/terms" target="_blank" class="text-blue-600 hover:text-blue-800 underline">
+                  conditions d'utilisation
+                </a>
+                et la 
+                <a href="#" class="text-blue-600 hover:text-blue-800 underline">
+                  politique de confidentialité
+                </a>
               </label>
             </div>
             <div *ngIf="authForm.get('terms')?.invalid && authForm.get('terms')?.touched" 

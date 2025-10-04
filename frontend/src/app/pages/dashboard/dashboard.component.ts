@@ -306,62 +306,15 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadDashboardData() {
-    // Mock data - in real app, this would come from API
-    this.courseProgress.set([
-      {
-        id: '1',
-        title: 'Introduction à l\'Algorithmique',
-        professor: 'Prof. Jean Dupont',
-        progress: 65,
-        totalLessons: 15,
-        completedLessons: 10,
-        lastAccessed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-        thumbnail: '',
-        type: 'video'
-      },
-      {
-        id: '2',
-        title: 'Analyse Mathématique',
-        professor: 'Prof. Marie Curie',
-        progress: 30,
-        totalLessons: 12,
-        completedLessons: 4,
-        lastAccessed: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        thumbnail: '',
-        type: 'video'
-      }
-    ]);
-
-    this.recentActivity.set([
-      {
-        id: '1',
-        type: 'lesson_completed',
-        title: 'Leçon 5: Structures de contrôle terminée',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        courseId: '1'
-      },
-      {
-        id: '2',
-        type: 'quiz_passed',
-        title: 'Quiz: Variables et types de données réussi',
-        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-        courseId: '1'
-      },
-      {
-        id: '3',
-        type: 'course_started',
-        title: 'Nouveau cours: Analyse Mathématique',
-        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        courseId: '2'
-      }
-    ]);
-
+    // For new users, show empty data
+    this.courseProgress.set([]);
+    this.recentActivity.set([]);
     this.studyStats.set({
-      totalHours: 24,
-      coursesCompleted: 2,
-      lessonsCompleted: 18,
-      currentStreak: 5,
-      longestStreak: 12
+      totalHours: 0,
+      coursesCompleted: 0,
+      lessonsCompleted: 0,
+      currentStreak: 0,
+      longestStreak: 0
     });
   }
 

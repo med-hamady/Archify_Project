@@ -26,6 +26,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
   {
+    path: 'terms',
+    loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent)
+  },
+  {
+    path: 'admin-init',
+    loadComponent: () => import('./pages/admin-init/admin-init.component').then(m => m.AdminInitComponent)
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]

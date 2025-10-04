@@ -1,39 +1,68 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
-interface AdminStat {
-  title: string;
-  value: string | number;
-  change: string;
-  changeType: 'positive' | 'negative' | 'neutral';
-  icon: string;
-}
-
-interface RecentUser {
+interface Department {
   id: string;
   name: string;
-  email: string;
-  role: string;
-  lastActive: Date;
-  status: 'active' | 'inactive' | 'banned';
+  courseCount: number;
+  userCount: number;
 }
 
-interface RecentCourse {
+interface Course {
   id: string;
   title: string;
+  description: string;
   professor: string;
-  students: number;
-  rating: number;
-  status: 'published' | 'draft' | 'archived';
-  createdAt: Date;
+  department: string;
+  departmentId: string;
+  semester: string;
+  tags: string[];
+  isPremium: boolean;
+  views: number;
+  lessonCount: number;
+  createdAt: string;
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  type: 'video' | 'pdf' | 'exam';
+  durationSec: number;
+  vimeoId?: string;
+  youtubeId?: string;
+  pdfUrl?: string;
+  isPremium: boolean;
+  orderIndex: number;
+  createdAt: string;
+  courseId: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'student' | 'admin' | 'superadmin';
+  department?: string;
+  semester?: number;
+  createdAt: string;
+  lastLoginAt?: string;
+}
+
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  interval: string;
+  priceCents: number;
+  currency: string;
 }
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -41,171 +70,274 @@ interface RecentCourse {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div class="flex items-center justify-between">
             <div>
-              <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Administration</h1>
-              <p class="text-gray-600 mt-1">Gérez votre plateforme d'apprentissage</p>
+              <h1 class="text-2xl font-bold text-gray-900">Administration</h1>
+              <p class="text-sm text-gray-600">Gérez votre plateforme éducative</p>
             </div>
             <div class="flex items-center gap-4">
-              <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium">
-                {{ authService.getInitials() }}
-              </div>
+              <span class="text-sm text-gray-500">Connecté en tant que {{ getDisplayName() }}</span>
+              <button (click)="logout()" 
+                      class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                Déconnexion
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div *ngFor="let stat of adminStats()" class="card p-6">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-                     [class]="getStatIconClass(stat.changeType)">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="stat.icon"/>
-                  </svg>
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+          <nav class="flex space-x-8">
+            <button *ngFor="let tab of tabs" 
+                    (click)="activeTab.set(tab.id)"
+                    [class]="activeTab() === tab.id ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+              {{ tab.name }}
+            </button>
+          </nav>
                 </div>
+
+        <!-- Departments Management -->
+        <div *ngIf="activeTab() === 'departments'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Départements</h2>
+            <button (click)="showAddDepartmentModal.set(true)" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Ajouter un département
+            </button>
               </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">{{ stat.title }}</p>
-                <p class="text-2xl font-semibold text-gray-900">{{ stat.value }}</p>
-                <p class="text-sm" [class]="getStatChangeClass(stat.changeType)">
-                  {{ stat.change }}
-                </p>
+
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cours</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateurs</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let dept of departments()">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ dept.name }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ dept.courseCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ dept.userCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button (click)="editDepartment(dept)" 
+                            class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
+                    <button (click)="deleteDepartment(dept.id)" 
+                            class="text-red-600 hover:text-red-900">Supprimer</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
               </div>
             </div>
+
+        <!-- Courses Management -->
+        <div *ngIf="activeTab() === 'courses'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Cours</h2>
+            <button (click)="showAddCourseModal.set(true)" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Ajouter un cours
+            </button>
+          </div>
+
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Professeur</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Département</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let course of courses()">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ course.title }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ course.professor }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ course.department }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="course.isPremium ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'" 
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                      {{ course.isPremium ? 'Premium' : 'Gratuit' }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button (click)="editCourse(course)" 
+                            class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
+                    <button (click)="deleteCourse(course.id)" 
+                            class="text-red-600 hover:text-red-900">Supprimer</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Recent Users -->
-          <div class="card">
-            <div class="p-6 border-b border-gray-200">
-              <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Utilisateurs récents</h2>
-                <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Voir tout</a>
+        <!-- Lessons Management -->
+        <div *ngIf="activeTab() === 'lessons'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Leçons</h2>
+            <button (click)="showAddLessonModal.set(true)" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Ajouter une leçon
+            </button>
+          </div>
+
+          <!-- Course Filter -->
+          <div class="flex gap-4 items-center">
+            <select [(ngModel)]="selectedCourseId" (change)="loadLessons()" 
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Tous les cours</option>
+              <option *ngFor="let course of courses()" [value]="course.id">{{ course.title }}</option>
+            </select>
+          </div>
+
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cours</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let lesson of lessons()">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ lesson.title }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <span [class]="getLessonTypeClass(lesson.type)" 
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                      {{ getLessonTypeLabel(lesson.type) }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDuration(lesson.durationSec) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getCourseTitle(lesson.courseId) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button (click)="editLesson(lesson)" 
+                            class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
+                    <button (click)="deleteLesson(lesson.id)" 
+                            class="text-red-600 hover:text-red-900">Supprimer</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
               </div>
             </div>
-            <div class="p-6">
-              <div *ngIf="recentUsers().length === 0" class="text-center py-8">
-                <p class="text-gray-500">Aucun utilisateur récent</p>
+
+        <!-- Users Management -->
+        <div *ngIf="activeTab() === 'users'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Utilisateurs</h2>
               </div>
-              <div *ngFor="let user of recentUsers()" class="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span class="text-sm font-medium text-gray-600">
-                      {{ getUserInitials(user.name) }}
+
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Département</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let user of users()">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.name }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="getRoleClass(user.role)" 
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                      {{ getRoleLabel(user.role) }}
                     </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.department || '-' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button (click)="editUser(user)" 
+                            class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
+                    <button (click)="deleteUser(user.id)" 
+                            class="text-red-600 hover:text-red-900">Supprimer</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-900">{{ user.name }}</p>
-                    <p class="text-sm text-gray-500">{{ user.email }}</p>
+
+        <!-- Statistics -->
+        <div *ngIf="activeTab() === 'stats'" class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900">Statistiques de la Plateforme</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
                   </div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                        [class]="getUserStatusClass(user.status)">
-                    {{ user.status }}
-                  </span>
-                  <span class="text-xs text-gray-500">{{ formatDate(user.lastActive) }}</span>
-                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Cours</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalCourses }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Recent Courses -->
-          <div class="card">
-            <div class="p-6 border-b border-gray-200">
-              <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Cours récents</h2>
-                <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Voir tout</a>
-              </div>
-            </div>
-            <div class="p-6">
-              <div *ngIf="recentCourses().length === 0" class="text-center py-8">
-                <p class="text-gray-500">Aucun cours récent</p>
-              </div>
-              <div *ngFor="let course of recentCourses()" class="py-3 border-b border-gray-100 last:border-b-0">
-                <div class="flex items-start justify-between">
-                  <div class="flex-1 min-w-0">
-                    <h3 class="text-sm font-medium text-gray-900 truncate">{{ course.title }}</h3>
-                    <p class="text-sm text-gray-500">{{ course.professor }}</p>
-                    <div class="flex items-center gap-4 mt-1">
-                      <span class="text-xs text-gray-500">{{ course.students }} étudiants</span>
+            <div class="bg-white p-6 rounded-lg shadow">
                       <div class="flex items-center">
-                        <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
                         </svg>
-                        <span class="text-xs text-gray-500 ml-1">{{ course.rating }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2 ml-4">
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                          [class]="getCourseStatusClass(course.status)">
-                      {{ course.status }}
-                    </span>
-                    <span class="text-xs text-gray-500">{{ formatDate(course.createdAt) }}</span>
                   </div>
                 </div>
-              </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Utilisateurs</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalUsers }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="mt-8">
-          <div class="card p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-6">Actions rapides</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                   </svg>
                 </div>
-                <div>
-                  <p class="font-medium text-gray-900">Nouveau cours</p>
-                  <p class="text-sm text-gray-600">Créer un cours</p>
                 </div>
-              </button>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Leçons</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalLessons }}</p>
+                </div>
+              </div>
+                </div>
 
-              <button class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
                   </svg>
                 </div>
-                <div>
-                  <p class="font-medium text-gray-900">Gérer utilisateurs</p>
-                  <p class="text-sm text-gray-600">Voir tous les utilisateurs</p>
                 </div>
-              </button>
-
-              <button class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                  </svg>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Abonnements Actifs</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().activeSubscriptions }}</p>
                 </div>
-                <div>
-                  <p class="font-medium text-gray-900">Analytics</p>
-                  <p class="text-sm text-gray-600">Voir les statistiques</p>
                 </div>
-              </button>
-
-              <button class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="font-medium text-gray-900">Paramètres</p>
-                  <p class="text-sm text-gray-600">Configuration système</p>
-                </div>
-              </button>
             </div>
           </div>
         </div>
@@ -213,156 +345,214 @@ interface RecentCourse {
     </div>
   `
 })
-export class AdminComponent {
-  adminStats = signal<AdminStat[]>([
-    {
-      title: 'Utilisateurs actifs',
-      value: '1,234',
-      change: '+12% ce mois',
-      changeType: 'positive',
-      icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z'
-    },
-    {
-      title: 'Cours publiés',
-      value: '89',
-      change: '+5 cette semaine',
-      changeType: 'positive',
-      icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-    },
-    {
-      title: 'Revenus mensuels',
-      value: '€12,450',
-      change: '+8% ce mois',
-      changeType: 'positive',
-      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
-    },
-    {
-      title: 'Taux de complétion',
-      value: '78%',
-      change: '+3% ce mois',
-      changeType: 'positive',
-      icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-    }
-  ]);
+export class AdminComponent implements OnInit {
+  private readonly API_URL = 'http://localhost:3000/api';
 
-  recentUsers = signal<RecentUser[]>([
-    {
-      id: '1',
-      name: 'Ahmed Benali',
-      email: 'ahmed.benali@email.com',
-      role: 'Étudiant',
-      lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      status: 'active'
-    },
-    {
-      id: '2',
-      name: 'Fatima Zahra',
-      email: 'fatima.zahra@email.com',
-      role: 'Professeur',
-      lastActive: new Date(Date.now() - 4 * 60 * 60 * 1000),
-      status: 'active'
-    },
-    {
-      id: '3',
-      name: 'Omar Alami',
-      email: 'omar.alami@email.com',
-      role: 'Étudiant',
-      lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      status: 'inactive'
-    }
-  ]);
+  // Signals
+  activeTab = signal('departments');
+  departments = signal<Department[]>([]);
+  courses = signal<Course[]>([]);
+  lessons = signal<Lesson[]>([]);
+  users = signal<User[]>([]);
+  stats = signal({
+    totalCourses: 0,
+    totalUsers: 0,
+    totalLessons: 0,
+    activeSubscriptions: 0
+  });
 
-  recentCourses = signal<RecentCourse[]>([
-    {
-      id: '1',
-      title: 'Introduction à l\'Algorithmique',
-      professor: 'Prof. Jean Dupont',
-      students: 156,
-      rating: 4.8,
-      status: 'published',
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-    },
-    {
-      id: '2',
-      title: 'Analyse Mathématique Avancée',
-      professor: 'Prof. Marie Curie',
-      students: 89,
-      rating: 4.6,
-      status: 'draft',
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-    },
-    {
-      id: '3',
-      title: 'Logique et Théorie des Ensembles',
-      professor: 'Prof. Pierre Fermat',
-      students: 203,
-      rating: 4.9,
-      status: 'published',
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    }
-  ]);
+  // Modal states
+  showAddDepartmentModal = signal(false);
+  showAddCourseModal = signal(false);
+  showAddLessonModal = signal(false);
 
-  constructor(public authService: AuthService) {}
+  // Form data
+  selectedCourseId = '';
 
-  getStatIconClass(changeType: string): string {
-    switch (changeType) {
-      case 'positive':
-        return 'bg-green-100 text-green-600';
-      case 'negative':
-        return 'bg-red-100 text-red-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
+  tabs = [
+    { id: 'departments', name: 'Départements' },
+    { id: 'courses', name: 'Cours' },
+    { id: 'lessons', name: 'Leçons' },
+    { id: 'users', name: 'Utilisateurs' },
+    { id: 'stats', name: 'Statistiques' }
+  ];
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.loadDepartments();
+    this.loadCourses();
+    this.loadUsers();
+    this.loadStats();
   }
 
-  getStatChangeClass(changeType: string): string {
-    switch (changeType) {
-      case 'positive':
-        return 'text-green-600';
-      case 'negative':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
+  // Load data methods
+  loadDepartments() {
+    this.http.get<Department[]>(`${this.API_URL}/departments`).subscribe({
+      next: (data) => this.departments.set(data),
+      error: (error) => console.error('Error loading departments:', error)
+    });
   }
 
-  getUserStatusClass(status: string): string {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'inactive':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'banned':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  loadCourses() {
+    this.http.get<{courses: Course[]}>(`${this.API_URL}/courses`).subscribe({
+      next: (data) => this.courses.set(data.courses),
+      error: (error) => console.error('Error loading courses:', error)
+    });
   }
 
-  getCourseStatusClass(status: string): string {
-    switch (status) {
-      case 'published':
-        return 'bg-green-100 text-green-800';
-      case 'draft':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'archived':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  getUserInitials(name: string): string {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
-  }
-
-  formatDate(date: Date): string {
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+  loadLessons() {
+    const url = this.selectedCourseId 
+      ? `${this.API_URL}/lessons/course/${this.selectedCourseId}`
+      : `${this.API_URL}/lessons`;
     
-    if (diffInHours < 1) return 'Il y a quelques minutes';
-    if (diffInHours < 24) return `Il y a ${diffInHours}h`;
-    if (diffInHours < 48) return 'Hier';
-    return date.toLocaleDateString('fr-FR');
+    this.http.get<Lesson[]>(url).subscribe({
+      next: (data) => this.lessons.set(data),
+      error: (error) => console.error('Error loading lessons:', error)
+    });
+  }
+
+  loadUsers() {
+    this.http.get<User[]>(`${this.API_URL}/users`).subscribe({
+      next: (data) => this.users.set(data),
+      error: (error) => console.error('Error loading users:', error)
+    });
+  }
+
+  loadStats() {
+    // This would typically come from a dedicated stats endpoint
+    this.stats.set({
+      totalCourses: this.courses().length,
+      totalUsers: this.users().length,
+      totalLessons: this.lessons().length,
+      activeSubscriptions: 0 // Would need to implement
+    });
+  }
+
+  // CRUD operations
+  editDepartment(dept: Department) {
+    // Implement edit department
+    console.log('Edit department:', dept);
+  }
+
+  deleteDepartment(id: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce département ?')) {
+      this.http.delete(`${this.API_URL}/departments/${id}`).subscribe({
+        next: () => this.loadDepartments(),
+        error: (error) => console.error('Error deleting department:', error)
+      });
+    }
+  }
+
+  editCourse(course: Course) {
+    // Implement edit course
+    console.log('Edit course:', course);
+  }
+
+  deleteCourse(id: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')) {
+      this.http.delete(`${this.API_URL}/courses/${id}`).subscribe({
+        next: () => this.loadCourses(),
+        error: (error) => console.error('Error deleting course:', error)
+      });
+    }
+  }
+
+  editLesson(lesson: Lesson) {
+    // Implement edit lesson
+    console.log('Edit lesson:', lesson);
+  }
+
+  deleteLesson(id: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon ?')) {
+      this.http.delete(`${this.API_URL}/lessons/${id}`).subscribe({
+        next: () => this.loadLessons(),
+        error: (error) => console.error('Error deleting lesson:', error)
+      });
+    }
+  }
+
+  editUser(user: User) {
+    // Implement edit user
+    console.log('Edit user:', user);
+  }
+
+  deleteUser(id: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+      this.http.delete(`${this.API_URL}/users/${id}`).subscribe({
+        next: () => this.loadUsers(),
+        error: (error) => console.error('Error deleting user:', error)
+      });
+    }
+  }
+
+  // Helper methods
+  getLessonTypeClass(type: string): string {
+    const classes = {
+      'video': 'bg-blue-100 text-blue-800',
+      'pdf': 'bg-red-100 text-red-800',
+      'exam': 'bg-green-100 text-green-800'
+    };
+    return classes[type as keyof typeof classes] || 'bg-gray-100 text-gray-800';
+  }
+
+  getLessonTypeLabel(type: string): string {
+    const labels = {
+      'video': 'Vidéo',
+      'pdf': 'PDF',
+      'exam': 'Examen'
+    };
+    return labels[type as keyof typeof labels] || type;
+  }
+
+  getRoleClass(role: string): string {
+    const classes = {
+      'student': 'bg-blue-100 text-blue-800',
+      'admin': 'bg-red-100 text-red-800',
+      'superadmin': 'bg-purple-100 text-purple-800'
+    };
+    return classes[role as keyof typeof classes] || 'bg-gray-100 text-gray-800';
+  }
+
+  getRoleLabel(role: string): string {
+    const labels = {
+      'student': 'Étudiant',
+      'admin': 'Administrateur',
+      'superadmin': 'Super Admin'
+    };
+    return labels[role as keyof typeof labels] || role;
+  }
+
+  getCourseTitle(courseId: string): string {
+    const course = this.courses().find(c => c.id === courseId);
+    return course ? course.title : 'Cours inconnu';
+  }
+
+  formatDuration(seconds: number): string {
+    if (seconds === 0) return '0 min';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}min`;
+    } else if (minutes > 0) {
+      return remainingSeconds > 0 ? `${minutes}min ${remainingSeconds}s` : `${minutes}min`;
+    } else {
+      return `${remainingSeconds}s`;
+    }
+  }
+
+  getDisplayName(): string {
+    const user = this.authService.user();
+    return user ? user.name : 'Utilisateur';
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

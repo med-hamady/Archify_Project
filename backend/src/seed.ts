@@ -42,7 +42,7 @@ async function main() {
         name: 'Gratuit',
         interval: 'monthly',
         priceCents: 0,
-        currency: 'MAD'
+        currency: 'MRU'
       }
     }),
     prisma.subscriptionPlan.upsert({
@@ -52,8 +52,8 @@ async function main() {
         id: 'premium-monthly',
         name: 'Premium Mensuel',
         interval: 'monthly',
-        priceCents: 2999, // 29.99 MAD
-        currency: 'MAD'
+        priceCents: 5000, // 50 MRU
+        currency: 'MRU'
       }
     }),
     prisma.subscriptionPlan.upsert({
@@ -63,8 +63,8 @@ async function main() {
         id: 'premium-yearly',
         name: 'Premium Annuel',
         interval: 'yearly',
-        priceCents: 29999, // 299.99 MAD
-        currency: 'MAD'
+        priceCents: 50000, // 500 MRU
+        currency: 'MRU'
       }
     })
   ]);
