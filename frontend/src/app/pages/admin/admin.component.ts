@@ -51,14 +51,6 @@ interface User {
   lastLoginAt?: string;
 }
 
-interface SubscriptionPlan {
-  id: string;
-  name: string;
-  interval: string;
-  priceCents: number;
-  currency: string;
-}
-
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -75,7 +67,7 @@ interface SubscriptionPlan {
             </div>
             <div class="flex items-center gap-4">
               <span class="text-sm text-gray-500">Connecté en tant que {{ getDisplayName() }}</span>
-              <button (click)="logout()" 
+              <button (click)="logout()"
                       class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                 Déconnexion
               </button>
@@ -88,24 +80,24 @@ interface SubscriptionPlan {
         <!-- Navigation Tabs -->
         <div class="mb-8">
           <nav class="flex space-x-8">
-            <button *ngFor="let tab of tabs" 
+            <button *ngFor="let tab of tabs"
                     (click)="activeTab.set(tab.id)"
                     [class]="activeTab() === tab.id ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                     class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
               {{ tab.name }}
             </button>
           </nav>
-                </div>
+        </div>
 
         <!-- Departments Management -->
         <div *ngIf="activeTab() === 'departments'" class="space-y-6">
           <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-900">Gestion des Départements</h2>
-            <button (click)="showAddDepartmentModal.set(true)" 
+            <button (click)="showAddDepartmentModal.set(true)"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               Ajouter un département
             </button>
-              </div>
+          </div>
 
           <div class="bg-white rounded-lg shadow overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200">
@@ -123,22 +115,22 @@ interface SubscriptionPlan {
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ dept.courseCount }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ dept.userCount }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button (click)="editDepartment(dept)" 
+                    <button (click)="editDepartment(dept)"
                             class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
-                    <button (click)="deleteDepartment(dept.id)" 
+                    <button (click)="deleteDepartment(dept.id)"
                             class="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
               </tbody>
             </table>
-              </div>
-            </div>
+          </div>
+        </div>
 
         <!-- Courses Management -->
         <div *ngIf="activeTab() === 'courses'" class="space-y-6">
           <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-900">Gestion des Cours</h2>
-            <button (click)="showAddCourseModal.set(true)" 
+            <button (click)="showAddCourseModal.set(true)"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               Ajouter un cours
             </button>
@@ -161,15 +153,15 @@ interface SubscriptionPlan {
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ course.professor }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ course.department }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span [class]="course.isPremium ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'" 
+                    <span [class]="course.isPremium ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'"
                           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
                       {{ course.isPremium ? 'Premium' : 'Gratuit' }}
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button (click)="editCourse(course)" 
+                    <button (click)="editCourse(course)"
                             class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
-                    <button (click)="deleteCourse(course.id)" 
+                    <button (click)="deleteCourse(course.id)"
                             class="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
@@ -182,7 +174,7 @@ interface SubscriptionPlan {
         <div *ngIf="activeTab() === 'lessons'" class="space-y-6">
           <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-900">Gestion des Leçons</h2>
-            <button (click)="showAddLessonModal.set(true)" 
+            <button (click)="showAddLessonModal.set(true)"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               Ajouter une leçon
             </button>
@@ -190,7 +182,7 @@ interface SubscriptionPlan {
 
           <!-- Course Filter -->
           <div class="flex gap-4 items-center">
-            <select [(ngModel)]="selectedCourseId" (change)="loadLessons()" 
+            <select [(ngModel)]="selectedCourseId" (change)="loadLessons()"
                     class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">Tous les cours</option>
               <option *ngFor="let course of courses()" [value]="course.id">{{ course.title }}</option>
@@ -212,7 +204,7 @@ interface SubscriptionPlan {
                 <tr *ngFor="let lesson of lessons()">
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ lesson.title }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span [class]="getLessonTypeClass(lesson.type)" 
+                    <span [class]="getLessonTypeClass(lesson.type)"
                           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
                       {{ getLessonTypeLabel(lesson.type) }}
                     </span>
@@ -220,22 +212,22 @@ interface SubscriptionPlan {
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDuration(lesson.durationSec) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getCourseTitle(lesson.courseId) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button (click)="editLesson(lesson)" 
+                    <button (click)="editLesson(lesson)"
                             class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
-                    <button (click)="deleteLesson(lesson.id)" 
+                    <button (click)="deleteLesson(lesson.id)"
                             class="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
               </tbody>
             </table>
-              </div>
-            </div>
+          </div>
+        </div>
 
         <!-- Users Management -->
         <div *ngIf="activeTab() === 'users'" class="space-y-6">
           <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-900">Gestion des Utilisateurs</h2>
-              </div>
+          </div>
 
           <div class="bg-white rounded-lg shadow overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200">
@@ -253,28 +245,28 @@ interface SubscriptionPlan {
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.name }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span [class]="getRoleClass(user.role)" 
+                    <span [class]="getRoleClass(user.role)"
                           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
                       {{ getRoleLabel(user.role) }}
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.department || '-' }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button (click)="editUser(user)" 
+                    <button (click)="editUser(user)"
                             class="text-blue-600 hover:text-blue-900 mr-3">Modifier</button>
-                    <button (click)="deleteUser(user.id)" 
+                    <button (click)="deleteUser(user.id)"
                             class="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-                  </div>
+        </div>
 
         <!-- Statistics -->
         <div *ngIf="activeTab() === 'stats'" class="space-y-6">
           <h2 class="text-xl font-semibold text-gray-900">Statistiques de la Plateforme</h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-lg shadow">
               <div class="flex items-center">
@@ -288,25 +280,25 @@ interface SubscriptionPlan {
                 <div class="ml-4">
                   <p class="text-sm font-medium text-gray-600">Total Cours</p>
                   <p class="text-2xl font-semibold text-gray-900">{{ stats().totalCourses }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
             <div class="bg-white p-6 rounded-lg shadow">
-                      <div class="flex items-center">
+              <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                        </svg>
+                    </svg>
                   </div>
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium text-gray-600">Total Utilisateurs</p>
                   <p class="text-2xl font-semibold text-gray-900">{{ stats().totalUsers }}</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
             <div class="bg-white p-6 rounded-lg shadow">
               <div class="flex items-center">
@@ -314,15 +306,15 @@ interface SubscriptionPlan {
                   <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                  </svg>
-                </div>
+                    </svg>
+                  </div>
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium text-gray-600">Total Leçons</p>
                   <p class="text-2xl font-semibold text-gray-900">{{ stats().totalLessons }}</p>
                 </div>
               </div>
-                </div>
+            </div>
 
             <div class="bg-white p-6 rounded-lg shadow">
               <div class="flex items-center">
@@ -330,14 +322,14 @@ interface SubscriptionPlan {
                   <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                  </svg>
-                </div>
+                    </svg>
+                  </div>
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium text-gray-600">Abonnements Actifs</p>
                   <p class="text-2xl font-semibold text-gray-900">{{ stats().activeSubscriptions }}</p>
                 </div>
-                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -368,6 +360,26 @@ export class AdminComponent implements OnInit {
 
   // Form data
   selectedCourseId = '';
+  newDepartmentName = '';
+  newCourse = {
+    title: '',
+    description: '',
+    professor: '',
+    semester: '',
+    isPremium: false,
+    departmentId: '',
+    tags: ''
+  };
+  newLesson = {
+    title: '',
+    type: 'video' as 'video' | 'pdf' | 'exam',
+    durationSec: 0,
+    vimeoId: '',
+    pdfUrl: '',
+    isPremium: false,
+    orderIndex: 0,
+    courseId: ''
+  };
 
   tabs = [
     { id: 'departments', name: 'Départements' },
@@ -405,10 +417,10 @@ export class AdminComponent implements OnInit {
   }
 
   loadLessons() {
-    const url = this.selectedCourseId 
+    const url = this.selectedCourseId
       ? `${this.API_URL}/lessons/course/${this.selectedCourseId}`
       : `${this.API_URL}/lessons`;
-    
+
     this.http.get<Lesson[]>(url).subscribe({
       next: (data) => this.lessons.set(data),
       error: (error) => console.error('Error loading lessons:', error)
@@ -433,6 +445,21 @@ export class AdminComponent implements OnInit {
   }
 
   // CRUD operations
+  addDepartment() {
+    if (!this.newDepartmentName.trim()) return;
+
+    this.http.post<Department>(`${this.API_URL}/departments`, {
+      name: this.newDepartmentName
+    }).subscribe({
+      next: () => {
+        this.loadDepartments();
+        this.showAddDepartmentModal.set(false);
+        this.newDepartmentName = '';
+      },
+      error: (error) => console.error('Error adding department:', error)
+    });
+  }
+
   editDepartment(dept: Department) {
     // Implement edit department
     console.log('Edit department:', dept);
@@ -447,6 +474,23 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  addCourse() {
+    if (!this.newCourse.title || !this.newCourse.professor || !this.newCourse.departmentId) return;
+
+    this.http.post<Course>(`${this.API_URL}/courses`, {
+      ...this.newCourse,
+      isPremium: this.newCourse.isPremium,
+      tags: this.newCourse.tags ? this.newCourse.tags.split(',').map(tag => tag.trim()) : []
+    }).subscribe({
+      next: () => {
+        this.loadCourses();
+        this.showAddCourseModal.set(false);
+        this.resetCourseForm();
+      },
+      error: (error) => console.error('Error adding course:', error)
+    });
+  }
+
   editCourse(course: Course) {
     // Implement edit course
     console.log('Edit course:', course);
@@ -459,6 +503,34 @@ export class AdminComponent implements OnInit {
         error: (error) => console.error('Error deleting course:', error)
       });
     }
+  }
+
+  addLesson() {
+    if (!this.newLesson.title || !this.newLesson.courseId) return;
+
+    const lessonData: any = {
+      title: this.newLesson.title,
+      type: this.newLesson.type,
+      durationSec: this.newLesson.durationSec,
+      isPremium: this.newLesson.isPremium,
+      orderIndex: this.newLesson.orderIndex,
+      courseId: this.newLesson.courseId
+    };
+
+    if (this.newLesson.type === 'video' && this.newLesson.vimeoId) {
+      lessonData.vimeoId = this.newLesson.vimeoId;
+    } else if (this.newLesson.type === 'pdf' && this.newLesson.pdfUrl) {
+      lessonData.pdfUrl = this.newLesson.pdfUrl;
+    }
+
+    this.http.post<Lesson>(`${this.API_URL}/lessons`, lessonData).subscribe({
+      next: () => {
+        this.loadLessons();
+        this.showAddLessonModal.set(false);
+        this.resetLessonForm();
+      },
+      error: (error) => console.error('Error adding lesson:', error)
+    });
   }
 
   editLesson(lesson: Lesson) {
@@ -487,6 +559,31 @@ export class AdminComponent implements OnInit {
         error: (error) => console.error('Error deleting user:', error)
       });
     }
+  }
+
+  private resetCourseForm() {
+    this.newCourse = {
+      title: '',
+      description: '',
+      professor: '',
+      semester: '',
+      isPremium: false,
+      departmentId: '',
+      tags: ''
+    };
+  }
+
+  private resetLessonForm() {
+    this.newLesson = {
+      title: '',
+      type: 'video',
+      durationSec: 0,
+      vimeoId: '',
+      pdfUrl: '',
+      isPremium: false,
+      orderIndex: 0,
+      courseId: ''
+    };
   }
 
   // Helper methods
@@ -533,11 +630,11 @@ export class AdminComponent implements OnInit {
 
   formatDuration(seconds: number): string {
     if (seconds === 0) return '0 min';
-    
+
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}min`;
     } else if (minutes > 0) {

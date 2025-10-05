@@ -56,11 +56,12 @@ model User {
   avatarUrl     String?
 
   // Relations
-  department    Department? @relation(fields: [departmentId], references: [id])
-  subscriptions Subscription[]
-  payments      Payment[]
-  progress      Progress[]
-  comments      Comment[]
+  department          Department?          @relation(fields: [departmentId], references: [id])
+  subscriptions       Subscription[]
+  payments            Payment[]
+  progress            Progress[]
+  comments            Comment[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Department {
@@ -173,6 +174,30 @@ model Progress {
   lessonId  String
   status    ProgressStatus @default(in_progress)
   updatedAt DateTime       @updatedAt
+}
+
+model Coupon {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  discountPercent Int
+  validFrom       DateTime @default(now())
+  validTo         DateTime
+  maxRedemptions  Int?
+  usedCount       Int      @default(0)
+  createdAt       DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
 }
 
 // Note: unique fields already imply indexes

@@ -10,6 +10,8 @@ const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const email_service_1 = require("../services/email.service");
+const crypto_1 = __importDefault(require("crypto"));
 const prisma = new client_1.PrismaClient();
 exports.authRouter = (0, express_1.Router)();
 // Helpers
@@ -216,14 +218,35 @@ exports.authRouter.put('/profile', requireAuth, async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// POST /forgot-password (stub)
+// POST /forgot-password
 const forgotSchema = zod_1.z.object({ email: zod_1.z.string().email() });
 exports.authRouter.post('/forgot-password', async (req, res) => {
     try {
         const body = forgotSchema.parse(req.body);
         const user = await prisma.user.findUnique({ where: { email: body.email } });
-        // In MVP, do not reveal existence
-        // TODO: integrate email service to send token
+        // Always respond with 204 to avoid revealing user existence
+        if (!user) {
+            return res.status(204).send();
+        }
+        // Generate secure reset token
+        const resetToken = crypto_1.default.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+        // Save token to database
+        await prisma.passwordResetToken.create({
+            data: {
+                userId: user.id,
+                token: resetToken,
+                expiresAt
+            }
+        });
+        // Send email
+        try {
+            await email_service_1.emailService.sendPasswordResetEmail(user.email, resetToken);
+        }
+        catch (emailError) {
+            console.error('Failed to send password reset email:', emailError);
+            // Don't reveal email failure to user
+        }
         return res.status(204).send();
     }
     catch (err) {
@@ -233,13 +256,42 @@ exports.authRouter.post('/forgot-password', async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// POST /reset-password (stub)
+// POST /reset-password
 const resetSchema = zod_1.z.object({ token: zod_1.z.string().min(10), newPassword: zod_1.z.string().min(8) });
 exports.authRouter.post('/reset-password', async (req, res) => {
     try {
-        const _body = resetSchema.parse(req.body);
-        // TODO: validate token stored server-side, update passwordHash
-        return res.status(204).send();
+        const body = resetSchema.parse(req.body);
+        // Find valid token
+        const tokenRecord = await prisma.passwordResetToken.findUnique({
+            where: { token: body.token },
+            include: { user: true }
+        });
+        if (!tokenRecord || tokenRecord.used || tokenRecord.expiresAt < new Date()) {
+            return res.status(400).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid or expired token' } });
+        }
+        // Hash new password
+        const passwordHash = await bcryptjs_1.default.hash(body.newPassword, 10);
+        // Update user password
+        await prisma.user.update({
+            where: { id: tokenRecord.userId },
+            data: { passwordHash }
+        });
+        // Mark token as used
+        await prisma.passwordResetToken.update({
+            where: { id: tokenRecord.id },
+            data: { used: true }
+        });
+        // Clean up old tokens for this user
+        await prisma.passwordResetToken.updateMany({
+            where: {
+                userId: tokenRecord.userId,
+                id: { not: tokenRecord.id },
+                used: false,
+                expiresAt: { lt: new Date() }
+            },
+            data: { used: true }
+        });
+        return res.json({ message: 'Password reset successfully' });
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {

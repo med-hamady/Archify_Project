@@ -1,348 +1,145 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminRouter = void 0;
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 const auth_1 = require("./auth");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const prisma = new client_1.PrismaClient();
 exports.adminRouter = (0, express_1.Router)();
-// Middleware to check admin role
-const requireAdmin = (req, res, next) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-    }
-    next();
-};
-// GET /api/admin/stats - Get platform statistics
-exports.adminRouter.get('/stats', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const [totalUsers, totalCourses, totalLessons, totalDepartments, activeUsers, premiumUsers] = await Promise.all([
-            prisma.user.count(),
-            prisma.course.count(),
-            prisma.lesson.count(),
-            prisma.department.count(),
-            prisma.user.count({
-                where: {
-                    lastLoginAt: {
-                        gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
-                    }
-                }
-            }),
-            prisma.user.count({
-                where: {
-                    subscriptions: {
-                        some: {
-                            status: 'active',
-                            endAt: { gt: new Date() }
-                        }
-                    }
-                }
-            })
-        ]);
-        res.json({
-            totalUsers,
-            totalCourses,
-            totalLessons,
-            totalDepartments,
-            activeUsers,
-            premiumUsers,
-            freeUsers: totalUsers - premiumUsers
-        });
-    }
-    catch (err) {
-        console.error('Error fetching admin stats:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
+// Schemas
+const createAdminSchema = zod_1.z.object({
+    email: zod_1.z.string().email(),
+    password: zod_1.z.string().min(8),
+    firstName: zod_1.z.string().min(1),
+    lastName: zod_1.z.string().min(1),
+    role: zod_1.z.enum(['admin', 'superadmin']).default('admin'),
 });
-// GET /api/admin/users - Get all users with pagination
-exports.adminRouter.get('/users', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        const [users, total] = await Promise.all([
-            prisma.user.findMany({
-                skip,
-                take: limit,
-                include: {
-                    department: { select: { name: true } }
-                },
-                orderBy: { createdAt: 'desc' }
-            }),
-            prisma.user.count()
-        ]);
-        res.json({
-            users: users.map(user => ({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                department: user.department?.name || 'Non assigné',
-                semester: user.semester,
-                lastLoginAt: user.lastLoginAt,
-                createdAt: user.createdAt
-            })),
-            pagination: {
-                page,
-                limit,
-                total,
-                pages: Math.ceil(total / limit)
-            }
-        });
-    }
-    catch (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
+const createUserSchema = zod_1.z.object({
+    email: zod_1.z.string().email(),
+    password: zod_1.z.string().min(8),
+    firstName: zod_1.z.string().min(1),
+    lastName: zod_1.z.string().min(1),
+    role: zod_1.z.enum(['student', 'admin', 'superadmin']).default('student'),
+    departmentId: zod_1.z.string().cuid().optional(),
+    semester: zod_1.z.number().int().min(1).max(10).optional(),
 });
-// PUT /api/admin/users/:id - Update user
-exports.adminRouter.put('/users/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = zod_1.z.object({
-            name: zod_1.z.string().min(1).optional(),
-            email: zod_1.z.string().email().optional(),
-            role: zod_1.z.enum(['student', 'admin', 'superadmin']).optional(),
-            departmentId: zod_1.z.string().optional(),
-            semester: zod_1.z.number().int().min(1).max(10).optional()
-        }).parse(req.body);
-        const user = await prisma.user.update({
-            where: { id },
-            data: updateData,
-            include: {
-                department: { select: { name: true } }
-            }
-        });
-        res.json({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            department: user.department?.name || 'Non assigné',
-            semester: user.semester,
-            lastLoginAt: user.lastLoginAt,
-            createdAt: user.createdAt
-        });
+// POST /api/admin/create-admin - Create admin account (Superadmin only)
+exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'superadmin') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only superadmin can create admin accounts' } });
     }
-    catch (err) {
-        if (err instanceof zod_1.z.ZodError) {
-            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+    try {
+        const body = createAdminSchema.parse(req.body);
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email: body.email }
+        });
+        if (existingUser) {
+            return res.status(409).json({ error: { code: 'CONFLICT', message: 'User with this email already exists' } });
         }
-        console.error('Error updating user:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// DELETE /api/admin/users/:id - Delete user
-exports.adminRouter.delete('/users/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        // Don't allow deleting superadmin users
-        const user = await prisma.user.findUnique({ where: { id } });
-        if (user?.role === 'superadmin') {
-            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Cannot delete superadmin user' } });
-        }
-        await prisma.user.delete({ where: { id } });
-        res.status(204).send();
-    }
-    catch (err) {
-        console.error('Error deleting user:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// GET /api/admin/lessons - Get all lessons with pagination
-exports.adminRouter.get('/lessons', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        const [lessons, total] = await Promise.all([
-            prisma.lesson.findMany({
-                skip,
-                take: limit,
-                include: {
-                    course: {
-                        select: {
-                            id: true,
-                            title: true
-                        }
-                    }
-                },
-                orderBy: { createdAt: 'desc' }
-            }),
-            prisma.lesson.count()
-        ]);
-        res.json({
-            lessons: lessons.map(lesson => ({
-                id: lesson.id,
-                title: lesson.title,
-                type: lesson.type,
-                durationSec: lesson.durationSec,
-                vimeoId: lesson.vimeoId,
-                youtubeId: lesson.youtubeId,
-                pdfUrl: lesson.pdfUrl,
-                isPremium: lesson.isPremium,
-                orderIndex: lesson.orderIndex,
-                courseId: lesson.courseId,
-                courseTitle: lesson.course.title,
-                createdAt: lesson.createdAt
-            })),
-            pagination: {
-                page,
-                limit,
-                total,
-                pages: Math.ceil(total / limit)
-            }
-        });
-    }
-    catch (err) {
-        console.error('Error fetching lessons:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// PUT /api/admin/lessons/:id - Update lesson
-exports.adminRouter.put('/lessons/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = zod_1.z.object({
-            title: zod_1.z.string().min(1).optional(),
-            type: zod_1.z.enum(['video', 'pdf', 'exam']).optional(),
-            durationSec: zod_1.z.number().int().min(0).optional(),
-            vimeoId: zod_1.z.string().optional().nullable(),
-            youtubeId: zod_1.z.string().optional().nullable(),
-            pdfUrl: zod_1.z.string().url().optional().nullable(),
-            isPremium: zod_1.z.boolean().optional(),
-            orderIndex: zod_1.z.number().int().min(0).optional()
-        }).parse(req.body);
-        const lesson = await prisma.lesson.update({
-            where: { id },
-            data: updateData,
-            include: {
-                course: {
-                    select: {
-                        id: true,
-                        title: true
-                    }
-                }
-            }
-        });
-        res.json({
-            id: lesson.id,
-            title: lesson.title,
-            type: lesson.type,
-            durationSec: lesson.durationSec,
-            vimeoId: lesson.vimeoId,
-            youtubeId: lesson.youtubeId,
-            pdfUrl: lesson.pdfUrl,
-            isPremium: lesson.isPremium,
-            orderIndex: lesson.orderIndex,
-            courseId: lesson.courseId,
-            courseTitle: lesson.course.title,
-            createdAt: lesson.createdAt
-        });
-    }
-    catch (err) {
-        if (err instanceof zod_1.z.ZodError) {
-            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-        }
-        console.error('Error updating lesson:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// DELETE /api/admin/lessons/:id - Delete lesson
-exports.adminRouter.delete('/lessons/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        await prisma.lesson.delete({ where: { id } });
-        res.status(204).send();
-    }
-    catch (err) {
-        console.error('Error deleting lesson:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// PUT /api/admin/courses/:id - Update course
-exports.adminRouter.put('/courses/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = zod_1.z.object({
-            title: zod_1.z.string().min(1).optional(),
-            description: zod_1.z.string().min(1).optional(),
-            professor: zod_1.z.string().min(1).optional(),
-            departmentId: zod_1.z.string().optional(),
-            semester: zod_1.z.string().min(1).optional(),
-            tags: zod_1.z.array(zod_1.z.string()).optional(),
-            isPremium: zod_1.z.boolean().optional()
-        }).parse(req.body);
-        const course = await prisma.course.update({
-            where: { id },
+        // Hash password
+        const hashedPassword = await bcryptjs_1.default.hash(body.password, 12);
+        // Create admin user
+        const admin = await prisma.user.create({
             data: {
-                ...updateData,
-                ...(updateData.departmentId && { department: { connect: { id: updateData.departmentId } } })
+                email: body.email,
+                passwordHash: hashedPassword,
+                role: body.role,
+                name: `${body.firstName} ${body.lastName}`,
+            }
+        });
+        return res.status(201).json({
+            message: 'Admin account created successfully',
+            admin
+        });
+    }
+    catch (err) {
+        if (err instanceof zod_1.z.ZodError) {
+            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+        }
+        console.error('Error creating admin:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// POST /api/admin/create-user - Create user account (Admin only)
+exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can create user accounts' } });
+    }
+    try {
+        const body = createUserSchema.parse(req.body);
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email: body.email }
+        });
+        if (existingUser) {
+            return res.status(409).json({ error: { code: 'CONFLICT', message: 'User with this email already exists' } });
+        }
+        // Hash password
+        const hashedPassword = await bcryptjs_1.default.hash(body.password, 12);
+        // Create user
+        const user = await prisma.user.create({
+            data: {
+                email: body.email,
+                passwordHash: hashedPassword,
+                role: body.role,
+                name: `${body.firstName} ${body.lastName}`,
+                departmentId: body.departmentId,
+                semester: body.semester,
             },
             include: {
                 department: { select: { name: true } },
-                lessons: { select: { id: true } }
             }
         });
-        res.json({
-            id: course.id,
-            title: course.title,
-            description: course.description,
-            professor: course.professor,
-            department: course.department.name,
-            departmentId: course.departmentId,
-            semester: course.semester,
-            tags: course.tags,
-            isPremium: course.isPremium,
-            views: course.views,
-            lessonCount: course.lessons.length,
-            createdAt: course.createdAt
+        return res.status(201).json({
+            message: 'User account created successfully',
+            user
         });
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {
             return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
         }
-        console.error('Error updating course:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+        console.error('Error creating user:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// DELETE /api/admin/courses/:id - Delete course
-exports.adminRouter.delete('/courses/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+// GET /api/admin/init - Initialize first superadmin (only if no users exist)
+exports.adminRouter.post('/init', async (req, res) => {
     try {
-        const { id } = req.params;
-        await prisma.course.delete({ where: { id } });
-        res.status(204).send();
-    }
-    catch (err) {
-        console.error('Error deleting course:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// DELETE /api/admin/departments/:id - Delete department
-exports.adminRouter.delete('/departments/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        // Check if department has courses or users
-        const [courseCount, userCount] = await Promise.all([
-            prisma.course.count({ where: { departmentId: id } }),
-            prisma.user.count({ where: { departmentId: id } })
-        ]);
-        if (courseCount > 0 || userCount > 0) {
-            return res.status(400).json({
-                error: {
-                    code: 'DEPARTMENT_IN_USE',
-                    message: 'Cannot delete department with existing courses or users'
-                }
-            });
+        // Check if any users exist
+        const userCount = await prisma.user.count();
+        if (userCount > 0) {
+            return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'System already initialized' } });
         }
-        await prisma.department.delete({ where: { id } });
-        res.status(204).send();
+        const { email, password, firstName, lastName } = req.body;
+        if (!email || !password || !firstName || !lastName) {
+            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'Missing required fields' } });
+        }
+        // Hash password
+        const hashedPassword = await bcryptjs_1.default.hash(password, 12);
+        // Create superadmin
+        const superadmin = await prisma.user.create({
+            data: {
+                email,
+                passwordHash: hashedPassword,
+                role: 'superadmin',
+                name: `${firstName} ${lastName}`,
+            }
+        });
+        return res.status(201).json({
+            message: 'Superadmin created successfully',
+            superadmin
+        });
     }
     catch (err) {
-        console.error('Error deleting department:', err);
-        res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+        console.error('Error initializing superadmin:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
 //# sourceMappingURL=admin.js.map

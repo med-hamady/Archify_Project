@@ -29,22 +29,72 @@ npm start
 ## 🌐 Production Deployment
 
 ### Environment Variables
-Create `.env` files in both `backend/` and `frontend/` directories:
 
-**Backend (.env):**
-```
-DATABASE_URL="postgresql://username:password@localhost:5432/archify"
-JWT_SECRET="your-super-secret-jwt-key"
-JWT_REFRESH_SECRET="your-super-secret-refresh-key"
-CORS_ORIGINS="https://yourdomain.com"
-PORT=3000
+**Required Environment Variables:**
+
+```bash
+# Database Configuration
+DB_USER=your-db-user
+DB_PASSWORD=your-secure-db-password
+DB_NAME=archify_prod
+DB_PORT=5432
+
+# Backend Configuration
+BACKEND_PORT=3000
 NODE_ENV=production
+LOG_LEVEL=warn
+
+# JWT Configuration (Generate secure random 256-bit keys)
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-here
+
+# CORS Configuration (Update with your actual domain)
+CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+
+# API Configuration
+API_BASE_URL=https://yourdomain.com/api
+
+# Frontend Configuration
+FRONTEND_PORT=80
+FRONTEND_SSL_PORT=443
+
+# File Storage Configuration
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=archify-prod-content
+
+# Cloudinary Configuration (for images and PDFs)
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
+# Video Services (Vimeo)
+VIMEO_ACCESS_TOKEN=your-vimeo-access-token
+VIMEO_CLIENT_ID=your-vimeo-client-id
+VIMEO_CLIENT_SECRET=your-vimeo-client-secret
+
+# Email Configuration (for password reset)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-specific-password
+EMAIL_FROM=noreply@yourdomain.com
+
+# Payment Provider Webhook Secrets
+BANKILY_WEBHOOK_SECRET=your-bankily-webhook-secret
+MASRIVI_WEBHOOK_SECRET=your-masrivi-webhook-secret
+SEDAD_WEBHOOK_SECRET=your-sedad-webhook-secret
+
+# Analytics (Optional)
+GOOGLE_ANALYTICS_ID=GA-YOUR-ANALYTICS-ID
 ```
 
-**Frontend (.env):**
-```
-VITE_API_URL="https://your-api-domain.com"
-```
+**Setup Steps:**
+1. Copy `.env.prod` to `.env` in the project root
+2. Update all values with your actual configuration
+3. Generate secure JWT secrets (256-bit hex strings)
+4. Configure your payment provider webhook endpoints
 
 ### Build Commands
 ```bash

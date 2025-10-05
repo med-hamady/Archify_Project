@@ -27,6 +27,23 @@ const courseCreateSchema = zod_1.z.object({
     isPremium: zod_1.z.boolean().default(false)
 });
 const courseUpdateSchema = courseCreateSchema.partial();
+// Helper to format course data for public view
+function getCoursePublic(course) {
+    return {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        semester: course.semester,
+        professor: course.professor,
+        department: course.department?.name,
+        departmentId: course.departmentId,
+        tags: course.tags,
+        isPremium: course.isPremium,
+        views: course.views,
+        lessonCount: course.lessons?.length || 0,
+        createdAt: course.createdAt
+    };
+}
 // GET /courses - List courses with filtering and pagination
 exports.coursesRouter.get('/', async (req, res) => {
     try {
@@ -43,12 +60,12 @@ exports.coursesRouter.get('/', async (req, res) => {
             ];
         }
         if (department) {
-            where.departmentId = department;
+            where.department = { name: { contains: department, mode: 'insensitive' } };
         }
         if (semester) {
             where.semester = semester;
         }
-        if (typeof isPremium === 'boolean') {
+        if (isPremium !== undefined) {
             where.isPremium = isPremium;
         }
         if (tags.length > 0) {
@@ -58,21 +75,8 @@ exports.coursesRouter.get('/', async (req, res) => {
             prisma.course.findMany({
                 where,
                 include: {
-                    department: true,
-                    lessons: {
-                        select: {
-                            id: true,
-                            title: true,
-                            type: true,
-                            durationSec: true,
-                            isPremium: true,
-                            orderIndex: true
-                        },
-                        orderBy: { orderIndex: 'asc' }
-                    },
-                    _count: {
-                        select: { lessons: true }
-                    }
+                    department: { select: { name: true } },
+                    lessons: { select: { id: true } }
                 },
                 orderBy: { createdAt: 'desc' },
                 skip,
@@ -80,22 +84,8 @@ exports.coursesRouter.get('/', async (req, res) => {
             }),
             prisma.course.count({ where })
         ]);
-        res.json({
-            courses: courses.map(course => ({
-                id: course.id,
-                title: course.title,
-                description: course.description,
-                semester: course.semester,
-                professor: course.professor,
-                department: course.department.name,
-                departmentId: course.departmentId,
-                tags: course.tags,
-                isPremium: course.isPremium,
-                views: course.views,
-                lessonCount: course._count.lessons,
-                lessons: course.lessons,
-                createdAt: course.createdAt
-            })),
+        return res.json({
+            courses: courses.map(getCoursePublic),
             pagination: {
                 page,
                 limit,
@@ -108,215 +98,111 @@ exports.coursesRouter.get('/', async (req, res) => {
         if (err instanceof zod_1.z.ZodError) {
             return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
         }
+        console.error('Error fetching courses:', err);
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// GET /courses/:id - Get course details
+// GET /courses/:id - Get a single course with lessons
 exports.coursesRouter.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const course = await prisma.course.findUnique({
             where: { id },
             include: {
-                department: true,
+                department: { select: { name: true } },
                 lessons: {
-                    select: {
-                        id: true,
-                        title: true,
-                        type: true,
-                        durationSec: true,
-                        isPremium: true,
-                        orderIndex: true,
-                        createdAt: true
-                    },
                     orderBy: { orderIndex: 'asc' }
-                },
-                _count: {
-                    select: { lessons: true }
                 }
             }
         });
         if (!course) {
             return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Course not found' } });
         }
-        // Increment view count
-        await prisma.course.update({
-            where: { id },
-            data: { views: { increment: 1 } }
-        });
-        res.json({
-            id: course.id,
-            title: course.title,
-            description: course.description,
-            semester: course.semester,
-            professor: course.professor,
-            department: course.department.name,
-            departmentId: course.departmentId,
-            tags: course.tags,
-            isPremium: course.isPremium,
-            views: course.views + 1, // Include the increment
-            lessonCount: course._count.lessons,
-            lessons: course.lessons,
-            createdAt: course.createdAt
-        });
+        return res.json(getCoursePublic(course));
     }
     catch (err) {
+        console.error('Error fetching course:', err);
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// POST /courses - Create course (admin only)
-exports.coursesRouter.post('/', auth_1.requireAuth, async (req, res) => {
-    try {
-        // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-        }
-        const body = courseCreateSchema.parse(req.body);
-        // Verify department exists
-        const department = await prisma.department.findUnique({
-            where: { id: body.departmentId }
-        });
-        if (!department) {
-            return res.status(400).json({ error: { code: 'INVALID_DEPARTMENT', message: 'Department not found' } });
-        }
-        const course = await prisma.course.create({
-            data: body,
-            include: {
-                department: true,
-                lessons: true,
-                _count: {
-                    select: { lessons: true }
-                }
-            }
-        });
-        res.status(201).json({
-            id: course.id,
-            title: course.title,
-            description: course.description,
-            semester: course.semester,
-            professor: course.professor,
-            department: course.department.name,
-            departmentId: course.departmentId,
-            tags: course.tags,
-            isPremium: course.isPremium,
-            views: course.views,
-            lessonCount: course._count.lessons,
-            lessons: course.lessons,
-            createdAt: course.createdAt
-        });
-    }
-    catch (err) {
-        if (err instanceof zod_1.z.ZodError) {
-            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-        }
-        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// PUT /courses/:id - Update course (admin only)
-exports.coursesRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    try {
-        // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-        }
-        const { id } = req.params;
-        const body = courseUpdateSchema.parse(req.body);
-        // Check if course exists
-        const existingCourse = await prisma.course.findUnique({ where: { id } });
-        if (!existingCourse) {
-            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Course not found' } });
-        }
-        // Verify department exists if provided
-        if (body.departmentId) {
-            const department = await prisma.department.findUnique({
-                where: { id: body.departmentId }
-            });
-            if (!department) {
-                return res.status(400).json({ error: { code: 'INVALID_DEPARTMENT', message: 'Department not found' } });
-            }
-        }
-        const course = await prisma.course.update({
-            where: { id },
-            data: body,
-            include: {
-                department: true,
-                lessons: true,
-                _count: {
-                    select: { lessons: true }
-                }
-            }
-        });
-        res.json({
-            id: course.id,
-            title: course.title,
-            description: course.description,
-            semester: course.semester,
-            professor: course.professor,
-            department: course.department.name,
-            departmentId: course.departmentId,
-            tags: course.tags,
-            isPremium: course.isPremium,
-            views: course.views,
-            lessonCount: course._count.lessons,
-            lessons: course.lessons,
-            createdAt: course.createdAt
-        });
-    }
-    catch (err) {
-        if (err instanceof zod_1.z.ZodError) {
-            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-        }
-        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// DELETE /courses/:id - Delete course (admin only)
-exports.coursesRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    try {
-        // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-        }
-        const { id } = req.params;
-        // Check if course exists
-        const course = await prisma.course.findUnique({ where: { id } });
-        if (!course) {
-            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Course not found' } });
-        }
-        await prisma.course.delete({ where: { id } });
-        res.status(204).send();
-    }
-    catch (err) {
-        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-    }
-});
-// GET /courses/:id/lessons - Get lessons for a course
+// GET /courses/:id/lessons - Get lessons for a specific course
 exports.coursesRouter.get('/:id/lessons', async (req, res) => {
     try {
         const { id } = req.params;
-        // Check if course exists
-        const course = await prisma.course.findUnique({ where: { id } });
-        if (!course) {
-            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Course not found' } });
-        }
         const lessons = await prisma.lesson.findMany({
             where: { courseId: id },
-            select: {
-                id: true,
-                title: true,
-                type: true,
-                durationSec: true,
-                isPremium: true,
-                orderIndex: true,
-                createdAt: true,
-                _count: {
-                    select: { comments: true }
-                }
-            },
             orderBy: { orderIndex: 'asc' }
         });
         res.json(lessons);
     }
     catch (err) {
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// POST /courses - Create a new course (Admin only)
+exports.coursesRouter.post('/', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+    }
+    try {
+        const body = courseCreateSchema.parse(req.body);
+        const course = await prisma.course.create({
+            data: {
+                ...body,
+                tags: body.tags,
+                views: 0
+            },
+            include: {
+                department: { select: { name: true } }
+            }
+        });
+        return res.status(201).json(course);
+    }
+    catch (err) {
+        if (err instanceof zod_1.z.ZodError) {
+            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+        }
+        console.error('Error creating course:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// PUT /courses/:id - Update a course (Admin only)
+exports.coursesRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+    }
+    try {
+        const { id } = req.params;
+        const body = courseUpdateSchema.parse(req.body);
+        const course = await prisma.course.update({
+            where: { id },
+            data: body,
+            include: {
+                department: { select: { name: true } }
+            }
+        });
+        return res.json(course);
+    }
+    catch (err) {
+        if (err instanceof zod_1.z.ZodError) {
+            return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+        }
+        console.error('Error updating course:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// DELETE /courses/:id - Delete a course (Admin only)
+exports.coursesRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+    }
+    try {
+        const { id } = req.params;
+        await prisma.course.delete({ where: { id } });
+        return res.status(204).send();
+    }
+    catch (err) {
+        console.error('Error deleting course:', err);
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });

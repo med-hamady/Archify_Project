@@ -7,9 +7,17 @@ const prisma = new PrismaClient();
 export const lessonsRouter = Router();
 
 // Schemas
+const lessonQuerySchema = z.object({
+  page: z.string().optional().transform(val => val ? parseInt(val) : 1),
+  limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
+  courseId: z.string().optional(),
+  type: z.enum(['video', 'pdf', 'exam']).optional(),
+  isPremium: z.string().optional().transform(val => val === 'true')
+});
+
 const lessonCreateSchema = z.object({
-  courseId: z.string().cuid(),
   title: z.string().min(1),
+  courseId: z.string().uuid(),
   type: z.enum(['video', 'pdf', 'exam']),
   durationSec: z.number().int().min(0).default(0),
   vimeoId: z.string().optional(),
@@ -19,322 +27,69 @@ const lessonCreateSchema = z.object({
   orderIndex: z.number().int().min(0).default(0)
 });
 
-const lessonUpdateSchema = lessonCreateSchema.partial().omit({ courseId: true });
+const lessonUpdateSchema = lessonCreateSchema.partial();
 
-const commentCreateSchema = z.object({
-  content: z.string().min(1).max(1000)
-});
+// Helper to format lesson data for public view
+function getLessonPublic(lesson: any) {
+  return {
+    id: lesson.id,
+    title: lesson.title,
+    courseId: lesson.courseId,
+    type: lesson.type,
+    durationSec: lesson.durationSec,
+    vimeoId: lesson.vimeoId,
+    youtubeId: lesson.youtubeId,
+    pdfUrl: lesson.pdfUrl,
+    isPremium: lesson.isPremium,
+    orderIndex: lesson.orderIndex,
+    createdAt: lesson.createdAt,
+    lessonAssets: lesson.lessonAssets || []
+  };
+}
 
-// GET /lessons/:id - Get lesson details
-lessonsRouter.get('/:id', async (req, res) => {
+// GET /lessons - List lessons with filtering and pagination
+lessonsRouter.get('/', async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    const lesson = await prisma.lesson.findUnique({
-      where: { id },
-      include: {
-        course: {
-          select: {
-            id: true,
-            title: true,
-            isPremium: true,
-            department: {
-              select: { name: true }
-            }
-          }
-        },
-        lessonAssets: true,
-        comments: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatarUrl: true
-              }
-            }
-          },
-          where: { status: 'visible' },
-          orderBy: { createdAt: 'desc' }
-        },
-        _count: {
-          select: { comments: true }
-        }
-      }
-    });
-    
-    if (!lesson) {
-      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
-    }
-    
-    res.json({
-      id: lesson.id,
-      title: lesson.title,
-      type: lesson.type,
-      durationSec: lesson.durationSec,
-      vimeoId: lesson.vimeoId,
-      youtubeId: lesson.youtubeId,
-      pdfUrl: lesson.pdfUrl,
-      isPremium: lesson.isPremium,
-      orderIndex: lesson.orderIndex,
-      createdAt: lesson.createdAt,
-      course: lesson.course,
-      assets: lesson.lessonAssets,
-      comments: lesson.comments.map(comment => ({
-        id: comment.id,
-        content: comment.content,
-        createdAt: comment.createdAt,
-        user: {
-          id: comment.user.id,
-          name: comment.user.name,
-          avatar: comment.user.avatarUrl
-        }
-      })),
-      commentCount: lesson._count.comments
-    });
-  } catch (err: any) {
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
+    const query = lessonQuerySchema.parse(req.query);
+    const { page, limit, courseId, type, isPremium } = query;
 
-// POST /lessons - Create lesson (admin only)
-lessonsRouter.post('/', requireAuth, async (req: any, res) => {
-  try {
-    // Check if user is admin
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-    }
-    
-    const body = lessonCreateSchema.parse(req.body);
-    
-    // Verify course exists
-    const course = await prisma.course.findUnique({
-      where: { id: body.courseId }
-    });
-    
-    if (!course) {
-      return res.status(400).json({ error: { code: 'INVALID_COURSE', message: 'Course not found' } });
-    }
-    
-    const lesson = await prisma.lesson.create({
-      data: body,
-      include: {
-        course: {
-          select: {
-            id: true,
-            title: true,
-            isPremium: true,
-            department: {
-              select: { name: true }
-            }
-          }
-        },
-        lessonAssets: true
-      }
-    });
-    
-    res.status(201).json({
-      id: lesson.id,
-      title: lesson.title,
-      type: lesson.type,
-      durationSec: lesson.durationSec,
-      vimeoId: lesson.vimeoId,
-      youtubeId: lesson.youtubeId,
-      pdfUrl: lesson.pdfUrl,
-      isPremium: lesson.isPremium,
-      orderIndex: lesson.orderIndex,
-      createdAt: lesson.createdAt,
-      course: lesson.course,
-      assets: lesson.lessonAssets
-    });
-  } catch (err: any) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-    }
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// PUT /lessons/:id - Update lesson (admin only)
-lessonsRouter.put('/:id', requireAuth, async (req: any, res) => {
-  try {
-    // Check if user is admin
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-    }
-    
-    const { id } = req.params;
-    const body = lessonUpdateSchema.parse(req.body);
-    
-    // Check if lesson exists
-    const existingLesson = await prisma.lesson.findUnique({ where: { id } });
-    if (!existingLesson) {
-      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
-    }
-    
-    const lesson = await prisma.lesson.update({
-      where: { id },
-      data: body,
-      include: {
-        course: {
-          select: {
-            id: true,
-            title: true,
-            isPremium: true,
-            department: {
-              select: { name: true }
-            }
-          }
-        },
-        lessonAssets: true
-      }
-    });
-    
-    res.json({
-      id: lesson.id,
-      title: lesson.title,
-      type: lesson.type,
-      durationSec: lesson.durationSec,
-      vimeoId: lesson.vimeoId,
-      youtubeId: lesson.youtubeId,
-      pdfUrl: lesson.pdfUrl,
-      isPremium: lesson.isPremium,
-      orderIndex: lesson.orderIndex,
-      createdAt: lesson.createdAt,
-      course: lesson.course,
-      assets: lesson.lessonAssets
-    });
-  } catch (err: any) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-    }
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// DELETE /lessons/:id - Delete lesson (admin only)
-lessonsRouter.delete('/:id', requireAuth, async (req: any, res) => {
-  try {
-    // Check if user is admin
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
-      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
-    }
-    
-    const { id } = req.params;
-    
-    // Check if lesson exists
-    const lesson = await prisma.lesson.findUnique({ where: { id } });
-    if (!lesson) {
-      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
-    }
-    
-    await prisma.lesson.delete({ where: { id } });
-    
-    res.status(204).send();
-  } catch (err: any) {
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// POST /lessons/:id/comments - Add comment to lesson
-lessonsRouter.post('/:id/comments', requireAuth, async (req: any, res) => {
-  try {
-    const { id } = req.params;
-    const body = commentCreateSchema.parse(req.body);
-    
-    // Check if lesson exists
-    const lesson = await prisma.lesson.findUnique({ where: { id } });
-    if (!lesson) {
-      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
-    }
-    
-    const comment = await prisma.comment.create({
-      data: {
-        lessonId: id,
-        userId: req.userId,
-        content: body.content
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true
-          }
-        }
-      }
-    });
-    
-    res.status(201).json({
-      id: comment.id,
-      content: comment.content,
-      createdAt: comment.createdAt,
-      user: {
-        id: comment.user.id,
-        name: comment.user.name,
-        avatar: comment.user.avatarUrl
-      }
-    });
-  } catch (err: any) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
-    }
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// GET /lessons/:id/comments - Get lesson comments
-lessonsRouter.get('/:id/comments', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
-    
-    // Check if lesson exists
-    const lesson = await prisma.lesson.findUnique({ where: { id } });
-    if (!lesson) {
-      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
+
+    // Build where clause
+    const where: any = {};
+
+    if (courseId) {
+      where.courseId = courseId;
     }
-    
-    const [comments, total] = await Promise.all([
-      prisma.comment.findMany({
-        where: { 
-          lessonId: id,
-          status: 'visible'
-        },
+
+    if (type) {
+      where.type = type;
+    }
+
+    if (isPremium !== undefined) {
+      where.isPremium = isPremium;
+    }
+
+    const [lessons, total] = await Promise.all([
+      prisma.lesson.findMany({
+        where,
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              avatarUrl: true
-            }
-          }
+          lessonAssets: true,
+          course: { select: { title: true, department: { select: { name: true } } } }
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: [
+          { courseId: 'asc' },
+          { orderIndex: 'asc' },
+          { createdAt: 'asc' }
+        ],
         skip,
         take: limit
       }),
-      prisma.comment.count({
-        where: { 
-          lessonId: id,
-          status: 'visible'
-        }
-      })
+      prisma.lesson.count({ where })
     ]);
-    
-    res.json({
-      comments: comments.map(comment => ({
-        id: comment.id,
-        content: comment.content,
-        createdAt: comment.createdAt,
-        user: {
-          id: comment.user.id,
-          name: comment.user.name,
-          avatar: comment.user.avatarUrl
-        }
-      })),
+
+    return res.json({
+      lessons: lessons.map(getLessonPublic),
       pagination: {
         page,
         limit,
@@ -343,23 +98,181 @@ lessonsRouter.get('/:id/comments', async (req, res) => {
       }
     });
   } catch (err: any) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+    }
+    console.error('Error fetching lessons:', err);
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });
 
-// POST /lessons/:id/progress - Update lesson progress
-lessonsRouter.post('/:id/progress', requireAuth, async (req: any, res) => {
+// GET /lessons/:id - Get a single lesson with assets
+lessonsRouter.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body; // 'viewed' or 'in_progress'
-    
-    // Check if lesson exists
-    const lesson = await prisma.lesson.findUnique({ where: { id } });
+
+    const lesson = await prisma.lesson.findUnique({
+      where: { id },
+      include: {
+        lessonAssets: true,
+        course: {
+          select: {
+            id: true,
+            title: true,
+            department: { select: { name: true } }
+          }
+        },
+        comments: {
+          where: { status: 'visible' },
+          include: { user: { select: { name: true } } },
+          orderBy: { createdAt: 'asc' }
+        }
+      }
+    });
+
     if (!lesson) {
       return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
     }
-    
-    // Check if progress already exists
+
+    return res.json(getLessonPublic(lesson));
+  } catch (err: any) {
+    console.error('Error fetching lesson:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// GET /lessons/:id/assets - Get lesson assets
+lessonsRouter.get('/:id/assets', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const assets = await prisma.lessonAsset.findMany({
+      where: { lessonId: id },
+      orderBy: { title: 'asc' }
+    });
+
+    res.json(assets);
+  } catch (err: any) {
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// POST /lessons - Create a new lesson (Admin only)
+lessonsRouter.post('/', requireAuth, async (req: any, res) => {
+  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+  }
+
+  try {
+    const body = lessonCreateSchema.parse(req.body);
+
+    // Verify course exists
+    const course = await prisma.course.findUnique({
+      where: { id: body.courseId },
+      select: { id: true }
+    });
+
+    if (!course) {
+      return res.status(404).json({ error: { code: 'COURSE_NOT_FOUND', message: 'Course not found' } });
+    }
+
+    const lesson = await prisma.lesson.create({
+      data: body,
+      include: {
+        lessonAssets: true,
+        course: { select: { title: true } }
+      }
+    });
+
+    return res.status(201).json(lesson);
+  } catch (err: any) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+    }
+    console.error('Error creating lesson:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// PUT /lessons/:id - Update a lesson (Admin only)
+lessonsRouter.put('/:id', requireAuth, async (req: any, res) => {
+  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+  }
+
+  try {
+    const { id } = req.params;
+    const body = lessonUpdateSchema.parse(req.body);
+
+    const lesson = await prisma.lesson.update({
+      where: { id },
+      data: body,
+      include: {
+        lessonAssets: true,
+        course: { select: { title: true } }
+      }
+    });
+
+    return res.json(lesson);
+  } catch (err: any) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+    }
+    console.error('Error updating lesson:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// DELETE /lessons/:id - Delete a lesson (Admin only)
+lessonsRouter.delete('/:id', requireAuth, async (req: any, res) => {
+  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+  }
+
+  try {
+    const { id } = req.params;
+
+    await prisma.lesson.delete({ where: { id } });
+    return res.status(204).send();
+  } catch (err: any) {
+    console.error('Error deleting lesson:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// POST /lessons/:id/progress - Update lesson progress (Authenticated users)
+lessonsRouter.post('/:id/progress', requireAuth, async (req: any, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['viewed', 'in_progress'].includes(status)) {
+      return res.status(400).json({ error: { code: 'INVALID_STATUS', message: 'Invalid status' } });
+    }
+
+    // Check if lesson exists
+    const lesson = await prisma.lesson.findUnique({
+      where: { id },
+      select: { id: true, isPremium: true }
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
+    }
+
+    // Check if user has access to premium content
+    if (lesson.isPremium) {
+      const user = await prisma.user.findUnique({
+        where: { id: req.userId },
+        include: { subscriptions: { where: { status: 'active' } } }
+      });
+
+      if (!user || user.subscriptions.length === 0) {
+        return res.status(403).json({ error: { code: 'PREMIUM_REQUIRED', message: 'Premium subscription required' } });
+      }
+    }
+
+    // Update or create progress record
     const existingProgress = await prisma.progress.findFirst({
       where: {
         userId: req.userId,
@@ -369,51 +282,23 @@ lessonsRouter.post('/:id/progress', requireAuth, async (req: any, res) => {
 
     let progress;
     if (existingProgress) {
-      // Update existing progress
       progress = await prisma.progress.update({
         where: { id: existingProgress.id },
-        data: {
-          status: status || 'in_progress'
-        }
+        data: { status: status as any }
       });
     } else {
-      // Create new progress
       progress = await prisma.progress.create({
         data: {
           userId: req.userId,
           lessonId: id,
-          status: status || 'in_progress'
+          status: status as any
         }
       });
     }
-    
-    res.json({
-      id: progress.id,
-      status: progress.status,
-      updatedAt: progress.updatedAt
-    });
-  } catch (err: any) {
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
 
-// GET /lessons/:id/progress - Get lesson progress
-lessonsRouter.get('/:id/progress', requireAuth, async (req: any, res) => {
-  try {
-    const { id } = req.params;
-    
-    const progress = await prisma.progress.findFirst({
-      where: {
-        userId: req.userId,
-        lessonId: id
-      }
-    });
-    
-    res.json({
-      status: progress?.status || 'not_started',
-      updatedAt: progress?.updatedAt || null
-    });
+    return res.json(progress);
   } catch (err: any) {
+    console.error('Error updating progress:', err);
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });

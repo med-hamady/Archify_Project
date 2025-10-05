@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <!-- Hero Section -->
@@ -67,91 +68,29 @@ import { RouterLink } from '@angular/router';
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          <!-- Course Card 1 -->
-          <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
-            <div class="aspect-video bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+          <div *ngFor="let course of featuredCourses()" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+            <div class="aspect-video bg-gradient-to-br {{ getCardGradient(course.color) }} flex items-center justify-center">
               <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
               </svg>
             </div>
             <div class="p-6">
               <div class="flex items-center justify-between mb-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Premium
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ getTypeClass(course.type) }}">
+                  {{ course.type }}
                 </span>
-                <span class="text-sm text-gray-500">15 leçons</span>
+                <span class="text-sm text-gray-500">{{ course.lessons }} leçons</span>
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Introduction à l'Algorithmique
+                {{ course.title }}
               </h3>
-              <p class="text-gray-600 text-sm mb-4">Prof. Jean Dupont</p>
+              <p class="text-gray-600 text-sm mb-4">{{ course.professor }}</p>
               <p class="text-gray-700 text-sm leading-relaxed mb-4">
-                Découvrez les bases de l'algorithmique et de la programmation avec des exemples pratiques.
+                {{ course.description }}
               </p>
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-900">S1 • Informatique</span>
-                <a routerLink="/course/1" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                  Voir le cours →
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Course Card 2 -->
-          <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
-            <div class="aspect-video bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-              <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Gratuit
-                </span>
-                <span class="text-sm text-gray-500">12 leçons</span>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
-                Analyse Mathématique
-              </h3>
-              <p class="text-gray-600 text-sm mb-4">Prof. Marie Curie</p>
-              <p class="text-gray-700 text-sm leading-relaxed mb-4">
-                Maîtrisez les concepts fondamentaux de l'analyse mathématique et des fonctions.
-              </p>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-900">S1 • Mathématiques</span>
-                <a routerLink="/course/2" class="text-green-600 hover:text-green-800 text-sm font-medium">
-                  Voir le cours →
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Course Card 3 -->
-          <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
-            <div class="aspect-video bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-              <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  Premium
-                </span>
-                <span class="text-sm text-gray-500">18 leçons</span>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-                Logique et Théorie des Ensembles
-              </h3>
-              <p class="text-gray-600 text-sm mb-4">Prof. Pierre Fermat</p>
-              <p class="text-gray-700 text-sm leading-relaxed mb-4">
-                Explorez la logique mathématique et les fondements de la théorie des ensembles.
-              </p>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-900">S2 • Mathématiques</span>
-                <a routerLink="/course/3" class="text-purple-600 hover:text-purple-800 text-sm font-medium">
+                <span class="text-sm font-medium text-gray-900">{{ course.semester }} • {{ course.department }}</span>
+                <a [routerLink]="'/course/' + course.id" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                   Voir le cours →
                 </a>
               </div>
@@ -214,4 +153,79 @@ import { RouterLink } from '@angular/router';
     </div>
   `
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+  // Dynamic statistics
+  stats = signal({
+    students: 1250,
+    courses: 45,
+    lessons: 320,
+    professors: 28
+  });
+
+  // Featured courses
+  featuredCourses = signal([
+    {
+      id: '1',
+      title: 'Introduction à l\'Algorithmique',
+      professor: 'Prof. Jean Dupont',
+      lessons: 15,
+      type: 'Premium',
+      semester: 'S1',
+      department: 'Informatique',
+      description: 'Découvrez les bases de l\'algorithmique et de la programmation avec des exemples pratiques.',
+      color: 'blue'
+    },
+    {
+      id: '2',
+      title: 'Analyse Mathématique',
+      professor: 'Prof. Marie Curie',
+      lessons: 12,
+      type: 'Gratuit',
+      semester: 'S1',
+      department: 'Mathématiques',
+      description: 'Maîtrisez les concepts fondamentaux de l\'analyse mathématique et des fonctions.',
+      color: 'green'
+    },
+    {
+      id: '3',
+      title: 'Logique et Théorie des Ensembles',
+      professor: 'Prof. Pierre Fermat',
+      lessons: 18,
+      type: 'Premium',
+      semester: 'S2',
+      department: 'Mathématiques',
+      description: 'Explorez la logique mathématique et les fondements de la théorie des ensembles.',
+      color: 'purple'
+    }
+  ]);
+
+  ngOnInit() {
+    // Simulate loading data
+    this.animateStats();
+  }
+
+  private animateStats() {
+    // Simple animation for stats
+    setTimeout(() => {
+      this.stats.set({
+        students: 2500,
+        courses: 85,
+        lessons: 650,
+        professors: 45
+      });
+    }, 1000);
+  }
+
+  getTypeClass(type: string): string {
+    return type === 'Premium' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800';
+  }
+
+  getCardGradient(color: string): string {
+    const gradients = {
+      blue: 'from-blue-500 to-blue-600',
+      green: 'from-green-500 to-green-600',
+      purple: 'from-purple-500 to-purple-600'
+    };
+    return gradients[color as keyof typeof gradients] || 'from-gray-500 to-gray-600';
+  }
+}

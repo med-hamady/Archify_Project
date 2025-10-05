@@ -1,9 +1,11 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { PaymentService, SubscriptionPlan, PaymentProvider, CheckoutRequest, CheckoutResponse } from '../../services/payment.service';
 
-interface SubscriptionPlan {
+interface SubscriptionPlanUI {
   id: string;
   name: string;
   description: string;
@@ -20,7 +22,7 @@ interface SubscriptionPlan {
 @Component({
   selector: 'app-subscription',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -166,6 +168,43 @@ interface SubscriptionPlan {
         <!-- Payment Methods -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-12">
           <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Méthodes de paiement acceptées</h2>
+
+          <!-- Payment Provider Selection -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-3">Sélectionnez votre méthode de paiement</label>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <button *ngFor="let provider of paymentProviders()"
+                      (click)="setPaymentProvider(provider.id)"
+                      [class]="selectedProvider() === provider.id
+                        ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-500'
+                        : 'border-gray-300 hover:bg-gray-50'"
+                      class="flex items-center gap-3 p-4 border rounded-lg transition-colors"
+                      [disabled]="!provider.enabled">
+                <div class="w-8 h-6 rounded flex items-center justify-center text-xs font-bold text-white"
+                     [style.background-color]="getProviderColor(provider.id)">
+                  {{ getProviderCode(provider.id) }}
+                </div>
+                <span class="text-sm text-gray-700">{{ provider.name }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Coupon Code Section -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-3">Code de réduction (optionnel)</label>
+            <div class="flex gap-3">
+              <input type="text"
+                     [(ngModel)]="couponCode"
+                     placeholder="Entrez votre code de réduction"
+                     class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <button (click)="applyCoupon()"
+                      class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+                Appliquer
+              </button>
+            </div>
+          </div>
+
+          <!-- Available Payment Methods -->
           <div class="flex flex-wrap justify-center items-center gap-8">
             <div class="flex items-center gap-2">
               <div class="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
@@ -245,7 +284,7 @@ export class SubscriptionComponent {
 
   billingPeriod = computed(() => this.billingPeriodSignal());
 
-  subscriptionPlans = computed<SubscriptionPlan[]>(() => {
+  subscriptionPlans = computed<SubscriptionPlanUI[]>(() => {
     const isMonthly = this.billingPeriod() === 'monthly';
     const currentUser = this.authService.user();
     const isPremium = this.authService.isPremium();
@@ -268,7 +307,7 @@ export class SubscriptionComponent {
         isPopular: false,
         isCurrent: !isPremium,
         buttonText: isPremium ? 'Plan actuel' : 'Commencer gratuitement',
-        buttonClass: isPremium 
+        buttonClass: isPremium
           ? 'w-full px-6 py-3 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed'
           : 'w-full px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors'
       },
@@ -292,7 +331,7 @@ export class SubscriptionComponent {
         isPopular: true,
         isCurrent: isPremium,
         buttonText: isPremium ? 'Plan actuel' : (isMonthly ? '29€/mois' : '290€/an'),
-        buttonClass: isPremium 
+        buttonClass: isPremium
           ? 'w-full px-6 py-3 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed'
           : 'w-full px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors'
       },
@@ -321,7 +360,24 @@ export class SubscriptionComponent {
     ];
   });
 
-  constructor(private authService: AuthService) {}
+  // Payment related signals
+  availablePlans = signal<SubscriptionPlan[]>([]);
+  paymentProviders = signal<PaymentProvider[]>([]);
+  isLoadingPlans = signal(false);
+  checkoutInProgress = signal(false);
+  selectedProvider = signal<string>('bankily');
+  couponCode = signal<string>('');
+
+  constructor(
+    private authService: AuthService,
+    private paymentService: PaymentService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.loadPlans();
+    this.loadPaymentProviders();
+  }
 
   setBillingPeriod(period: 'monthly' | 'yearly'): void {
     this.billingPeriodSignal.set(period);
@@ -329,25 +385,156 @@ export class SubscriptionComponent {
 
   selectPlan(planId: string): void {
     if (planId === 'free') {
-      // Handle free plan selection
-      console.log('Free plan selected');
+      this.handleFreePlan();
     } else if (planId === 'premium') {
-      // Handle premium plan selection
       this.initiatePayment('premium');
     } else if (planId === 'enterprise') {
-      // Handle enterprise plan contact
       this.contactEnterprise();
     }
   }
 
+  private handleFreePlan(): void {
+    // Free plan is automatically available, just show success message
+    alert('Vous utilisez maintenant le plan gratuit. Vous pouvez accéder aux cours gratuits immédiatement.');
+  }
+
   private initiatePayment(planId: string): void {
-    // In a real app, this would integrate with payment providers
-    console.log(`Initiating payment for ${planId} plan`);
-    // This would redirect to payment gateway or show payment modal
+    if (this.checkoutInProgress()) return;
+
+    this.checkoutInProgress.set(true);
+
+    // Find the plan by ID (in real app, this would be from availablePlans signal)
+    const plan = this.availablePlans().find(p => p.id === planId);
+    if (!plan) {
+      alert('Plan non trouvé');
+      this.checkoutInProgress.set(false);
+      return;
+    }
+
+    const checkoutRequest: CheckoutRequest = {
+      planId: plan.id,
+      provider: this.selectedProvider() as 'bankily' | 'masrivi' | 'sedad'
+    };
+
+    if (this.couponCode().trim()) {
+      checkoutRequest.couponCode = this.couponCode().trim();
+    }
+
+    this.paymentService.initiateCheckout(checkoutRequest).subscribe({
+      next: (response) => {
+        this.handleCheckoutResponse(response, plan);
+        this.checkoutInProgress.set(false);
+      },
+      error: (error) => {
+        console.error('Checkout error:', error);
+        alert('Erreur lors de l\'initialisation du paiement: ' + error.message);
+        this.checkoutInProgress.set(false);
+      }
+    });
+  }
+
+  private handleCheckoutResponse(response: CheckoutResponse, plan: SubscriptionPlan): void {
+    if (response.approvalUrl) {
+      // Redirect to payment gateway
+      window.location.href = response.approvalUrl;
+    } else if (response.qrCode) {
+      // Show QR code for mobile payments
+      this.showQRCode(response.qrCode, plan);
+    } else if (response.intentId) {
+      // Handle intent-based payments
+      this.handleIntentPayment(response.intentId, plan);
+    } else {
+      alert('Configuration de paiement reçue. Veuillez suivre les instructions à l\'écran.');
+    }
+  }
+
+  private showQRCode(qrCode: string, plan: SubscriptionPlan): void {
+    // In a real app, this would show a modal with QR code
+    alert(`QR Code généré pour le paiement de ${plan.price} ${plan.currency}. Montant: ${plan.name} plan`);
+    // Implementation would show QR code modal
+  }
+
+  private handleIntentPayment(intentId: string, plan: SubscriptionPlan): void {
+    // Handle payment intents (like mobile money)
+    alert(`Demande de paiement créée: ${intentId}. Vérifiez votre téléphone pour confirmer le paiement de ${plan.price} ${plan.currency}`);
   }
 
   private contactEnterprise(): void {
     // In a real app, this would open contact form or redirect to sales page
-    console.log('Contacting enterprise sales');
+    this.router.navigate(['/contact-enterprise']);
+  }
+
+  private loadPlans(): void {
+    this.isLoadingPlans.set(true);
+    this.paymentService.getPlans().subscribe({
+      next: (plans) => {
+        this.availablePlans.set(plans);
+        this.isLoadingPlans.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading plans:', error);
+        this.isLoadingPlans.set(false);
+      }
+    });
+  }
+
+  private loadPaymentProviders(): void {
+    this.paymentService.getPaymentProviders().subscribe({
+      next: (providers) => {
+        this.paymentProviders.set(providers);
+      },
+      error: (error) => {
+        console.error('Error loading payment providers:', error);
+      }
+    });
+  }
+
+  setPaymentProvider(providerId: string): void {
+    this.selectedProvider.set(providerId);
+  }
+
+  applyCoupon(): void {
+    if (!this.couponCode().trim()) {
+      alert('Veuillez entrer un code de réduction');
+      return;
+    }
+
+    // Validate coupon (in real app, this would check against backend)
+    this.paymentService.validateCoupon(this.couponCode(), 'premium').subscribe({
+      next: (result) => {
+        if (result.valid) {
+          alert(`Code de réduction appliqué! Réduction de ${result.discount}%`);
+        } else {
+          alert(result.message || 'Code de réduction invalide');
+        }
+      },
+      error: (error) => {
+        console.error('Coupon validation error:', error);
+        alert('Erreur lors de la validation du code de réduction');
+      }
+    });
+  }
+
+  // Helper methods for payment provider styling
+  getProviderColor(providerId: string): string {
+    const colors = {
+      'bankily': '#2563EB', // blue-600
+      'masrivi': '#059669', // emerald-600
+      'sedad': '#EA580C',   // orange-600
+      'visa': '#1F2937',    // gray-800
+      'mastercard': '#1D4ED8' // blue-700
+    };
+    return colors[providerId as keyof typeof colors] || '#6B7280';
+  }
+
+  getProviderCode(providerId: string): string {
+    const codes = {
+      'bankily': 'BK',
+      'masrivi': 'MV',
+      'sedad': 'SD',
+      'visa': 'VS',
+      'mastercard': 'MC'
+    };
+    return codes[providerId as keyof typeof codes] || '??';
   }
 }

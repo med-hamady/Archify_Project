@@ -1,0 +1,42 @@
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  backend:
+    environment:
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      PORT: 3000
+      NODE_ENV: production
+      LOG_LEVEL: warn
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/logs:/app/logs
+
+  frontend:
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+    volumes:
+      - ./frontend/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+
+networks:
+  default:
+    name: archify-network
+
+volumes:
+  postgres_data:
+    driver: local

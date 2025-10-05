@@ -14,6 +14,7 @@ import { subscriptionsRouter } from './modules/subscriptions';
 import { departmentsRouter } from './modules/departments';
 import { usersRouter } from './modules/users';
 import { adminRouter } from './modules/admin';
+import { commentsRouter } from './modules/comments';
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/departments', departmentsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/comments', commentsRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
