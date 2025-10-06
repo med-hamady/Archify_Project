@@ -12,9 +12,9 @@ export const subscriptionsRouter = Router();
 // Schemas
 const subscriptionPlanCreateSchema = z.object({
   name: z.string().min(1),
-  interval: z.enum(['monthly', 'yearly']),
+  interval: z.enum(['yearly']), // Only yearly subscriptions
   priceCents: z.number().int().min(0),
-  currency: z.string().length(3).default('MAD')
+  currency: z.string().length(3).default('MRU')
 });
 
 const subscriptionCreateSchema = z.object({
@@ -43,124 +43,17 @@ subscriptionsRouter.get('/plans', async (req, res) => {
   }
 });
 
-// GET /providers - Get available payment providers
-subscriptionsRouter.get('/providers', async (req, res) => {
+// POST /validate-coupon - Validate coupon code
+subscriptionsRouter.post('/validate-coupon', async (req, res) => {
   try {
-    // In a real implementation, these would be configured in the database
-    const providers = [
-      {
-        id: 'bankily',
-        name: 'Bankily',
-        logo: '/assets/payment/bankily.png',
-        enabled: true
-      },
-      {
-        id: 'masrivi',
-        name: 'Masrivi',
-        logo: '/assets/payment/masrivi.png',
-        enabled: true
-      },
-      {
-        id: 'sedad',
-        name: 'Sedad',
-        logo: '/assets/payment/sedad.png',
-        enabled: true
-      }
-    ];
-
-    res.json({ providers });
-  } catch (err: any) {
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// POST /checkout - Initiate checkout process
-subscriptionsRouter.post('/checkout', requireAuth, async (req: any, res) => {
-  try {
-    const { planId, provider, couponCode } = req.body;
-
-    // Validate plan exists
-    const plan = await prisma.subscriptionPlan.findUnique({
-      where: { id: planId }
-    });
-
-    if (!plan) {
-      return res.status(404).json({ error: { code: 'PLAN_NOT_FOUND', message: 'Plan not found' } });
-    }
-
-    // Validate coupon if provided
-    if (couponCode) {
-      const coupon = await prisma.coupon.findUnique({
-        where: { code: couponCode.toUpperCase() }
-      });
-
-      if (!coupon || coupon.validTo < new Date() || (coupon.maxRedemptions !== null && coupon.maxRedemptions <= coupon.usedCount)) {
-        return res.status(400).json({ error: { code: 'INVALID_COUPON', message: 'Invalid or expired coupon' } });
-      }
-    }
-
-    // Generate checkout response based on provider
-    const checkoutResponse = await generateCheckoutResponse(plan, provider, couponCode);
-
-    res.json(checkoutResponse);
-  } catch (err: any) {
-    console.error('Checkout error:', err);
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// POST /webhook - Handle payment webhooks
-subscriptionsRouter.post('/webhook', async (req, res) => {
-  try {
-    const { provider, data } = req.body;
-
-    // Process webhook based on provider
-    await processWebhook(provider, data);
-
-    res.status(200).json({ received: true });
-  } catch (err: any) {
-    console.error('Webhook error:', err);
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// GET /payments/status/:providerRef - Get payment status
-subscriptionsRouter.get('/payments/status/:providerRef', async (req, res) => {
-  try {
-    const { providerRef } = req.params;
-
-    const payment = await prisma.payment.findUnique({
-      where: { providerRef }
-    });
-
-    if (!payment) {
-      return res.status(404).json({ error: { code: 'PAYMENT_NOT_FOUND', message: 'Payment not found' } });
-    }
-
-    res.json({
-      status: payment.status,
-      provider: payment.provider,
-      providerRef: payment.providerRef,
-      amount: payment.amountCents / 100,
-      currency: payment.currency,
-      completedAt: payment.createdAt
-    });
-  } catch (err: any) {
-    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
-  }
-});
-
-// POST /coupons/validate - Validate coupon code
-subscriptionsRouter.post('/coupons/validate', requireAuth, async (req: any, res) => {
-  try {
-    const { couponCode, planId } = req.body;
-
-    if (!couponCode) {
-      return res.json({ valid: false, message: 'Coupon code required' });
+    const { code, planId } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ error: { code: 'MISSING_CODE', message: 'Coupon code is required' } });
     }
 
     const coupon = await prisma.coupon.findUnique({
-      where: { code: couponCode.toUpperCase() }
+      where: { code }
     });
 
     if (!coupon) {
@@ -168,11 +61,11 @@ subscriptionsRouter.post('/coupons/validate', requireAuth, async (req: any, res)
     }
 
     if (coupon.validTo < new Date()) {
-      return res.json({ valid: false, message: 'Coupon expired' });
+      return res.json({ valid: false, message: 'Coupon has expired' });
     }
 
-    if (coupon.maxRedemptions && coupon.usedCount >= coupon.maxRedemptions) {
-      return res.json({ valid: false, message: 'Coupon usage limit reached' });
+    if (coupon.maxRedemptions !== null && coupon.maxRedemptions <= coupon.usedCount) {
+      return res.json({ valid: false, message: 'Coupon usage limit exceeded' });
     }
 
     res.json({
@@ -186,84 +79,69 @@ subscriptionsRouter.post('/coupons/validate', requireAuth, async (req: any, res)
 });
 
 // Helper functions for payment processing
-async function generateCheckoutResponse(plan: any, provider: string, couponCode?: string) {
-  // In a real implementation, this would integrate with actual payment providers
-  // For now, return mock response
-
-  const baseAmount = plan.priceCents;
-  const discount = couponCode ? await calculateDiscount(couponCode, baseAmount) : 0;
-  const finalAmount = baseAmount - discount;
-
-  switch (provider) {
-    case 'bankily':
-      return {
-        approvalUrl: `https://bankily.com/checkout?amount=${finalAmount}&plan=${plan.id}`,
-        qrCode: `bankily_qr_${Date.now()}`,
-        instructions: 'Scannez le QR code avec l\'app Bankily ou utilisez le lien de paiement',
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString() // 15 minutes
-      };
-    case 'masrivi':
-      return {
-        approvalUrl: `https://masrivi.com/pay?amount=${finalAmount}&plan=${plan.id}`,
-        intentId: `masrivi_${Date.now()}`,
-        instructions: 'Utilisez l\'app Masrivi pour confirmer le paiement',
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 minutes
-      };
-    case 'sedad':
-      return {
-        approvalUrl: `https://sedad.com/payment?amount=${finalAmount}&plan=${plan.id}`,
-        qrCode: `sedad_qr_${Date.now()}`,
-        instructions: 'Scannez le QR code avec l\'app Sedad',
-        expiresAt: new Date(Date.now() + 20 * 60 * 1000).toISOString() // 20 minutes
-      };
-    default:
-      throw new Error(`Unsupported provider: ${provider}`);
-  }
+async function createPaymentIntent(provider: string, amount: number, currency: string) {
+  // Mock implementation - in real app, integrate with payment providers
+  return {
+    intentId: `intent_${Date.now()}`,
+    qrCode: `data:image/png;base64,mock_qr_code`,
+    approvalUrl: `https://payment.${provider}.com/approve/${Date.now()}`
+  };
 }
 
-async function calculateDiscount(couponCode: string, amount: number): Promise<number> {
-  const coupon = await prisma.coupon.findUnique({
-    where: { code: couponCode.toUpperCase() }
-  });
-
-  if (!coupon) return 0;
-
-  return Math.floor(amount * (coupon.discountPercent / 100));
-}
-
-async function processWebhook(provider: string, data: any) {
-  // Process webhook data and update payment status
-  // This would integrate with actual payment provider webhooks
-
-  console.log(`Processing ${provider} webhook:`, data);
-
-  // Update payment status in database
-  if (data.status === 'completed') {
-    await updatePaymentStatus(data.providerRef, 'completed');
-    await activateSubscription(data.providerRef);
-  }
-}
-
-async function updatePaymentStatus(providerRef: string, status: string) {
-  await prisma.payment.updateMany({
-    where: { providerRef },
-    data: { status }
-  });
-}
-
-async function activateSubscription(providerRef: string) {
-  const payment = await prisma.payment.findUnique({
-    where: { providerRef },
-    include: { subscription: true }
-  });
-
-  if (payment && payment.subscription) {
-    await prisma.subscription.update({
-      where: { id: payment.subscription.id },
-      data: { status: 'active' }
+// POST /checkout - Initiate payment checkout
+subscriptionsRouter.post('/checkout', requireAuth, async (req: any, res) => {
+  try {
+    const { planId, provider, couponCode } = req.body;
+    
+    // Get plan details
+    const plan = await prisma.subscriptionPlan.findUnique({
+      where: { id: planId }
     });
+
+    if (!plan) {
+      return res.status(400).json({ error: { code: 'INVALID_PLAN', message: 'Plan not found' } });
+    }
+
+    // Check if user already has active subscription
+    const existingSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: req.userId,
+        status: 'active'
+      }
+    });
+
+    if (existingSubscription) {
+      return res.status(400).json({ 
+        error: { code: 'ALREADY_SUBSCRIBED', message: 'User already has an active subscription' } 
+      });
+    }
+
+    // Apply coupon discount if provided
+    let finalPrice = plan.priceCents;
+    if (couponCode) {
+      const coupon = await prisma.coupon.findUnique({
+        where: { code: couponCode }
+      });
+      
+      if (coupon && coupon.validTo > new Date() && (coupon.maxRedemptions === null || coupon.maxRedemptions > coupon.usedCount)) {
+        finalPrice = Math.round(plan.priceCents * (1 - coupon.discountPercent / 100));
+      }
+    }
+
+    // Create payment intent
+    const paymentIntent = await createPaymentIntent(provider, finalPrice, plan.currency);
+    
+    res.json({
+      intentId: paymentIntent.intentId,
+      qrCode: paymentIntent.qrCode,
+      approvalUrl: paymentIntent.approvalUrl,
+      amount: finalPrice,
+      currency: plan.currency
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
-}
+});
 
 // POST /plans - Create subscription plan (admin only)
 subscriptionsRouter.post('/plans', requireAuth, async (req: any, res) => {
@@ -382,14 +260,10 @@ subscriptionsRouter.post('/subscribe', requireAuth, async (req: any, res) => {
       });
     }
     
-    // Calculate end date
+    // Calculate end date (1 year from now)
     const startAt = new Date();
     const endAt = new Date();
-    if (plan.interval === 'monthly') {
-      endAt.setMonth(endAt.getMonth() + 1);
-    } else {
-      endAt.setFullYear(endAt.getFullYear() + 1);
-    }
+    endAt.setFullYear(endAt.getFullYear() + 1);
     
     const subscription = await prisma.subscription.create({
       data: {

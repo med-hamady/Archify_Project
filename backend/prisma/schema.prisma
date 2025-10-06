@@ -1,5 +1,5 @@
-// Prisma schema for Archify MVP core
-// Datasource and generator
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,70 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enums
-
-enum Role {
-  student
-  admin
-  superadmin
-}
-
-enum SubscriptionStatus {
-  active
-  canceled
-  expired
-}
-
-enum LessonType {
-  video
-  pdf
-  exam
-}
-
-enum CommentStatus {
-  visible
-  hidden
-  reported
-}
-
-enum ProgressStatus {
-  viewed
-  in_progress
-}
-
-// Models
-
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  passwordHash  String
-  name          String
-  departmentId  String?
-  semester      Int?
-  role          Role     @default(student)
-  createdAt     DateTime @default(now())
-  lastLoginAt   DateTime?
-  avatarUrl     String?
-
-  // Relations
-  department          Department?          @relation(fields: [departmentId], references: [id])
-  subscriptions       Subscription[]
-  payments            Payment[]
-  progress            Progress[]
-  comments            Comment[]
+  id                String              @id @default(cuid())
+  email             String              @unique
+  passwordHash      String
+  name              String
+  department        Department          @relation(fields: [departmentId], references: [id])
+  departmentId      String
+  semester          String
+  role              UserRole            @default(STUDENT)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  subscriptions     Subscription[]
+  comments          Comment[]
+  progresses        Progress[]
   passwordResetTokens PasswordResetToken[]
 }
 
 model Department {
-  id      String   @id @default(cuid())
-  name    String   @unique
-  courses Course[]
-  users   User[]
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  users     User[]
+  courses   Course[]
 }
 
 model Course {
-  id          String      @id @default(cuid())
-  department  Department  @relation(fields: [departmentId], references: [id])
+  id          String    @id @default(cuid())
+  department  Department @relation(fields: [departmentId], references: [id])
   departmentId String
   title       String
   description String
@@ -107,25 +71,23 @@ model Lesson {
 }
 
 model LessonAsset {
-  id        String  @id @default(cuid())
-  lesson    Lesson  @relation(fields: [lessonId], references: [id])
-  lessonId  String
-  kind      String
-  url       String
-  title     String
+  id       String @id @default(cuid())
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+  lessonId String
+  kind     AssetKind
+  url      String
+  title    String
 }
 
 model Comment {
-  id        String         @id @default(cuid())
-  lesson    Lesson         @relation(fields: [lessonId], references: [id])
+  id        String   @id @default(cuid())
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
   lessonId  String
-  user      User           @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
   content   String
-  status    CommentStatus  @default(visible)
-  createdAt DateTime       @default(now())
-
-  @@index([lessonId, createdAt], map: "comments_lesson_created_idx")
+  status    CommentStatus @default(VISIBLE)
+  createdAt DateTime @default(now())
 }
 
 model SubscriptionPlan {
@@ -133,7 +95,7 @@ model SubscriptionPlan {
   name         String
   interval     String
   priceCents   Int
-  currency     String
+  currency     String  @default("MRU")
   subscriptions Subscription[]
 }
 
@@ -143,61 +105,129 @@ model Subscription {
   userId     String
   plan       SubscriptionPlan    @relation(fields: [planId], references: [id])
   planId     String
-  status     SubscriptionStatus  @default(active)
-  startAt    DateTime            @default(now())
+  status     SubscriptionStatus  @default(ACTIVE)
+  startAt    DateTime
   endAt      DateTime
   cancelAt   DateTime?
+  createdAt  DateTime           @default(now())
   payments   Payment[]
-
-  @@index([userId, status], map: "subscriptions_user_status_idx")
 }
 
 model Payment {
-  id               String   @id @default(cuid())
-  user             User     @relation(fields: [userId], references: [id])
-  userId           String
-  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
-  subscriptionId   String
-  provider         String
-  providerRef      String   @unique
-  amountCents      Int
-  currency         String
-  status           String
-  createdAt        DateTime @default(now())
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String
+  provider       PaymentProvider
+  providerRef    String
+  amountCents    Int
+  currency       String        @default("MRU")
+  status         PaymentStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
 }
 
 model Progress {
-  id        String         @id @default(cuid())
-  user      User           @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  lesson    Lesson         @relation(fields: [lessonId], references: [id])
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
   lessonId  String
-  status    ProgressStatus @default(in_progress)
-  updatedAt DateTime       @updatedAt
+  status    ProgressStatus @default(VIEWED)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId])
 }
 
 model Coupon {
-  id              String   @id @default(cuid())
-  code            String   @unique
+  id             String   @id @default(cuid())
+  code           String   @unique
   discountPercent Int
-  validFrom       DateTime @default(now())
-  validTo         DateTime
-  maxRedemptions  Int?
-  usedCount       Int      @default(0)
-  createdAt       DateTime @default(now())
+  validFrom      DateTime
+  validTo        DateTime
+  maxRedemptions Int?
+  usedCount      Int      @default(0)
+  createdAt      DateTime @default(now())
 }
 
 model PasswordResetToken {
   id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
   token     String   @unique
   expiresAt DateTime
-  used      Boolean  @default(false)
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([token])
-  @@index([userId])
 }
 
-// Note: unique fields already imply indexes
+model Quiz {
+  id       String     @id @default(cuid())
+  lesson   Lesson     @relation(fields: [lessonId], references: [id])
+  lessonId String
+  title    String
+  questions QuizQuestion[]
+}
+
+model QuizQuestion {
+  id      String @id @default(cuid())
+  quiz    Quiz   @relation(fields: [quizId], references: [id])
+  quizId  String
+  question String
+  options String[]
+  correctAnswer Int
+}
+
+model QuizAnswer {
+  id       String @id @default(cuid())
+  userId   String
+  questionId String
+  answer   Int
+  isCorrect Boolean
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
+  SUPERADMIN
+}
+
+enum LessonType {
+  VIDEO
+  PDF
+  EXAM
+}
+
+enum AssetKind {
+  PDF
+  ATTACHMENT
+}
+
+enum CommentStatus {
+  VISIBLE
+  HIDDEN
+  REPORTED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+}
+
+enum PaymentProvider {
+  BANKILY
+  MASRIVI
+  SEDAD
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum ProgressStatus {
+  VIEWED
+  IN_PROGRESS
+}

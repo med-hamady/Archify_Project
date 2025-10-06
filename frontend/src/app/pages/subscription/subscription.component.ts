@@ -40,30 +40,13 @@ interface SubscriptionPlanUI {
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Billing Toggle -->
+        <!-- Subscription Info -->
         <div class="flex justify-center mb-12">
-          <div class="bg-gray-100 rounded-lg p-1 flex">
-            <button
-              (click)="setBillingPeriod('monthly')"
-              class="px-6 py-2 text-sm font-medium rounded-md transition-colors"
-              [class]="billingPeriod() === 'monthly' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-500 hover:text-gray-700'"
-            >
-              Mensuel
-            </button>
-            <button
-              (click)="setBillingPeriod('yearly')"
-              class="px-6 py-2 text-sm font-medium rounded-md transition-colors"
-              [class]="billingPeriod() === 'yearly' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-500 hover:text-gray-700'"
-            >
-              Annuel
-              <span class="ml-1 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
-                -20%
-              </span>
-            </button>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-2xl">
+            <div class="text-center">
+              <h2 class="text-xl font-semibold text-blue-900 mb-2">Abonnement Annuel</h2>
+              <p class="text-blue-700">Accès complet à tous les cours et leçons pour une année entière</p>
+            </div>
           </div>
         </div>
 
@@ -108,14 +91,10 @@ interface SubscriptionPlanUI {
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Premium</h3>
               <p class="text-gray-600 mb-6">Pour les étudiants sérieux</p>
               <div class="mb-6">
-                <span class="text-4xl font-bold text-gray-900">
-                  {{ billingPeriod() === 'monthly' ? '29' : '290' }}
-                </span>
-                <span class="text-gray-600">
-                  /{{ billingPeriod() === 'monthly' ? 'mois' : 'an' }}
-                </span>
-                <div *ngIf="billingPeriod() === 'yearly'" class="text-sm text-green-600 font-medium mt-1">
-                  Économisez 58€ par an
+                <span class="text-4xl font-bold text-gray-900">650</span>
+                <span class="text-gray-600">/an</span>
+                <div class="text-sm text-green-600 font-medium mt-1">
+                  Accès à tous les cours et leçons
                 </div>
               </div>
               <button 
@@ -280,12 +259,8 @@ interface SubscriptionPlanUI {
   `
 })
 export class SubscriptionComponent {
-  private billingPeriodSignal = signal<'monthly' | 'yearly'>('monthly');
-
-  billingPeriod = computed(() => this.billingPeriodSignal());
 
   subscriptionPlans = computed<SubscriptionPlanUI[]>(() => {
-    const isMonthly = this.billingPeriod() === 'monthly';
     const currentUser = this.authService.user();
     const isPremium = this.authService.isPremium();
 
@@ -295,8 +270,8 @@ export class SubscriptionComponent {
         name: 'Gratuit',
         description: 'Parfait pour commencer',
         price: 0,
-        currency: 'EUR',
-        period: this.billingPeriod(),
+        currency: 'MRU',
+        period: 'yearly',
         features: [
           'Accès aux cours gratuits',
           'Vidéos de base',
@@ -314,23 +289,24 @@ export class SubscriptionComponent {
       {
         id: 'premium',
         name: 'Premium',
-        description: 'Pour les étudiants sérieux',
-        price: isMonthly ? 29 : 290,
-        currency: 'EUR',
-        period: this.billingPeriod(),
+        description: 'Accès complet à tous les cours',
+        price: 650,
+        currency: 'MRU',
+        period: 'yearly',
         features: [
-          'Tous les cours premium',
+          'Accès à TOUS les cours',
+          'Toutes les leçons premium',
           'Vidéos HD illimitées',
           'Toutes les notes PDF',
           'Support prioritaire',
-          'Cours illimités',
           'Téléchargements offline',
           'Certificats de fin de cours',
-          'Accès aux examens d\'archive'
+          'Accès aux examens d\'archive',
+          'Accès pour 1 an complet'
         ],
         isPopular: true,
         isCurrent: isPremium,
-        buttonText: isPremium ? 'Plan actuel' : (isMonthly ? '29€/mois' : '290€/an'),
+        buttonText: isPremium ? 'Plan actuel' : '650 MRU/an',
         buttonClass: isPremium
           ? 'w-full px-6 py-3 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed'
           : 'w-full px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors'
@@ -340,8 +316,8 @@ export class SubscriptionComponent {
         name: 'Entreprise',
         description: 'Pour les institutions',
         price: 0,
-        currency: 'EUR',
-        period: this.billingPeriod(),
+        currency: 'MRU',
+        period: 'yearly',
         features: [
           'Tout du plan Premium',
           'Gestion multi-utilisateurs',
@@ -379,9 +355,6 @@ export class SubscriptionComponent {
     this.loadPaymentProviders();
   }
 
-  setBillingPeriod(period: 'monthly' | 'yearly'): void {
-    this.billingPeriodSignal.set(period);
-  }
 
   selectPlan(planId: string): void {
     if (planId === 'free') {
