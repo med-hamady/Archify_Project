@@ -7,7 +7,7 @@ export const roleGuard = (roles: Array<'student' | 'admin' | 'superadmin'>): Can
     const auth = inject(AuthService);
     const router = inject(Router);
     const user = auth.user();
-    if (user && roles.includes(user.role)) {
+    if (user && roles.includes(user.role.toLowerCase() as 'student' | 'admin' | 'superadmin')) {
       return true;
     }
     router.navigate(['/']);

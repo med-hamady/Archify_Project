@@ -24,6 +24,27 @@ export interface User {
   lastLoginAt?: Date;
 }
 
+// Backend user interface (with uppercase roles)
+export interface BackendUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
+  subscription?: {
+    type: 'free' | 'premium' | 'enterprise';
+    expiresAt: Date | null;
+    isActive: boolean;
+  };
+  profile?: {
+    avatar?: string;
+    university?: string;
+    department?: string;
+    year?: number;
+  };
+  createdAt: Date;
+  lastLoginAt?: Date;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -41,7 +62,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  user: User;
+  user: BackendUser;
 }
 
 @Injectable({
@@ -84,7 +105,13 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.setAuthData(response);
-          this.router.navigate(['/dashboard']);
+          // Redirect admins to admin dashboard, others to user dashboard
+          const userRole = response.user.role.toLowerCase();
+          if (userRole === 'admin' || userRole === 'superadmin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         }),
         catchError(error => {
           console.error('Login error:', error);
@@ -105,7 +132,13 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.setAuthData(response);
-          this.router.navigate(['/dashboard']);
+          // Redirect admins to admin dashboard, others to user dashboard
+          const userRole = response.user.role.toLowerCase();
+          if (userRole === 'admin' || userRole === 'superadmin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         }),
         catchError(error => {
           console.error('Registration error:', error);
@@ -175,11 +208,17 @@ export class AuthService {
   }
 
   private setAuthData(response: AuthResponse): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+    // Transform role to lowercase to match frontend interface
+    const userData = {
+      ...response.user,
+      role: response.user.role.toLowerCase() as 'student' | 'admin' | 'superadmin'
+    };
+    
+    localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
     
     // Update signals
-    this.userSubject.next(response.user);
-    this.user.set(response.user);
+    this.userSubject.next(userData);
+    this.user.set(userData);
   }
 
   private updateUser(user: User): void {

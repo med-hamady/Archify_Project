@@ -52,8 +52,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () => import('./pages/admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [authGuard, roleGuard(['admin'])]
+    loadComponent: () => import('./pages/admin/admin-enhanced.component').then(m => m.AdminEnhancedComponent),
+    canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
   },
   { path: '**', redirectTo: '' }
 ];
