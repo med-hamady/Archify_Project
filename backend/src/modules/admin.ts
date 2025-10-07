@@ -13,7 +13,7 @@ const createAdminSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  role: z.enum(['admin', 'superadmin']).default('admin'),
+  role: z.enum(['ADMIN', 'SUPERADMIN']).default('ADMIN'),
 });
 
 const createUserSchema = z.object({
@@ -21,14 +21,14 @@ const createUserSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  role: z.enum(['student', 'admin', 'superadmin']).default('student'),
+  role: z.enum(['STUDENT', 'ADMIN', 'SUPERADMIN']).default('STUDENT'),
   departmentId: z.string().cuid().optional(),
-  semester: z.number().int().min(1).max(10).optional(),
+  semester: z.string().optional(),
 });
 
 // POST /api/admin/create-admin - Create admin account (Superadmin only)
 adminRouter.post('/create-admin', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'superadmin') {
+  if (req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only superadmin can create admin accounts' } });
   }
 
@@ -47,6 +47,12 @@ adminRouter.post('/create-admin', requireAuth, async (req: any, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(body.password, 12);
 
+    // Get the first department ID
+    const firstDept = await prisma.department.findFirst();
+    if (!firstDept) {
+      return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
+    }
+
     // Create admin user
     const admin = await prisma.user.create({
       data: {
@@ -54,6 +60,8 @@ adminRouter.post('/create-admin', requireAuth, async (req: any, res) => {
         passwordHash: hashedPassword,
         role: body.role,
         name: `${body.firstName} ${body.lastName}`,
+        departmentId: firstDept.id,
+        semester: 'S1'
       }
     });
 
@@ -72,7 +80,7 @@ adminRouter.post('/create-admin', requireAuth, async (req: any, res) => {
 
 // POST /api/admin/create-user - Create user account (Admin only)
 adminRouter.post('/create-user', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can create user accounts' } });
   }
 
@@ -98,8 +106,8 @@ adminRouter.post('/create-user', requireAuth, async (req: any, res) => {
         passwordHash: hashedPassword,
         role: body.role,
         name: `${body.firstName} ${body.lastName}`,
-        departmentId: body.departmentId,
-        semester: body.semester,
+        departmentId: body.departmentId || (await prisma.department.findFirst())?.id || 'default-dept',
+        semester: body.semester || 'S1',
       },
       include: {
         department: { select: { name: true } },
@@ -138,13 +146,21 @@ adminRouter.post('/init', async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Get the first department ID
+    const firstDept = await prisma.department.findFirst();
+    if (!firstDept) {
+      return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
+    }
+
     // Create superadmin
     const superadmin = await prisma.user.create({
       data: {
         email,
         passwordHash: hashedPassword,
-        role: 'superadmin',
+        role: 'SUPERADMIN',
         name: `${firstName} ${lastName}`,
+        departmentId: firstDept.id,
+        semester: 'S1'
       }
     });
 

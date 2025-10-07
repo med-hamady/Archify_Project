@@ -28,14 +28,13 @@ commentsRouter.get('/lessons/:id/comments', async (req, res) => {
       prisma.comment.findMany({
         where: {
           lessonId: id,
-          status: 'visible'
+          status: 'VISIBLE'
         },
         include: {
           user: {
             select: {
               id: true,
               name: true,
-              avatarUrl: true
             }
           }
         },
@@ -46,7 +45,7 @@ commentsRouter.get('/lessons/:id/comments', async (req, res) => {
       prisma.comment.count({
         where: {
           lessonId: id,
-          status: 'visible'
+          status: 'VISIBLE'
         }
       })
     ]);
@@ -95,14 +94,13 @@ commentsRouter.post('/lessons/:id/comments', requireAuth, async (req: any, res) 
         content: body.content,
         lessonId: id,
         userId: req.userId,
-        status: 'visible'
+        status: 'VISIBLE'
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
-            avatarUrl: true
           }
         }
       }
@@ -148,13 +146,15 @@ commentsRouter.put('/:id', requireAuth, async (req: any, res) => {
 
     const updatedComment = await prisma.comment.update({
       where: { id },
-      data: body,
+      data: {
+        ...body,
+        status: body.status === 'visible' ? 'VISIBLE' : body.status === 'hidden' ? 'HIDDEN' : body.status === 'reported' ? 'REPORTED' : body.status
+      },
       include: {
         user: {
           select: {
             id: true,
             name: true,
-            avatarUrl: true
           }
         }
       }
@@ -229,7 +229,7 @@ commentsRouter.post('/:id/report', requireAuth, async (req: any, res) => {
     // Update comment status to reported
     await prisma.comment.update({
       where: { id },
-      data: { status: 'reported' }
+      data: { status: 'REPORTED' }
     });
 
     res.json({ message: 'Comment reported successfully' });

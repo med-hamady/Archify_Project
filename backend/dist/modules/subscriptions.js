@@ -12,9 +12,12 @@ exports.subscriptionsRouter = (0, express_1.Router)();
 // Schemas
 const subscriptionPlanCreateSchema = zod_1.z.object({
     name: zod_1.z.string().min(1),
+    description: zod_1.z.string().optional(),
+    type: zod_1.z.enum(['VIDEOS_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']),
     interval: zod_1.z.enum(['yearly']), // Only yearly subscriptions
     priceCents: zod_1.z.number().int().min(0),
-    currency: zod_1.z.string().length(3).default('MRU')
+    currency: zod_1.z.string().length(3).default('MRU'),
+    features: zod_1.z.array(zod_1.z.string()).default([])
 });
 const subscriptionCreateSchema = zod_1.z.object({
     planId: zod_1.z.string().cuid()
@@ -93,7 +96,7 @@ exports.subscriptionsRouter.post('/checkout', auth_1.requireAuth, async (req, re
         const existingSubscription = await prisma.subscription.findFirst({
             where: {
                 userId: req.userId,
-                status: 'active'
+                status: 'ACTIVE'
             }
         });
         if (existingSubscription) {
@@ -158,7 +161,7 @@ exports.subscriptionsRouter.get('/my-subscription', auth_1.requireAuth, async (r
         const subscription = await prisma.subscription.findFirst({
             where: {
                 userId: req.userId,
-                status: 'active'
+                status: 'ACTIVE'
             },
             include: {
                 plan: true,
@@ -221,7 +224,7 @@ exports.subscriptionsRouter.post('/subscribe', auth_1.requireAuth, async (req, r
         const existingSubscription = await prisma.subscription.findFirst({
             where: {
                 userId: req.userId,
-                status: 'active'
+                status: 'ACTIVE'
             }
         });
         if (existingSubscription) {
@@ -275,7 +278,7 @@ exports.subscriptionsRouter.post('/cancel', auth_1.requireAuth, async (req, res)
         const subscription = await prisma.subscription.findFirst({
             where: {
                 userId: req.userId,
-                status: 'active'
+                status: 'ACTIVE'
             }
         });
         if (!subscription) {
@@ -289,7 +292,7 @@ exports.subscriptionsRouter.post('/cancel', auth_1.requireAuth, async (req, res)
         await prisma.subscription.update({
             where: { id: subscription.id },
             data: {
-                status: 'canceled',
+                status: 'CANCELED',
                 cancelAt: new Date()
             }
         });
@@ -393,7 +396,7 @@ exports.subscriptionsRouter.get('/check-access/:lessonId', auth_1.requireAuth, a
         const subscription = await prisma.subscription.findFirst({
             where: {
                 userId: req.userId,
-                status: 'active',
+                status: 'ACTIVE',
                 endAt: { gt: new Date() }
             }
         });

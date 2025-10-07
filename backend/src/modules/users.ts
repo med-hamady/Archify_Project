@@ -160,8 +160,8 @@ usersRouter.get('/stats/overview', requireAuth, async (req: any, res) => {
       usersByDepartment
     ] = await Promise.all([
       prisma.user.count(),
-      prisma.user.count({ where: { role: 'student' } }),
-      prisma.user.count({ where: { role: { in: ['admin', 'superadmin'] } } }),
+      prisma.user.count({ where: { role: 'STUDENT' } }),
+      prisma.user.count({ where: { role: { in: ['ADMIN', 'SUPERADMIN'] } } }),
       prisma.user.count({
         where: {
           createdAt: {
@@ -171,8 +171,7 @@ usersRouter.get('/stats/overview', requireAuth, async (req: any, res) => {
       }),
       prisma.user.groupBy({
         by: ['departmentId'],
-        _count: { id: true },
-        where: { departmentId: { not: null } }
+        _count: { id: true }
       })
     ]);
 
@@ -183,7 +182,7 @@ usersRouter.get('/stats/overview', requireAuth, async (req: any, res) => {
       recentUsers,
       usersByDepartment: usersByDepartment.map(item => ({
         departmentId: item.departmentId,
-        count: item._count.id
+        count: item._count?.id || 0
       }))
     });
   } catch (err: any) {

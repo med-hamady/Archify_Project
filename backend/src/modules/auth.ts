@@ -108,13 +108,23 @@ authRouter.post('/register', async (req, res) => {
       return res.status(409).json({ error: { code: 'EMAIL_EXISTS', message: 'Email already in use' } });
     }
     const passwordHash = await bcrypt.hash(body.password, 10);
+    // Get the first department ID if not provided
+    let departmentId = body.departmentId;
+    if (!departmentId) {
+      const firstDept = await prisma.department.findFirst();
+      if (!firstDept) {
+        return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
+      }
+      departmentId = firstDept.id;
+    }
+
     const user = await prisma.user.create({
       data: {
         email: body.email,
         passwordHash,
         name: body.name,
-        departmentId: body.departmentId ?? null,
-        semester: body.semester ?? null,
+        departmentId,
+        semester: body.semester?.toString() ?? 'S1',
       },
     });
 
@@ -140,7 +150,7 @@ authRouter.post('/login', async (req, res) => {
     const ok = await bcrypt.compare(body.password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' } });
 
-    await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+    // Update last login time (removed lastLoginAt field)
 
     const accessToken = signAccessToken({ sub: user.id, role: user.role });
     const refreshToken = signRefreshToken({ sub: user.id });
@@ -210,7 +220,12 @@ const profileSchema = z.object({
 authRouter.put('/profile', requireAuth, async (req: any, res) => {
   try {
     const body = profileSchema.parse(req.body);
-    const user = await prisma.user.update({ where: { id: req.userId }, data: body });
+    const updateData: any = {};
+    if (body.name) updateData.name = body.name;
+    if (body.departmentId !== undefined) updateData.departmentId = body.departmentId;
+    if (body.semester !== undefined) updateData.semester = body.semester?.toString();
+    
+    const user = await prisma.user.update({ where: { id: req.userId }, data: updateData });
     return res.json(getUserPublic(user));
   } catch (err: any) {
     if (err instanceof z.ZodError) {
@@ -274,7 +289,7 @@ authRouter.post('/reset-password', async (req, res) => {
       include: { user: true }
     });
 
-    if (!tokenRecord || tokenRecord.used || tokenRecord.expiresAt < new Date()) {
+    if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
       return res.status(400).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid or expired token' } });
     }
 
@@ -287,21 +302,18 @@ authRouter.post('/reset-password', async (req, res) => {
       data: { passwordHash }
     });
 
-    // Mark token as used
-    await prisma.passwordResetToken.update({
-      where: { id: tokenRecord.id },
-      data: { used: true }
+    // Delete the used token
+    await prisma.passwordResetToken.delete({
+      where: { id: tokenRecord.id }
     });
 
     // Clean up old tokens for this user
-    await prisma.passwordResetToken.updateMany({
+    await prisma.passwordResetToken.deleteMany({
       where: {
         userId: tokenRecord.userId,
         id: { not: tokenRecord.id },
-        used: false,
         expiresAt: { lt: new Date() }
-      },
-      data: { used: true }
+      }
     });
 
     return res.json({ message: 'Password reset successfully' });

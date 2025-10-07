@@ -1,0 +1,15 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4200",
+  "executionArgs": {
+    "projectName": "Archify_Project",
+    "projectPath": "C:\\Users\\hp\\Desktop\\Proger Tech Projects\\Archify_Project",
+    "testIds": [],
+    "additionalInstruction": "Run comprehensive frontend tests for the Archify platform including navigation, authentication, subscription page, payment logos, responsive design, and UI/UX elements. Test all the features we've implemented including the home page, subscription plans, payment providers (Bankily, Masrivi, Sedad), authentication flow, and admin dashboard access.",
+    "envs": {
+      "API_KEY": ""
+    }
+  }
+}

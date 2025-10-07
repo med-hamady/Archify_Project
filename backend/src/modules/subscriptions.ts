@@ -12,9 +12,12 @@ export const subscriptionsRouter = Router();
 // Schemas
 const subscriptionPlanCreateSchema = z.object({
   name: z.string().min(1),
+  description: z.string().optional(),
+  type: z.enum(['VIDEOS_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']),
   interval: z.enum(['yearly']), // Only yearly subscriptions
   priceCents: z.number().int().min(0),
-  currency: z.string().length(3).default('MRU')
+  currency: z.string().length(3).default('MRU'),
+  features: z.array(z.string()).default([])
 });
 
 const subscriptionCreateSchema = z.object({
@@ -106,7 +109,7 @@ subscriptionsRouter.post('/checkout', requireAuth, async (req: any, res) => {
     const existingSubscription = await prisma.subscription.findFirst({
       where: {
         userId: req.userId,
-        status: 'active'
+        status: 'ACTIVE'
       }
     });
 
@@ -179,7 +182,7 @@ subscriptionsRouter.get('/my-subscription', requireAuth, async (req: any, res) =
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId: req.userId,
-        status: 'active'
+        status: 'ACTIVE'
       },
       include: {
         plan: true,
@@ -247,7 +250,7 @@ subscriptionsRouter.post('/subscribe', requireAuth, async (req: any, res) => {
     const existingSubscription = await prisma.subscription.findFirst({
       where: {
         userId: req.userId,
-        status: 'active'
+        status: 'ACTIVE'
       }
     });
     
@@ -305,7 +308,7 @@ subscriptionsRouter.post('/cancel', requireAuth, async (req: any, res) => {
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId: req.userId,
-        status: 'active'
+        status: 'ACTIVE'
       }
     });
     
@@ -321,7 +324,7 @@ subscriptionsRouter.post('/cancel', requireAuth, async (req: any, res) => {
     await prisma.subscription.update({
       where: { id: subscription.id },
       data: {
-        status: 'canceled',
+        status: 'CANCELED',
         cancelAt: new Date()
       }
     });
@@ -432,7 +435,7 @@ subscriptionsRouter.get('/check-access/:lessonId', requireAuth, async (req: any,
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId: req.userId,
-        status: 'active',
+        status: 'ACTIVE',
         endAt: { gt: new Date() }
       }
     });

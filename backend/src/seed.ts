@@ -40,31 +40,77 @@ async function main() {
       create: {
         id: 'free-plan',
         name: 'Gratuit',
+        description: 'Accès aux cours gratuits uniquement',
+        type: 'FULL_ACCESS',
         interval: 'monthly',
         priceCents: 0,
-        currency: 'MRU'
+        currency: 'MRU',
+        features: [
+          'Accès aux cours gratuits',
+          'Vidéos de base',
+          'Support communautaire'
+        ]
       }
     }),
     prisma.subscriptionPlan.upsert({
-      where: { id: 'premium-monthly' },
+      where: { id: 'videos-only' },
       update: {},
       create: {
-        id: 'premium-monthly',
-        name: 'Premium Mensuel',
-        interval: 'monthly',
-        priceCents: 5000, // 50 MRU
-        currency: 'MRU'
+        id: 'videos-only',
+        name: 'Vidéos Seulement',
+        description: 'Accès à toutes les vidéos de solutions d\'examens',
+        type: 'VIDEOS_ONLY',
+        interval: 'yearly',
+        priceCents: 65000, // 650 MRU
+        currency: 'MRU',
+        features: [
+          'Accès à toutes les vidéos de solutions',
+          'Vidéos HD illimitées',
+          'Téléchargements offline',
+          'Support prioritaire',
+          'Accès pour 1 an complet'
+        ]
       }
     }),
     prisma.subscriptionPlan.upsert({
-      where: { id: 'premium-yearly' },
+      where: { id: 'documents-only' },
       update: {},
       create: {
-        id: 'premium-yearly',
-        name: 'Premium Annuel',
+        id: 'documents-only',
+        name: 'Documents Seulement',
+        description: 'Accès à tous les documents PDF et solutions écrites',
+        type: 'DOCUMENTS_ONLY',
         interval: 'yearly',
         priceCents: 50000, // 500 MRU
-        currency: 'MRU'
+        currency: 'MRU',
+        features: [
+          'Accès à tous les documents PDF',
+          'Solutions écrites détaillées',
+          'Archives d\'examens complets',
+          'Téléchargements illimités',
+          'Accès pour 1 an complet'
+        ]
+      }
+    }),
+    prisma.subscriptionPlan.upsert({
+      where: { id: 'full-access' },
+      update: {},
+      create: {
+        id: 'full-access',
+        name: 'Accès Complet',
+        description: 'Accès à toutes les vidéos ET documents',
+        type: 'FULL_ACCESS',
+        interval: 'yearly',
+        priceCents: 100000, // 1000 MRU
+        currency: 'MRU',
+        features: [
+          'Tout du plan Vidéos',
+          'Tout du plan Documents',
+          'Accès prioritaire aux nouveaux contenus',
+          'Support premium 24/7',
+          'Certificats de fin de cours',
+          'Accès pour 1 an complet'
+        ]
       }
     })
   ]);
@@ -80,9 +126,9 @@ async function main() {
       email: 'admin@archify.ma',
       passwordHash: adminPassword,
       name: 'Administrateur Archify',
-      role: 'superadmin',
+      role: 'SUPERADMIN',
       departmentId: departments[0].id,
-      semester: 1
+      semester: '1'
     }
   });
 
@@ -97,9 +143,9 @@ async function main() {
       email: 'student@archify.ma',
       passwordHash: studentPassword,
       name: 'Étudiant Test',
-      role: 'student',
+      role: 'STUDENT',
       departmentId: departments[0].id,
-      semester: 1
+      semester: '1'
     }
   });
 
@@ -180,11 +226,12 @@ async function main() {
       create: {
         id: 'lesson-1-1',
         courseId: courses[0].id,
-        title: 'Introduction aux algorithmes',
-        type: 'video',
+        title: 'Introduction aux algorithmes - Examen 2020',
+        type: 'VIDEO',
         durationSec: 1800, // 30 minutes
         vimeoId: '123456789',
         isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 1
       }
     }),
@@ -194,11 +241,12 @@ async function main() {
       create: {
         id: 'lesson-1-2',
         courseId: courses[0].id,
-        title: 'Variables et types de données',
-        type: 'video',
+        title: 'Variables et types de données - Examen 2021',
+        type: 'VIDEO',
         durationSec: 2400, // 40 minutes
         vimeoId: '123456790',
         isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 2
       }
     }),
@@ -208,11 +256,12 @@ async function main() {
       create: {
         id: 'lesson-1-3',
         courseId: courses[0].id,
-        title: 'Structures de contrôle',
-        type: 'video',
+        title: 'Structures de contrôle - Test 2020',
+        type: 'VIDEO',
         durationSec: 2700, // 45 minutes
         vimeoId: '123456791',
         isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 3
       }
     }),
@@ -222,10 +271,11 @@ async function main() {
       create: {
         id: 'lesson-1-4',
         courseId: courses[0].id,
-        title: 'Exercices pratiques',
-        type: 'pdf',
-        pdfUrl: 'https://example.com/exercices-algorithmique.pdf',
+        title: 'Solutions écrites - Algorithmique 2020',
+        type: 'PDF',
+        pdfUrl: 'https://example.com/solutions-algorithmique-2020.pdf',
         isPremium: true,
+        requiresDocumentSubscription: true,
         orderIndex: 4
       }
     }),
@@ -237,11 +287,12 @@ async function main() {
       create: {
         id: 'lesson-2-1',
         courseId: courses[1].id,
-        title: 'Introduction aux fonctions',
-        type: 'video',
+        title: 'Limites et continuité - Examen 2020',
+        type: 'VIDEO',
         durationSec: 2100, // 35 minutes
         vimeoId: '123456792',
-        isPremium: false,
+        isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 1
       }
     }),
@@ -251,12 +302,27 @@ async function main() {
       create: {
         id: 'lesson-2-2',
         courseId: courses[1].id,
-        title: 'Limites et continuité',
-        type: 'video',
+        title: 'Dérivées - Examen 2021',
+        type: 'VIDEO',
         durationSec: 3000, // 50 minutes
         vimeoId: '123456793',
-        isPremium: false,
+        isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 2
+      }
+    }),
+    prisma.lesson.upsert({
+      where: { id: 'lesson-2-3' },
+      update: {},
+      create: {
+        id: 'lesson-2-3',
+        courseId: courses[1].id,
+        title: 'Solutions écrites - Analyse 2020',
+        type: 'PDF',
+        pdfUrl: 'https://example.com/solutions-analyse-2020.pdf',
+        isPremium: true,
+        requiresDocumentSubscription: true,
+        orderIndex: 3
       }
     }),
 
@@ -267,11 +333,12 @@ async function main() {
       create: {
         id: 'lesson-3-1',
         courseId: courses[2].id,
-        title: 'Logique propositionnelle',
-        type: 'video',
+        title: 'Logique propositionnelle - Test 2020',
+        type: 'VIDEO',
         durationSec: 2400, // 40 minutes
         vimeoId: '123456794',
         isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 1
       }
     }),
@@ -283,11 +350,12 @@ async function main() {
       create: {
         id: 'lesson-4-1',
         courseId: courses[3].id,
-        title: 'Principes de la comptabilité',
-        type: 'video',
+        title: 'Principes de la comptabilité - Examen 2020',
+        type: 'VIDEO',
         durationSec: 1800, // 30 minutes
         vimeoId: '123456795',
-        isPremium: false,
+        isPremium: true,
+        requiresVideoSubscription: true,
         orderIndex: 1
       }
     })
@@ -329,7 +397,7 @@ async function main() {
       id: 'sub-1',
       userId: student.id,
       planId: plans[1].id, // Premium monthly
-      status: 'active',
+      status: 'ACTIVE',
       startAt: new Date(),
       endAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
     }

@@ -11,14 +11,14 @@ const lessonQuerySchema = z.object({
   page: z.string().optional().transform(val => val ? parseInt(val) : 1),
   limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
   courseId: z.string().optional(),
-  type: z.enum(['video', 'pdf', 'exam']).optional(),
+  type: z.enum(['VIDEO', 'PDF', 'EXAM']).optional(),
   isPremium: z.string().optional().transform(val => val === 'true')
 });
 
 const lessonCreateSchema = z.object({
   title: z.string().min(1),
   courseId: z.string().uuid(),
-  type: z.enum(['video', 'pdf', 'exam']),
+  type: z.enum(['VIDEO', 'PDF', 'EXAM']),
   durationSec: z.number().int().min(0).default(0),
   vimeoId: z.string().optional(),
   youtubeId: z.string().optional(),
@@ -123,7 +123,7 @@ lessonsRouter.get('/:id', async (req, res) => {
           }
         },
         comments: {
-          where: { status: 'visible' },
+          where: { status: 'VISIBLE' },
           include: { user: { select: { name: true } } },
           orderBy: { createdAt: 'asc' }
         }
@@ -264,7 +264,7 @@ lessonsRouter.post('/:id/progress', requireAuth, async (req: any, res) => {
     if (lesson.isPremium) {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        include: { subscriptions: { where: { status: 'active' } } }
+        include: { subscriptions: { where: { status: 'ACTIVE' } } }
       });
 
       if (!user || user.subscriptions.length === 0) {

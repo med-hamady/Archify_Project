@@ -7,33 +7,92 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, CommonModule],
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <!-- Hero Section -->
       <div class="relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <!-- Animated Background -->
+        <div class="absolute inset-0">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-indigo-600/5 to-purple-600/5"></div>
+          <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23e0e7ff%22%20fill-opacity%3D%220.4%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30 animate-pulse"></div>
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
           <div class="text-center">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              <span class="text-blue-900">Archify</span> — 
-              <span class="text-gray-700">Votre plateforme d'apprentissage</span>
+            <!-- ISCAE Badge -->
+            <div class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm font-semibold mb-8 shadow-lg border border-blue-200/50 hover:scale-105 transition-all duration-300">
+              <svg class="w-5 h-5 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              Spécialement conçu pour les étudiants ISCAE
+            </div>
+            
+            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-gray-900 leading-tight mb-8">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-pulse">Archify</span>
+              <br>
+              <span class="text-gray-800 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Solutions d'Archives</span>
             </h1>
-            <p class="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Accédez à des cours, vidéos, notes PDF et archives d'examens pour réussir vos études. 
-              Contenu protégé et sécurisé pour votre réussite académique.
+            
+            <p class="mt-8 text-xl sm:text-2xl md:text-3xl text-gray-600 max-w-5xl mx-auto leading-relaxed font-medium mb-4">
+              La plateforme de référence pour les étudiants en 
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-bold">Informatique de Gestion</span> 
+              à l'ISCAE
             </p>
-            <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-              <a routerLink="/catalog" 
-                 class="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-blue-900 text-white text-sm sm:text-base font-medium rounded-lg hover:bg-blue-800 transition-colors shadow-lg">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            
+            <p class="text-lg sm:text-xl text-gray-500 max-w-4xl mx-auto leading-relaxed mb-12">
+              Accédez aux solutions vidéo et documents de tous les examens d'archives avec des explications détaillées et professionnelles
+            </p>
+            
+            <!-- Key Benefits -->
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto mb-16">
+              <div class="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-lg font-bold text-gray-800">Vidéos HD</span>
+                <span class="text-sm text-gray-600 text-center">Solutions vidéo en haute définition</span>
+              </div>
+              <div class="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm12 12V6H4v10h12z"/>
+                  </svg>
+                </div>
+                <span class="text-lg font-bold text-gray-800">Solutions PDF</span>
+                <span class="text-sm text-gray-600 text-center">Documents détaillés et téléchargeables</span>
+              </div>
+              <div class="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-lg font-bold text-gray-800">Archives Complètes</span>
+                <span class="text-sm text-gray-600 text-center">Tous les examens des années précédentes</span>
+              </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <a routerLink="/subscription" 
+                 class="group inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xl font-bold rounded-2xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-500 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105">
+                <svg class="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                 </svg>
-                Explorer les cours
+                Commencer maintenant
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
               </a>
-              <a routerLink="/dashboard" 
-                 class="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-white text-gray-900 text-sm sm:text-base font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-lg border border-gray-300">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              <a routerLink="/catalog" 
+                 class="group inline-flex items-center justify-center px-10 py-5 bg-white/80 backdrop-blur-sm text-gray-900 text-xl font-bold rounded-2xl hover:bg-white transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-gray-200 hover:border-gray-300 transform hover:-translate-y-1 hover:scale-105">
+                <svg class="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                Mon tableau de bord
+                Voir les cours
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
               </a>
             </div>
           </div>
@@ -60,14 +119,157 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
 
+      <!-- Pricing Section -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Choisissez votre plan d'accès</h2>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">Des solutions adaptées à vos besoins d'étude</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Videos Only Plan -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 relative transform hover:scale-105 transition-all duration-300">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Vidéos Seulement</h3>
+                <p class="text-gray-600 mb-6">Accès à toutes les vidéos de solutions</p>
+                <div class="mb-6">
+                  <span class="text-5xl font-bold text-gray-900">650</span>
+                  <span class="text-gray-600 text-lg"> MRU/an</span>
+                </div>
+                <ul class="text-left space-y-3 mb-8">
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Vidéos HD illimitées</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Téléchargements offline</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Support prioritaire</span>
+                  </li>
+                </ul>
+                <a routerLink="/subscription" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block">
+                  Choisir ce plan
+                </a>
+              </div>
+            </div>
+
+            <!-- Documents Only Plan -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 relative transform hover:scale-105 transition-all duration-300">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Documents Seulement</h3>
+                <p class="text-gray-600 mb-6">Accès à tous les documents PDF</p>
+                <div class="mb-6">
+                  <span class="text-5xl font-bold text-gray-900">500</span>
+                  <span class="text-gray-600 text-lg"> MRU/an</span>
+                </div>
+                <ul class="text-left space-y-3 mb-8">
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Solutions écrites détaillées</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Archives d'examens complets</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Téléchargements illimités</span>
+                  </li>
+                </ul>
+                <a routerLink="/subscription" class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block">
+                  Choisir ce plan
+                </a>
+              </div>
+            </div>
+
+            <!-- Full Access Plan -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 relative transform hover:scale-105 transition-all duration-300 border-2 border-purple-200">
+              <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span class="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  Recommandé
+                </span>
+              </div>
+              <div class="text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Accès Complet</h3>
+                <p class="text-gray-600 mb-6">Vidéos + Documents + Plus</p>
+                <div class="mb-6">
+                  <span class="text-5xl font-bold text-gray-900">1000</span>
+                  <span class="text-gray-600 text-lg"> MRU/an</span>
+                </div>
+                <ul class="text-left space-y-3 mb-8">
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Tout du plan Vidéos</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Tout du plan Documents</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Support premium 24/7</span>
+                  </li>
+                  <li class="flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-700">Certificats de fin de cours</span>
+                  </li>
+                </ul>
+                <a routerLink="/subscription" class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors inline-block">
+                  Choisir ce plan
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Featured Courses Section -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div class="text-center mb-8 sm:mb-12">
-          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Contenu mis en avant</h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">Découvrez nos cours les plus populaires et commencez votre apprentissage dès aujourd'hui</p>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Matières disponibles</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Solutions d'archives pour les matières les plus importantes d'Informatique de Gestion</p>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           <div *ngFor="let course of featuredCourses()" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
             <div class="aspect-video bg-gradient-to-br {{ getCardGradient(course.color) }} flex items-center justify-center">
               <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
@@ -166,36 +368,47 @@ export class HomeComponent implements OnInit {
   featuredCourses = signal([
     {
       id: '1',
-      title: 'Introduction à l\'Algorithmique',
-      professor: 'Prof. Jean Dupont',
-      lessons: 15,
+      title: 'Analyse Mathématique',
+      professor: 'Solutions d\'Archives',
+      lessons: 25,
       type: 'Premium',
       semester: 'S1',
-      department: 'Informatique',
-      description: 'Découvrez les bases de l\'algorithmique et de la programmation avec des exemples pratiques.',
+      department: 'IG',
+      description: 'Solutions complètes des examens d\'archives d\'Analyse avec explications détaillées.',
       color: 'blue'
     },
     {
       id: '2',
-      title: 'Analyse Mathématique',
-      professor: 'Prof. Marie Curie',
-      lessons: 12,
-      type: 'Gratuit',
+      title: 'Logique Mathématique',
+      professor: 'Solutions d\'Archives',
+      lessons: 20,
+      type: 'Premium',
       semester: 'S1',
-      department: 'Mathématiques',
-      description: 'Maîtrisez les concepts fondamentaux de l\'analyse mathématique et des fonctions.',
+      department: 'IG',
+      description: 'Corrections vidéo et écrites de tous les examens de Logique Mathématique.',
       color: 'green'
     },
     {
       id: '3',
-      title: 'Logique et Théorie des Ensembles',
-      professor: 'Prof. Pierre Fermat',
-      lessons: 18,
+      title: 'Algorithmique',
+      professor: 'Solutions d\'Archives',
+      lessons: 30,
       type: 'Premium',
       semester: 'S2',
-      department: 'Mathématiques',
-      description: 'Explorez la logique mathématique et les fondements de la théorie des ensembles.',
+      department: 'IG',
+      description: 'Solutions détaillées des exercices d\'algorithmique des archives d\'examens.',
       color: 'purple'
+    },
+    {
+      id: '4',
+      title: 'Architecture des Ordinateurs',
+      professor: 'Solutions d\'Archives',
+      lessons: 22,
+      type: 'Premium',
+      semester: 'S2',
+      department: 'IG',
+      description: 'Corrections complètes des examens d\'Architecture des Ordinateurs.',
+      color: 'orange'
     }
   ]);
 
@@ -224,7 +437,8 @@ export class HomeComponent implements OnInit {
     const gradients = {
       blue: 'from-blue-500 to-blue-600',
       green: 'from-green-500 to-green-600',
-      purple: 'from-purple-500 to-purple-600'
+      purple: 'from-purple-500 to-purple-600',
+      orange: 'from-orange-500 to-orange-600'
     };
     return gradients[color as keyof typeof gradients] || 'from-gray-500 to-gray-600';
   }

@@ -17,20 +17,20 @@ const createAdminSchema = zod_1.z.object({
     password: zod_1.z.string().min(8),
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
-    role: zod_1.z.enum(['admin', 'superadmin']).default('admin'),
+    role: zod_1.z.enum(['ADMIN', 'SUPERADMIN']).default('ADMIN'),
 });
 const createUserSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(8),
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
-    role: zod_1.z.enum(['student', 'admin', 'superadmin']).default('student'),
+    role: zod_1.z.enum(['STUDENT', 'ADMIN', 'SUPERADMIN']).default('STUDENT'),
     departmentId: zod_1.z.string().cuid().optional(),
-    semester: zod_1.z.number().int().min(1).max(10).optional(),
+    semester: zod_1.z.string().optional(),
 });
 // POST /api/admin/create-admin - Create admin account (Superadmin only)
 exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'superadmin') {
+    if (req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only superadmin can create admin accounts' } });
     }
     try {
@@ -44,6 +44,11 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
         }
         // Hash password
         const hashedPassword = await bcryptjs_1.default.hash(body.password, 12);
+        // Get the first department ID
+        const firstDept = await prisma.department.findFirst();
+        if (!firstDept) {
+            return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
+        }
         // Create admin user
         const admin = await prisma.user.create({
             data: {
@@ -51,6 +56,8 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
                 passwordHash: hashedPassword,
                 role: body.role,
                 name: `${body.firstName} ${body.lastName}`,
+                departmentId: firstDept.id,
+                semester: 'S1'
             }
         });
         return res.status(201).json({
@@ -68,7 +75,7 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
 });
 // POST /api/admin/create-user - Create user account (Admin only)
 exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can create user accounts' } });
     }
     try {
@@ -89,8 +96,8 @@ exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) =>
                 passwordHash: hashedPassword,
                 role: body.role,
                 name: `${body.firstName} ${body.lastName}`,
-                departmentId: body.departmentId,
-                semester: body.semester,
+                departmentId: body.departmentId || (await prisma.department.findFirst())?.id || 'default-dept',
+                semester: body.semester || 'S1',
             },
             include: {
                 department: { select: { name: true } },
@@ -123,13 +130,20 @@ exports.adminRouter.post('/init', async (req, res) => {
         }
         // Hash password
         const hashedPassword = await bcryptjs_1.default.hash(password, 12);
+        // Get the first department ID
+        const firstDept = await prisma.department.findFirst();
+        if (!firstDept) {
+            return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
+        }
         // Create superadmin
         const superadmin = await prisma.user.create({
             data: {
                 email,
                 passwordHash: hashedPassword,
-                role: 'superadmin',
+                role: 'SUPERADMIN',
                 name: `${firstName} ${lastName}`,
+                departmentId: firstDept.id,
+                semester: 'S1'
             }
         });
         return res.status(201).json({

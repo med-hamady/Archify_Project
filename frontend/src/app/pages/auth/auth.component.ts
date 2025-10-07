@@ -1,7 +1,7 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.service';
 
 @Component({
@@ -264,7 +264,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
     </div>
   `
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
   private isLoginModeSignal = signal<boolean>(true);
   private showPasswordSignal = signal<boolean>(false);
   private isLoadingSignal = signal<boolean>(false);
@@ -280,9 +280,22 @@ export class AuthComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.authForm = this.createForm();
+  }
+
+  ngOnInit(): void {
+    // Check the current route to determine if we're in login or register mode
+    const currentUrl = this.router.url;
+    if (currentUrl.includes('/register')) {
+      this.isLoginModeSignal.set(false);
+      this.authForm = this.createForm();
+    } else {
+      this.isLoginModeSignal.set(true);
+      this.authForm = this.createForm();
+    }
   }
 
   private createForm(): FormGroup {

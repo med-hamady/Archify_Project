@@ -89,6 +89,218 @@ interface User {
           </nav>
         </div>
 
+        <!-- Overview Dashboard -->
+        <div *ngIf="activeTab() === 'overview'" class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900">Vue d'ensemble de la plateforme</h2>
+          
+          <!-- Key Metrics -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Cours</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalCourses }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Utilisateurs</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalUsers }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Leçons</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().totalLessons }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Abonnements Actifs</p>
+                  <p class="text-2xl font-semibold text-gray-900">{{ stats().activeSubscriptions }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Activité récente</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <div class="flex items-center">
+                  <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                  <span class="text-sm text-gray-600">Nouvel utilisateur inscrit</span>
+                </div>
+                <span class="text-xs text-gray-500">Il y a 2 heures</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                <div class="flex items-center">
+                  <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                  <span class="text-sm text-gray-600">Nouvelle leçon ajoutée</span>
+                </div>
+                <span class="text-xs text-gray-500">Il y a 4 heures</span>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <div class="flex items-center">
+                  <div class="w-2 h-2 bg-purple-400 rounded-full mr-3"></div>
+                  <span class="text-sm text-gray-600">Nouvel abonnement activé</span>
+                </div>
+                <span class="text-xs text-gray-500">Il y a 6 heures</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscription Management -->
+        <div *ngIf="activeTab() === 'subscriptions'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Abonnements</h2>
+            <button (click)="showAddPlanModal.set(true)"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Ajouter un plan
+            </button>
+          </div>
+
+          <!-- Subscription Plans -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Vidéos Seulement</h3>
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Actif</span>
+              </div>
+              <div class="mb-4">
+                <span class="text-3xl font-bold text-gray-900">650</span>
+                <span class="text-gray-600"> MRU/an</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-4">Accès à toutes les vidéos de solutions d'examens</p>
+              <div class="flex space-x-2">
+                <button class="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  Modifier
+                </button>
+                <button class="flex-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                  Désactiver
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Documents Seulement</h3>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Actif</span>
+              </div>
+              <div class="mb-4">
+                <span class="text-3xl font-bold text-gray-900">500</span>
+                <span class="text-gray-600"> MRU/an</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-4">Accès à tous les documents PDF et solutions écrites</p>
+              <div class="flex space-x-2">
+                <button class="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  Modifier
+                </button>
+                <button class="flex-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                  Désactiver
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Accès Complet</h3>
+                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Actif</span>
+              </div>
+              <div class="mb-4">
+                <span class="text-3xl font-bold text-gray-900">1000</span>
+                <span class="text-gray-600"> MRU/an</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-4">Accès à toutes les vidéos ET documents</p>
+              <div class="flex space-x-2">
+                <button class="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  Modifier
+                </button>
+                <button class="flex-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                  Désactiver
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Subscriptions -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Abonnements actifs</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Début</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fin</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Étudiant Test</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Vidéos Seulement</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Actif
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/01/2024</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/01/2025</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-blue-600 hover:text-blue-900 mr-3">Voir</button>
+                      <button class="text-red-600 hover:text-red-900">Annuler</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- Departments Management -->
         <div *ngIf="activeTab() === 'departments'" class="space-y-6">
           <div class="flex justify-between items-center">
@@ -341,7 +553,7 @@ export class AdminComponent implements OnInit {
   private readonly API_URL = 'http://localhost:3000/api';
 
   // Signals
-  activeTab = signal('departments');
+  activeTab = signal('overview');
   departments = signal<Department[]>([]);
   courses = signal<Course[]>([]);
   lessons = signal<Lesson[]>([]);
@@ -357,6 +569,7 @@ export class AdminComponent implements OnInit {
   showAddDepartmentModal = signal(false);
   showAddCourseModal = signal(false);
   showAddLessonModal = signal(false);
+  showAddPlanModal = signal(false);
 
   // Form data
   selectedCourseId = '';
@@ -382,6 +595,8 @@ export class AdminComponent implements OnInit {
   };
 
   tabs = [
+    { id: 'overview', name: 'Vue d\'ensemble' },
+    { id: 'subscriptions', name: 'Abonnements' },
     { id: 'departments', name: 'Départements' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },

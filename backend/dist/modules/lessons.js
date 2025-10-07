@@ -12,13 +12,13 @@ const lessonQuerySchema = zod_1.z.object({
     page: zod_1.z.string().optional().transform(val => val ? parseInt(val) : 1),
     limit: zod_1.z.string().optional().transform(val => val ? parseInt(val) : 10),
     courseId: zod_1.z.string().optional(),
-    type: zod_1.z.enum(['video', 'pdf', 'exam']).optional(),
+    type: zod_1.z.enum(['VIDEO', 'PDF', 'EXAM']).optional(),
     isPremium: zod_1.z.string().optional().transform(val => val === 'true')
 });
 const lessonCreateSchema = zod_1.z.object({
     title: zod_1.z.string().min(1),
     courseId: zod_1.z.string().uuid(),
-    type: zod_1.z.enum(['video', 'pdf', 'exam']),
+    type: zod_1.z.enum(['VIDEO', 'PDF', 'EXAM']),
     durationSec: zod_1.z.number().int().min(0).default(0),
     vimeoId: zod_1.z.string().optional(),
     youtubeId: zod_1.z.string().optional(),
@@ -112,7 +112,7 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
                     }
                 },
                 comments: {
-                    where: { status: 'visible' },
+                    where: { status: 'VISIBLE' },
                     include: { user: { select: { name: true } } },
                     orderBy: { createdAt: 'asc' }
                 }
@@ -235,7 +235,7 @@ exports.lessonsRouter.post('/:id/progress', auth_1.requireAuth, async (req, res)
         if (lesson.isPremium) {
             const user = await prisma.user.findUnique({
                 where: { id: req.userId },
-                include: { subscriptions: { where: { status: 'active' } } }
+                include: { subscriptions: { where: { status: 'ACTIVE' } } }
             });
             if (!user || user.subscriptions.length === 0) {
                 return res.status(403).json({ error: { code: 'PREMIUM_REQUIRED', message: 'Premium subscription required' } });

@@ -26,6 +26,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
   {
+    path: 'login',
+    loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
+  },
+  {
     path: 'terms',
     loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent)
   },
@@ -40,8 +48,7 @@ export const routes: Routes = [
   },
   {
     path: 'subscription',
-    loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent)
   },
   {
     path: 'admin',

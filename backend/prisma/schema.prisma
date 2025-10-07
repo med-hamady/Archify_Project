@@ -25,6 +25,7 @@ model User {
   comments          Comment[]
   progresses        Progress[]
   passwordResetTokens PasswordResetToken[]
+  payments          Payment[]
 }
 
 model Department {
@@ -61,11 +62,14 @@ model Lesson {
   youtubeId    String?   
   pdfUrl       String?   
   isPremium    Boolean   @default(false)
+  requiresVideoSubscription Boolean @default(false)
+  requiresDocumentSubscription Boolean @default(false)
   orderIndex   Int       @default(0)
   createdAt    DateTime  @default(now())
   lessonAssets LessonAsset[]
   comments     Comment[]
   progresses   Progress[]
+  quizzes      Quiz[]
 
   @@index([courseId, orderIndex], map: "lessons_course_order_idx")
 }
@@ -93,9 +97,14 @@ model Comment {
 model SubscriptionPlan {
   id           String  @id @default(cuid())
   name         String
+  description  String?
+  type         SubscriptionType
   interval     String
   priceCents   Int
   currency     String  @default("MRU")
+  features     String[]
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
   subscriptions Subscription[]
 }
 
@@ -230,4 +239,10 @@ enum PaymentStatus {
 enum ProgressStatus {
   VIEWED
   IN_PROGRESS
+}
+
+enum SubscriptionType {
+  VIDEOS_ONLY
+  DOCUMENTS_ONLY
+  FULL_ACCESS
 }

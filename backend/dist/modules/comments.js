@@ -26,14 +26,13 @@ exports.commentsRouter.get('/lessons/:id/comments', async (req, res) => {
             prisma.comment.findMany({
                 where: {
                     lessonId: id,
-                    status: 'visible'
+                    status: 'VISIBLE'
                 },
                 include: {
                     user: {
                         select: {
                             id: true,
                             name: true,
-                            avatarUrl: true
                         }
                     }
                 },
@@ -44,7 +43,7 @@ exports.commentsRouter.get('/lessons/:id/comments', async (req, res) => {
             prisma.comment.count({
                 where: {
                     lessonId: id,
-                    status: 'visible'
+                    status: 'VISIBLE'
                 }
             })
         ]);
@@ -89,14 +88,13 @@ exports.commentsRouter.post('/lessons/:id/comments', auth_1.requireAuth, async (
                 content: body.content,
                 lessonId: id,
                 userId: req.userId,
-                status: 'visible'
+                status: 'VISIBLE'
             },
             include: {
                 user: {
                     select: {
                         id: true,
                         name: true,
-                        avatarUrl: true
                     }
                 }
             }
@@ -137,13 +135,15 @@ exports.commentsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
         }
         const updatedComment = await prisma.comment.update({
             where: { id },
-            data: body,
+            data: {
+                ...body,
+                status: body.status === 'visible' ? 'VISIBLE' : body.status === 'hidden' ? 'HIDDEN' : body.status === 'reported' ? 'REPORTED' : body.status
+            },
             include: {
                 user: {
                     select: {
                         id: true,
                         name: true,
-                        avatarUrl: true
                     }
                 }
             }
@@ -208,7 +208,7 @@ exports.commentsRouter.post('/:id/report', auth_1.requireAuth, async (req, res) 
         // Update comment status to reported
         await prisma.comment.update({
             where: { id },
-            data: { status: 'reported' }
+            data: { status: 'REPORTED' }
         });
         res.json({ message: 'Comment reported successfully' });
     }
