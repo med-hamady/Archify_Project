@@ -1,6 +1,7 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -270,6 +271,29 @@ import { CommonModule } from '@angular/common';
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <!-- Loading state -->
+          <div *ngIf="loading()" class="col-span-full text-center py-8">
+            <div class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-lg">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Chargement des cours...
+            </div>
+          </div>
+          
+          <!-- No courses state -->
+          <div *ngIf="!loading() && featuredCourses().length === 0" class="col-span-full text-center py-8">
+            <div class="text-gray-500">
+              <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+              <p class="text-lg font-medium">Aucun cours disponible</p>
+              <p class="text-sm">Les cours seront bientôt disponibles</p>
+            </div>
+          </div>
+          
+          <!-- Course cards -->
           <div *ngFor="let course of featuredCourses()" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
             <div class="aspect-video bg-gradient-to-br {{ getCardGradient(course.color) }} flex items-center justify-center">
               <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
@@ -291,7 +315,7 @@ import { CommonModule } from '@angular/common';
                 {{ course.description }}
               </p>
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-900">{{ course.semester }} • {{ course.department }}</span>
+                <span class="text-sm font-medium text-gray-900">{{ course.semester }}</span>
                 <a [routerLink]="'/course/' + course.id" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                   Voir le cours →
                 </a>
@@ -356,6 +380,8 @@ import { CommonModule } from '@angular/common';
   `
 })
 export class HomeComponent implements OnInit {
+  private readonly API_URL = 'http://localhost:3000/api';
+
   // Dynamic statistics
   stats = signal({
     students: 1250,
@@ -364,57 +390,88 @@ export class HomeComponent implements OnInit {
     professors: 28
   });
 
-  // Featured courses
-  featuredCourses = signal([
-    {
-      id: '1',
-      title: 'Analyse Mathématique',
-      professor: 'Solutions d\'Archives',
-      lessons: 25,
-      type: 'Premium',
-      semester: 'S1',
-      department: 'IG',
-      description: 'Solutions complètes des examens d\'archives d\'Analyse avec explications détaillées.',
-      color: 'blue'
-    },
-    {
-      id: '2',
-      title: 'Logique Mathématique',
-      professor: 'Solutions d\'Archives',
-      lessons: 20,
-      type: 'Premium',
-      semester: 'S1',
-      department: 'IG',
-      description: 'Corrections vidéo et écrites de tous les examens de Logique Mathématique.',
-      color: 'green'
-    },
-    {
-      id: '3',
-      title: 'Algorithmique',
-      professor: 'Solutions d\'Archives',
-      lessons: 30,
-      type: 'Premium',
-      semester: 'S2',
-      department: 'IG',
-      description: 'Solutions détaillées des exercices d\'algorithmique des archives d\'examens.',
-      color: 'purple'
-    },
-    {
-      id: '4',
-      title: 'Architecture des Ordinateurs',
-      professor: 'Solutions d\'Archives',
-      lessons: 22,
-      type: 'Premium',
-      semester: 'S2',
-      department: 'IG',
-      description: 'Corrections complètes des examens d\'Architecture des Ordinateurs.',
-      color: 'orange'
-    }
-  ]);
+  // Featured courses - now loaded from database
+  featuredCourses = signal<any[]>([]);
+  loading = signal(false);
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Simulate loading data
+    console.log('🏠 Home component initialized');
+    console.log('🌐 API URL:', this.API_URL);
+    
+    // Test API connection first
+    this.testApiConnection();
+    
+    // Load real courses from database
+    this.loadFeaturedCourses();
     this.animateStats();
+  }
+
+  private testApiConnection() {
+    console.log('🧪 Testing API connection...');
+    this.http.get(`${this.API_URL.replace('/api', '')}/healthz`).subscribe({
+      next: (response) => {
+        console.log('✅ API connection test successful:', response);
+      },
+      error: (error) => {
+        console.error('❌ API connection test failed:', error);
+      }
+    });
+  }
+
+  private loadFeaturedCourses() {
+    console.log('🔄 Loading featured courses from:', `${this.API_URL}/courses?isPremium=true&limit=4`);
+    this.loading.set(true);
+    
+    // Add timeout to prevent hanging
+    const timeoutId = setTimeout(() => {
+      console.error('⏰ Request timeout after 10 seconds');
+      this.loading.set(false);
+      this.featuredCourses.set([]);
+    }, 10000);
+    
+    this.http.get<any>(`${this.API_URL}/courses?isPremium=true&limit=4`)
+      .subscribe({
+        next: (response) => {
+          clearTimeout(timeoutId);
+          console.log('✅ Courses API response:', response);
+          const courses = response.courses || response;
+          console.log('📚 Courses data:', courses);
+          
+          // Transform courses to match the expected format
+          const transformedCourses = courses.map((course: any, index: number) => ({
+            id: course.id,
+            title: course.title,
+            professor: 'Solutions d\'Archives',
+            lessons: course.lessonCount || 0,
+            type: 'Premium',
+            semester: course.semester,
+            department: 'IG',
+            description: course.description || 'Solutions complètes des examens d\'archives avec explications détaillées.',
+            color: this.getColorByIndex(index)
+          }));
+          
+          console.log('🎨 Transformed courses:', transformedCourses);
+          this.featuredCourses.set(transformedCourses);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          clearTimeout(timeoutId);
+          console.error('❌ Error loading courses:', error);
+          console.error('❌ Error details:', error.message);
+          console.error('❌ Error status:', error.status);
+          console.error('❌ Full error object:', error);
+          this.loading.set(false);
+          // Fallback to empty array if API fails
+          this.featuredCourses.set([]);
+        }
+      });
+  }
+
+  private getColorByIndex(index: number): string {
+    const colors = ['blue', 'green', 'purple', 'orange'];
+    return colors[index % colors.length];
   }
 
   private animateStats() {
