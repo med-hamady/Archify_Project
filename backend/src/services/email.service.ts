@@ -1,12 +1,4 @@
-// import nodemailer from 'nodemailer';
-
-// Temporary fallback for when nodemailer is not available
-let nodemailer: any = null;
-try {
-  nodemailer = require('nodemailer');
-} catch (error) {
-  console.warn('Nodemailer not available, email functionality will be disabled');
-}
+import nodemailer from 'nodemailer';
 
 export interface EmailOptions {
   to: string;
@@ -19,26 +11,41 @@ export class EmailService {
   private transporter: any;
 
   constructor() {
-    if (!nodemailer) {
-      console.warn('Email service initialized without nodemailer - emails will not be sent');
-      return;
+    // For development, we'll use a test account or console logging
+    // In production, you would use real SMTP credentials
+    
+    // Check if we have SMTP credentials
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      this.transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      });
+      console.log('✅ Email service configured with SMTP credentials');
+    } else {
+      // For development without SMTP credentials, create a test transporter
+      this.transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'ethereal.user@ethereal.email',
+          pass: 'ethereal.pass'
+        }
+      });
+      console.log('⚠️ Email service using test configuration (emails will be logged to console)');
+      console.log('💡 To enable real email sending, set SMTP_USER and SMTP_PASS environment variables');
     }
-
-    this.transporter = nodemailer.createTransporter({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
   }
 
   async sendEmail(options: EmailOptions): Promise<void> {
-    if (!nodemailer || !this.transporter) {
-      console.log(`Email would be sent to ${options.to} (nodemailer not available)`);
-      return; // Silently fail when nodemailer is not available
+    if (!this.transporter) {
+      console.log(`Email would be sent to ${options.to} (transporter not available)`);
+      return;
     }
 
     try {
@@ -50,16 +57,34 @@ export class EmailService {
         text: options.text || this.stripHtml(options.html)
       };
 
-      await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent successfully to ${options.to}`);
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Email sent successfully to ${options.to}`);
+      console.log(`📧 Message ID: ${info.messageId}`);
+      
+      // If using Ethereal (test account), show the preview URL
+      if (info.messageId && info.messageId.includes('ethereal')) {
+        console.log(`🔗 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+      }
     } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
+      console.error('❌ Error sending email:', error);
+      // Don't throw error - just log it and continue
+      console.log('📧 Email content would be:');
+      console.log('To:', options.to);
+      console.log('Subject:', options.subject);
+      console.log('HTML:', options.html.substring(0, 200) + '...');
     }
   }
 
   async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/forgot-password?token=${resetToken}`;
+
+    // For development/testing: Log the reset code to console
+    console.log('🔐 PASSWORD RESET CODE FOR TESTING:');
+    console.log('📧 Email:', email);
+    console.log('🔑 Reset Code:', resetToken);
+    console.log('🔗 Reset URL:', resetUrl);
+    console.log('⏰ Expires in 1 hour');
+    console.log('=====================================');
 
     const html = `
       <!DOCTYPE html>
@@ -74,6 +99,7 @@ export class EmailService {
             .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
             .button { display: inline-block; background: #1e3a8a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .code { background: #f1f5f9; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 18px; text-align: center; margin: 20px 0; }
           </style>
         </head>
         <body>
@@ -84,9 +110,11 @@ export class EmailService {
             <div class="content">
               <h2>Bonjour,</h2>
               <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte Archify.</p>
-              <p>Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+              <p><strong>Code de réinitialisation :</strong></p>
+              <div class="code">${resetToken}</div>
+              <p>Entrez ce code dans le formulaire de réinitialisation ou cliquez sur le bouton ci-dessous :</p>
               <a href="${resetUrl}" class="button">Réinitialiser mon mot de passe</a>
-              <p><strong>Ce lien expirera dans 1 heure.</strong></p>
+              <p><strong>Ce code expirera dans 1 heure.</strong></p>
               <p>Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.</p>
               <p>Cordialement,<br>L'équipe Archify</p>
             </div>
@@ -100,11 +128,17 @@ export class EmailService {
       </html>
     `;
 
-    await this.sendEmail({
-      to: email,
-      subject: 'Réinitialisation de votre mot de passe - Archify',
-      html
-    });
+    // Try to send email, but don't fail if email service is not configured
+    try {
+      await this.sendEmail({
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe - Archify',
+        html
+      });
+    } catch (error) {
+      console.error('Failed to send email, but continuing with password reset process:', error);
+      // Don't throw error - just log it and continue
+    }
   }
 
   async sendWelcomeEmail(email: string, name: string): Promise<void> {

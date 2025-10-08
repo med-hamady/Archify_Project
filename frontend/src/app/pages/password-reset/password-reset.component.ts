@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-password-reset',
@@ -19,16 +19,16 @@ import { Router } from '@angular/router';
           </div>
         </div>
         <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-          {{ isResetStep() ? 'Réinitialiser le mot de passe' : 'Mot de passe oublié' }}
+          {{ getStepTitle() }}
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          {{ isResetStep() ? 'Entrez votre nouveau mot de passe' : 'Entrez votre email pour recevoir un code de réinitialisation' }}
+          {{ getStepDescription() }}
         </p>
       </div>
 
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <!-- Forgot Password Form -->
+          <!-- Step 1: Email Input -->
           <form *ngIf="!isResetStep()" (ngSubmit)="sendResetCode()" class="space-y-6">
             <div>
               <label for="email" class="block text-sm font-medium text-gray-700">
@@ -49,8 +49,8 @@ import { Router } from '@angular/router';
             </div>
           </form>
 
-          <!-- Reset Password Form -->
-          <form *ngIf="isResetStep()" (ngSubmit)="resetPassword()" class="space-y-6">
+          <!-- Step 2: Code Verification -->
+          <form *ngIf="isResetStep() && !isCodeVerified()" (ngSubmit)="verifyCode()" class="space-y-6">
             <div>
               <label for="code" class="block text-sm font-medium text-gray-700">
                 Code de vérification
@@ -62,6 +62,17 @@ import { Router } from '@angular/router';
               </div>
             </div>
 
+            <div>
+              <button type="submit" [disabled]="isLoading()"
+                      class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!isLoading()">Vérifier le code</span>
+                <span *ngIf="isLoading()">Vérification en cours...</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Step 3: Password Reset -->
+          <form *ngIf="isResetStep() && isCodeVerified()" (ngSubmit)="resetPassword()" class="space-y-6">
             <div>
               <label for="newPassword" class="block text-sm font-medium text-gray-700">
                 Nouveau mot de passe
@@ -134,17 +145,28 @@ import { Router } from '@angular/router';
               </div>
             </div>
           </div>
+
+          <!-- Alternative: Manual Code Entry -->
+          <div *ngIf="!isResetStep()" class="mt-4 text-center">
+            <p class="text-sm text-gray-600">
+              Vous avez déjà reçu un code ? 
+              <button (click)="isResetStep.set(true)" class="text-blue-600 hover:text-blue-800 font-medium">
+                Entrer le code manuellement
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   `
 })
-export class PasswordResetComponent {
+export class PasswordResetComponent implements OnInit {
   private readonly API_URL = 'http://localhost:3000/api';
 
   // Signals
   isLoading = signal(false);
   isResetStep = signal(false);
+  isCodeVerified = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
 
@@ -156,8 +178,41 @@ export class PasswordResetComponent {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    // Check if token is provided in URL
+    this.route.queryParams.subscribe(params => {
+      if (params['token']) {
+        this.resetCode = params['token'];
+        this.isResetStep.set(true);
+        this.isCodeVerified.set(true); // Skip code verification if token is in URL
+        this.successMessage.set('Code de réinitialisation détecté. Veuillez entrer votre nouveau mot de passe.');
+      }
+    });
+  }
+
+  getStepTitle(): string {
+    if (!this.isResetStep()) {
+      return 'Mot de passe oublié';
+    } else if (!this.isCodeVerified()) {
+      return 'Vérification du code';
+    } else {
+      return 'Réinitialiser le mot de passe';
+    }
+  }
+
+  getStepDescription(): string {
+    if (!this.isResetStep()) {
+      return 'Entrez votre email pour recevoir un code de réinitialisation';
+    } else if (!this.isCodeVerified()) {
+      return 'Entrez le code de vérification reçu par email';
+    } else {
+      return 'Entrez votre nouveau mot de passe';
+    }
+  }
 
   async sendResetCode() {
     if (!this.email) {
@@ -176,6 +231,32 @@ export class PasswordResetComponent {
     } catch (error: any) {
       console.error('Error sending reset code:', error);
       this.errorMessage.set('Erreur lors de l\'envoi du code. Veuillez réessayer.');
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  async verifyCode() {
+    if (!this.resetCode) {
+      this.errorMessage.set('Veuillez entrer le code de vérification');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    try {
+      const response = await this.http.post(`${this.API_URL}/auth/verify-reset-code`, {
+        email: this.email,
+        code: this.resetCode
+      }).toPromise();
+
+      console.log('Code verified:', response);
+      this.isCodeVerified.set(true);
+      this.successMessage.set('Code vérifié avec succès. Vous pouvez maintenant définir votre nouveau mot de passe.');
+    } catch (error: any) {
+      console.error('Error verifying code:', error);
+      this.errorMessage.set(error.error?.message || 'Code de vérification invalide');
     } finally {
       this.isLoading.set(false);
     }

@@ -172,7 +172,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
             </div>
 
             <!-- Remember Me / Terms -->
-            <div *ngIf="isLoginMode()" class="flex items-center justify-between">
+            <div *ngIf="isLoginMode()" class="flex items-center justify-between mb-4">
               <div class="flex items-center">
                 <input
                   id="rememberMe"
@@ -184,7 +184,9 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
                   Se souvenir de moi
                 </label>
               </div>
-              <button type="button" class="text-sm text-blue-600 hover:text-blue-800">
+              <button type="button"
+                       (click)="onForgotPasswordClick()"
+                       class="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer z-10 relative inline-block px-2 py-1 -mx-2 -my-1 transition-colors duration-200 hover:bg-blue-50 rounded bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-blue-500">
                 Mot de passe oublié ?
               </button>
             </div>
@@ -239,12 +241,6 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
             </div>
           </form>
 
-          <!-- Forgot Password Link (Login Mode Only) -->
-          <div *ngIf="isLoginMode()" class="mt-4 text-center">
-            <a routerLink="/forgot-password" class="text-sm text-blue-600 hover:text-blue-800">
-              Mot de passe oublié ?
-            </a>
-          </div>
 
           <!-- Toggle Mode -->
           <div class="mt-6 text-center">
@@ -323,6 +319,19 @@ export class AuthComponent implements OnInit {
     this.isLoginModeSignal.set(!this.isLoginMode());
     this.errorMessageSignal.set('');
     this.authForm = this.createForm();
+  }
+
+  onForgotPasswordClick(): void {
+    console.log('🔗 Forgot password button clicked - navigating to password reset page');
+    console.log('🔗 Current router URL:', this.router.url);
+    console.log('🔗 Navigating to /forgot-password');
+    
+    try {
+      this.router.navigate(['/forgot-password']);
+      console.log('✅ Navigation successful');
+    } catch (error) {
+      console.error('❌ Navigation failed:', error);
+    }
   }
 
   togglePassword(): void {

@@ -286,6 +286,43 @@ authRouter.post('/forgot-password', async (req, res) => {
   }
 });
 
+// POST /verify-reset-code
+const verifyCodeSchema = z.object({ 
+  email: z.string().email(),
+  code: z.string().min(6)
+});
+authRouter.post('/verify-reset-code', async (req, res) => {
+  try {
+    const body = verifyCodeSchema.parse(req.body);
+    
+    // Find the user
+    const user = await prisma.user.findUnique({ where: { email: body.email } });
+    if (!user) {
+      return res.status(400).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
+    }
+
+    // Find valid token for this user
+    const tokenRecord = await prisma.passwordResetToken.findFirst({
+      where: { 
+        userId: user.id,
+        token: body.code,
+        expiresAt: { gt: new Date() }
+      }
+    });
+
+    if (!tokenRecord) {
+      return res.status(400).json({ error: { code: 'INVALID_CODE', message: 'Invalid or expired code' } });
+    }
+
+    return res.json({ message: 'Code verified successfully', token: tokenRecord.token });
+  } catch (err: any) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
+    }
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
 // POST /reset-password
 const resetSchema = z.object({ token: z.string().min(10), newPassword: z.string().min(8) });
 authRouter.post('/reset-password', async (req, res) => {
