@@ -1,23 +1,14 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
-interface Department {
-  id: string;
-  name: string;
-  courseCount: number;
-  userCount: number;
-}
 
 interface Course {
   id: string;
   title: string;
   description: string;
-  professor: string;
-  department: string;
-  departmentId: string;
   semester: string;
   tags: string[];
   isPremium: boolean;
@@ -29,12 +20,14 @@ interface Course {
 interface Lesson {
   id: string;
   title: string;
-  type: 'video' | 'pdf' | 'exam';
+  type: 'VIDEO' | 'PDF' | 'EXAM';
   durationSec: number;
   vimeoId?: string;
   youtubeId?: string;
   pdfUrl?: string;
   isPremium: boolean;
+  requiresVideoSubscription?: boolean;
+  requiresDocumentSubscription?: boolean;
   orderIndex: number;
   createdAt: string;
   courseId: string;
@@ -44,10 +37,26 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: 'student' | 'admin' | 'superadmin';
-  department?: string;
+  role: 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
   semester?: number;
   createdAt: string;
+}
+
+interface Department {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string;
+  priceCents: number;
+  currency: string;
+  type: 'VIDEOS_ONLY' | 'DOCUMENTS_ONLY' | 'FULL_ACCESS';
+  features: string;
+  isActive: boolean;
 }
 
 interface Subscription {
@@ -70,10 +79,6 @@ interface UserStats {
   totalStudents: number;
   totalAdmins: number;
   recentUsers: number;
-  usersByDepartment: Array<{
-    departmentId: string;
-    count: number;
-  }>;
 }
 
 @Component({
@@ -94,6 +99,7 @@ interface UserStats {
             </button>
           </nav>
         </div>
+
 
         <!-- Overview Dashboard -->
         <div *ngIf="activeTab() === 'overview'" class="space-y-8">
@@ -313,13 +319,13 @@ interface UserStats {
 
           <!-- Subscription Plans -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div *ngFor="let plan of subscriptionPlans" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+            <div *ngFor="let plan of subscriptionPlans()" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
               <div class="text-center">
                 <h3 class="text-xl font-bold text-gray-900">{{ plan.name }}</h3>
-                <p class="text-3xl font-bold text-blue-600 mt-2">{{ plan.price | currency:'MRU':'symbol':'1.0-0' }}</p>
-                <p class="text-gray-500 text-sm">{{ plan.interval }}</p>
+                <p class="text-3xl font-bold text-blue-600 mt-2">{{ plan.priceCents / 100 | currency:'MRU':'symbol':'1.0-0' }}</p>
+                <p class="text-gray-500 text-sm">{{ plan.currency }}</p>
                 <ul class="mt-4 space-y-2">
-                  <li *ngFor="let feature of plan.features" class="text-sm text-gray-600 flex items-center">
+                  <li *ngFor="let feature of plan.features.split(',')" class="text-sm text-gray-600 flex items-center">
                     <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -425,8 +431,8 @@ interface UserStats {
       </div>
 
       <!-- Add Course Modal -->
-      <div *ngIf="showAddCourseModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
+      <div *ngIf="showAddCourseModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-gray-900">Ajouter un Cours</h3>
             <button (click)="showAddCourseModal.set(false)" class="text-gray-400 hover:text-gray-600">
@@ -442,14 +448,21 @@ interface UserStats {
                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-              <textarea [(ngModel)]="newCourse.description" name="description" required
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description (optionnel)</label>
+              <textarea [(ngModel)]="newCourse.description" name="description"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"></textarea>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Professeur</label>
-              <input type="text" [(ngModel)]="newCourse.professor" name="professor" required
-                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            
+            <!-- Premium Notice -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-sm font-medium text-blue-800">
+                  Ce cours sera créé en tant que contenu Premium (nécessite un abonnement)
+                </span>
+              </div>
             </div>
             <div class="flex space-x-3 pt-4">
               <button type="button" (click)="showAddCourseModal.set(false)" 
@@ -465,9 +478,46 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Edit Course Modal -->
+      <div *ngIf="showEditCourseModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Modifier le Cours</h3>
+            <button (click)="showEditCourseModal.set(false)" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form (ngSubmit)="updateCourse()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Titre du cours</label>
+              <input type="text" [(ngModel)]="editCourse.title" name="title" required
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description (optionnel)</label>
+              <textarea [(ngModel)]="editCourse.description" name="description"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"></textarea>
+            </div>
+            
+            <div class="flex space-x-3 pt-4">
+              <button type="button" (click)="showEditCourseModal.set(false)" 
+                      class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Annuler
+              </button>
+              <button type="submit" 
+                      class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Modifier le Cours
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <!-- Add User Modal -->
-      <div *ngIf="showAddUserModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
+      <div *ngIf="showAddUserModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-gray-900">Ajouter un Utilisateur</h3>
             <button (click)="showAddUserModal.set(false)" class="text-gray-400 hover:text-gray-600">
@@ -477,10 +527,17 @@ interface UserStats {
             </button>
           </div>
           <form (ngSubmit)="createUser()" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
-              <input type="text" [(ngModel)]="newUser.name" name="name" required
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                <input type="text" [(ngModel)]="newUser.firstName" name="firstName" required
                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                <input type="text" [(ngModel)]="newUser.lastName" name="lastName" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
@@ -496,9 +553,15 @@ interface UserStats {
               <label class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
               <select [(ngModel)]="newUser.role" name="role" required
                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <option value="student">Étudiant</option>
-                <option value="admin">Administrateur</option>
+                <option value="STUDENT">Étudiant</option>
+                <option value="ADMIN">Administrateur</option>
+                <option value="SUPERADMIN">Super Administrateur</option>
               </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Semestre</label>
+              <input type="text" [(ngModel)]="newUser.semester" name="semester" placeholder="S1, S2, etc."
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div class="flex space-x-3 pt-4">
               <button type="button" (click)="showAddUserModal.set(false)" 
@@ -515,8 +578,8 @@ interface UserStats {
       </div>
 
       <!-- Add Plan Modal -->
-      <div *ngIf="showAddPlanModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
+      <div *ngIf="showAddPlanModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-gray-900">Ajouter un Plan</h3>
             <button (click)="showAddPlanModal.set(false)" class="text-gray-400 hover:text-gray-600">
@@ -563,19 +626,504 @@ interface UserStats {
           </form>
         </div>
       </div>
+
+      <!-- Courses Management Section -->
+      <div *ngIf="activeTab() === 'courses'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Gestion des Cours</h2>
+              <p class="text-gray-600 mt-1">Créez et gérez tous les cours de la plateforme</p>
+            </div>
+            <button (click)="showAddCourseModal.set(true)" 
+                    class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Nouveau Cours
+            </button>
+          </div>
+        </div>
+
+        <!-- Courses List -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cours</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leçons</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vues</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let course of courses()" class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">{{ course.title }}</div>
+                        <div class="text-sm text-gray-500">{{ course.semester }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ course.lessonCount }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ course.views }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="bg-yellow-100 text-yellow-800 inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      Premium
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <button (click)="editCourseItem(course)" 
+                              class="text-blue-600 hover:text-blue-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                      </button>
+                      <button (click)="deleteCourse(course.id)" 
+                              class="text-red-600 hover:text-red-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lessons Management Section -->
+      <div *ngIf="activeTab() === 'lessons'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Gestion des Leçons</h2>
+              <p class="text-gray-600 mt-1">Créez et gérez toutes les leçons ({{ lessons().length }} leçons)</p>
+            </div>
+            <div class="flex space-x-3">
+              <a routerLink="/admin/upload" 
+                 class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                Upload Vidéos
+              </a>
+            <button (click)="showAddLessonModal.set(true)" 
+                    class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Nouvelle Leçon
+            </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lessons List -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leçon</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cours</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngIf="lessons().length === 0" class="text-center py-8">
+                  <td colspan="6" class="text-gray-500">
+                    Aucune leçon trouvée
+                  </td>
+                </tr>
+                <tr *ngFor="let lesson of lessons(); trackBy: trackByLessonId" class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">{{ lesson.title }}</div>
+                        <div class="text-sm text-gray-500">Ordre: {{ lesson.orderIndex }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="lesson.type === 'VIDEO' ? 'bg-blue-100 text-blue-800' : lesson.type === 'PDF' ? 'bg-red-100 text-red-800' : 'bg-purple-100 text-purple-800'" 
+                          class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      {{ lesson.type }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatDuration(lesson.durationSec) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ getCourseTitle(lesson.courseId) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="bg-yellow-100 text-yellow-800 inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      Premium
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <button (click)="editLessonItem(lesson)" 
+                              class="text-blue-600 hover:text-blue-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                      </button>
+                      <button (click)="deleteLesson(lesson.id)" 
+                              class="text-red-600 hover:text-red-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Management Section -->
+      <div *ngIf="activeTab() === 'users'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Gestion des Utilisateurs</h2>
+              <p class="text-gray-600 mt-1">Gérez tous les utilisateurs de la plateforme</p>
+            </div>
+            <button (click)="showAddUserModal.set(true)" 
+                    class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Nouvel Utilisateur
+            </button>
+          </div>
+        </div>
+
+        <!-- Users List -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inscription</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let user of users()" class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+                        <span class="text-white font-bold text-sm">{{ user.name.charAt(0) }}</span>
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                        <div class="text-sm text-gray-500">{{ user.semester || 'N/A' }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="(user.role === 'admin' || user.role === 'superadmin' || user.role === 'ADMIN' || user.role === 'SUPERADMIN') ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'" 
+                          class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      {{ user.role | titlecase }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.createdAt | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <button (click)="editUserItem(user)" 
+                              class="text-blue-600 hover:text-blue-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                      </button>
+                      <button (click)="deleteUser(user.id)" 
+                              class="text-red-600 hover:text-red-900 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscriptions Management Section -->
+      <div *ngIf="activeTab() === 'subscriptions'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Gestion des Abonnements</h2>
+              <p class="text-gray-600 mt-1">Gérez les plans d'abonnement et les souscriptions</p>
+            </div>
+            <button (click)="showAddPlanModal.set(true)" 
+                    class="bg-gradient-to-r from-purple-600 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-violet-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Nouveau Plan
+            </button>
+          </div>
+        </div>
+
+        <!-- Subscription Plans Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let plan of subscriptionPlans()" 
+               class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 hover:shadow-2xl transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                </svg>
+              </div>
+              <div class="flex space-x-2">
+                <button (click)="editPlanItem(plan)" 
+                        class="text-blue-600 hover:text-blue-900 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </button>
+                <button (click)="deletePlan(plan.id)" 
+                        class="text-red-600 hover:text-red-900 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plan.name }}</h3>
+            <div class="text-2xl font-bold text-gray-900 mb-2">{{ plan.priceCents / 100 }} {{ plan.currency }}</div>
+            <div class="text-sm text-gray-600 mb-4">{{ plan.description }}</div>
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>{{ plan.type }}</span>
+              <span [class]="plan.isActive ? 'text-green-600' : 'text-red-600'">
+                {{ plan.isActive ? 'Actif' : 'Inactif' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Lesson Modal -->
+      <div *ngIf="showAddLessonModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all duration-300 my-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Nouvelle Leçon</h3>
+            <button (click)="showAddLessonModal.set(false)" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form (ngSubmit)="createLesson()" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de la leçon</label>
+                <input type="text" [(ngModel)]="newLesson.title" name="title"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                <select [(ngModel)]="newLesson.type" name="type"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <option value="VIDEO">Vidéo</option>
+                  <option value="PDF">PDF</option>
+                  <option value="EXAM">Examen</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Cours</label>
+                <select [(ngModel)]="newLesson.courseId" name="courseId"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <option value="">Sélectionner un cours</option>
+                  <option *ngFor="let course of courses()" [value]="course.id">{{ course.title }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Durée (secondes)</label>
+                <input type="number" [(ngModel)]="newLesson.durationSec" name="durationSec"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+              </div>
+            </div>
+            
+            <!-- Premium Notice -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-sm font-medium text-green-800">
+                  Cette leçon sera créée en tant que contenu Premium (nécessite un abonnement)
+                </span>
+              </div>
+            </div>
+            <div class="flex space-x-3 pt-4">
+              <button type="button" (click)="showAddLessonModal.set(false)" 
+                      class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Annuler
+              </button>
+              <button type="submit" (click)="onSubmitClick()"
+                      class="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                Créer la Leçon
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit User Modal -->
+      <div *ngIf="showEditUserModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Modifier l'Utilisateur</h3>
+            <button (click)="showEditUserModal.set(false)" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form (ngSubmit)="updateUser()" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                <input type="text" [(ngModel)]="editUser.firstName" name="firstName" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                <input type="text" [(ngModel)]="editUser.lastName" name="lastName" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input type="email" [(ngModel)]="editUser.email" name="email" required
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
+              <select [(ngModel)]="editUser.role" name="role" required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="STUDENT">Étudiant</option>
+                <option value="ADMIN">Administrateur</option>
+                <option value="SUPERADMIN">Super Administrateur</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Semestre</label>
+              <input type="text" [(ngModel)]="editUser.semester" name="semester" placeholder="S1, S2, etc."
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div class="flex space-x-3 pt-4">
+              <button type="button" (click)="showEditUserModal.set(false)" 
+                      class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Annuler
+              </button>
+              <button type="submit" 
+                      class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Mettre à jour
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Plan Modal -->
+      <div *ngIf="showEditPlanModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Modifier le Plan</h3>
+            <button (click)="showEditPlanModal.set(false)" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form (ngSubmit)="updatePlan()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nom du plan</label>
+              <input type="text" [(ngModel)]="editPlan.name" name="name" required
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Prix (centimes)</label>
+              <input type="number" [(ngModel)]="editPlan.priceCents" name="priceCents" required
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+              <select [(ngModel)]="editPlan.type" name="type" required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="VIDEOS_ONLY">Vidéos Seulement</option>
+                <option value="DOCUMENTS_ONLY">Documents Seulement</option>
+                <option value="FULL_ACCESS">Accès Complet</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea [(ngModel)]="editPlan.description" name="description" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"></textarea>
+            </div>
+            <div class="flex space-x-3 pt-4">
+              <button type="button" (click)="showEditPlanModal.set(false)" 
+                      class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Annuler
+              </button>
+              <button type="submit" 
+                      class="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                Mettre à jour
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   `
 })
-export class AdminEnhancedComponent implements OnInit {
+export class AdminEnhancedComponent implements OnInit, OnDestroy {
   private readonly API_URL = 'http://localhost:3000/api';
 
   // Signals
   activeTab = signal('overview');
-  departments = signal<Department[]>([]);
   courses = signal<Course[]>([]);
   lessons = signal<Lesson[]>([]);
   users = signal<User[]>([]);
   subscriptions = signal<Subscription[]>([]);
+  subscriptionPlans = signal<SubscriptionPlan[]>([]);
   userStats = signal<UserStats | null>(null);
   stats = signal({
     totalCourses: 0,
@@ -592,22 +1140,27 @@ export class AdminEnhancedComponent implements OnInit {
   showAddPlanModal = signal(false);
   showAddCourseModal = signal(false);
   showAddUserModal = signal(false);
+  showAddLessonModal = signal(false);
+  showEditCourseModal = signal(false);
+  showEditLessonModal = signal(false);
+  showEditUserModal = signal(false);
+  showEditPlanModal = signal(false);
 
   // Form data
   newCourse = {
     title: '',
     description: '',
-    professor: '',
-    departmentId: '',
     semester: 'S1',
-    isPremium: false
+    isPremium: true
   };
 
   newUser = {
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
-    role: 'student' as 'student' | 'admin'
+    role: 'STUDENT' as 'STUDENT' | 'ADMIN' | 'SUPERADMIN',
+    semester: ''
   };
 
   newPlan = {
@@ -617,11 +1170,71 @@ export class AdminEnhancedComponent implements OnInit {
     description: ''
   };
 
+  newLesson = {
+    title: '',
+    type: 'VIDEO' as 'VIDEO' | 'PDF' | 'EXAM',
+    courseId: '',
+    durationSec: 0,
+    vimeoId: '',
+    youtubeId: '',
+    pdfUrl: '',
+    isPremium: true, // ✅ Premium by default
+    requiresVideoSubscription: false,
+    requiresDocumentSubscription: false,
+    orderIndex: 0
+  };
+
+  // Edit form data
+  editCourse = {
+    id: '',
+    title: '',
+    description: '',
+    semester: 'S1',
+    isPremium: false
+  };
+
+  editUser = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: 'STUDENT' as 'STUDENT' | 'ADMIN' | 'SUPERADMIN',
+    semester: ''
+  };
+
+  editPlan = {
+    id: '',
+    name: '',
+    description: '',
+    priceCents: 0,
+    currency: 'MAD',
+    type: 'VIDEOS_ONLY' as 'VIDEOS_ONLY' | 'DOCUMENTS_ONLY' | 'FULL_ACCESS',
+    features: '',
+    isActive: true
+  };
+
+  editLesson = {
+    id: '',
+    title: '',
+    type: 'VIDEO' as 'VIDEO' | 'PDF' | 'EXAM',
+    courseId: '',
+    durationSec: 0,
+    vimeoId: '',
+    youtubeId: '',
+    pdfUrl: '',
+    isPremium: false,
+    requiresVideoSubscription: false,
+    requiresDocumentSubscription: false,
+    orderIndex: 0
+  };
+
+
   tabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
-    { id: 'subscriptions', name: 'Abonnements' },
-    { id: 'content', name: 'Contenu' },
+    { id: 'courses', name: 'Cours' },
+    { id: 'lessons', name: 'Leçons' },
     { id: 'users', name: 'Utilisateurs' },
+    { id: 'subscriptions', name: 'Abonnements' },
     { id: 'analytics', name: 'Analytiques' }
   ];
 
@@ -651,26 +1264,6 @@ export class AdminEnhancedComponent implements OnInit {
     { description: 'Cours mis à jour', time: 'Il y a 8 heures', color: 'bg-orange-400' }
   ];
 
-  subscriptionPlans = [
-    {
-      name: 'Vidéos Seulement',
-      price: 650,
-      interval: '/mois',
-      features: ['Accès aux vidéos', 'Solutions complètes', 'Support prioritaire']
-    },
-    {
-      name: 'Documents Seulement',
-      price: 500,
-      interval: '/mois',
-      features: ['Accès aux PDFs', 'Exercices corrigés', 'Archives complètes']
-    },
-    {
-      name: 'Accès Complet',
-      price: 1000,
-      interval: '/mois',
-      features: ['Vidéos + Documents', 'Accès illimité', 'Support 24/7']
-    }
-  ];
 
   constructor(
     private http: HttpClient,
@@ -679,24 +1272,33 @@ export class AdminEnhancedComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+    
+    // Check for URL hash to set active tab
+    const hash = window.location.hash.substring(1);
+    if (hash && this.tabs.some(tab => tab.id === hash)) {
+      this.activeTab.set(hash);
+    }
   }
 
-  loadData() {
-    // Load departments
-    this.http.get<Department[]>(`${this.API_URL}/departments`).subscribe({
-      next: (data) => this.departments.set(data),
-      error: (error) => console.error('Error loading departments:', error)
-    });
+  ngOnDestroy() {
+    // Clean up any timeouts or intervals if needed
+  }
 
-    // Load courses
-    this.http.get<any>(`${this.API_URL}/courses`).subscribe({
+
+  loadData() {
+    // Load courses (admin needs to see all courses, not just premium)
+    this.http.get<any>(`${this.API_URL}/courses?isPremium=true`).subscribe({
       next: (response) => this.courses.set(response.courses || []),
       error: (error) => console.error('Error loading courses:', error)
     });
 
-    // Load lessons
-    this.http.get<Lesson[]>(`${this.API_URL}/lessons`).subscribe({
-      next: (data) => this.lessons.set(data),
+    // Load lessons (admin needs to see all lessons, not just premium)
+    this.http.get<any>(`${this.API_URL}/lessons?isPremium=true`).subscribe({
+      next: (response) => {
+        console.log('📥 Lessons response:', response);
+        this.lessons.set(response.lessons || []);
+        console.log('📥 Lessons loaded:', this.lessons().length);
+      },
       error: (error) => console.error('Error loading lessons:', error)
     });
 
@@ -720,6 +1322,13 @@ export class AdminEnhancedComponent implements OnInit {
       next: (data) => this.subscriptions.set(data),
       error: (error) => console.error('Error loading subscriptions:', error)
     });
+
+    // Load subscription plans
+    this.http.get<SubscriptionPlan[]>(`${this.API_URL}/subscriptions/plans`).subscribe({
+      next: (data) => this.subscriptionPlans.set(data),
+      error: (error) => console.error('Error loading subscription plans:', error)
+    });
+
 
     // Update stats
     this.updateStats();
@@ -770,14 +1379,29 @@ export class AdminEnhancedComponent implements OnInit {
   }
 
   async createUser() {
+    console.log('Creating user with data:', this.newUser);
+    console.log('Current user:', this.authService.user());
+    console.log('API URL:', this.API_URL);
+    
     try {
-      const response = await this.http.post(`${this.API_URL}/admin/create-user`, this.newUser).toPromise();
+      const userData = {
+        firstName: this.newUser.firstName,
+        lastName: this.newUser.lastName,
+        email: this.newUser.email,
+        password: this.newUser.password,
+        role: this.newUser.role,
+        semester: this.newUser.semester
+      };
+      console.log('Sending user data:', userData);
+      const response = await this.http.post(`${this.API_URL}/admin/create-user`, userData).toPromise();
       console.log('User created:', response);
       this.showAddUserModal.set(false);
       this.resetUserForm();
       this.loadData(); // Reload data
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating user:', error);
+      console.error('Full error object:', error);
+      alert('Erreur lors de la création de l\'utilisateur: ' + (error.error?.message || error.message || 'Erreur inconnue'));
     }
   }
 
@@ -805,19 +1429,19 @@ export class AdminEnhancedComponent implements OnInit {
     this.newCourse = {
       title: '',
       description: '',
-      professor: '',
-      departmentId: '',
       semester: 'S1',
-      isPremium: false
+      isPremium: true
     };
   }
 
   resetUserForm() {
     this.newUser = {
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
-      role: 'student'
+      role: 'STUDENT',
+      semester: ''
     };
   }
 
@@ -829,4 +1453,372 @@ export class AdminEnhancedComponent implements OnInit {
       description: ''
     };
   }
+
+  // Helper methods
+  formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
+  }
+
+  getCourseTitle(courseId: string): string {
+    const course = this.courses().find(c => c.id === courseId);
+    return course ? course.title : 'Cours inconnu';
+  }
+
+  // CRUD Operations for Courses
+  editCourseItem(course: Course) {
+    this.editCourse = {
+      id: course.id,
+      title: course.title,
+      description: course.description,
+      semester: course.semester,
+      isPremium: course.isPremium
+    };
+    this.showEditCourseModal.set(true);
+  }
+
+  async updateCourse() {
+    try {
+      const response = await this.http.put(`${this.API_URL}/courses/${this.editCourse.id}`, this.editCourse).toPromise();
+      console.log('Course updated:', response);
+      this.showEditCourseModal.set(false);
+      this.resetEditCourseForm();
+      this.loadData();
+    } catch (error) {
+      console.error('Error updating course:', error);
+    }
+  }
+
+  async deleteCourse(courseId: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')) {
+      try {
+        await this.http.delete(`${this.API_URL}/courses/${courseId}`).toPromise();
+        console.log('Course deleted');
+        this.loadData();
+      } catch (error: any) {
+        console.error('Error deleting course:', error);
+        
+        // Handle specific error cases
+        if (error.error?.error?.code === 'CONSTRAINT_ERROR') {
+          const forceDelete = confirm(
+            'Ce cours a des données associées (leçons, commentaires, etc.).\n\n' +
+            'Voulez-vous forcer la suppression en supprimant toutes les données associées ?\n\n' +
+            '⚠️ ATTENTION: Cette action est irréversible !'
+          );
+          
+          if (forceDelete) {
+            try {
+              await this.http.delete(`${this.API_URL}/courses/${courseId}?force=true`).toPromise();
+              console.log('Course force deleted');
+              this.loadData();
+            } catch (forceError: any) {
+              console.error('Error force deleting course:', forceError);
+              alert('Erreur lors de la suppression forcée. Veuillez réessayer.');
+            }
+          }
+        } else if (error.error?.error?.code === 'NOT_FOUND') {
+          alert('Cours non trouvé.');
+        } else {
+          alert('Erreur lors de la suppression du cours: ' + (error.error?.message || error.message || 'Erreur inconnue'));
+        }
+      }
+    }
+  }
+
+  // Helper method for debugging
+  onSubmitClick() {
+    console.log('Submit button clicked');
+  }
+
+  trackByLessonId(index: number, lesson: Lesson): string {
+    return lesson.id;
+  }
+
+  // CRUD Operations for Lessons
+  async createLesson() {
+    // Check if required fields are filled
+    if (!this.newLesson.title) {
+      alert('Veuillez saisir un titre pour la leçon');
+      return;
+    }
+    if (!this.newLesson.courseId) {
+      alert('Veuillez sélectionner un cours');
+      return;
+    }
+    if (!this.newLesson.type) {
+      alert('Veuillez sélectionner un type de leçon');
+      return;
+    }
+    
+    try {
+      // Clean up the data before sending
+      const lessonData = {
+        title: this.newLesson.title,
+        courseId: this.newLesson.courseId,
+        type: this.newLesson.type,
+        durationSec: this.newLesson.durationSec || 0,
+        vimeoId: this.newLesson.vimeoId || undefined,
+        youtubeId: this.newLesson.youtubeId || undefined,
+        pdfUrl: this.newLesson.pdfUrl || undefined,
+        isPremium: this.newLesson.isPremium || false,
+        requiresVideoSubscription: this.newLesson.requiresVideoSubscription || false,
+        requiresDocumentSubscription: this.newLesson.requiresDocumentSubscription || false,
+        orderIndex: this.newLesson.orderIndex || 0
+      };
+      
+      const response = await this.http.post(`${this.API_URL}/lessons`, lessonData).toPromise();
+      
+      // Close modal and reset form
+      this.showAddLessonModal.set(false);
+      this.resetLessonForm();
+      
+      // Reload data
+      this.loadData();
+      
+      // Show success message
+      alert('Leçon créée avec succès!');
+      
+    } catch (error: any) {
+      console.error('Error creating lesson:', error);
+      alert('Erreur lors de la création de la leçon: ' + (error.error?.message || error.message || 'Erreur inconnue'));
+    }
+  }
+
+
+  editUserItem(user: User) {
+    const nameParts = user.name.split(' ');
+    this.editUser = { 
+      id: user.id,
+      firstName: nameParts[0] || '',
+      lastName: nameParts.slice(1).join(' ') || '',
+      email: user.email,
+      role: user.role.toUpperCase() as 'STUDENT' | 'ADMIN' | 'SUPERADMIN',
+      semester: user.semester?.toString() || ''
+    };
+    this.showEditUserModal.set(true);
+  }
+
+  async updateUser() {
+    try {
+      const userData = {
+        firstName: this.editUser.firstName,
+        lastName: this.editUser.lastName,
+        email: this.editUser.email,
+        role: this.editUser.role,
+        semester: this.editUser.semester
+      };
+      const response = await this.http.put(`${this.API_URL}/admin/users/${this.editUser.id}`, userData).toPromise();
+      console.log('User updated:', response);
+      this.showEditUserModal.set(false);
+      this.resetEditUserForm();
+      this.loadData();
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  }
+
+  async deleteUser(userId: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+      try {
+        const response = await this.http.delete(`${this.API_URL}/admin/users/${userId}`).toPromise();
+        console.log('User deleted');
+        this.loadData();
+      } catch (error: any) {
+        console.error('Error deleting user:', error);
+        
+        // Handle specific error cases
+        if (error.error?.error?.code === 'CONSTRAINT_ERROR') {
+          const forceDelete = confirm(
+            'Cet utilisateur a des données associées (abonnements, commentaires, etc.).\n\n' +
+            'Voulez-vous forcer la suppression en supprimant toutes les données associées ?\n\n' +
+            '⚠️ ATTENTION: Cette action est irréversible !'
+          );
+          
+          if (forceDelete) {
+            try {
+              await this.http.delete(`${this.API_URL}/admin/users/${userId}?force=true`).toPromise();
+              console.log('User force deleted');
+      this.loadData();
+            } catch (forceError: any) {
+              console.error('Error force deleting user:', forceError);
+              alert('Erreur lors de la suppression forcée. Veuillez réessayer.');
+            }
+          }
+        } else if (error.error?.error?.code === 'NOT_FOUND') {
+          alert('Utilisateur non trouvé.');
+        } else if (error.error?.error?.code === 'BAD_REQUEST') {
+          alert('Impossible de supprimer ce type de compte.');
+        } else {
+          alert('Erreur lors de la suppression. Veuillez réessayer.');
+        }
+      }
+    }
+  }
+
+
+  editPlanItem(plan: SubscriptionPlan) {
+    this.editPlan = { ...plan };
+    this.showEditPlanModal.set(true);
+  }
+
+  async updatePlan() {
+    try {
+      const response = await this.http.put(`${this.API_URL}/subscriptions/plans/${this.editPlan.id}`, this.editPlan).toPromise();
+      console.log('Plan updated:', response);
+      this.showEditPlanModal.set(false);
+      this.resetEditPlanForm();
+      this.loadData();
+    } catch (error) {
+      console.error('Error updating plan:', error);
+    }
+  }
+
+  async deletePlan(planId: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce plan ?')) {
+      try {
+        await this.http.delete(`${this.API_URL}/subscriptions/plans/${planId}`).toPromise();
+        console.log('Plan deleted');
+        this.loadData();
+      } catch (error) {
+        console.error('Error deleting plan:', error);
+      }
+    }
+  }
+
+  editLessonItem(lesson: Lesson) {
+    this.editLesson = { 
+      id: lesson.id,
+      title: lesson.title,
+      type: lesson.type,
+      courseId: lesson.courseId,
+      durationSec: lesson.durationSec,
+      vimeoId: lesson.vimeoId || '',
+      youtubeId: lesson.youtubeId || '',
+      pdfUrl: lesson.pdfUrl || '',
+      isPremium: lesson.isPremium,
+      requiresVideoSubscription: lesson.requiresVideoSubscription || false,
+      requiresDocumentSubscription: lesson.requiresDocumentSubscription || false,
+      orderIndex: lesson.orderIndex
+    };
+    this.showEditLessonModal.set(true);
+  }
+
+  async updateLesson() {
+    try {
+      const response = await this.http.put(`${this.API_URL}/lessons/${this.editLesson.id}`, this.editLesson).toPromise();
+      console.log('Lesson updated:', response);
+      this.showEditLessonModal.set(false);
+      this.resetEditLessonForm();
+      this.loadData();
+    } catch (error) {
+      console.error('Error updating lesson:', error);
+    }
+  }
+
+  async deleteLesson(lessonId: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon ?')) {
+      try {
+        console.log('🗑️ Attempting to delete lesson:', lessonId);
+        console.log('🔐 User role:', this.authService.user()?.role);
+        console.log('🔐 Is authenticated:', this.authService.isAuthenticated());
+        
+        await this.http.delete(`${this.API_URL}/lessons/${lessonId}`).toPromise();
+        console.log('✅ Lesson deleted successfully');
+        this.loadData();
+      } catch (error: any) {
+        console.error('❌ Error deleting lesson:', error);
+        console.error('❌ Error details:', error.error);
+        console.error('❌ Error status:', error.status);
+        
+        // Show user-friendly error message
+        if (error.status === 403) {
+          alert('Erreur: Vous n\'avez pas les permissions pour supprimer cette leçon.');
+        } else if (error.status === 401) {
+          alert('Erreur: Vous devez être connecté pour supprimer une leçon.');
+        } else {
+          alert('Erreur serveur lors de la suppression de la leçon. Veuillez réessayer.');
+        }
+      }
+    }
+  }
+
+
+  // Reset form methods
+  resetLessonForm() {
+    this.newLesson = {
+      title: '',
+      type: 'VIDEO',
+      courseId: '',
+      durationSec: 0,
+      vimeoId: '',
+      youtubeId: '',
+      pdfUrl: '',
+      isPremium: true, // ✅ Premium by default
+      requiresVideoSubscription: false,
+      requiresDocumentSubscription: false,
+      orderIndex: 0
+    };
+  }
+
+
+  resetEditCourseForm() {
+    this.editCourse = {
+      id: '',
+      title: '',
+      description: '',
+      semester: 'S1',
+      isPremium: true // ✅ Premium by default
+    };
+  }
+
+  resetEditLessonForm() {
+    this.editLesson = {
+      id: '',
+      title: '',
+      type: 'VIDEO',
+      courseId: '',
+      durationSec: 0,
+      vimeoId: '',
+      youtubeId: '',
+      pdfUrl: '',
+      isPremium: true, // ✅ Premium by default
+      requiresVideoSubscription: false,
+      requiresDocumentSubscription: false,
+      orderIndex: 0
+    };
+  }
+
+  resetEditUserForm() {
+    this.editUser = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: 'STUDENT',
+      semester: ''
+    };
+  }
+
+  resetEditPlanForm() {
+    this.editPlan = {
+      id: '',
+      name: '',
+      description: '',
+      priceCents: 0,
+      currency: 'MAD',
+      type: 'VIDEOS_ONLY',
+      features: '',
+      isActive: true
+    };
+  }
+
 }

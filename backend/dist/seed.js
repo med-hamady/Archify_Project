@@ -8,30 +8,6 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const prisma = new client_1.PrismaClient();
 async function main() {
     console.log('🌱 Starting database seeding...');
-    // Create departments
-    const departments = await Promise.all([
-        prisma.department.upsert({
-            where: { name: 'Informatique de Gestion' },
-            update: {},
-            create: { name: 'Informatique de Gestion' }
-        }),
-        prisma.department.upsert({
-            where: { name: 'Gestion' },
-            update: {},
-            create: { name: 'Gestion' }
-        }),
-        prisma.department.upsert({
-            where: { name: 'Comptabilité' },
-            update: {},
-            create: { name: 'Comptabilité' }
-        }),
-        prisma.department.upsert({
-            where: { name: 'Marketing' },
-            update: {},
-            create: { name: 'Marketing' }
-        })
-    ]);
-    console.log('✅ Departments created');
     // Create subscription plans
     const plans = await Promise.all([
         prisma.subscriptionPlan.upsert({
@@ -125,7 +101,6 @@ async function main() {
             passwordHash: adminPassword,
             name: 'Administrateur Archify',
             role: 'SUPERADMIN',
-            departmentId: departments[0].id,
             semester: '1'
         }
     });
@@ -140,7 +115,6 @@ async function main() {
             passwordHash: studentPassword,
             name: 'Étudiant Test',
             role: 'STUDENT',
-            departmentId: departments[0].id,
             semester: '1'
         }
     });
@@ -155,8 +129,6 @@ async function main() {
                 title: 'Introduction à l\'Algorithmique',
                 description: 'Découvrez les bases de l\'algorithmique et de la programmation avec des exemples pratiques et des exercices concrets.',
                 semester: 'S1',
-                professor: 'Prof. Jean Dupont',
-                departmentId: departments[0].id,
                 tags: ['Algorithmique', 'Programmation', 'Logique'],
                 isPremium: true,
                 views: 150
@@ -170,8 +142,6 @@ async function main() {
                 title: 'Analyse Mathématique',
                 description: 'Maîtrisez les concepts fondamentaux de l\'analyse mathématique et des fonctions avec des applications pratiques.',
                 semester: 'S1',
-                professor: 'Prof. Marie Curie',
-                departmentId: departments[0].id,
                 tags: ['Mathématiques', 'Analyse', 'Fonctions'],
                 isPremium: false,
                 views: 89
@@ -185,8 +155,6 @@ async function main() {
                 title: 'Logique et Théorie des Ensembles',
                 description: 'Explorez la logique mathématique et les fondements de la théorie des ensembles avec des exemples concrets.',
                 semester: 'S2',
-                professor: 'Prof. Pierre Fermat',
-                departmentId: departments[0].id,
                 tags: ['Logique', 'Théorie des Ensembles', 'Mathématiques'],
                 isPremium: true,
                 views: 67
@@ -200,8 +168,6 @@ async function main() {
                 title: 'Comptabilité Générale',
                 description: 'Apprenez les principes fondamentaux de la comptabilité générale avec des cas pratiques.',
                 semester: 'S1',
-                professor: 'Prof. Ahmed Benali',
-                departmentId: departments[2].id,
                 tags: ['Comptabilité', 'Finance', 'Gestion'],
                 isPremium: false,
                 views: 120

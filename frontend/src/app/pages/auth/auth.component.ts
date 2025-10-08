@@ -239,6 +239,13 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
             </div>
           </form>
 
+          <!-- Forgot Password Link (Login Mode Only) -->
+          <div *ngIf="isLoginMode()" class="mt-4 text-center">
+            <a routerLink="/forgot-password" class="text-sm text-blue-600 hover:text-blue-800">
+              Mot de passe oublié ?
+            </a>
+          </div>
+
           <!-- Toggle Mode -->
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">

@@ -25,7 +25,6 @@ const createUserSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
     role: zod_1.z.enum(['STUDENT', 'ADMIN', 'SUPERADMIN']).default('STUDENT'),
-    departmentId: zod_1.z.string().cuid().optional(),
     semester: zod_1.z.string().optional(),
 });
 // POST /api/admin/create-admin - Create admin account (Superadmin only)
@@ -44,11 +43,6 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
         }
         // Hash password
         const hashedPassword = await bcryptjs_1.default.hash(body.password, 12);
-        // Get the first department ID
-        const firstDept = await prisma.department.findFirst();
-        if (!firstDept) {
-            return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
-        }
         // Create admin user
         const admin = await prisma.user.create({
             data: {
@@ -56,7 +50,6 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
                 passwordHash: hashedPassword,
                 role: body.role,
                 name: `${body.firstName} ${body.lastName}`,
-                departmentId: firstDept.id,
                 semester: 'S1'
             }
         });
@@ -75,7 +68,7 @@ exports.adminRouter.post('/create-admin', auth_1.requireAuth, async (req, res) =
 });
 // POST /api/admin/create-user - Create user account (Admin only)
 exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN' && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can create user accounts' } });
     }
     try {
@@ -96,12 +89,8 @@ exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) =>
                 passwordHash: hashedPassword,
                 role: body.role,
                 name: `${body.firstName} ${body.lastName}`,
-                departmentId: body.departmentId || (await prisma.department.findFirst())?.id || 'default-dept',
                 semester: body.semester || 'S1',
             },
-            include: {
-                department: { select: { name: true } },
-            }
         });
         return res.status(201).json({
             message: 'User account created successfully',
@@ -116,13 +105,140 @@ exports.adminRouter.post('/create-user', auth_1.requireAuth, async (req, res) =>
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// GET /api/admin/init - Initialize first superadmin (only if no users exist)
+// GET /api/admin/users - Get all users (Admin only)
+exports.adminRouter.get('/users', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can view users' } });
+    }
+    try {
+        const users = await prisma.user.findMany({
+            include: {
+                subscriptions: { where: { status: 'ACTIVE' } }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+        return res.json(users);
+    }
+    catch (err) {
+        console.error('Error fetching users:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// PUT /api/admin/users/:id - Update user (Admin only)
+exports.adminRouter.put('/users/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can update users' } });
+    }
+    try {
+        const { id } = req.params;
+        const { firstName, lastName, email, role, semester } = req.body;
+        const user = await prisma.user.update({
+            where: { id },
+            data: {
+                name: `${firstName} ${lastName}`,
+                email,
+                role,
+                semester
+            },
+        });
+        return res.json(user);
+    }
+    catch (err) {
+        console.error('Error updating user:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// DELETE /api/admin/users/:id - Delete user (Admin only)
+exports.adminRouter.delete('/users/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can delete users' } });
+    }
+    try {
+        const { id } = req.params;
+        const { force } = req.query; // Optional force parameter
+        // Check if user exists
+        const user = await prisma.user.findUnique({ where: { id } });
+        if (!user) {
+            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'User not found' } });
+        }
+        // Prevent deletion of superadmin accounts
+        if (user.role === 'SUPERADMIN') {
+            return res.status(400).json({
+                error: {
+                    code: 'BAD_REQUEST',
+                    message: 'Cannot delete superadmin accounts'
+                }
+            });
+        }
+        if (force === 'true') {
+            // Force delete: remove all related data first
+            console.log(`Force deleting user ${user.name} and all related data...`);
+            // Delete in the correct order to avoid foreign key constraints
+            await prisma.payment.deleteMany({ where: { userId: id } });
+            await prisma.subscription.deleteMany({ where: { userId: id } });
+            await prisma.comment.deleteMany({ where: { userId: id } });
+            await prisma.progress.deleteMany({ where: { userId: id } });
+            await prisma.passwordResetToken.deleteMany({ where: { userId: id } });
+            // Finally delete the user
+            await prisma.user.delete({ where: { id } });
+            return res.json({ message: 'User and all related data deleted successfully' });
+        }
+        else {
+            // Regular delete (will fail if there are constraints)
+            await prisma.user.delete({ where: { id } });
+            return res.json({ message: 'User deleted successfully' });
+        }
+    }
+    catch (err) {
+        console.error('Error deleting user:', err);
+        // Handle specific Prisma errors
+        if (err.code === 'P2003') {
+            return res.status(400).json({
+                error: {
+                    code: 'CONSTRAINT_ERROR',
+                    message: 'Cannot delete user due to existing relationships. Use ?force=true to delete all related data.'
+                }
+            });
+        }
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// POST /api/admin/reset - Reset admin initialization (emergency use)
+exports.adminRouter.post('/reset', async (req, res) => {
+    try {
+        const { secret } = req.body;
+        // Only allow reset with a secret key (for emergency use)
+        if (secret !== 'ARCHIFY_EMERGENCY_RESET_2024') {
+            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Invalid reset key' } });
+        }
+        // Delete all admin users
+        await prisma.user.deleteMany({
+            where: {
+                role: {
+                    in: ['ADMIN', 'SUPERADMIN']
+                }
+            }
+        });
+        return res.json({ message: 'Admin accounts reset successfully. You can now create a new superadmin.' });
+    }
+    catch (err) {
+        console.error('Error resetting admin accounts:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// POST /api/admin/init - Initialize first superadmin (only if no admin users exist)
 exports.adminRouter.post('/init', async (req, res) => {
     try {
-        // Check if any users exist
-        const userCount = await prisma.user.count();
-        if (userCount > 0) {
-            return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'System already initialized' } });
+        // Check if any admin users exist (not just any users)
+        const adminCount = await prisma.user.count({
+            where: {
+                role: {
+                    in: ['ADMIN', 'SUPERADMIN']
+                }
+            }
+        });
+        if (adminCount > 0) {
+            return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Admin accounts already exist' } });
         }
         const { email, password, firstName, lastName } = req.body;
         if (!email || !password || !firstName || !lastName) {
@@ -130,11 +246,6 @@ exports.adminRouter.post('/init', async (req, res) => {
         }
         // Hash password
         const hashedPassword = await bcryptjs_1.default.hash(password, 12);
-        // Get the first department ID
-        const firstDept = await prisma.department.findFirst();
-        if (!firstDept) {
-            return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
-        }
         // Create superadmin
         const superadmin = await prisma.user.create({
             data: {
@@ -142,7 +253,6 @@ exports.adminRouter.post('/init', async (req, res) => {
                 passwordHash: hashedPassword,
                 role: 'SUPERADMIN',
                 name: `${firstName} ${lastName}`,
-                departmentId: firstDept.id,
                 semester: 'S1'
             }
         });

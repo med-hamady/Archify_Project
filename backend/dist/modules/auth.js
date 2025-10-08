@@ -53,7 +53,6 @@ function getUserPublic(user) {
         email: user.email,
         name: user.name,
         role: user.role,
-        departmentId: user.departmentId,
         semester: user.semester,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
@@ -91,8 +90,7 @@ const registerSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(8),
     name: zod_1.z.string().min(1),
-    departmentId: zod_1.z.string().uuid().optional(),
-    semester: zod_1.z.number().int().optional(),
+    semester: zod_1.z.string().optional(),
 });
 const loginSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
@@ -107,22 +105,12 @@ exports.authRouter.post('/register', async (req, res) => {
             return res.status(409).json({ error: { code: 'EMAIL_EXISTS', message: 'Email already in use' } });
         }
         const passwordHash = await bcryptjs_1.default.hash(body.password, 10);
-        // Get the first department ID if not provided
-        let departmentId = body.departmentId;
-        if (!departmentId) {
-            const firstDept = await prisma.department.findFirst();
-            if (!firstDept) {
-                return res.status(500).json({ error: { code: 'NO_DEPARTMENT', message: 'No department found' } });
-            }
-            departmentId = firstDept.id;
-        }
         const user = await prisma.user.create({
             data: {
                 email: body.email,
                 passwordHash,
                 name: body.name,
-                departmentId,
-                semester: body.semester?.toString() ?? 'S1',
+                semester: body.semester ?? 'S1',
             },
         });
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
@@ -180,6 +168,28 @@ exports.authRouter.post('/refresh', async (req, res) => {
         return res.status(401).json({ error: { code: 'INVALID_REFRESH', message: 'Invalid refresh' } });
     }
 });
+// GET /me - Get current user info
+exports.authRouter.get('/me', requireAuth, async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId },
+            include: {
+                subscriptions: {
+                    where: { status: 'ACTIVE' },
+                    include: { plan: true }
+                }
+            }
+        });
+        if (!user) {
+            return res.status(404).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
+        }
+        return res.json({ user: getUserPublic(user) });
+    }
+    catch (err) {
+        console.error('Error in /me:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
 // GET /verify
 exports.authRouter.get('/verify', async (req, res) => {
     const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
@@ -211,8 +221,7 @@ exports.authRouter.get('/me', requireAuth, async (req, res) => {
 // PUT /profile
 const profileSchema = zod_1.z.object({
     name: zod_1.z.string().min(1).optional(),
-    departmentId: zod_1.z.string().uuid().nullable().optional(),
-    semester: zod_1.z.number().int().min(1).max(12).nullable().optional(),
+    semester: zod_1.z.string().nullable().optional(),
 });
 exports.authRouter.put('/profile', requireAuth, async (req, res) => {
     try {
@@ -220,10 +229,8 @@ exports.authRouter.put('/profile', requireAuth, async (req, res) => {
         const updateData = {};
         if (body.name)
             updateData.name = body.name;
-        if (body.departmentId !== undefined)
-            updateData.departmentId = body.departmentId;
         if (body.semester !== undefined)
-            updateData.semester = body.semester?.toString();
+            updateData.semester = body.semester;
         const user = await prisma.user.update({ where: { id: req.userId }, data: updateData });
         return res.json(getUserPublic(user));
     }

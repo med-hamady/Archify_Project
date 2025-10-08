@@ -9,6 +9,26 @@ const auth_1 = require("./auth");
 const getAuthenticatedReq = (req) => req;
 const prisma = new client_1.PrismaClient();
 exports.subscriptionsRouter = (0, express_1.Router)();
+// GET /subscriptions - List all subscriptions (Admin only)
+exports.subscriptionsRouter.get('/', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
+    }
+    try {
+        const subscriptions = await prisma.subscription.findMany({
+            include: {
+                user: { select: { id: true, name: true, email: true } },
+                plan: { select: { id: true, name: true, priceCents: true, currency: true } }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+        return res.json(subscriptions);
+    }
+    catch (err) {
+        console.error('Error fetching subscriptions:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
 // Schemas
 const subscriptionPlanCreateSchema = zod_1.z.object({
     name: zod_1.z.string().min(1),
@@ -369,6 +389,50 @@ exports.subscriptionsRouter.post('/webhook', async (req, res) => {
         res.status(200).json({ received: true });
     }
     catch (err) {
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// PUT /plans/:id - Update subscription plan (Admin only)
+exports.subscriptionsRouter.put('/plans/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can update plans' } });
+    }
+    try {
+        const { id } = req.params;
+        const { name, description, priceCents, currency, type, features, isActive } = req.body;
+        const plan = await prisma.subscriptionPlan.update({
+            where: { id },
+            data: {
+                name,
+                description,
+                priceCents,
+                currency,
+                type,
+                features,
+                isActive
+            }
+        });
+        return res.json(plan);
+    }
+    catch (err) {
+        console.error('Error updating plan:', err);
+        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+// DELETE /plans/:id - Delete subscription plan (Admin only)
+exports.subscriptionsRouter.delete('/plans/:id', auth_1.requireAuth, async (req, res) => {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can delete plans' } });
+    }
+    try {
+        const { id } = req.params;
+        await prisma.subscriptionPlan.delete({
+            where: { id }
+        });
+        return res.json({ message: 'Plan deleted successfully' });
+    }
+    catch (err) {
+        console.error('Error deleting plan:', err);
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });

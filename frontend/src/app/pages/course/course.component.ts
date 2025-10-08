@@ -8,9 +8,6 @@ interface Course {
   id: string;
   title: string;
   description: string;
-  professor: string;
-  department: string;
-  departmentId: string;
   semester: string;
   tags: string[];
   isPremium: boolean;
@@ -72,9 +69,9 @@ interface Lesson {
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 class="text-2xl md:text-3xl font-semibold text-gray-900">{{ course()?.title }}</h1>
-                <p class="text-gray-600 mt-1">{{ course()?.professor }} • {{ course()?.semester }}</p>
+                <p class="text-gray-600 mt-1">{{ course()?.semester }}</p>
                 <div class="flex flex-wrap gap-2 mt-3">
-                  <span *ngFor="let tag of course()?.tags" 
+                  <span *ngFor="let tag of course()?.tags; trackBy: trackByTag" 
                         class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                     {{ tag }}
                   </span>
@@ -372,5 +369,9 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   goToCatalog(): void {
     this.router.navigate(['/catalog']);
+  }
+
+  trackByTag(index: number, tag: string): string {
+    return tag;
   }
 }

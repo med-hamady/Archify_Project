@@ -8,9 +8,6 @@ interface Course {
   id: string;
   title: string;
   description: string;
-  professor: string;
-  department: string;
-  departmentId: string;
   semester: string;
   tags: string[];
   isPremium: boolean;
@@ -29,12 +26,6 @@ interface CourseResponse {
   };
 }
 
-interface Department {
-  id: string;
-  name: string;
-  courseCount: number;
-  userCount: number;
-}
 
 @Component({
   selector: 'app-catalog',
@@ -65,7 +56,7 @@ interface Department {
                 type="text" 
                 [(ngModel)]="searchQuery"
                 (ngModelChange)="onSearch()"
-                placeholder="Titre, professeur, matière..."
+                placeholder="Titre, matière..."
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
       </div>
@@ -88,32 +79,7 @@ interface Department {
         </select>
             </div>
 
-            <!-- Department -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Département</label>
-              <select 
-                [(ngModel)]="selectedDepartment"
-                (ngModelChange)="onFilterChange()"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Tous</option>
-                <option *ngFor="let dept of departments()" [value]="dept.id">{{ dept.name }}</option>
-        </select>
-            </div>
 
-            <!-- Premium Filter -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
-              <select 
-                [(ngModel)]="premiumFilter"
-                (ngModelChange)="onFilterChange()"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Tous</option>
-                <option value="false">Gratuits</option>
-                <option value="true">Premium</option>
-        </select>
-            </div>
           </div>
       </div>
 
@@ -131,7 +97,7 @@ interface Department {
         <!-- Courses Grid -->
         <div *ngIf="!isLoading()" class="mt-8">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div *ngFor="let course of courses()" 
+            <div *ngFor="let course of courses(); trackBy: trackByCourseId" 
                  [routerLink]="['/course', course.id]" 
                  class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group cursor-pointer">
               
@@ -154,14 +120,13 @@ interface Department {
                 <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                   {{ course.title }}
                 </h3>
-                <p class="text-gray-600 text-sm mb-3">{{ course.professor }}</p>
                 <p class="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-2">
                   {{ course.description }}
                 </p>
                 
                 <!-- Tags -->
                 <div class="flex flex-wrap gap-2 mb-4">
-                  <span *ngFor="let tag of course.tags.slice(0, 3)" 
+                  <span *ngFor="let tag of course.tags.slice(0, 3); trackBy: trackByTag" 
                         class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                     {{ tag }}
                   </span>
@@ -169,7 +134,7 @@ interface Department {
 
                 <!-- Course Meta -->
                 <div class="flex items-center justify-between text-sm text-gray-500">
-                  <span>{{ course.semester }} • {{ course.department }}</span>
+                  <span>{{ course.semester }}</span>
                   <span>{{ course.views }} vues</span>
                 </div>
           </div>
@@ -219,7 +184,6 @@ export class CatalogComponent implements OnInit {
 
   // Signals
   private coursesSignal = signal<Course[]>([]);
-  private departmentsSignal = signal<Department[]>([]);
   private paginationSignal = signal({
     page: 1,
     limit: 12,
@@ -231,29 +195,19 @@ export class CatalogComponent implements OnInit {
   // Form properties
   searchQuery = '';
   selectedSemester = '';
-  selectedDepartment = '';
-  premiumFilter = '';
   private searchTimeout: any;
 
   // Computed properties
   courses = computed(() => this.coursesSignal());
-  departments = computed(() => this.departmentsSignal());
   pagination = computed(() => this.paginationSignal());
   isLoading = computed(() => this.isLoadingSignal());
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.loadDepartments();
     this.loadCourses();
   }
 
-  private loadDepartments() {
-    this.http.get<Department[]>(`${this.API_URL}/departments`).subscribe({
-      next: (departments) => this.departmentsSignal.set(departments),
-      error: (error) => console.error('Error loading departments:', error)
-    });
-  }
 
   private loadCourses() {
     this.isLoadingSignal.set(true);
@@ -264,8 +218,8 @@ export class CatalogComponent implements OnInit {
     
     if (this.searchQuery) params.set('search', this.searchQuery);
     if (this.selectedSemester) params.set('semester', this.selectedSemester);
-    if (this.selectedDepartment) params.set('department', this.selectedDepartment);
-    if (this.premiumFilter) params.set('isPremium', this.premiumFilter);
+    // Always filter for premium content only
+    params.set('isPremium', 'true');
 
     this.http.get<CourseResponse>(`${this.API_URL}/courses?${params.toString()}`).subscribe({
       next: (response) => {
@@ -302,5 +256,13 @@ export class CatalogComponent implements OnInit {
       this.paginationSignal.update(p => ({ ...p, page }));
       this.loadCourses();
     }
+  }
+
+  trackByCourseId(index: number, course: Course): string {
+    return course.id;
+  }
+
+  trackByTag(index: number, tag: string): string {
+    return tag;
   }
 }

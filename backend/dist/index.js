@@ -15,7 +15,6 @@ const auth_1 = require("./modules/auth");
 const courses_1 = require("./modules/courses");
 const lessons_1 = require("./modules/lessons");
 const subscriptions_1 = require("./modules/subscriptions");
-const departments_1 = require("./modules/departments");
 const users_1 = require("./modules/users");
 const admin_1 = require("./modules/admin");
 const comments_1 = require("./modules/comments");
@@ -39,25 +38,36 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, pino_http_1.default)({ logger }));
-// Basic rate limiting for auth and login-sensitive routes
+// Rate limiting configurations
 const authLimiter = (0, express_rate_limit_1.default)({
     windowMs: 60 * 1000,
     max: 20,
     standardHeaders: true,
     legacyHeaders: false,
 });
+const generalLimiter = (0, express_rate_limit_1.default)({
+    windowMs: 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+const strictLimiter = (0, express_rate_limit_1.default)({
+    windowMs: 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 app.get('/healthz', (_req, res) => {
     res.status(200).json({ status: 'ok' });
 });
-// Routes
+// Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, auth_1.authRouter);
-app.use('/api/courses', courses_1.coursesRouter);
-app.use('/api/lessons', lessons_1.lessonsRouter);
-app.use('/api/subscriptions', subscriptions_1.subscriptionsRouter);
-app.use('/api/departments', departments_1.departmentsRouter);
-app.use('/api/users', users_1.usersRouter);
-app.use('/api/admin', admin_1.adminRouter);
-app.use('/api/comments', comments_1.commentsRouter);
+app.use('/api/courses', generalLimiter, courses_1.coursesRouter);
+app.use('/api/lessons', generalLimiter, lessons_1.lessonsRouter);
+app.use('/api/subscriptions', generalLimiter, subscriptions_1.subscriptionsRouter);
+app.use('/api/users', strictLimiter, users_1.usersRouter);
+app.use('/api/admin', strictLimiter, admin_1.adminRouter);
+app.use('/api/comments', generalLimiter, comments_1.commentsRouter);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     logger.info({ port }, 'Backend listening');

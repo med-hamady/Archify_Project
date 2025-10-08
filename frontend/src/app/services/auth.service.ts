@@ -8,7 +8,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'student' | 'admin' | 'superadmin';
+  role: 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
   subscription?: {
     type: 'free' | 'premium' | 'enterprise';
     expiresAt: Date | null;
@@ -72,32 +72,51 @@ export class AuthService {
   private readonly API_URL = 'http://localhost:3000/api'; // Will be updated for production
   private readonly USER_KEY = 'archify_user';
 
-  private userSubject = new BehaviorSubject<User | null>(null);
-  private tokenSubject = new BehaviorSubject<string | null>(null);
-
-  // Public signals for reactive components
+  // Use signals for modern reactive state management
   user = signal<User | null>(null);
   isAuthenticated = computed(() => this.user() !== null);
   isPremium = computed(() => this.user()?.subscription?.type === 'premium' || this.user()?.subscription?.type === 'enterprise');
-  isAdmin = computed(() => this.user()?.role === 'admin');
+  isAdmin = computed(() => this.user()?.role === 'admin' || this.user()?.role === 'ADMIN' || this.user()?.role === 'superadmin' || this.user()?.role === 'SUPERADMIN');
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
     this.initializeAuth();
+    this.setupSessionPersistence();
   }
 
   private initializeAuth() {
     const user = this.getStoredUser();
     if (user) {
-      this.userSubject.next(user);
       this.user.set(user);
       this.verifyToken().subscribe({
         next: (response) => this.updateUser(response.user),
         error: () => this.logout(),
       });
     }
+  }
+
+  private setupSessionPersistence() {
+    // Set up periodic session refresh
+    setInterval(() => {
+      if (this.isAuthenticated()) {
+        this.refreshSession();
+      }
+    }, 5 * 60 * 1000); // Every 5 minutes
+  }
+
+  private refreshSession() {
+    this.http.post(`${this.API_URL}/auth/refresh`, {}).subscribe({
+      next: () => {
+        // Session refreshed successfully
+        console.log('Session refreshed');
+      },
+      error: () => {
+        // Refresh failed, user needs to login again
+        this.logout();
+      }
+    });
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
@@ -152,9 +171,7 @@ export class AuthService {
     this.http.post<void>(`${this.API_URL}/auth/logout`, {}).subscribe({ next: () => {}, error: () => {} });
     localStorage.removeItem(this.USER_KEY);
     
-    // Clear signals
-    this.userSubject.next(null);
-    this.tokenSubject.next(null);
+    // Clear signal
     this.user.set(null);
     
     // Redirect to home
@@ -208,22 +225,20 @@ export class AuthService {
   }
 
   private setAuthData(response: AuthResponse): void {
-    // Transform role to lowercase to match frontend interface
+    // Keep role as is to support both formats
     const userData = {
       ...response.user,
-      role: response.user.role.toLowerCase() as 'student' | 'admin' | 'superadmin'
+      role: response.user.role as 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN'
     };
     
     localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
     
-    // Update signals
-    this.userSubject.next(userData);
+    // Update signal
     this.user.set(userData);
   }
 
   private updateUser(user: User): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    this.userSubject.next(user);
     this.user.set(user);
   }
 

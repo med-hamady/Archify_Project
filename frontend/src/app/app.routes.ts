@@ -26,6 +26,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/password-reset/password-reset.component').then(m => m.PasswordResetComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
@@ -53,6 +57,11 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin-enhanced.component').then(m => m.AdminEnhancedComponent),
+    canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
+  },
+  {
+    path: 'admin/upload',
+    loadComponent: () => import('./pages/admin/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
     canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
   },
   { path: '**', redirectTo: '' }

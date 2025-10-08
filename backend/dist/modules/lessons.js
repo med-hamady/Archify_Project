@@ -17,13 +17,15 @@ const lessonQuerySchema = zod_1.z.object({
 });
 const lessonCreateSchema = zod_1.z.object({
     title: zod_1.z.string().min(1),
-    courseId: zod_1.z.string().uuid(),
+    courseId: zod_1.z.string().min(1), // Changed from uuid() to min(1) to accept CUIDs
     type: zod_1.z.enum(['VIDEO', 'PDF', 'EXAM']),
     durationSec: zod_1.z.number().int().min(0).default(0),
     vimeoId: zod_1.z.string().optional(),
     youtubeId: zod_1.z.string().optional(),
-    pdfUrl: zod_1.z.string().url().optional(),
-    isPremium: zod_1.z.boolean().default(false),
+    pdfUrl: zod_1.z.string().optional(), // Removed .url() validation to allow empty strings
+    isPremium: zod_1.z.boolean().default(true), // ✅ Premium by default
+    requiresVideoSubscription: zod_1.z.boolean().default(false),
+    requiresDocumentSubscription: zod_1.z.boolean().default(false),
     orderIndex: zod_1.z.number().int().min(0).default(0)
 });
 const lessonUpdateSchema = lessonCreateSchema.partial();
@@ -39,6 +41,8 @@ function getLessonPublic(lesson) {
         youtubeId: lesson.youtubeId,
         pdfUrl: lesson.pdfUrl,
         isPremium: lesson.isPremium,
+        requiresVideoSubscription: lesson.requiresVideoSubscription,
+        requiresDocumentSubscription: lesson.requiresDocumentSubscription,
         orderIndex: lesson.orderIndex,
         createdAt: lesson.createdAt,
         lessonAssets: lesson.lessonAssets || []
@@ -66,7 +70,7 @@ exports.lessonsRouter.get('/', async (req, res) => {
                 where,
                 include: {
                     lessonAssets: true,
-                    course: { select: { title: true, department: { select: { name: true } } } }
+                    course: { select: { title: true } }
                 },
                 orderBy: [
                     { courseId: 'asc' },
@@ -78,7 +82,7 @@ exports.lessonsRouter.get('/', async (req, res) => {
             }),
             prisma.lesson.count({ where })
         ]);
-        return res.json({
+        const response = {
             lessons: lessons.map(getLessonPublic),
             pagination: {
                 page,
@@ -86,7 +90,8 @@ exports.lessonsRouter.get('/', async (req, res) => {
                 total,
                 pages: Math.ceil(total / limit)
             }
-        });
+        };
+        return res.json(response);
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {
@@ -108,7 +113,6 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
                     select: {
                         id: true,
                         title: true,
-                        department: { select: { name: true } }
                     }
                 },
                 comments: {
@@ -120,6 +124,49 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
         });
         if (!lesson) {
             return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
+        }
+        // Check if lesson is premium and user has subscription
+        if (lesson.isPremium) {
+            // Try to get user from token (optional authentication)
+            const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
+            let hasAccess = false;
+            if (token) {
+                try {
+                    const jwt = require('jsonwebtoken');
+                    const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+                    const decoded = jwt.verify(token, JWT_SECRET);
+                    // Check if user has active subscription
+                    const user = await prisma.user.findUnique({
+                        where: { id: decoded.sub },
+                        include: {
+                            subscriptions: {
+                                where: { status: 'ACTIVE' },
+                                include: { plan: true }
+                            }
+                        }
+                    });
+                    if (user && user.subscriptions.length > 0) {
+                        hasAccess = true;
+                    }
+                }
+                catch (error) {
+                    // Token invalid, no access
+                }
+            }
+            if (!hasAccess) {
+                return res.status(403).json({
+                    error: {
+                        code: 'SUBSCRIPTION_REQUIRED',
+                        message: 'Premium content requires an active subscription'
+                    },
+                    lesson: {
+                        id: lesson.id,
+                        title: lesson.title,
+                        isPremium: true,
+                        requiresSubscription: true
+                    }
+                });
+            }
         }
         return res.json(getLessonPublic(lesson));
     }
@@ -144,7 +191,7 @@ exports.lessonsRouter.get('/:id/assets', async (req, res) => {
 });
 // POST /lessons - Create a new lesson (Admin only)
 exports.lessonsRouter.post('/', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -176,7 +223,7 @@ exports.lessonsRouter.post('/', auth_1.requireAuth, async (req, res) => {
 });
 // PUT /lessons/:id - Update a lesson (Admin only)
 exports.lessonsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -202,12 +249,57 @@ exports.lessonsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // DELETE /lessons/:id - Delete a lesson (Admin only)
 exports.lessonsRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
         const { id } = req.params;
-        await prisma.lesson.delete({ where: { id } });
+        // Check if lesson exists
+        const lesson = await prisma.lesson.findUnique({
+            where: { id },
+            select: { id: true }
+        });
+        if (!lesson) {
+            return res.status(404).json({ error: { code: 'LESSON_NOT_FOUND', message: 'Lesson not found' } });
+        }
+        // Delete related data first (in correct order to avoid foreign key constraints)
+        await prisma.$transaction(async (tx) => {
+            // Delete lesson assets
+            await tx.lessonAsset.deleteMany({
+                where: { lessonId: id }
+            });
+            // Delete comments
+            await tx.comment.deleteMany({
+                where: { lessonId: id }
+            });
+            // Delete progress records
+            await tx.progress.deleteMany({
+                where: { lessonId: id }
+            });
+            // Delete quiz answers first (due to foreign key constraints)
+            await tx.quizAnswer.deleteMany({
+                where: {
+                    questionId: {
+                        in: await tx.quizQuestion.findMany({
+                            where: { quiz: { lessonId: id } },
+                            select: { id: true }
+                        }).then(questions => questions.map(q => q.id))
+                    }
+                }
+            });
+            // Delete quiz questions
+            await tx.quizQuestion.deleteMany({
+                where: { quiz: { lessonId: id } }
+            });
+            // Delete quizzes
+            await tx.quiz.deleteMany({
+                where: { lessonId: id }
+            });
+            // Finally delete the lesson
+            await tx.lesson.delete({
+                where: { id }
+            });
+        });
         return res.status(204).send();
     }
     catch (err) {

@@ -21,9 +21,6 @@ interface Lesson {
     id: string;
     title: string;
     isPremium: boolean;
-    department: {
-      name: string;
-    };
   };
   assets: any[];
   comments: any[];
@@ -102,6 +99,29 @@ interface LessonProgress {
             </div>
           </div>
         </div>
+
+      <!-- Subscription Required State -->
+      <div *ngIf="subscriptionRequired() && !isLoading()" class="min-h-screen flex items-center justify-center">
+        <div class="text-center max-w-md mx-auto p-6">
+          <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Contenu Premium</h2>
+          <p class="text-gray-600 mb-6">Cette leçon nécessite un abonnement actif pour y accéder.</p>
+          <div class="space-y-3">
+            <button (click)="router.navigate(['/subscription'])" 
+                    class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+              Voir les abonnements
+            </button>
+            <button (click)="router.navigate(['/catalog'])" 
+                    class="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+              Retour au catalogue
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Main Content -->
       <div class="max-w-6xl mx-auto px-4 py-6">
@@ -231,6 +251,7 @@ export class LessonComponent implements OnInit, OnDestroy {
   private errorSignal = signal<string>('');
   private relatedLessonsSignal = signal<Lesson[]>([]);
   private progressSignal = signal<LessonProgress>({ status: 'not_started', updatedAt: null });
+  subscriptionRequired = signal(false);
   
   userEmail = signal<string>('');
   currentTime = signal<string>('');
@@ -254,7 +275,7 @@ export class LessonComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private router: Router, 
+    public router: Router, 
     private activatedRoute: ActivatedRoute,
     private http: HttpClient,
     private authService: AuthService
@@ -292,6 +313,7 @@ export class LessonComponent implements OnInit, OnDestroy {
         this.lessonSignal.set(lesson);
         this.pdfUrl = lesson.pdfUrl;
         this.isLoadingSignal.set(false);
+        this.subscriptionRequired.set(false);
         
         // Load related lessons from the same course
         this.loadRelatedLessons(lesson.course.id);
@@ -301,9 +323,29 @@ export class LessonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading lesson:', error);
-        this.errorSignal.set('Erreur lors du chargement de la leçon');
-        this.isLoadingSignal.set(false);
-        this.router.navigate(['/catalog']);
+        
+        // Check if it's a subscription required error
+        if (error.status === 403 && error.error?.code === 'SUBSCRIPTION_REQUIRED') {
+          this.subscriptionRequired.set(true);
+          this.lessonSignal.set({
+            id: error.error.lesson.id,
+            title: error.error.lesson.title,
+            type: 'video',
+            durationSec: 0,
+            isPremium: true,
+            orderIndex: 0,
+            createdAt: '',
+            course: { id: '', title: '', isPremium: true },
+            assets: [],
+            comments: [],
+            commentCount: 0
+          });
+          this.isLoadingSignal.set(false);
+        } else {
+          this.errorSignal.set('Erreur lors du chargement de la leçon');
+          this.isLoadingSignal.set(false);
+          this.router.navigate(['/catalog']);
+        }
       }
     });
   }
@@ -322,6 +364,7 @@ export class LessonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading related lessons:', error);
+        this.errorSignal.set('Erreur lors du chargement des leçons associées');
       }
     });
   }
@@ -333,6 +376,7 @@ export class LessonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading lesson progress:', error);
+        // Don't show error for progress loading as it's not critical
       }
     });
   }

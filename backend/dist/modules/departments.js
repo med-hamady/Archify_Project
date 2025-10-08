@@ -48,7 +48,6 @@ exports.departmentsRouter.get('/:id', async (req, res) => {
                     select: {
                         id: true,
                         title: true,
-                        professor: true,
                         semester: true,
                         isPremium: true,
                         views: true,
@@ -86,17 +85,16 @@ exports.departmentsRouter.get('/:id', async (req, res) => {
             name: department.name,
             courseCount: department._count.courses,
             userCount: department._count.users,
-            courses: department.courses.map(course => ({
+            courses: department.courses.map((course) => ({
                 id: course.id,
                 title: course.title,
-                professor: course.professor,
                 semester: course.semester,
                 isPremium: course.isPremium,
                 views: course.views,
                 lessonCount: course._count.lessons,
                 createdAt: course.createdAt
             })),
-            users: department.users.map(user => ({
+            users: department.users.map((user) => ({
                 id: user.id,
                 name: user.name,
                 email: user.email,
@@ -114,7 +112,7 @@ exports.departmentsRouter.get('/:id', async (req, res) => {
 exports.departmentsRouter.post('/', auth_1.requireAuth, async (req, res) => {
     try {
         // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
             return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
         }
         const body = departmentCreateSchema.parse(req.body);
@@ -159,7 +157,7 @@ exports.departmentsRouter.post('/', auth_1.requireAuth, async (req, res) => {
 exports.departmentsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
     try {
         // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
             return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
         }
         const { id } = req.params;
@@ -213,7 +211,7 @@ exports.departmentsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
 exports.departmentsRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
     try {
         // Check if user is admin
-        if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
             return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
         }
         const { id } = req.params;

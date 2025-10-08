@@ -44,7 +44,7 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: 'student' | 'admin' | 'superadmin';
+  role: 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
   department?: string;
   semester?: number;
   createdAt: string;

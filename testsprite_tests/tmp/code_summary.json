@@ -1,0 +1,653 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Angular 20.3.0",
+    "Node.js",
+    "Express.js 5.1.0",
+    "PostgreSQL",
+    "Prisma 5.19.1",
+    "JWT Authentication",
+    "Tailwind CSS",
+    "Angular Material",
+    "Zod Validation",
+    "Helmet Security",
+    "CORS",
+    "Rate Limiting"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Complete JWT-based authentication system with login, registration, profile management, and role-based access control",
+      "files": [
+        "backend/src/modules/auth.ts",
+        "frontend/src/app/services/auth.service.ts",
+        "frontend/src/app/pages/auth/auth.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/auth/register": {
+            "post": {
+              "summary": "User Registration",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "email": {"type": "string", "format": "email"},
+                        "password": {"type": "string", "minLength": 6},
+                        "semester": {"type": "string"}
+                      },
+                      "required": ["name", "email", "password", "semester"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {"description": "User created successfully"},
+                "400": {"description": "Validation error"},
+                "409": {"description": "Email already exists"}
+              }
+            }
+          },
+          "/api/auth/login": {
+            "post": {
+              "summary": "User Login",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "email": {"type": "string", "format": "email"},
+                        "password": {"type": "string"}
+                      },
+                      "required": ["email", "password"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {"description": "Login successful"},
+                "401": {"description": "Invalid credentials"}
+              }
+            }
+          },
+          "/api/auth/me": {
+            "get": {
+              "summary": "Get Current User Profile",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {"description": "User profile"},
+                "401": {"description": "Unauthorized"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Course Management System",
+      "description": "Complete CRUD operations for courses with search, filtering, and pagination",
+      "files": [
+        "backend/src/modules/courses.ts",
+        "frontend/src/app/pages/course/course.component.ts",
+        "frontend/src/app/pages/catalog/catalog.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/courses": {
+            "get": {
+              "summary": "Get All Courses",
+              "parameters": [
+                {"name": "page", "in": "query", "schema": {"type": "integer", "default": 1}},
+                {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 10}},
+                {"name": "search", "in": "query", "schema": {"type": "string"}},
+                {"name": "departmentId", "in": "query", "schema": {"type": "string"}}
+              ],
+              "responses": {
+                "200": {
+                  "description": "Courses retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "courses": {"type": "array", "items": {"$ref": "#/components/schemas/Course"}},
+                          "pagination": {"$ref": "#/components/schemas/Pagination"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "post": {
+              "summary": "Create Course",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "departmentId": {"type": "string"},
+                        "isPremium": {"type": "boolean", "default": false}
+                      },
+                      "required": ["title", "departmentId"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {"description": "Course created successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/courses/{id}": {
+            "get": {
+              "summary": "Get Course by ID",
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Course details"},
+                "404": {"description": "Course not found"}
+              }
+            },
+            "put": {
+              "summary": "Update Course",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Course updated successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            },
+            "delete": {
+              "summary": "Delete Course",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Course deleted successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Lesson Management System",
+      "description": "Complete CRUD operations for lessons with video, PDF, and exam support",
+      "files": [
+        "backend/src/modules/lessons.ts",
+        "frontend/src/app/pages/lesson/lesson.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/lessons": {
+            "get": {
+              "summary": "Get All Lessons",
+              "parameters": [
+                {"name": "page", "in": "query", "schema": {"type": "integer", "default": 1}},
+                {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 10}},
+                {"name": "courseId", "in": "query", "schema": {"type": "string"}},
+                {"name": "type", "in": "query", "schema": {"type": "string", "enum": ["VIDEO", "PDF", "EXAM"]}},
+                {"name": "isPremium", "in": "query", "schema": {"type": "boolean"}}
+              ],
+              "responses": {
+                "200": {
+                  "description": "Lessons retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "lessons": {"type": "array", "items": {"$ref": "#/components/schemas/Lesson"}},
+                          "pagination": {"$ref": "#/components/schemas/Pagination"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "post": {
+              "summary": "Create Lesson",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "title": {"type": "string"},
+                        "courseId": {"type": "string"},
+                        "type": {"type": "string", "enum": ["VIDEO", "PDF", "EXAM"]},
+                        "durationSec": {"type": "integer", "default": 0},
+                        "vimeoId": {"type": "string"},
+                        "youtubeId": {"type": "string"},
+                        "pdfUrl": {"type": "string"},
+                        "isPremium": {"type": "boolean", "default": true},
+                        "requiresVideoSubscription": {"type": "boolean", "default": false},
+                        "requiresDocumentSubscription": {"type": "boolean", "default": false},
+                        "orderIndex": {"type": "integer", "default": 0}
+                      },
+                      "required": ["title", "courseId", "type"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {"description": "Lesson created successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/lessons/{id}": {
+            "get": {
+              "summary": "Get Lesson by ID",
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Lesson details"},
+                "404": {"description": "Lesson not found"}
+              }
+            },
+            "put": {
+              "summary": "Update Lesson",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Lesson updated successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            },
+            "delete": {
+              "summary": "Delete Lesson",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "Lesson deleted successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/lessons/{id}/progress": {
+            "post": {
+              "summary": "Update Lesson Progress",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "status": {"type": "string", "enum": ["NOT_STARTED", "IN_PROGRESS", "COMPLETED"]}
+                      },
+                      "required": ["status"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {"description": "Progress updated successfully"},
+                "401": {"description": "Unauthorized"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Subscription Management System",
+      "description": "Complete subscription system with plans, payments, and access control",
+      "files": [
+        "backend/src/modules/subscriptions.ts",
+        "frontend/src/app/pages/subscription/subscription.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/subscriptions/plans": {
+            "get": {
+              "summary": "Get Subscription Plans",
+              "responses": {
+                "200": {
+                  "description": "Subscription plans retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "priceCents": {"type": "integer"},
+                            "currency": {"type": "string"},
+                            "interval": {"type": "string"},
+                            "features": {"type": "string"}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/subscriptions/checkout": {
+            "post": {
+              "summary": "Create Checkout Session",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "planId": {"type": "string"},
+                        "provider": {"type": "string", "enum": ["BANKILY", "MASRIVI", "SEDAD"]},
+                        "couponCode": {"type": "string"}
+                      },
+                      "required": ["planId", "provider"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {"description": "Checkout session created"},
+                "401": {"description": "Unauthorized"}
+              }
+            }
+          },
+          "/api/subscriptions/my-subscription": {
+            "get": {
+              "summary": "Get User Subscription",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {"description": "User subscription details"},
+                "401": {"description": "Unauthorized"},
+                "404": {"description": "No subscription found"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Admin Management System",
+      "description": "Complete admin panel with user management, content management, and analytics",
+      "files": [
+        "backend/src/modules/admin.ts",
+        "frontend/src/app/pages/admin/admin-enhanced.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/admin/users": {
+            "get": {
+              "summary": "Get All Users",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {"description": "Users retrieved successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/admin/create-user": {
+            "post": {
+              "summary": "Create User",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "firstName": {"type": "string"},
+                        "lastName": {"type": "string"},
+                        "email": {"type": "string", "format": "email"},
+                        "password": {"type": "string"},
+                        "role": {"type": "string", "enum": ["STUDENT", "ADMIN", "SUPERADMIN"]},
+                        "semester": {"type": "string"}
+                      },
+                      "required": ["firstName", "lastName", "email", "password", "role", "semester"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {"description": "User created successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/admin/users/{id}": {
+            "put": {
+              "summary": "Update User",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "User updated successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            },
+            "delete": {
+              "summary": "Delete User",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "User deleted successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Department Management System",
+      "description": "Department management with course organization and user assignment",
+      "files": [
+        "backend/src/modules/departments.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/departments": {
+            "get": {
+              "summary": "Get All Departments",
+              "responses": {
+                "200": {
+                  "description": "Departments retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "description": {"type": "string"},
+                            "courseCount": {"type": "integer"},
+                            "userCount": {"type": "integer"}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "post": {
+              "summary": "Create Department",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "description": {"type": "string"}
+                      },
+                      "required": ["name"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {"description": "Department created successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "User Management System",
+      "description": "User profile management, statistics, and role-based operations",
+      "files": [
+        "backend/src/modules/users.ts",
+        "frontend/src/app/pages/profile/profile.component.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/api/users": {
+            "get": {
+              "summary": "Get All Users",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {"description": "Users retrieved successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/users/{id}": {
+            "get": {
+              "summary": "Get User by ID",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "User details"},
+                "404": {"description": "User not found"}
+              }
+            },
+            "put": {
+              "summary": "Update User",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "User updated successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            },
+            "delete": {
+              "summary": "Delete User",
+              "security": [{"bearerAuth": []}],
+              "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+              "responses": {
+                "200": {"description": "User deleted successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          },
+          "/api/users/stats/overview": {
+            "get": {
+              "summary": "Get User Statistics",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {"description": "User statistics retrieved successfully"},
+                "403": {"description": "Forbidden - Admin access required"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Course": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "departmentId": {"type": "string"},
+          "isPremium": {"type": "boolean"},
+          "lessonCount": {"type": "integer"},
+          "views": {"type": "integer"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "Lesson": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "courseId": {"type": "string"},
+          "type": {"type": "string", "enum": ["VIDEO", "PDF", "EXAM"]},
+          "durationSec": {"type": "integer"},
+          "vimeoId": {"type": "string"},
+          "youtubeId": {"type": "string"},
+          "pdfUrl": {"type": "string"},
+          "isPremium": {"type": "boolean"},
+          "requiresVideoSubscription": {"type": "boolean"},
+          "requiresDocumentSubscription": {"type": "boolean"},
+          "orderIndex": {"type": "integer"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "email": {"type": "string", "format": "email"},
+          "role": {"type": "string", "enum": ["STUDENT", "ADMIN", "SUPERADMIN"]},
+          "semester": {"type": "string"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "SubscriptionPlan": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "priceCents": {"type": "integer"},
+          "currency": {"type": "string"},
+          "interval": {"type": "string"},
+          "features": {"type": "string"}
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {"type": "integer"},
+          "limit": {"type": "integer"},
+          "total": {"type": "integer"},
+          "pages": {"type": "integer"}
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

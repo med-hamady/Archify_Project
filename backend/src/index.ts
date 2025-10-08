@@ -11,7 +11,6 @@ import { authRouter } from './modules/auth';
 import { coursesRouter } from './modules/courses';
 import { lessonsRouter } from './modules/lessons';
 import { subscriptionsRouter } from './modules/subscriptions';
-import { departmentsRouter } from './modules/departments';
 import { usersRouter } from './modules/users';
 import { adminRouter } from './modules/admin';
 import { commentsRouter } from './modules/comments';
@@ -40,10 +39,24 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(pinoHttp({ logger }));
 
-// Basic rate limiting for auth and login-sensitive routes
+// Rate limiting configurations
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const generalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -52,15 +65,14 @@ app.get('/healthz', (_req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// Routes
+// Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, authRouter);
-app.use('/api/courses', coursesRouter);
-app.use('/api/lessons', lessonsRouter);
-app.use('/api/subscriptions', subscriptionsRouter);
-app.use('/api/departments', departmentsRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/admin', adminRouter);
-app.use('/api/comments', commentsRouter);
+app.use('/api/courses', generalLimiter, coursesRouter);
+app.use('/api/lessons', generalLimiter, lessonsRouter);
+app.use('/api/subscriptions', generalLimiter, subscriptionsRouter);
+app.use('/api/users', strictLimiter, usersRouter);
+app.use('/api/admin', strictLimiter, adminRouter);
+app.use('/api/comments', generalLimiter, commentsRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

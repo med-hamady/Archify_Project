@@ -125,21 +125,21 @@ interface SubscriptionPlanUI {
             <div class="group text-center p-8 border-2 border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-gray-100">
                 <img src="images/payments/bankily-logo.png" alt="Bankily" class="w-16 h-16 object-contain" />
-              </div>
+          </div>
               <h3 class="text-xl font-bold text-gray-900 mb-3">Bankily</h3>
               <p class="text-gray-600">Paiement sécurisé via Bankily avec protection maximale</p>
-            </div>
+              </div>
             <div class="group text-center p-8 border-2 border-gray-200 rounded-2xl hover:border-green-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-gray-100">
                 <img src="images/payments/masrivi-logo.png" alt="Masrivi" class="w-16 h-16 object-contain" />
-              </div>
+            </div>
               <h3 class="text-xl font-bold text-gray-900 mb-3">Masrivi</h3>
               <p class="text-gray-600">Paiement mobile instantané avec Masrivi</p>
-            </div>
+              </div>
             <div class="group text-center p-8 border-2 border-gray-200 rounded-2xl hover:border-purple-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-gray-100">
                 <img src="images/payments/sedad-logo.png" alt="Sedad" class="w-16 h-16 object-contain" />
-              </div>
+            </div>
               <h3 class="text-xl font-bold text-gray-900 mb-3">Sedad</h3>
               <p class="text-gray-600">Paiement électronique rapide et fiable</p>
             </div>
