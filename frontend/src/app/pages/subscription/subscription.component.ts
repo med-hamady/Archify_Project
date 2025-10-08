@@ -2,6 +2,7 @@ import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { PaymentService, SubscriptionPlan, CheckoutRequest, CheckoutResponse } from '../../services/payment.service';
 
@@ -43,8 +44,19 @@ interface SubscriptionPlanUI {
           </p>
         </div>
 
+        <!-- Loading State -->
+        <div *ngIf="plansLoading()" class="flex justify-center items-center py-16">
+          <div class="text-center">
+            <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600 mx-auto" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-4 text-gray-600">Chargement des plans d'abonnement...</p>
+          </div>
+        </div>
+
         <!-- Subscription Plans -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div *ngIf="!plansLoading()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           <div *ngFor="let plan of subscriptionPlans()" 
                class="group relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 border-2 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                [class.border-blue-500]="plan.isPopular"
@@ -180,6 +192,7 @@ interface SubscriptionPlanUI {
   `
 })
 export class SubscriptionComponent implements OnInit {
+  private readonly API_URL = 'http://localhost:3000/api';
   selectedPlan = signal<string | null>(null);
   selectedProvider = signal<'bankily' | 'masrivi' | 'sedad'>('bankily');
   isLoading = signal(false);
@@ -188,78 +201,57 @@ export class SubscriptionComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private paymentService: PaymentService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
+  subscriptionPlans = signal<SubscriptionPlanUI[]>([]);
+  plansLoading = signal(false);
+
   ngOnInit() {
-    // Initialize component
+    this.loadSubscriptionPlans();
   }
 
-  subscriptionPlans = computed<SubscriptionPlanUI[]>(() => {
-    const currentUser = this.authService.user();
-    const isPremium = this.authService.isPremium();
+  private loadSubscriptionPlans() {
+    this.plansLoading.set(true);
+    this.http.get<any>(`${this.API_URL}/subscriptions/plans`).subscribe({
+      next: (response) => {
+        const plans = response.plans || response;
+        const currentUser = this.authService.user();
+        const isPremium = this.authService.isPremium();
 
-    return [
-      {
-        id: 'videos-only',
-        name: 'Vidéos Seulement',
-        description: 'Accès à toutes les vidéos de solutions',
-        price: 650,
-        currency: 'MRU',
-        period: 'yearly',
-        features: [
-          'Accès à toutes les vidéos de solutions',
-          'Vidéos HD illimitées',
-          'Téléchargements offline',
-          'Support prioritaire',
-          'Accès pour 1 an complet'
-        ],
-        isPopular: true,
-        isCurrent: false,
-        buttonText: '650 MRU/an',
-        buttonClass: 'w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+        const uiPlans: SubscriptionPlanUI[] = plans.map((plan: any, index: number) => ({
+          id: plan.id,
+          name: plan.name,
+          description: plan.description || `Accès ${plan.name.toLowerCase()}`,
+          price: plan.priceCents / 100,
+          currency: plan.currency,
+          period: plan.interval,
+          features: plan.features || [
+            `Accès ${plan.name.toLowerCase()}`,
+            'Contenu premium',
+            'Support par email',
+            'Accès pour 1 an complet'
+          ],
+          isPopular: index === 0, // Make first plan popular
+          isCurrent: false, // Will be set based on user subscription
+          buttonText: `${plan.priceCents / 100} ${plan.currency}/an`,
+          buttonClass: index === 0 
+            ? 'w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+            : index === 1
+            ? 'w-full px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+            : 'w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+        }));
+
+        this.subscriptionPlans.set(uiPlans);
+        this.plansLoading.set(false);
       },
-      {
-        id: 'documents-only',
-        name: 'Documents Seulement',
-        description: 'Accès à tous les documents PDF',
-        price: 500,
-        currency: 'MRU',
-        period: 'yearly',
-        features: [
-          'Accès à tous les documents PDF',
-          'Solutions écrites détaillées',
-          'Archives d\'examens complets',
-          'Téléchargements illimités',
-          'Accès pour 1 an complet'
-        ],
-        isPopular: false,
-        isCurrent: false,
-        buttonText: '500 MRU/an',
-        buttonClass: 'w-full px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
-      },
-      {
-        id: 'full-access',
-        name: 'Accès Complet',
-        description: 'Vidéos + Documents + Plus',
-        price: 1000,
-        currency: 'MRU',
-        period: 'yearly',
-        features: [
-          'Tout du plan Vidéos',
-          'Tout du plan Documents',
-          'Accès prioritaire aux nouveaux contenus',
-          'Support premium 24/7',
-          'Certificats de fin de cours',
-          'Accès pour 1 an complet'
-        ],
-        isPopular: false,
-        isCurrent: false,
-        buttonText: '1000 MRU/an',
-        buttonClass: 'w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+      error: (error) => {
+        console.error('Error loading subscription plans:', error);
+        this.plansLoading.set(false);
       }
-    ];
-  });
+    });
+  }
 
   selectPlan(planId: string) {
     this.selectedPlan.set(planId);

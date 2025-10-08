@@ -158,6 +158,7 @@ interface LessonProgress {
                 [showDownloadButton]="false"
                 [showSecondaryToolbarButton]="false"
                 [showSidebarButton]="true"
+                (pdfLoaded)="onPdfLoaded()"
                 style="height:100%"
               ></ngx-extended-pdf-viewer>
             </div>
@@ -395,6 +396,50 @@ export class LessonComponent implements OnInit, OnDestroy {
     });
   }
 
+  private trackLessonView() {
+    const lesson = this.lesson();
+    if (!lesson) return;
+    
+    // Only track views for premium lessons
+    if (!lesson.isPremium) {
+      console.log('Skipping view tracking for non-premium lesson');
+      return;
+    }
+
+    // Check if user is authenticated and has subscription
+    if (!this.authService.isAuthenticated()) {
+      console.log('User not authenticated, skipping view tracking');
+      return;
+    }
+
+    console.log('🎬 Tracking lesson view for:', lesson.title);
+    
+    this.http.post(`${this.API_URL}/lessons/${lesson.id}/view`, {}).subscribe({
+      next: (response: any) => {
+        console.log('✅ View tracked successfully:', response);
+        // Optionally update the lesson data to reflect new view count
+        if (response.viewCount) {
+          // You could emit an event or update a signal here if needed
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error tracking view:', error);
+        if (error.status === 403) {
+          console.log('User needs subscription to view this content');
+        } else if (error.status === 400) {
+          console.log('View already tracked for this lesson');
+        }
+      }
+    });
+  }
+
+  onPdfLoaded() {
+    console.log('📄 PDF loaded, tracking view');
+    // Track view when PDF is loaded (similar to video play event)
+    this.trackLessonView();
+    this.updateLessonProgress('in_progress');
+  }
+
   ngOnDestroy() {
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
@@ -428,6 +473,8 @@ export class LessonComponent implements OnInit, OnDestroy {
     // Track progress when video is played
     this.vimeoPlayer.on('play', () => {
       this.updateLessonProgress('in_progress');
+      // Track view when video starts playing (only for subscribed users)
+      this.trackLessonView();
     });
     
     this.vimeoPlayer.on('ended', () => {

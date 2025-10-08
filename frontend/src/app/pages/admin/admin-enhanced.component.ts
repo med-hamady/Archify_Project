@@ -282,7 +282,7 @@ interface UserStats {
                   <div class="w-full bg-gradient-to-t from-green-500 to-green-300 rounded-t-lg mb-2" 
                        [style.height.px]="week.value * 3">
                   </div>
-                  <span class="text-xs text-gray-500">{{ week.week }}</span>
+                  <span class="text-xs text-gray-500">{{ week.month }}</span>
                   <span class="text-xs font-medium text-gray-700">{{ week.value }}</span>
                 </div>
               </div>
@@ -304,92 +304,6 @@ interface UserStats {
           </div>
         </div>
 
-        <!-- Subscription Management -->
-        <div *ngIf="activeTab() === 'subscriptions'" class="space-y-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-900">Gestion des Abonnements</h2>
-            <button (click)="showAddPlanModal.set(true)"
-                    class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-              </svg>
-              Ajouter un Plan
-            </button>
-          </div>
-
-          <!-- Subscription Plans -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div *ngFor="let plan of subscriptionPlans()" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div class="text-center">
-                <h3 class="text-xl font-bold text-gray-900">{{ plan.name }}</h3>
-                <p class="text-3xl font-bold text-blue-600 mt-2">{{ plan.priceCents / 100 | currency:'MRU':'symbol':'1.0-0' }}</p>
-                <p class="text-gray-500 text-sm">{{ plan.currency }}</p>
-                <ul class="mt-4 space-y-2">
-                  <li *ngFor="let feature of plan.features.split(',')" class="text-sm text-gray-600 flex items-center">
-                    <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    {{ feature }}
-                  </li>
-                </ul>
-                <button class="mt-6 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Modifier
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Active Subscriptions Table -->
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-900">Abonnements Actifs</h3>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de début</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <tr *ngFor="let subscription of subscriptions()" class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="flex items-center">
-                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                          <span class="text-sm font-medium text-gray-700">{{ subscription.user.name.charAt(0) }}</span>
-                        </div>
-                        <div>
-                          <div class="text-sm font-medium text-gray-900">{{ subscription.user.name }}</div>
-                          <div class="text-sm text-gray-500">{{ subscription.user.email }}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="text-sm text-gray-900">{{ subscription.plan.name }}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 py-1 text-xs font-semibold rounded-full"
-                            [class]="subscription.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                        {{ subscription.status | titlecase }}
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {{ subscription.startDate | date:'dd/MM/yyyy' }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button class="text-blue-600 hover:text-blue-900 mr-3">Voir</button>
-                      <button class="text-red-600 hover:text-red-900">Suspendre</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
 
         <!-- Content Management -->
         <div *ngIf="activeTab() === 'content'" class="space-y-6">
@@ -887,18 +801,35 @@ interface UserStats {
               <h2 class="text-2xl font-bold text-gray-900">Gestion des Abonnements</h2>
               <p class="text-gray-600 mt-1">Gérez les plans d'abonnement et les souscriptions</p>
             </div>
-            <button (click)="showAddPlanModal.set(true)" 
-                    class="bg-gradient-to-r from-purple-600 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-violet-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+            <button (click)="showAddPlanModal.set(true)"
+                    class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
-              Nouveau Plan
+              Ajouter un Plan
             </button>
           </div>
         </div>
 
+        <!-- Debug Info -->
+        <div class="mb-4 p-4 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-800">Debug: {{ subscriptionPlans().length }} plans loaded</p>
+          <p class="text-sm text-blue-600">API URL: {{ API_URL }}/subscriptions/plans</p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="subscriptionPlans().length === 0" class="text-center py-8">
+          <div class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Chargement des plans d'abonnement...
+          </div>
+        </div>
+
         <!-- Subscription Plans Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngIf="subscriptionPlans().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div *ngFor="let plan of subscriptionPlans()" 
                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 hover:shadow-2xl transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
@@ -922,14 +853,19 @@ interface UserStats {
                 </button>
               </div>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plan.name }}</h3>
-            <div class="text-2xl font-bold text-gray-900 mb-2">{{ plan.priceCents / 100 }} {{ plan.currency }}</div>
-            <div class="text-sm text-gray-600 mb-4">{{ plan.description }}</div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plan.name || 'No Name' }}</h3>
+            <div class="text-2xl font-bold text-gray-900 mb-2">{{ plan.priceCents ? (plan.priceCents / 100) : 'No Price' }} {{ plan.currency || 'No Currency' }}</div>
+            <div class="text-sm text-gray-600 mb-4">{{ plan.description || 'No Description' }}</div>
             <div class="flex justify-between text-sm text-gray-600">
-              <span>{{ plan.type }}</span>
-              <span [class]="plan.isActive ? 'text-green-600' : 'text-red-600'">
-                {{ plan.isActive ? 'Actif' : 'Inactif' }}
-              </span>
+              <span>yearly</span>
+              <span class="text-green-600">Actif</span>
+            </div>
+            <!-- Debug Info -->
+            <div class="mt-2 p-2 bg-gray-100 rounded text-xs">
+              <div>ID: {{ plan.id }}</div>
+              <div>Name: {{ plan.name }}</div>
+              <div>Price: {{ plan.priceCents }}</div>
+              <div>Currency: {{ plan.currency }}</div>
             </div>
           </div>
         </div>
@@ -1061,6 +997,203 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Analytics Section -->
+      <div *ngIf="activeTab() === 'analytics'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Analytiques</h2>
+              <p class="text-gray-600 mt-1">Statistiques détaillées et analyses de performance</p>
+            </div>
+            <div class="flex space-x-3">
+              <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Exporter
+              </button>
+              <button class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Actualiser
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-blue-600 mb-1">Revenus Totaux</p>
+                <p class="text-3xl font-bold text-blue-900">{{ stats().totalRevenue | currency:'MRU':'symbol':'1.0-0' }}</p>
+                <p class="text-xs text-blue-500 mt-2">+22% ce mois</p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-green-600 mb-1">Utilisateurs Actifs</p>
+                <p class="text-3xl font-bold text-green-900">{{ stats().totalUsers }}</p>
+                <p class="text-xs text-green-500 mt-2">+15% ce mois</p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-purple-600 mb-1">Abonnements</p>
+                <p class="text-3xl font-bold text-purple-900">{{ stats().activeSubscriptions }}</p>
+                <p class="text-xs text-purple-500 mt-2">+8% ce mois</p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-orange-600 mb-1">Cours</p>
+                <p class="text-3xl font-bold text-orange-900">{{ stats().totalCourses }}</p>
+                <p class="text-xs text-orange-500 mt-2">+5% ce mois</p>
+              </div>
+              <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Revenue Chart -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Revenus par Mois</h3>
+            <div class="h-64 flex items-end space-x-2">
+              <div *ngFor="let month of revenueData" class="flex-1 flex flex-col items-center">
+                <div class="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-lg mb-2"
+                     [style.height.px]="month.value * 3">
+                </div>
+                <span class="text-xs text-gray-600 mt-2">{{ month.month }}</span>
+                <span class="text-xs text-gray-500">{{ month.value }}k MRU</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Growth Chart -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Croissance des Utilisateurs</h3>
+            <div class="h-64 flex items-end space-x-2">
+              <div *ngFor="let month of userGrowthData" class="flex-1 flex flex-col items-center">
+                <div class="w-full bg-gradient-to-t from-green-500 to-green-300 rounded-t-lg mb-2"
+                     [style.height.px]="month.value * 2">
+                </div>
+                <span class="text-xs text-gray-600 mt-2">{{ month.month }}</span>
+                <span class="text-xs text-gray-500">{{ month.value }} utilisateurs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Analytics -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Top Courses -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Cours les Plus Populaires</h3>
+            <div class="space-y-3">
+              <div *ngFor="let course of courses(); let i = index" class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-sm font-medium text-blue-600">{{ i + 1 }}</span>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">{{ course.title }}</p>
+                    <p class="text-xs text-gray-500">{{ course.views || 0 }} vues</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-medium text-gray-900">{{ course.views || 0 }}</p>
+                  <p class="text-xs text-gray-500">vues</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscription Analytics -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Analyses des Abonnements</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Plans Actifs</span>
+                <span class="text-sm font-medium text-gray-900">{{ subscriptionPlans().length }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Abonnements Actifs</span>
+                <span class="text-sm font-medium text-gray-900">{{ stats().activeSubscriptions }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Taux de Conversion</span>
+                <span class="text-sm font-medium text-green-600">12.5%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Churn Rate</span>
+                <span class="text-sm font-medium text-red-600">2.1%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Activité Récente</h3>
+            <div class="space-y-3">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div>
+                  <p class="text-sm text-gray-900">Nouvel utilisateur inscrit</p>
+                  <p class="text-xs text-gray-500">Il y a 2 heures</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                <div>
+                  <p class="text-sm text-gray-900">Nouveau cours créé</p>
+                  <p class="text-xs text-gray-500">Il y a 4 heures</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                <div>
+                  <p class="text-sm text-gray-900">Abonnement renouvelé</p>
+                  <p class="text-xs text-gray-500">Il y a 6 heures</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Edit Plan Modal -->
       <div *ngIf="showEditPlanModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 my-8">
@@ -1079,8 +1212,8 @@ interface UserStats {
                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Prix (centimes)</label>
-              <input type="number" [(ngModel)]="editPlan.priceCents" name="priceCents" required
+              <label class="block text-sm font-medium text-gray-700 mb-2">Prix (MRU)</label>
+              <input type="number" [(ngModel)]="editPlanPrice" name="editPlanPrice" required
                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
             <div>
@@ -1115,7 +1248,7 @@ interface UserStats {
   `
 })
 export class AdminEnhancedComponent implements OnInit, OnDestroy {
-  private readonly API_URL = 'http://localhost:3000/api';
+  readonly API_URL = 'http://localhost:3000/api';
 
   // Signals
   activeTab = signal('overview');
@@ -1207,11 +1340,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     name: '',
     description: '',
     priceCents: 0,
-    currency: 'MAD',
+    currency: 'MRU',
     type: 'VIDEOS_ONLY' as 'VIDEOS_ONLY' | 'DOCUMENTS_ONLY' | 'FULL_ACCESS',
     features: '',
     isActive: true
   };
+  editPlanPrice = 0; // Price in MRU for display
 
   editLesson = {
     id: '',
@@ -1249,12 +1383,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   ];
 
   userGrowthData = [
-    { week: 'S1', value: 12 },
-    { week: 'S2', value: 18 },
-    { week: 'S3', value: 25 },
-    { week: 'S4', value: 32 },
-    { week: 'S5', value: 28 },
-    { week: 'S6', value: 35 }
+    { month: 'Jan', value: 12 },
+    { month: 'Fév', value: 18 },
+    { month: 'Mar', value: 25 },
+    { month: 'Avr', value: 32 },
+    { month: 'Mai', value: 28 },
+    { month: 'Juin', value: 35 }
   ];
 
   recentActivity = [
@@ -1324,9 +1458,20 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     });
 
     // Load subscription plans
-    this.http.get<SubscriptionPlan[]>(`${this.API_URL}/subscriptions/plans`).subscribe({
-      next: (data) => this.subscriptionPlans.set(data),
-      error: (error) => console.error('Error loading subscription plans:', error)
+    this.http.get<any>(`${this.API_URL}/subscriptions/plans`).subscribe({
+      next: (response) => {
+        console.log('📋 Subscription plans response:', response);
+        const plans = response.plans || response;
+        console.log('📋 Plans to set:', plans);
+        console.log('📋 Plans count:', plans?.length || 0);
+        this.subscriptionPlans.set(plans || []);
+      },
+      error: (error) => {
+        console.error('❌ Error loading subscription plans:', error);
+        console.error('❌ Error status:', error.status);
+        console.error('❌ Error message:', error.message);
+        this.subscriptionPlans.set([]);
+      }
     });
 
 
@@ -1410,7 +1555,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       const planData = {
         ...this.newPlan,
         priceCents: this.newPlan.price * 100,
-        interval: 'monthly',
+        interval: 'yearly', // ✅ Fixed: Backend only accepts 'yearly'
         currency: 'MRU',
         features: []
       };
@@ -1667,12 +1812,19 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
   editPlanItem(plan: SubscriptionPlan) {
     this.editPlan = { ...plan };
+    this.editPlanPrice = plan.priceCents / 100; // Convert cents to MRU for display
     this.showEditPlanModal.set(true);
   }
 
   async updatePlan() {
     try {
-      const response = await this.http.put(`${this.API_URL}/subscriptions/plans/${this.editPlan.id}`, this.editPlan).toPromise();
+      // Convert MRU price back to cents before sending to backend
+      const planData = {
+        ...this.editPlan,
+        priceCents: this.editPlanPrice * 100
+      };
+      
+      const response = await this.http.put(`${this.API_URL}/subscriptions/plans/${this.editPlan.id}`, planData).toPromise();
       console.log('Plan updated:', response);
       this.showEditPlanModal.set(false);
       this.resetEditPlanForm();
@@ -1685,11 +1837,25 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   async deletePlan(planId: string) {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce plan ?')) {
       try {
+        console.log('🗑️ Attempting to delete plan:', planId);
         await this.http.delete(`${this.API_URL}/subscriptions/plans/${planId}`).toPromise();
-        console.log('Plan deleted');
+        console.log('✅ Plan deleted successfully');
         this.loadData();
-      } catch (error) {
-        console.error('Error deleting plan:', error);
+      } catch (error: any) {
+        console.error('❌ Error deleting plan:', error);
+        console.error('❌ Error details:', error.error);
+        console.error('❌ Error status:', error.status);
+        
+        // Show user-friendly error message
+        if (error.status === 400 && error.error?.code === 'PLAN_IN_USE') {
+          alert('Impossible de supprimer ce plan car il a des abonnements actifs. Veuillez d\'abord annuler tous les abonnements.');
+        } else if (error.status === 404) {
+          alert('Plan non trouvé.');
+        } else if (error.status === 403) {
+          alert('Erreur: Vous n\'avez pas les permissions pour supprimer ce plan.');
+        } else {
+          alert('Erreur serveur lors de la suppression du plan. Veuillez réessayer.');
+        }
       }
     }
   }
@@ -1814,11 +1980,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       priceCents: 0,
-      currency: 'MAD',
+      currency: 'MRU',
       type: 'VIDEOS_ONLY',
       features: '',
       isActive: true
     };
+    this.editPlanPrice = 0;
   }
 
 }

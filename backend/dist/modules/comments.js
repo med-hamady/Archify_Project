@@ -130,7 +130,7 @@ exports.commentsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
             return res.status(404).json({ error: { code: 'COMMENT_NOT_FOUND', message: 'Comment not found' } });
         }
         // Check if user is the author or an admin
-        if (comment.userId !== req.userId && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        if (comment.userId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
             return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Can only edit your own comments' } });
         }
         const updatedComment = await prisma.comment.update({
@@ -178,7 +178,7 @@ exports.commentsRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
             return res.status(404).json({ error: { code: 'COMMENT_NOT_FOUND', message: 'Comment not found' } });
         }
         // Check if user is the author or an admin
-        if (comment.userId !== req.userId && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+        if (comment.userId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
             return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Can only delete your own comments' } });
         }
         await prisma.comment.delete({ where: { id } });
@@ -219,7 +219,7 @@ exports.commentsRouter.post('/:id/report', auth_1.requireAuth, async (req, res) 
 });
 // GET /admin/comments - Get all comments for moderation (Admin only)
 exports.commentsRouter.get('/admin/comments', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
     }
     try {
@@ -286,7 +286,7 @@ exports.commentsRouter.get('/admin/comments', auth_1.requireAuth, async (req, re
 });
 // PUT /admin/comments/:id/moderate - Moderate a comment (Admin only)
 exports.commentsRouter.put('/admin/comments/:id/moderate', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
     }
     try {

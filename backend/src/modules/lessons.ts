@@ -347,6 +347,100 @@ lessonsRouter.delete('/:id', requireAuth, async (req: any, res) => {
   }
 });
 
+// POST /lessons/:id/view - Track lesson view (Authenticated users with subscription)
+lessonsRouter.post('/:id/view', requireAuth, async (req: any, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.userId;
+
+    // Check if lesson exists
+    const lesson = await prisma.lesson.findUnique({
+      where: { id },
+      include: {
+        course: { select: { id: true, title: true } }
+      }
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ error: { code: 'LESSON_NOT_FOUND', message: 'Lesson not found' } });
+    }
+
+    // Check if user has active subscription
+    const activeSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: userId,
+        status: 'ACTIVE',
+        endAt: { gt: new Date() }
+      },
+      include: { plan: true }
+    });
+
+    if (!activeSubscription) {
+      return res.status(403).json({ 
+        error: { 
+          code: 'SUBSCRIPTION_REQUIRED', 
+          message: 'Active subscription required to view lesson content' 
+        } 
+      });
+    }
+
+    // Check if lesson is premium (only premium lessons count views)
+    if (!lesson.isPremium) {
+      return res.status(400).json({ 
+        error: { 
+          code: 'NOT_PREMIUM_LESSON', 
+          message: 'View tracking only applies to premium lessons' 
+        } 
+      });
+    }
+
+    // Check if user has already viewed this lesson (prevent duplicate views)
+    const existingView = await prisma.progress.findUnique({
+      where: {
+        userId_lessonId: {
+          userId: userId,
+          lessonId: id
+        }
+      }
+    });
+
+    if (existingView) {
+      // User has already viewed this lesson, don't increment view count
+      return res.json({ 
+        message: 'View already tracked', 
+        viewCount: lesson.views 
+      });
+    }
+
+    // Increment lesson view count and create progress record
+    await prisma.$transaction(async (tx) => {
+      // Increment lesson view count
+      await tx.lesson.update({
+        where: { id },
+        data: { views: { increment: 1 } }
+      });
+
+      // Create progress record
+      await tx.progress.create({
+        data: {
+          userId: userId,
+          lessonId: id,
+          status: 'VIEWED'
+        }
+      });
+    });
+
+    return res.json({ 
+      message: 'View tracked successfully', 
+      viewCount: lesson.views + 1 
+    });
+
+  } catch (err: any) {
+    console.error('Error tracking lesson view:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
 // POST /lessons/:id/progress - Update lesson progress (Authenticated users)
 lessonsRouter.post('/:id/progress', requireAuth, async (req: any, res) => {
   try {

@@ -140,7 +140,7 @@ commentsRouter.put('/:id', requireAuth, async (req: any, res) => {
     }
 
     // Check if user is the author or an admin
-    if (comment.userId !== req.userId && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (comment.userId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
       return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Can only edit your own comments' } });
     }
 
@@ -193,7 +193,7 @@ commentsRouter.delete('/:id', requireAuth, async (req: any, res) => {
     }
 
     // Check if user is the author or an admin
-    if (comment.userId !== req.userId && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (comment.userId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
       return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Can only delete your own comments' } });
     }
 
@@ -241,7 +241,7 @@ commentsRouter.post('/:id/report', requireAuth, async (req: any, res) => {
 
 // GET /admin/comments - Get all comments for moderation (Admin only)
 commentsRouter.get('/admin/comments', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
   }
 
@@ -312,7 +312,7 @@ commentsRouter.get('/admin/comments', requireAuth, async (req: any, res) => {
 
 // PUT /admin/comments/:id/moderate - Moderate a comment (Admin only)
 commentsRouter.put('/admin/comments/:id/moderate', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
   }
 

@@ -172,7 +172,7 @@ subscriptionsRouter.post('/checkout', requireAuth, async (req: any, res) => {
 subscriptionsRouter.post('/plans', requireAuth, async (req: any, res) => {
   try {
     // Check if user is admin
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
       return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Admin access required' } });
     }
     
@@ -468,8 +468,49 @@ subscriptionsRouter.delete('/plans/:id', requireAuth, async (req: any, res) => {
   try {
     const { id } = req.params;
 
-    await prisma.subscriptionPlan.delete({
-      where: { id }
+    // Check if plan exists
+    const plan = await prisma.subscriptionPlan.findUnique({
+      where: { id },
+      include: {
+        subscriptions: true
+      }
+    });
+
+    if (!plan) {
+      return res.status(404).json({ error: { code: 'PLAN_NOT_FOUND', message: 'Plan not found' } });
+    }
+
+    // Check if plan has active subscriptions
+    const activeSubscriptions = plan.subscriptions.filter(sub => sub.status === 'ACTIVE');
+    if (activeSubscriptions.length > 0) {
+      return res.status(400).json({ 
+        error: { 
+          code: 'PLAN_IN_USE', 
+          message: `Cannot delete plan with ${activeSubscriptions.length} active subscription(s). Please cancel all subscriptions first.` 
+        } 
+      });
+    }
+
+    // Delete related data first (in correct order to avoid foreign key constraints)
+    await prisma.$transaction(async (tx) => {
+      // Delete payments for subscriptions using this plan
+      await tx.payment.deleteMany({
+        where: {
+          subscription: {
+            planId: id
+          }
+        }
+      });
+
+      // Delete subscriptions using this plan
+      await tx.subscription.deleteMany({
+        where: { planId: id }
+      });
+
+      // Finally delete the plan
+      await tx.subscriptionPlan.delete({
+        where: { id }
+      });
     });
 
     return res.json({ message: 'Plan deleted successfully' });
