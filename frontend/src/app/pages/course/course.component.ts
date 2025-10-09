@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { VideoUploadComponent } from '../../components/video-upload/video-upload.component';
 
 interface Course {
   id: string;
@@ -25,12 +26,17 @@ interface Lesson {
   isPremium: boolean;
   orderIndex: number;
   createdAt: string;
+  // Video upload fields
+  videoUrl?: string;
+  videoSize?: number;
+  videoType?: string;
+  uploadedAt?: string;
 }
 
 @Component({
   selector: 'app-course',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, VideoUploadComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Loading State -->
@@ -99,103 +105,248 @@ interface Lesson {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Video Player Section -->
           <div class="lg:col-span-2">
-            <div class="bg-black rounded-lg overflow-hidden aspect-video relative card" 
-                 [style.background]="'linear-gradient(45deg, #1f2937 25%, transparent 25%), linear-gradient(-45deg, #1f2937 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1f2937 75%), linear-gradient(-45deg, transparent 75%, #1f2937 75%)'"
-                 [style.backgroundSize]="'20px 20px'"
-                 [style.backgroundPosition]="'0 0, 0 10px, 10px -10px, -10px 0px'">
+            <!-- Professional Video Player -->
+            <div class="relative mb-8 overflow-hidden rounded-2xl shadow-2xl border border-gray-300 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
               
-              <!-- Content Protection Overlay -->
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="text-center text-white">
-                  <div class="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M8 5v6l4 2 4-2V5l-4-2-4 2z"/>
-                    </svg>
-                  </div>
-                  <p class="text-lg font-medium">Vidéo protégée</p>
-                  <p class="text-sm opacity-75">Connectez-vous pour accéder au contenu</p>
-                </div>
+              <!-- Video Container -->
+              <div class="aspect-video relative">
+                 <!-- Show actual video if uploaded -->
+                 <div *ngIf="selectedLesson()?.videoUrl" class="w-full h-full">
+                   <!-- Test with a simple video first -->
+                   <video 
+                     class="w-full h-full object-cover"
+                     controls
+                     preload="auto"
+                     playsinline
+                     webkit-playsinline
+                     [src]="getVideoUrl(selectedLesson()?.videoUrl)"
+                     (click)="onVideoClick()"
+                     (loadstart)="onVideoLoadStart()"
+                     (canplay)="onVideoCanPlay()"
+                     (error)="onVideoError($event)"
+                     (loadedmetadata)="onVideoMetadataLoaded()"
+                     (load)="onVideoLoad()"
+                     (stalled)="onVideoStalled()"
+                     (suspend)="onVideoSuspend()"
+                     (canplaythrough)="onVideoCanPlayThrough()"
+                     #videoElement>
+                     Your browser does not support the video tag.
+                   </video>
+                   
+    <!-- Alternative: Try with a direct URL -->
+    <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded">
+      <p class="text-sm font-bold text-yellow-800">Alternative Test:</p>
+      <video 
+        class="w-64 h-32 border border-gray-300"
+        controls
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        muted
+        [src]="getVideoUrl(selectedLesson()?.videoUrl)"
+        (loadstart)="onAltVideoLoadStart()"
+        (canplay)="onAltVideoCanPlay()"
+        (error)="onAltVideoError($event)"
+        #altVideoElement>
+        Fallback video
+      </video>
+      <button (click)="playAltVideo()" class="mt-2 px-2 py-1 bg-yellow-600 text-white rounded text-xs">
+        Play Alt Video
+      </button>
+    </div>
+                   
+                   <!-- Debug info overlay -->
+                   <div class="absolute top-4 left-4 bg-black bg-opacity-75 text-white p-3 rounded text-xs max-w-xs">
+                     <p><strong>Debug Info:</strong></p>
+                     <p>Video URL: {{ getVideoUrl(selectedLesson()?.videoUrl) }}</p>
+                     <p>Lesson ID: {{ selectedLesson()?.id }}</p>
+                     <p>Video Size: {{ selectedLesson()?.videoSize | number }} bytes</p>
+                     <p>Video Type: {{ selectedLesson()?.videoType }}</p>
+                     <p>Uploaded: {{ selectedLesson()?.uploadedAt | date:'short' }}</p>
+                     <button (click)="testVideoDirectly()" class="mt-2 px-2 py-1 bg-blue-600 text-white rounded text-xs">
+                       Test Video
+                     </button>
+                     <button (click)="openVideoInNewTab()" class="mt-1 px-2 py-1 bg-green-600 text-white rounded text-xs">
+                       Open Video URL
+                     </button>
+                     <button (click)="forceReloadVideo()" class="mt-1 px-2 py-1 bg-purple-600 text-white rounded text-xs">
+                       Force Reload
+                     </button>
+                   </div>
               </div>
 
-              <!-- Dynamic Watermark -->
-              <div class="absolute top-4 right-4 text-white text-xs opacity-50 pointer-events-none select-none">
-                Archify - {{ userEmail() }} - {{ currentTime() }}
+                <!-- Show placeholder if no video uploaded -->
+                <div *ngIf="!selectedLesson()?.videoUrl" 
+                     class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/20 to-indigo-900/30 flex items-center justify-center cursor-pointer group"
+                     (click)="onVideoClick()">
+                  
+                  <!-- Main Play Button -->
+                  <div class="text-center text-white transform transition-all duration-500 group-hover:scale-110">
+                    <div class="relative mb-6">
+                      <!-- Outer ring -->
+                      <div class="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto backdrop-blur-md border-2 border-white/30 group-hover:border-white/50 transition-all duration-300">
+                        <!-- Inner play button -->
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl group-hover:from-blue-400 group-hover:to-purple-500 transition-all duration-300">
+                          <svg class="w-8 h-8 ml-1 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <!-- Pulse animation -->
+                      <div class="absolute inset-0 w-24 h-24 bg-white/20 rounded-full mx-auto animate-ping opacity-75"></div>
               </div>
 
-              <!-- Security Notice -->
-              <div class="absolute bottom-4 left-4 text-white text-xs opacity-75">
-                ⚠️ Enregistrement interdit - Contenu protégé
+                    <!-- Video Info -->
+                    <div class="space-y-3">
+                      <h3 class="text-2xl font-bold mb-2 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                        {{ selectedLesson()?.title || 'Sélectionnez une leçon' }}
+                      </h3>
+                      <p class="text-lg opacity-90 mb-4">Contenu premium</p>
+                      
+                    </div>
               </div>
             </div>
 
-            <!-- Video Controls -->
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
-                📱 Plein écran
+              </div>
+
+              <!-- Video Controls Bar -->
+              <div class="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4 border-t border-gray-700">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <!-- Show different controls based on whether video is uploaded -->
+                    <div *ngIf="selectedLesson()?.videoUrl" class="flex items-center gap-4">
+                      <span class="text-green-400 text-sm font-medium">✅ Vidéo disponible</span>
+                      <button (click)="playVideoInNewTab()" class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-5-5v5m0-5v5"/>
+                        </svg>
+                        Ouvrir dans un nouvel onglet
+                      </button>
+                    </div>
+                    
+                    <!-- Default controls when no video -->
+                    <div *ngIf="!selectedLesson()?.videoUrl" class="flex items-center gap-4">
+                      <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-5-5v5m0-5v5"/>
+                        </svg>
+                        Plein écran
               </button>
-              <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
-                🔊 Volume
+                      <button class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                        </svg>
+                        Volume
               </button>
-              <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
-                ⚙️ Paramètres
+                      <button class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Paramètres
               </button>
             </div>
           </div>
 
-          <!-- Lessons Sidebar -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Clean Sidebar -->
           <div class="lg:col-span-1">
-            <div class="card">
-              <div class="p-4 border-b">
-                <h3 class="font-semibold text-gray-900">Leçons</h3>
+
+            <!-- Lessons Section -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+              <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                  </div>
+                  <h3 class="font-bold text-gray-900">Leçons</h3>
+                </div>
                 <p class="text-sm text-gray-600">{{ lessons().length }} leçons • {{ totalDuration() }}</p>
               </div>
               <div class="max-h-96 overflow-y-auto">
                 <div *ngFor="let lesson of lessons(); trackBy: trackByLessonId" 
-                     class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                     class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
                      [class.bg-blue-50]="selectedLesson()?.id === lesson.id"
                      (click)="selectLesson(lesson)">
                   <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
                       <p class="text-sm font-medium text-gray-900 truncate">{{ lesson.title }}</p>
-                      <p class="text-xs text-gray-500">{{ formatDuration(lesson.durationSec) }}</p>
+                      <p class="text-xs text-gray-500 mt-1">{{ formatDuration(lesson.durationSec) }}</p>
                     </div>
-                    <div class="flex items-center gap-2 ml-2">
-                      <span *ngIf="lesson.isPremium" class="text-xs text-orange-600">🔒</span>
+                    <div class="flex items-center gap-2 ml-3">
+                      <span *ngIf="lesson.isPremium" class="text-xs text-orange-600 font-medium">🔒</span>
                       <span class="text-xs text-gray-400">
                         {{ lesson.type === 'video' ? '🎥' : lesson.type === 'pdf' ? '📄' : '📝' }}
                       </span>
                     </div>
                   </div>
                 </div>
+                <div *ngIf="lessons().length === 0" class="p-6 text-center text-gray-500">
+                  <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                  </svg>
+                  <p class="text-sm">Aucune leçon disponible</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Course Description -->
-        <div class="mt-8 bg-white rounded-lg shadow-sm border p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Description du cours</h3>
-          <p class="text-gray-700 leading-relaxed">
-            {{ course()?.description }}
-          </p>
+          <!-- Video Upload Section (Testing Mode - Visible to All) -->
+          <div *ngIf="selectedLesson()" class="mt-6">
+            <app-video-upload 
+              [lessonId]="selectedLesson()?.id || ''"
+              (videoUploaded)="onVideoUploaded($event)"
+              (videoRemoved)="onVideoRemoved()">
+            </app-video-upload>
+          </div>
+        </div>
+
+        <!-- Enhanced Course Description -->
+        <div class="mt-8 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-6 border-b border-gray-200">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900">Description du cours</h3>
+                <p class="text-sm text-gray-600">Informations détaillées sur le contenu</p>
+              </div>
+            </div>
+          </div>
           
-          <!-- Course Stats -->
-          <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-200">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-blue-600">{{ course()?.lessonCount }}</div>
-              <div class="text-sm text-gray-500">Leçons</div>
+          <div class="p-8">
+            <p class="text-gray-700 leading-relaxed text-lg">
+              {{ getCourseDescription() }}
+            </p>
+            
+            <!-- Enhanced Course Stats -->
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-gray-200">
+              <div class="text-center p-4 bg-blue-50 rounded-xl">
+                <div class="text-3xl font-bold text-blue-600 mb-1">{{ course()?.lessonCount || 0 }}</div>
+                <div class="text-sm text-blue-500 font-medium">Leçons</div>
+              </div>
+              <div class="text-center p-4 bg-green-50 rounded-xl">
+                <div class="text-3xl font-bold text-green-600 mb-1">{{ totalDuration() }}</div>
+                <div class="text-sm text-green-500 font-medium">Durée totale</div>
             </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-600">{{ totalDuration() }}</div>
-              <div class="text-sm text-gray-500">Durée totale</div>
+              <div class="text-center p-4 bg-purple-50 rounded-xl">
+                <div class="text-3xl font-bold text-purple-600 mb-1">{{ course()?.views || 0 }}</div>
+                <div class="text-sm text-purple-500 font-medium">Vues</div>
             </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ course()?.views }}</div>
-              <div class="text-sm text-gray-500">Vues</div>
+              <div class="text-center p-4 bg-orange-50 rounded-xl">
+                <div class="text-3xl font-bold text-orange-600 mb-1">{{ course()?.semester }}</div>
+                <div class="text-sm text-orange-500 font-medium">Semestre</div>
             </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-orange-600">{{ course()?.semester }}</div>
-              <div class="text-sm text-gray-500">Semestre</div>
             </div>
           </div>
         </div>
@@ -210,8 +361,6 @@ export class CourseComponent implements OnInit, OnDestroy {
   private courseSignal = signal<Course | undefined>(undefined);
   private isLoadingSignal = signal(false);
   private errorSignal = signal<string>('');
-  userEmail = signal<string>('');
-  currentTime = signal<string>('');
   private timeInterval: any;
 
   // Computed properties
@@ -244,15 +393,6 @@ export class CourseComponent implements OnInit, OnDestroy {
       this.loadCourse(courseId);
     });
 
-    // Set user email for watermark
-    const user = this.authService.user();
-    if (user) {
-      this.userEmail.set(user.email);
-    }
-
-    // Update time for watermark
-    this.updateTime();
-    this.timeInterval = setInterval(() => this.updateTime(), 1000);
 
     // Prevent right-click and other security measures
     this.setupContentProtection();
@@ -282,13 +422,13 @@ export class CourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateTime() {
-    this.currentTime.set(new Date().toLocaleTimeString('fr-FR'));
-  }
 
   private setupContentProtection() {
-    // Invisible protection - no visible indicators to users
+    // Temporarily disabled for debugging - re-enable after fixing video issue
+    console.log('🔓 Security measures temporarily disabled for debugging');
     
+    // TODO: Re-enable security measures after video playback is fixed
+    /*
     // Disable right-click silently
     document.addEventListener('contextmenu', (e) => {
       e.preventDefault();
@@ -339,12 +479,13 @@ export class CourseComponent implements OnInit, OnDestroy {
       }
       return true;
     }, { capture: true });
+    */
   }
 
   selectLesson(lesson: Lesson) {
     this.selectedLesson.set(lesson);
-    // Navigate to lesson detail
-    this.router.navigate(['/lesson', lesson.id]);
+    // For testing: Stay on course page to show video upload
+    // this.router.navigate(['/lesson', lesson.id]);
   }
 
   trackByLessonId(index: number, lesson: Lesson): string {
@@ -374,4 +515,178 @@ export class CourseComponent implements OnInit, OnDestroy {
   trackByTag(index: number, tag: string): string {
     return tag;
   }
+
+  // Video interaction
+  onVideoClick() {
+    console.log('🎬 Video clicked - Security measures active');
+    // Professional video interaction without alerts
+  }
+
+  getCourseDescription(): string {
+    return this.course()?.description || 'Ce cours vous permettra d\'acquérir des connaissances approfondies dans le domaine de l\'algorithmique et de la programmation.';
+  }
+
+  // Admin check
+  isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN' || this.authService.getUserRole() === 'SUPERADMIN';
+  }
+
+  // Video upload handlers
+  onVideoUploaded(videoData: any) {
+    console.log('Video uploaded successfully:', videoData);
+    // Refresh the lesson data to show the new video
+    this.loadCourse(this.activatedRoute.snapshot.params['id']);
+  }
+
+  onVideoRemoved() {
+    console.log('Video removed successfully');
+    // Refresh the lesson data
+    this.loadCourse(this.activatedRoute.snapshot.params['id']);
+  }
+
+  // Get full video URL
+  getVideoUrl(videoUrl: string | undefined): string {
+    if (!videoUrl) {
+      console.log('❌ No video URL provided');
+      return '';
+    }
+    // If it's already a full URL, return as is
+    if (videoUrl.startsWith('http')) {
+      console.log('✅ Video URL is already complete:', videoUrl);
+      return videoUrl;
+    }
+    // Otherwise, prepend the backend URL
+    const fullUrl = `http://localhost:3000${videoUrl}`;
+    console.log('🔗 Constructed video URL:', fullUrl);
+    return fullUrl;
+  }
+
+  // Play video in new tab
+  playVideoInNewTab() {
+    if (this.selectedLesson()?.videoUrl) {
+      const videoUrl = this.getVideoUrl(this.selectedLesson()?.videoUrl);
+      window.open(videoUrl, '_blank');
+    }
+  }
+
+  // Video debugging methods
+  onVideoLoadStart() {
+    console.log('🎬 Video load started');
+  }
+
+  onVideoCanPlay() {
+    console.log('✅ Video can play');
+    this.enableVideoInteraction();
+  }
+
+  onVideoError(event: any) {
+    console.error('❌ Video error:', event);
+    console.error('Video src:', this.getVideoUrl(this.selectedLesson()?.videoUrl));
+  }
+
+  onVideoMetadataLoaded() {
+    console.log('📊 Video metadata loaded');
+    console.log('Video URL:', this.getVideoUrl(this.selectedLesson()?.videoUrl));
+  }
+
+  onVideoLoad() {
+    console.log('✅ Video loaded successfully');
+  }
+
+  onVideoStalled() {
+    console.warn('⚠️ Video loading stalled');
+  }
+
+  onVideoSuspend() {
+    console.warn('⚠️ Video loading suspended');
+  }
+
+  onVideoCanPlayThrough() {
+    console.log('🎬 Video can play through - fully loaded');
+  }
+
+  // Enable video interaction programmatically
+  enableVideoInteraction() {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.controls = true;
+      videoElement.muted = false; // Ensure audio is not muted
+      videoElement.volume = 0.5; // Set a default volume
+      console.log('🎬 Video interaction enabled');
+    }
+  }
+
+  // Test video directly
+  testVideoDirectly() {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      console.log('🎬 Testing video element:');
+      console.log('- Video src:', videoElement.src);
+      console.log('- Video readyState:', videoElement.readyState);
+      console.log('- Video networkState:', videoElement.networkState);
+      console.log('- Video paused:', videoElement.paused);
+      console.log('- Video muted:', videoElement.muted);
+      console.log('- Video controls:', videoElement.controls);
+      
+      // Test if the video URL is accessible
+      const videoUrl = this.getVideoUrl(this.selectedLesson()?.videoUrl);
+      console.log('🔗 Testing video URL accessibility:', videoUrl);
+      
+      // Try to fetch the video URL directly
+      fetch(videoUrl, { method: 'HEAD' })
+        .then(response => {
+          console.log('✅ Video URL is accessible:', response.status, response.statusText);
+          console.log('📊 Response headers:', Object.fromEntries(response.headers.entries()));
+        })
+        .catch(error => {
+          console.error('❌ Video URL is not accessible:', error);
+        });
+    } else {
+      console.error('❌ No video element found');
+    }
+  }
+
+  // Open video URL in new tab for testing
+  openVideoInNewTab() {
+    const videoUrl = this.getVideoUrl(this.selectedLesson()?.videoUrl);
+    console.log('🔗 Opening video URL in new tab:', videoUrl);
+    window.open(videoUrl, '_blank');
+  }
+
+  // Force reload video element
+  forceReloadVideo() {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      console.log('🔄 Force reloading video element...');
+      // Just reload, don't auto-play to avoid infinite loops
+      videoElement.load();
+      console.log('✅ Video element reloaded');
+    }
+  }
+
+  // Alternative video methods
+  onAltVideoLoadStart() {
+    console.log('🎬 Alt video load started');
+  }
+
+  onAltVideoCanPlay() {
+    console.log('✅ Alt video can play');
+  }
+
+  onAltVideoError(event: any) {
+    console.error('❌ Alt video error:', event);
+  }
+
+  playAltVideo() {
+    const altVideoElement = document.querySelector('#altVideoElement') as HTMLVideoElement;
+    if (altVideoElement) {
+      console.log('🎬 Playing alt video...');
+      altVideoElement.play().then(() => {
+        console.log('✅ Alt video play succeeded');
+      }).catch((error) => {
+        console.error('❌ Alt video play failed:', error);
+      });
+    }
+  }
+
 }

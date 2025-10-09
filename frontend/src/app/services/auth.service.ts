@@ -288,4 +288,10 @@ export class AuthService {
     }
     return user.name.charAt(0).toUpperCase();
   }
+
+  // Get user's role
+  getUserRole(): string {
+    const user = this.user();
+    return user?.role || '';
+  }
 }

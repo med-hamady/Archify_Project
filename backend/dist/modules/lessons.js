@@ -23,6 +23,11 @@ const lessonCreateSchema = zod_1.z.object({
     vimeoId: zod_1.z.string().optional(),
     youtubeId: zod_1.z.string().optional(),
     pdfUrl: zod_1.z.string().optional(), // Removed .url() validation to allow empty strings
+    // Video upload fields
+    videoUrl: zod_1.z.string().optional(),
+    videoSize: zod_1.z.number().int().min(0).optional(),
+    videoType: zod_1.z.string().optional(),
+    uploadedAt: zod_1.z.date().optional(),
     isPremium: zod_1.z.boolean().default(true), // ✅ Premium by default
     requiresVideoSubscription: zod_1.z.boolean().default(false),
     requiresDocumentSubscription: zod_1.z.boolean().default(false),
@@ -40,6 +45,11 @@ function getLessonPublic(lesson) {
         vimeoId: lesson.vimeoId,
         youtubeId: lesson.youtubeId,
         pdfUrl: lesson.pdfUrl,
+        // Video upload fields
+        videoUrl: lesson.videoUrl,
+        videoSize: lesson.videoSize,
+        videoType: lesson.videoType,
+        uploadedAt: lesson.uploadedAt,
         isPremium: lesson.isPremium,
         requiresVideoSubscription: lesson.requiresVideoSubscription,
         requiresDocumentSubscription: lesson.requiresDocumentSubscription,

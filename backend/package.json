@@ -22,6 +22,7 @@
   "type": "commonjs",
   "dependencies": {
     "@prisma/client": "^5.19.1",
+    "@types/multer": "^2.0.0",
     "@types/nodemailer": "^7.0.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -31,6 +32,7 @@
     "express-rate-limit": "^7.4.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
     "nodemailer": "^6.10.1",
     "pino": "^10.0.0",
     "pino-http": "^10.5.0",

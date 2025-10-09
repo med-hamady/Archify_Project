@@ -35,6 +35,7 @@ function getCoursePublic(course) {
         isPremium: course.isPremium,
         views: course.views,
         lessonCount: course.lessons?.length || 0,
+        lessons: course.lessons || [],
         createdAt: course.createdAt
     };
 }

@@ -49,6 +49,11 @@ model Lesson {
   vimeoId      String?   
   youtubeId    String?   
   pdfUrl       String?   
+  // Video upload fields
+  videoUrl     String?   // Local video file path
+  videoSize    Int?      // File size in bytes
+  videoType    String?   // MIME type (video/mp4, etc.)
+  uploadedAt   DateTime? // Upload timestamp
   isPremium    Boolean   @default(false)
   requiresVideoSubscription Boolean @default(false)
   requiresDocumentSubscription Boolean @default(false)
