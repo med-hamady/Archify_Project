@@ -147,7 +147,7 @@ coursesRouter.get('/:id/lessons', async (req, res) => {
 
 // POST /courses - Create a new course (Admin only)
 coursesRouter.post('/', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -177,7 +177,7 @@ coursesRouter.post('/', requireAuth, async (req: any, res) => {
 
 // PUT /courses/:id - Update a course (Admin only)
 coursesRouter.put('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -202,7 +202,7 @@ coursesRouter.put('/:id', requireAuth, async (req: any, res) => {
 
 // DELETE /courses/:id - Delete a course (Admin only)
 coursesRouter.delete('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
-import { VideoUploadComponent } from '../../components/video-upload/video-upload.component';
+import { VideoPlayerComponent } from '../../components/video-player/video-player.component';
 
 interface Course {
   id: string;
@@ -36,7 +36,7 @@ interface Lesson {
 @Component({
   selector: 'app-course',
   standalone: true,
-  imports: [CommonModule, VideoUploadComponent],
+  imports: [CommonModule, VideoPlayerComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Loading State -->
@@ -110,70 +110,23 @@ interface Lesson {
               
               <!-- Video Container -->
               <div class="aspect-video relative">
-                 <!-- Show actual video if uploaded -->
-                 <div *ngIf="selectedLesson()?.videoUrl" class="w-full h-full">
-                   <!-- Test with a simple video first -->
-                   <video 
-                     class="w-full h-full object-cover"
-                     controls
-                     preload="auto"
-                     playsinline
-                     webkit-playsinline
-                     [src]="getVideoUrl(selectedLesson()?.videoUrl)"
-                     (click)="onVideoClick()"
-                     (loadstart)="onVideoLoadStart()"
-                     (canplay)="onVideoCanPlay()"
-                     (error)="onVideoError($event)"
-                     (loadedmetadata)="onVideoMetadataLoaded()"
-                     (load)="onVideoLoad()"
-                     (stalled)="onVideoStalled()"
-                     (suspend)="onVideoSuspend()"
-                     (canplaythrough)="onVideoCanPlayThrough()"
-                     #videoElement>
-                     Your browser does not support the video tag.
-                   </video>
-                   
-    <!-- Alternative: Try with a direct URL -->
-    <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded">
-      <p class="text-sm font-bold text-yellow-800">Alternative Test:</p>
-      <video 
-        class="w-64 h-32 border border-gray-300"
-        controls
-        preload="auto"
-        playsinline
-        webkit-playsinline
-        muted
-        [src]="getVideoUrl(selectedLesson()?.videoUrl)"
-        (loadstart)="onAltVideoLoadStart()"
-        (canplay)="onAltVideoCanPlay()"
-        (error)="onAltVideoError($event)"
-        #altVideoElement>
-        Fallback video
-      </video>
-      <button (click)="playAltVideo()" class="mt-2 px-2 py-1 bg-yellow-600 text-white rounded text-xs">
-        Play Alt Video
-      </button>
-    </div>
-                   
-                   <!-- Debug info overlay -->
-                   <div class="absolute top-4 left-4 bg-black bg-opacity-75 text-white p-3 rounded text-xs max-w-xs">
-                     <p><strong>Debug Info:</strong></p>
-                     <p>Video URL: {{ getVideoUrl(selectedLesson()?.videoUrl) }}</p>
-                     <p>Lesson ID: {{ selectedLesson()?.id }}</p>
-                     <p>Video Size: {{ selectedLesson()?.videoSize | number }} bytes</p>
-                     <p>Video Type: {{ selectedLesson()?.videoType }}</p>
-                     <p>Uploaded: {{ selectedLesson()?.uploadedAt | date:'short' }}</p>
-                     <button (click)="testVideoDirectly()" class="mt-2 px-2 py-1 bg-blue-600 text-white rounded text-xs">
-                       Test Video
-                     </button>
-                     <button (click)="openVideoInNewTab()" class="mt-1 px-2 py-1 bg-green-600 text-white rounded text-xs">
-                       Open Video URL
-                     </button>
-                     <button (click)="forceReloadVideo()" class="mt-1 px-2 py-1 bg-purple-600 text-white rounded text-xs">
-                       Force Reload
-                     </button>
-                   </div>
-              </div>
+                  <!-- Show actual video if uploaded -->
+                  <div *ngIf="selectedLesson()?.videoUrl" class="w-full h-full">
+                    <app-video-player
+                      [videoUrl]="getVideoUrl(selectedLesson()?.videoUrl)"
+                      [videoTitle]="selectedLesson()?.title || ''"
+                      [showControls]="true"
+                      [showInfo]="true"
+                      [autoplay]="false"
+                      [muted]="false"
+                      [preload]="'metadata'"
+                      (play)="onVideoPlay()"
+                      (pause)="onVideoPause()"
+                      (ended)="onVideoEnded()"
+                      (error)="onVideoError($event)"
+                      (timeUpdate)="onVideoTimeUpdate($event)">
+                    </app-video-player>
+                  </div>
 
                 <!-- Show placeholder if no video uploaded -->
                 <div *ngIf="!selectedLesson()?.videoUrl" 
@@ -298,13 +251,40 @@ interface Lesson {
           </div>
         </div>
 
-          <!-- Video Upload Section (Testing Mode - Visible to All) -->
-          <div *ngIf="selectedLesson()" class="mt-6">
-            <app-video-upload 
-              [lessonId]="selectedLesson()?.id || ''"
-              (videoUploaded)="onVideoUploaded($event)"
-              (videoRemoved)="onVideoRemoved()">
-            </app-video-upload>
+          <!-- Admin Video Management Link -->
+          <div *ngIf="selectedLesson() && isAdmin()" class="mt-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                  </svg>
+                </div>
+                <h3 class="font-bold text-blue-900">Gestion des Vidéos</h3>
+              </div>
+              <p class="text-sm text-blue-700 mb-3">En tant qu'administrateur, vous pouvez gérer les vidéos de cette leçon.</p>
+              <button (click)="goToLessonManagement()" 
+                      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                🎬 Gérer les Vidéos
+              </button>
+            </div>
+          </div>
+
+          <!-- Non-Admin Message -->
+          <div *ngIf="selectedLesson() && !isAdmin()" class="mt-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-medium text-blue-900">Accès restreint</h4>
+                  <p class="text-sm text-blue-700">Seuls les administrateurs peuvent gérer les vidéos des leçons.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -518,7 +498,7 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   // Video interaction
   onVideoClick() {
-    console.log('🎬 Video clicked - Security measures active');
+    console.log('🎬 Video clicked - Security measures disabled for testing');
     // Professional video interaction without alerts
   }
 
@@ -576,7 +556,6 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   onVideoCanPlay() {
     console.log('✅ Video can play');
-    this.enableVideoInteraction();
   }
 
   onVideoError(event: any) {
@@ -587,6 +566,14 @@ export class CourseComponent implements OnInit, OnDestroy {
   onVideoMetadataLoaded() {
     console.log('📊 Video metadata loaded');
     console.log('Video URL:', this.getVideoUrl(this.selectedLesson()?.videoUrl));
+  }
+
+  onVideoPlay() {
+    console.log('▶️ Video started playing');
+  }
+
+  onVideoPause() {
+    console.log('⏸️ Video paused');
   }
 
   onVideoLoad() {
@@ -646,11 +633,92 @@ export class CourseComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Force play video with JavaScript
+  forcePlayVideo() {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      console.log('🎬 Force playing video...');
+      console.log('Video element:', videoElement);
+      console.log('Video src:', videoElement.src);
+      console.log('Video readyState:', videoElement.readyState);
+      
+      // Try multiple approaches
+      videoElement.muted = true; // Ensure muted for autoplay
+      videoElement.volume = 0; // Set volume to 0
+      
+      videoElement.play().then(() => {
+        console.log('✅ Force play succeeded');
+      }).catch((error) => {
+        console.error('❌ Force play failed:', error);
+        console.error('Error details:', error.name, error.message);
+        
+        // Try alternative approach
+        videoElement.load();
+        setTimeout(() => {
+          videoElement.play().then(() => {
+            console.log('✅ Force play succeeded after reload');
+          }).catch((err) => {
+            console.error('❌ Force play failed after reload:', err);
+          });
+        }, 1000);
+      });
+    } else {
+      console.error('❌ No video element found for force play');
+    }
+  }
+
   // Open video URL in new tab for testing
   openVideoInNewTab() {
     const videoUrl = this.getVideoUrl(this.selectedLesson()?.videoUrl);
     console.log('🔗 Opening video URL in new tab:', videoUrl);
     window.open(videoUrl, '_blank');
+  }
+
+  // Video player event handlers
+  onVideoEnded() {
+    console.log('🏁 Video ended');
+  }
+
+  onVideoTimeUpdate(currentTime: number) {
+    // Optional: Handle time updates
+    // console.log('⏱️ Video time:', currentTime);
+  }
+
+  playSimpleVideo() {
+    const simpleVideo = document.querySelector('#simpleVideo') as HTMLVideoElement;
+    if (simpleVideo) {
+      console.log('🎬 Playing simple video...');
+      simpleVideo.play().then(() => {
+        console.log('✅ Simple video play succeeded');
+      }).catch((error) => {
+        console.error('❌ Simple video play failed:', error);
+      });
+    }
+  }
+
+  // Delete and re-upload video
+  deleteAndReuploadVideo() {
+    const lesson = this.selectedLesson();
+    if (lesson?.id) {
+      console.log('🗑️ Deleting current video...');
+      this.http.delete(`${this.API_URL}/video-upload/${lesson.id}/video`, {
+        withCredentials: true
+      }).subscribe({
+        next: () => {
+          console.log('✅ Video deleted successfully');
+          // Refresh the lesson data
+          this.loadCourse(this.activatedRoute.snapshot.params['id']);
+        },
+        error: (err) => {
+          console.error('❌ Failed to delete video:', err);
+        }
+      });
+    }
+  }
+
+  // Navigate to lesson management
+  goToLessonManagement() {
+    this.router.navigate(['/admin/lessons']);
   }
 
   // Force reload video element
@@ -664,29 +732,5 @@ export class CourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Alternative video methods
-  onAltVideoLoadStart() {
-    console.log('🎬 Alt video load started');
-  }
-
-  onAltVideoCanPlay() {
-    console.log('✅ Alt video can play');
-  }
-
-  onAltVideoError(event: any) {
-    console.error('❌ Alt video error:', event);
-  }
-
-  playAltVideo() {
-    const altVideoElement = document.querySelector('#altVideoElement') as HTMLVideoElement;
-    if (altVideoElement) {
-      console.log('🎬 Playing alt video...');
-      altVideoElement.play().then(() => {
-        console.log('✅ Alt video play succeeded');
-      }).catch((error) => {
-        console.error('❌ Alt video play failed:', error);
-      });
-    }
-  }
 
 }

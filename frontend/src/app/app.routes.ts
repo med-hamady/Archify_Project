@@ -64,5 +64,15 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
     canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
   },
+      {
+        path: 'admin/lessons',
+        loadComponent: () => import('./pages/lesson-management/lesson-management.component').then(m => m.LessonManagementComponent),
+        canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
+      },
+      {
+        path: 'admin/lesson/:lessonId/video',
+        loadComponent: () => import('./pages/lesson-video-upload/lesson-video-upload.component').then(m => m.LessonVideoUploadComponent),
+        canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
+      },
   { path: '**', redirectTo: '' }
 ];

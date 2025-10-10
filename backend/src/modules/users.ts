@@ -29,7 +29,7 @@ function getUserPublic(user: any) {
 
 // GET /api/users - Get all users (Admin only)
 usersRouter.get('/', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -47,7 +47,7 @@ usersRouter.get('/', requireAuth, async (req: any, res) => {
 
 // GET /api/users/:id - Get a single user by ID (Admin only)
 usersRouter.get('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -75,7 +75,7 @@ usersRouter.get('/:id', requireAuth, async (req: any, res) => {
 
 // PUT /api/users/:id - Update a user (Admin only)
 usersRouter.put('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -109,7 +109,7 @@ usersRouter.put('/:id', requireAuth, async (req: any, res) => {
 
 // DELETE /api/users/:id - Delete a user (Admin only)
 usersRouter.delete('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -153,7 +153,7 @@ usersRouter.delete('/:id', requireAuth, async (req: any, res) => {
 
 // GET /api/users/stats - Get user statistics (Admin only)
 usersRouter.get('/stats/overview', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 

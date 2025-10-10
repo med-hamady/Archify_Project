@@ -87,6 +87,8 @@ app.use('/uploads', express_1.default.static('uploads', {
         }
     }
 }));
+// Serve test HTML file
+app.use('/test-video.html', express_1.default.static('test-video.html'));
 app.use((0, pino_http_1.default)({ logger }));
 // Rate limiting configurations
 const authLimiter = (0, express_rate_limit_1.default)({

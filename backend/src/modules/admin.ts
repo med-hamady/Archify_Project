@@ -73,7 +73,7 @@ adminRouter.post('/create-admin', requireAuth, async (req: any, res) => {
 
 // POST /api/admin/create-user - Create user account (Admin only)
 adminRouter.post('/create-user', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN' && req.userRole !== 'admin' && req.userRole !== 'superadmin') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can create user accounts' } });
   }
 

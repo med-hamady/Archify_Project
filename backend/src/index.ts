@@ -6,6 +6,8 @@ import pinoHttp from 'pino-http';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import fs from 'fs';
 
 import { authRouter } from './modules/auth';
 import { coursesRouter } from './modules/courses';
@@ -56,6 +58,15 @@ app.use(
     exposedHeaders: ['Content-Range', 'Accept-Ranges', 'Content-Length']
   })
 );
+
+// Override CORS for uploads to be more permissive
+app.use('/uploads', cors({
+  origin: 'http://localhost:4200',
+  credentials: true,
+  methods: ['GET', 'HEAD', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Range'],
+  exposedHeaders: ['Content-Range', 'Accept-Ranges', 'Content-Length']
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -69,27 +80,62 @@ app.options('/uploads/:filename', (req, res) => {
   res.status(200).end();
 });
 
-// Serve static files from uploads directory with proper headers for video streaming
-app.use('/uploads', express.static('uploads', {
-  setHeaders: (res, path) => {
-    // Set CORS headers for all static files
+// Additional CORS handler for all uploads routes - using middleware approach
+app.use('/uploads', (req, res, next) => {
+  // Handle OPTIONS requests for CORS preflight
+  if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Range');
     res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
-    
-    // Set specific headers for video files
-    if (path.endsWith('.mp4') || path.endsWith('.webm') || path.endsWith('.ogg') || path.endsWith('.avi') || path.endsWith('.mov')) {
-      res.setHeader('Content-Type', 'video/mp4');
-      res.setHeader('Accept-Ranges', 'bytes');
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
-      // CRITICAL: Prevent download, allow inline playback
-      res.setHeader('Content-Disposition', 'inline');
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-    }
+    res.status(200).end();
+    return;
   }
-}));
+  next();
+});
+
+// Custom route handler for video files with proper CORS
+app.get('/uploads/videos/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../uploads/videos', filename);
+  
+  console.log('🎬 Video request:', filename);
+  console.log('🎬 Origin header:', req.headers.origin);
+  console.log('🎬 Referer header:', req.headers.referer);
+  
+  // Set CORS headers - Allow all origins for video files
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Range');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
+  
+  // Set video-specific headers
+  res.setHeader('Content-Type', 'video/mp4');
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('Cache-Control', 'public, max-age=31536000');
+  res.setHeader('Content-Disposition', 'inline');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  
+  console.log('🎬 CORS headers set with wildcard origin');
+  
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    console.log('❌ File not found:', filePath);
+    return res.status(404).json({ error: 'File not found' });
+  }
+  
+  console.log('✅ Sending video file:', filePath);
+  // Send the file
+  res.sendFile(filePath);
+});
+
+// Serve other static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Serve test HTML files
+app.use('/test-video.html', express.static('test-video.html'));
+app.use('/test-cors.html', express.static('test-cors.html'));
 app.use(pinoHttp({ logger }));
 
 // Rate limiting configurations
@@ -116,6 +162,13 @@ const strictLimiter = rateLimit({
 
 app.get('/healthz', (_req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+// Test CORS endpoint
+app.get('/test-cors', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(200).json({ message: 'CORS test successful' });
 });
 
 // Routes with appropriate rate limiting

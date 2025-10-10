@@ -2,6 +2,7 @@ import { Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 
@@ -627,14 +628,6 @@ interface UserStats {
               <h2 class="text-2xl font-bold text-gray-900">Gestion des Leçons</h2>
               <p class="text-gray-600 mt-1">Créez et gérez toutes les leçons ({{ lessons().length }} leçons)</p>
             </div>
-            <div class="flex space-x-3">
-              <a routerLink="/admin/upload" 
-                 class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                </svg>
-                Upload Vidéos
-              </a>
             <button (click)="showAddLessonModal.set(true)" 
                     class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -642,7 +635,6 @@ interface UserStats {
               </svg>
               Nouvelle Leçon
             </button>
-            </div>
           </div>
         </div>
 
@@ -666,7 +658,9 @@ interface UserStats {
                     Aucune leçon trouvée
                   </td>
                 </tr>
-                <tr *ngFor="let lesson of lessons(); trackBy: trackByLessonId" class="hover:bg-gray-50 transition-colors">
+                <tr *ngFor="let lesson of lessons(); trackBy: trackByLessonId" 
+                    class="hover:bg-gray-50 transition-colors cursor-pointer"
+                    (click)="goToLessonVideoUpload(lesson.id)">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
@@ -1476,6 +1470,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     public authService: AuthService
   ) {}
 
@@ -2068,6 +2063,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     const totalRevenue = this.stats().totalRevenue;
     return totalUsers > 0 ? totalRevenue / totalUsers : 0;
   }
+
+      // Navigate to lesson video upload
+      goToLessonVideoUpload(lessonId: string) {
+        this.router.navigate(['/admin/lesson', lessonId, 'video']);
+      }
 
   // Handle tab clicks with data refresh for analytics
   onTabClick(tabId: string) {

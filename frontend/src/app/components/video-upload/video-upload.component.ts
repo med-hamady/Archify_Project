@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-video-upload',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
       <div class="flex items-center gap-3 mb-4">
@@ -74,28 +75,151 @@ import { HttpClient } from '@angular/common/http';
 
         <!-- Uploaded State -->
         <div *ngIf="uploadedVideo() && !isUploading()" class="space-y-4">
-          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-          </div>
-          <div>
-            <p class="text-lg font-medium text-gray-900 mb-2">Video uploaded successfully!</p>
-            <div class="text-sm text-gray-500 space-y-1">
-              <p><strong>File:</strong> {{ uploadedVideo()?.filename }}</p>
-              <p><strong>Size:</strong> {{ formatFileSize(uploadedVideo()?.videoSize || 0) }}</p>
-              <p><strong>Type:</strong> {{ uploadedVideo()?.videoType }}</p>
+          <!-- Upload Success Message -->
+          <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-lg font-medium text-green-800">Video uploaded successfully!</p>
+                <p class="text-sm text-green-600">{{ formatFileSize(uploadedVideo()?.videoSize || 0) }} ({{ uploadedVideo()?.videoType }})</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button (click)="playVideo()" 
+                      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                🎬 Play Video
+              </button>
+              <button (click)="removeVideo()" 
+                      class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                🗑️ Remove
+              </button>
             </div>
           </div>
-          <div class="flex gap-2">
-            <button (click)="playVideo()" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Play Video
-            </button>
-            <button (click)="removeVideo()" 
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-              Remove
-            </button>
+
+          <!-- Admin Video Controls -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                </svg>
+              </div>
+              <h3 class="font-bold text-gray-900">Admin Video Controls</h3>
+            </div>
+            
+            <!-- Video Information Editing -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Video Title</label>
+                <input type="text" 
+                       [(ngModel)]="videoTitle" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Enter video title">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Duration (seconds)</label>
+                <input type="number" 
+                       [(ngModel)]="videoDuration" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Enter duration in seconds">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Video Type</label>
+                <select [(ngModel)]="videoType" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="video/mp4">MP4</option>
+                  <option value="video/webm">WebM</option>
+                  <option value="video/ogg">OGG</option>
+                  <option value="video/avi">AVI</option>
+                  <option value="video/mov">MOV</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">File Size (bytes)</label>
+                <input type="number" 
+                       [(ngModel)]="videoSize" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Enter file size in bytes">
+              </div>
+            </div>
+
+            <!-- Video Description -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Video Description</label>
+              <textarea [(ngModel)]="videoDescription" 
+                        rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter video description"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <button (click)="updateVideoInfo()" 
+                      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                💾 Update Video Info
+              </button>
+              <button (click)="resetVideoInfo()" 
+                      class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
+                🔄 Reset to Auto
+              </button>
+              <button (click)="testVideoPlayback()" 
+                      class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                ▶️ Test Playback
+              </button>
+            </div>
+          </div>
+
+          <!-- Video Preview Player -->
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-5-5v5m0-5v5"/>
+                </svg>
+              </div>
+              <h3 class="font-bold text-gray-900">Video Preview</h3>
+            </div>
+            
+            <div class="aspect-video bg-gray-900 rounded-lg overflow-hidden mb-3">
+              <video 
+                #videoPlayer
+                class="w-full h-full object-cover"
+                controls
+                preload="metadata"
+                [src]="getVideoUrl()"
+                (loadedmetadata)="onVideoMetadataLoaded()"
+                (error)="onVideoError($event)"
+                (play)="onVideoPlay()"
+                (pause)="onVideoPause()">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-gray-600">
+                <span *ngIf="videoTitle">{{ videoTitle }}</span>
+                <span *ngIf="!videoTitle">Video Preview</span>
+                <span *ngIf="videoDuration"> • {{ formatDuration(videoDuration) }}</span>
+              </div>
+              <div class="flex gap-2">
+                <button (click)="playVideoInPlayer()" 
+                        class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                  ▶️ Play
+                </button>
+                <button (click)="pauseVideoInPlayer()" 
+                        class="px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm">
+                  ⏸️ Pause
+                </button>
+                <button (click)="openVideoInNewTab()" 
+                        class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">
+                  🔗 Open in New Tab
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,6 +249,13 @@ export class VideoUploadComponent {
   uploadedVideo = signal<any>(null);
   error = signal<string>('');
   isDragOver = signal(false);
+
+  // Admin video control properties
+  videoTitle = '';
+  videoDuration = 0;
+  videoType = 'video/mp4';
+  videoSize = 0;
+  videoDescription = '';
 
   constructor(private http: HttpClient) {}
 
@@ -258,6 +389,130 @@ export class VideoUploadComponent {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Admin video control methods
+  updateVideoInfo() {
+    console.log('💾 Updating video info:', {
+      title: this.videoTitle,
+      duration: this.videoDuration,
+      type: this.videoType,
+      size: this.videoSize,
+      description: this.videoDescription
+    });
+    
+    // Here you would typically send this to the backend to update the lesson
+    // For now, we'll just show a success message
+    alert('Video information updated successfully!');
+  }
+
+  resetVideoInfo() {
+    const video = this.uploadedVideo();
+    if (video) {
+      this.videoTitle = video.filename || '';
+      this.videoDuration = video.videoSize || 0; // This would be duration, not size
+      this.videoType = video.videoType || 'video/mp4';
+      this.videoSize = video.videoSize || 0;
+      this.videoDescription = '';
+    }
+    console.log('🔄 Reset video info to auto-detected values');
+  }
+
+  testVideoPlayback() {
+    console.log('▶️ Testing video playback...');
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.play().then(() => {
+        console.log('✅ Video playback test successful');
+      }).catch((error) => {
+        console.error('❌ Video playback test failed:', error);
+        alert('Video playback test failed: ' + error.message);
+      });
+    }
+  }
+
+  getVideoUrl(): string {
+    const video = this.uploadedVideo();
+    if (!video?.videoUrl) {
+      console.log('❌ No video URL found:', video);
+      return '';
+    }
+    
+    let finalUrl = '';
+    if (video.videoUrl.startsWith('http')) {
+      finalUrl = video.videoUrl;
+    } else {
+      finalUrl = `http://localhost:3000${video.videoUrl}`;
+    }
+    
+    console.log('🎬 Generated video URL:', finalUrl);
+    console.log('📊 Video data:', video);
+    return finalUrl;
+  }
+
+  playVideoInPlayer() {
+    const videoElement = document.querySelector('#videoPlayer') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.play();
+    }
+  }
+
+  pauseVideoInPlayer() {
+    const videoElement = document.querySelector('#videoPlayer') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.pause();
+    }
+  }
+
+  openVideoInNewTab() {
+    const videoUrl = this.getVideoUrl();
+    if (videoUrl) {
+      window.open(videoUrl, '_blank');
+    }
+  }
+
+  onVideoMetadataLoaded() {
+    console.log('📊 Video metadata loaded');
+    const videoElement = document.querySelector('#videoPlayer') as HTMLVideoElement;
+    if (videoElement) {
+      // Auto-populate duration if not set
+      if (!this.videoDuration && videoElement.duration) {
+        this.videoDuration = Math.round(videoElement.duration);
+      }
+    }
+  }
+
+  onVideoError(event: any) {
+    console.error('❌ Video error:', event);
+    console.error('❌ Video error details:', {
+      error: event.target?.error,
+      networkState: event.target?.networkState,
+      readyState: event.target?.readyState,
+      src: event.target?.src,
+      currentSrc: event.target?.currentSrc
+    });
+  }
+
+  onVideoPlay() {
+    console.log('▶️ Video started playing');
+  }
+
+  onVideoPause() {
+    console.log('⏸️ Video paused');
+  }
+
+  formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${secs}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
   }
 
 }

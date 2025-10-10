@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test for Video Loading</h1>
+    <button onclick="testCORS()">Test CORS</button>
+    <button onclick="testVideo()">Test Video</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testCORS() {
+            try {
+                const response = await fetch('http://localhost:3000/test-cors', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Origin': 'http://localhost:4200'
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `
+                    <h3>CORS Test Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${JSON.stringify(data)}</p>
+                    <p>Headers: ${JSON.stringify([...response.headers.entries()])}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <h3>CORS Test Error:</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testVideo() {
+            try {
+                const response = await fetch('http://localhost:3000/uploads/videos/cmgkmit41000238j4cybfa705_1760087291242.mp4', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Origin': 'http://localhost:4200'
+                    }
+                });
+                
+                document.getElementById('result').innerHTML = `
+                    <h3>Video Test Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Content-Type: ${response.headers.get('content-type')}</p>
+                    <p>Content-Length: ${response.headers.get('content-length')}</p>
+                    <p>Access-Control-Allow-Origin: ${response.headers.get('access-control-allow-origin')}</p>
+                    <p>All Headers: ${JSON.stringify([...response.headers.entries()])}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <h3>Video Test Error:</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

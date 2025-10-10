@@ -155,6 +155,7 @@ lessonsRouter.get('/:id', async (req, res) => {
       // Try to get user from token (optional authentication)
       const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
       let hasAccess = false;
+      let isAdmin = false;
 
       if (token) {
         try {
@@ -162,7 +163,7 @@ lessonsRouter.get('/:id', async (req, res) => {
           const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
           const decoded: any = jwt.verify(token, JWT_SECRET);
           
-          // Check if user has active subscription
+          // Check if user is admin (bypass subscription check)
           const user = await prisma.user.findUnique({
             where: { id: decoded.sub },
             include: {
@@ -173,8 +174,14 @@ lessonsRouter.get('/:id', async (req, res) => {
             }
           });
 
-          if (user && user.subscriptions.length > 0) {
-            hasAccess = true;
+          if (user) {
+            // Admin bypass - admins can access all content
+            if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
+              isAdmin = true;
+              hasAccess = true;
+            } else if (user.subscriptions.length > 0) {
+              hasAccess = true;
+            }
           }
         } catch (error) {
           // Token invalid, no access
@@ -222,7 +229,7 @@ lessonsRouter.get('/:id/assets', async (req, res) => {
 
 // POST /lessons - Create a new lesson (Admin only)
 lessonsRouter.post('/', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -259,7 +266,7 @@ lessonsRouter.post('/', requireAuth, async (req: any, res) => {
 
 // PUT /lessons/:id - Update a lesson (Admin only)
 lessonsRouter.put('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
@@ -288,7 +295,7 @@ lessonsRouter.put('/:id', requireAuth, async (req: any, res) => {
 
 // DELETE /lessons/:id - Delete a lesson (Admin only)
 lessonsRouter.delete('/:id', requireAuth, async (req: any, res) => {
-  if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
     return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
   }
 
