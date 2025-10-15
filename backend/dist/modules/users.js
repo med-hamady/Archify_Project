@@ -28,7 +28,7 @@ function getUserPublic(user) {
 }
 // GET /api/users - Get all users (Admin only)
 exports.usersRouter.get('/', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -44,7 +44,7 @@ exports.usersRouter.get('/', auth_1.requireAuth, async (req, res) => {
 });
 // GET /api/users/:id - Get a single user by ID (Admin only)
 exports.usersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -69,7 +69,7 @@ exports.usersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // PUT /api/users/:id - Update a user (Admin only)
 exports.usersRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -98,7 +98,7 @@ exports.usersRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // DELETE /api/users/:id - Delete a user (Admin only)
 exports.usersRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -135,7 +135,7 @@ exports.usersRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // GET /api/users/stats - Get user statistics (Admin only)
 exports.usersRouter.get('/stats/overview', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {

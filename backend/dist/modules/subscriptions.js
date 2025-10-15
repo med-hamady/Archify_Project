@@ -33,7 +33,7 @@ exports.subscriptionsRouter.get('/', auth_1.requireAuth, async (req, res) => {
 const subscriptionPlanCreateSchema = zod_1.z.object({
     name: zod_1.z.string().min(1),
     description: zod_1.z.string().optional(),
-    type: zod_1.z.enum(['VIDEOS_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']),
+    type: zod_1.z.enum(['PREMIUM']),
     interval: zod_1.z.enum(['yearly']), // Only yearly subscriptions
     priceCents: zod_1.z.number().int().min(0),
     currency: zod_1.z.string().length(3).default('MRU'),

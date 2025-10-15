@@ -33,14 +33,14 @@ interface SubscriptionPlanUI {
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            Plans d'abonnement
+            Abonnement Premium
           </div>
           <h1 class="text-5xl sm:text-6xl font-black text-gray-900 mb-6">
-            Choisissez votre 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">plan parfait</span>
+            Accédez à
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"> tout le contenu</span>
             </h1>
           <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            Accédez à tous nos contenus premium avec nos plans d'abonnement flexibles et adaptés à vos besoins
+            Un seul abonnement pour accéder à tous les cours, documents et ressources de la plateforme Archify
           </p>
         </div>
 
@@ -56,39 +56,22 @@ interface SubscriptionPlanUI {
         </div>
 
         <!-- Subscription Plans -->
-        <div *ngIf="!plansLoading()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <div *ngFor="let plan of subscriptionPlans()" 
-               class="group relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 border-2 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
-               [class.border-blue-500]="plan.isPopular"
-               [class.border-gray-200]="!plan.isPopular"
-               [class.ring-4]="plan.isPopular"
-               [class.ring-blue-500/20]="plan.isPopular">
-            
-            <!-- Popular Badge -->
-            <div *ngIf="plan.isPopular" 
-                 class="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-              <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-lg animate-pulse">
-                ⭐ Le plus populaire
+        <div *ngIf="!plansLoading()" class="flex justify-center mb-16">
+          <div *ngFor="let plan of subscriptionPlans()"
+               class="group relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border-4 border-blue-500 ring-8 ring-blue-500/20 transition-all duration-500 hover:shadow-3xl hover:-translate-y-3 max-w-lg w-full">
+
+            <!-- Premium Badge -->
+            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
+              <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-8 py-3 rounded-2xl text-base font-bold shadow-lg animate-pulse">
+                ⭐ Abonnement Premium
             </div>
           </div>
 
             <!-- Plan Header -->
             <div class="text-center mb-8">
-              <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-lg"
-                   [class.bg-gradient-to-br]="true"
-                   [class.from-blue-500]="plan.id === 'videos-only'"
-                   [class.to-cyan-500]="plan.id === 'videos-only'"
-                   [class.from-green-500]="plan.id === 'documents-only'"
-                   [class.to-emerald-500]="plan.id === 'documents-only'"
-                   [class.from-purple-500]="plan.id === 'full-access'"
-                   [class.to-pink-500]="plan.id === 'full-access'"
-                   [class.from-gray-500]="plan.id === 'free'"
-                   [class.to-gray-600]="plan.id === 'free'">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path *ngIf="plan.id === 'videos-only'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                  <path *ngIf="plan.id === 'documents-only'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                  <path *ngIf="plan.id === 'full-access'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  <path *ngIf="plan.id === 'free'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <div class="w-24 h-24 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600">
+                <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                 </svg>
             </div>
               <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
@@ -167,18 +150,18 @@ interface SubscriptionPlanUI {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-6">
               <div class="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50/50 rounded-r-2xl">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">Puis-je changer de plan à tout moment ?</h3>
-                <p class="text-gray-600">Oui, vous pouvez changer de plan à tout moment depuis votre tableau de bord sans frais supplémentaires.</p>
+                <h3 class="text-lg font-bold text-gray-900 mb-3">Quelle est la durée de l'abonnement ?</h3>
+                <p class="text-gray-600">L'abonnement Premium est valable pour une durée d'un an à partir de la date d'activation.</p>
             </div>
               <div class="border-l-4 border-green-500 pl-6 py-4 bg-green-50/50 rounded-r-2xl">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">Y a-t-il des frais d'annulation ?</h3>
-                <p class="text-gray-600">Non, vous pouvez annuler votre abonnement à tout moment sans frais ni engagement.</p>
+                <h3 class="text-lg font-bold text-gray-900 mb-3">Comment effectuer le paiement ?</h3>
+                <p class="text-gray-600">Vous pouvez payer en ligne via Bankily, Masrivi ou Sedad. Le paiement est 100% sécurisé.</p>
             </div>
           </div>
             <div class="space-y-6">
               <div class="border-l-4 border-purple-500 pl-6 py-4 bg-purple-50/50 rounded-r-2xl">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">Les prix incluent-ils les taxes ?</h3>
-                <p class="text-gray-600">Oui, tous les prix affichés incluent les taxes applicables au Maroc.</p>
+                <h3 class="text-lg font-bold text-gray-900 mb-3">Que comprend l'abonnement Premium ?</h3>
+                <p class="text-gray-600">Accès illimité à tous les cours vidéo, documents PDF, supports de cours et nouveaux contenus pour 1 an complet.</p>
         </div>
               <div class="border-l-4 border-orange-500 pl-6 py-4 bg-orange-50/50 rounded-r-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-3">Comment contacter le support ?</h3>
@@ -209,6 +192,12 @@ export class SubscriptionComponent implements OnInit {
   plansLoading = signal(false);
 
   ngOnInit() {
+    // Redirect to dashboard if user already has active subscription
+    if (this.authService.isPremium()) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
+
     this.loadSubscriptionPlans();
   }
 
@@ -233,14 +222,10 @@ export class SubscriptionComponent implements OnInit {
             'Support par email',
             'Accès pour 1 an complet'
           ],
-          isPopular: index === 0, // Make first plan popular
+          isPopular: true, // Premium is always popular
           isCurrent: false, // Will be set based on user subscription
-          buttonText: `${plan.priceCents / 100} ${plan.currency}/an`,
-          buttonClass: index === 0 
-            ? 'w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
-            : index === 1
-            ? 'w-full px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
-            : 'w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold'
+          buttonText: 'Choisir Premium',
+          buttonClass: 'w-full px-8 py-5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-lg rounded-2xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-xl hover:shadow-2xl font-bold'
         }));
 
         this.subscriptionPlans.set(uiPlans);
@@ -256,6 +241,9 @@ export class SubscriptionComponent implements OnInit {
   selectPlan(planId: string) {
     this.selectedPlan.set(planId);
     this.error.set(null);
+
+    // Rediriger vers le formulaire de paiement manuel
+    this.router.navigate(['/payment/submit'], { queryParams: { planId } });
   }
 
   async proceedToPayment() {

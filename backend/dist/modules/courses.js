@@ -25,6 +25,29 @@ const courseCreateSchema = zod_1.z.object({
 });
 const courseUpdateSchema = courseCreateSchema.partial();
 // Helper to format course data for public view
+// Helper to format lesson data
+function formatLesson(lesson) {
+    return {
+        id: lesson.id,
+        title: lesson.title,
+        courseId: lesson.courseId,
+        type: lesson.type,
+        durationSec: lesson.durationSec,
+        vimeoId: lesson.vimeoId,
+        youtubeId: lesson.youtubeId,
+        pdfUrl: lesson.pdfUrl,
+        videoUrl: lesson.videoUrl,
+        videoSize: lesson.videoSize,
+        videoType: lesson.videoType,
+        uploadedAt: lesson.uploadedAt,
+        isPremium: lesson.isPremium,
+        requiresVideoSubscription: lesson.requiresVideoSubscription,
+        requiresDocumentSubscription: lesson.requiresDocumentSubscription,
+        orderIndex: lesson.orderIndex,
+        views: lesson.views,
+        createdAt: lesson.createdAt
+    };
+}
 function getCoursePublic(course) {
     return {
         id: course.id,
@@ -35,7 +58,7 @@ function getCoursePublic(course) {
         isPremium: course.isPremium,
         views: course.views,
         lessonCount: course.lessons?.length || 0,
-        lessons: course.lessons || [],
+        lessons: course.lessons ? course.lessons.map(formatLesson) : [],
         createdAt: course.createdAt
     };
 }
@@ -130,7 +153,7 @@ exports.coursesRouter.get('/:id/lessons', async (req, res) => {
 });
 // POST /courses - Create a new course (Admin only)
 exports.coursesRouter.post('/', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -156,7 +179,7 @@ exports.coursesRouter.post('/', auth_1.requireAuth, async (req, res) => {
 });
 // PUT /courses/:id - Update a course (Admin only)
 exports.coursesRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -178,7 +201,7 @@ exports.coursesRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // DELETE /courses/:id - Delete a course (Admin only)
 exports.coursesRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {

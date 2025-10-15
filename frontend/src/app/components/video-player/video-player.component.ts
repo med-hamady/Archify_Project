@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, signal, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, ViewChild, ElementRef, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-video-player',
@@ -135,6 +136,11 @@ export class VideoPlayerComponent implements OnDestroy {
 
   private updateInterval?: number;
 
+  constructor(private sanitizer: DomSanitizer) {
+    // Log video URL for debugging
+    console.log('🎥 VideoPlayerComponent initialized');
+  }
+
   ngOnDestroy() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -183,6 +189,7 @@ export class VideoPlayerComponent implements OnDestroy {
 
   // Event handlers
   onLoadStart() {
+    console.log('🎬 Video loading started:', this.videoUrl);
     this.isLoading.set(true);
     this.hasError.set(false);
   }
@@ -220,10 +227,19 @@ export class VideoPlayerComponent implements OnDestroy {
   onError(event: any) {
     this.isLoading.set(false);
     this.hasError.set(true);
-    
+
     const error = event.target?.error;
     let message = 'An error occurred while loading the video.';
-    
+
+    // Enhanced debugging
+    console.error('❌ Video Player Error:', {
+      videoUrl: this.videoUrl,
+      errorCode: error?.code,
+      errorMessage: error?.message,
+      target: event.target,
+      currentSrc: event.target?.currentSrc
+    });
+
     if (error) {
       switch (error.code) {
         case error.MEDIA_ERR_ABORTED:
@@ -240,7 +256,7 @@ export class VideoPlayerComponent implements OnDestroy {
           break;
       }
     }
-    
+
     this.errorMessage.set(message);
     this.error.emit(message);
   }

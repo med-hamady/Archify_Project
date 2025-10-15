@@ -35,7 +35,7 @@ subscriptionsRouter.get('/', requireAuth, async (req: any, res) => {
 const subscriptionPlanCreateSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
-  type: z.enum(['VIDEOS_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']),
+  type: z.enum(['PREMIUM']),
   interval: z.enum(['yearly']), // Only yearly subscriptions
   priceCents: z.number().int().min(0),
   currency: z.string().length(3).default('MRU'),

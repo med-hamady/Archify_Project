@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vidéo Direct</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .video-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Test de Lecture Vidéo Direct</h1>
+
+    <div class="video-container">
+        <h2>Test 1 : URL complète avec localhost:3000</h2>
+        <video id="video1" controls controlsList="nodownload">
+            <source src="http://localhost:3000/uploads/videos/lesson-1-1_1760130703368.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+        <div id="status1" class="info">Statut : En attente...</div>
+    </div>
+
+    <div class="video-container">
+        <h2>Test 2 : URL relative</h2>
+        <video id="video2" controls controlsList="nodownload">
+            <source src="/uploads/videos/lesson-1-1_1760130703368.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+        <div id="status2" class="info">Statut : En attente...</div>
+    </div>
+
+    <script>
+        const video1 = document.getElementById('video1');
+        const video2 = document.getElementById('video2');
+        const status1 = document.getElementById('status1');
+        const status2 = document.getElementById('status2');
+
+        // Video 1 events
+        video1.addEventListener('loadstart', () => {
+            status1.innerHTML = '✅ Statut : Chargement démarré...';
+            status1.className = 'info';
+        });
+
+        video1.addEventListener('loadedmetadata', () => {
+            status1.innerHTML = `✅ Statut : Métadonnées chargées<br>
+                                Durée : ${Math.floor(video1.duration)}s<br>
+                                Dimensions : ${video1.videoWidth}x${video1.videoHeight}`;
+            status1.className = 'info';
+        });
+
+        video1.addEventListener('canplay', () => {
+            status1.innerHTML += '<br>✅ Vidéo prête à être lue !';
+        });
+
+        video1.addEventListener('error', (e) => {
+            const error = video1.error;
+            let message = 'Erreur inconnue';
+            if (error) {
+                switch (error.code) {
+                    case error.MEDIA_ERR_ABORTED:
+                        message = 'MEDIA_ERR_ABORTED - Chargement abandonné';
+                        break;
+                    case error.MEDIA_ERR_NETWORK:
+                        message = 'MEDIA_ERR_NETWORK - Erreur réseau';
+                        break;
+                    case error.MEDIA_ERR_DECODE:
+                        message = 'MEDIA_ERR_DECODE - Format non supporté';
+                        break;
+                    case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        message = 'MEDIA_ERR_SRC_NOT_SUPPORTED - Source non supportée';
+                        break;
+                }
+            }
+            status1.innerHTML = `❌ Erreur : ${message}<br>Message: ${error ? error.message : 'N/A'}`;
+            status1.className = 'error';
+            console.error('Video 1 Error:', error);
+        });
+
+        // Video 2 events
+        video2.addEventListener('loadstart', () => {
+            status2.innerHTML = '✅ Statut : Chargement démarré...';
+            status2.className = 'info';
+        });
+
+        video2.addEventListener('loadedmetadata', () => {
+            status2.innerHTML = `✅ Statut : Métadonnées chargées<br>
+                                Durée : ${Math.floor(video2.duration)}s<br>
+                                Dimensions : ${video2.videoWidth}x${video2.videoHeight}`;
+            status2.className = 'info';
+        });
+
+        video2.addEventListener('canplay', () => {
+            status2.innerHTML += '<br>✅ Vidéo prête à être lue !';
+        });
+
+        video2.addEventListener('error', (e) => {
+            const error = video2.error;
+            let message = 'Erreur inconnue';
+            if (error) {
+                switch (error.code) {
+                    case error.MEDIA_ERR_ABORTED:
+                        message = 'MEDIA_ERR_ABORTED - Chargement abandonné';
+                        break;
+                    case error.MEDIA_ERR_NETWORK:
+                        message = 'MEDIA_ERR_NETWORK - Erreur réseau';
+                        break;
+                    case error.MEDIA_ERR_DECODE:
+                        message = 'MEDIA_ERR_DECODE - Format non supporté';
+                        break;
+                    case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        message = 'MEDIA_ERR_SRC_NOT_SUPPORTED - Source non supportée';
+                        break;
+                }
+            }
+            status2.innerHTML = `❌ Erreur : ${message}<br>Message: ${error ? error.message : 'N/A'}`;
+            status2.className = 'error';
+            console.error('Video 2 Error:', error);
+        });
+
+        console.log('Test vidéo chargé');
+        console.log('URL Video 1:', video1.querySelector('source').src);
+        console.log('URL Video 2:', video2.querySelector('source').src);
+    </script>
+</body>
+</html>

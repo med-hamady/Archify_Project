@@ -9,7 +9,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import fs from 'fs';
 
-import { authRouter } from './modules/auth';
+import { authRouter, optionalAuth } from './modules/auth';
 import { coursesRouter } from './modules/courses';
 import { lessonsRouter } from './modules/lessons';
 import { subscriptionsRouter } from './modules/subscriptions';
@@ -17,6 +17,8 @@ import { usersRouter } from './modules/users';
 import { adminRouter } from './modules/admin';
 import { commentsRouter } from './modules/comments';
 import { videoUploadRouter } from './modules/video-upload';
+import { manualPaymentsRouter } from './modules/manual-payments';
+import { checkVideoFileAccess } from './middleware/subscription-access';
 
 dotenv.config();
 
@@ -40,7 +42,7 @@ app.use(helmet({
       scriptSrc: ["'self'"],
       scriptSrcAttr: ["'none'"],
       styleSrc: ["'self'", "https:", "'unsafe-inline'"],
-      mediaSrc: ["'self'", "data:", "blob:"],
+      mediaSrc: ["'self'", "data:", "blob:", "http://localhost:3000", "http://localhost:4200"],
       upgradeInsecureRequests: []
     }
   }
@@ -95,47 +97,97 @@ app.use('/uploads', (req, res, next) => {
   next();
 });
 
-// Custom route handler for video files with proper CORS
-app.get('/uploads/videos/:filename', (req, res) => {
+// Custom route handler for video files with proper CORS and subscription check
+app.get('/uploads/videos/:filename', optionalAuth, checkVideoFileAccess, (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, '../uploads/videos', filename);
-  
+
   console.log('🎬 Video request:', filename);
   console.log('🎬 Origin header:', req.headers.origin);
   console.log('🎬 Referer header:', req.headers.referer);
-  
+
+  // IMPORTANT: Remove all CSP headers for video files
+  res.removeHeader('Content-Security-Policy');
+  res.removeHeader('Content-Security-Policy-Report-Only');
+
   // Set CORS headers - Allow all origins for video files
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
-  
+
   // Set video-specific headers
   res.setHeader('Content-Type', 'video/mp4');
   res.setHeader('Accept-Ranges', 'bytes');
   res.setHeader('Cache-Control', 'public, max-age=31536000');
   res.setHeader('Content-Disposition', 'inline');
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  
+
   console.log('🎬 CORS headers set with wildcard origin');
-  
+
   // Check if file exists
   if (!fs.existsSync(filePath)) {
     console.log('❌ File not found:', filePath);
     return res.status(404).json({ error: 'File not found' });
   }
-  
+
   console.log('✅ Sending video file:', filePath);
   // Send the file
   res.sendFile(filePath);
 });
 
-// Serve other static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Serve payment screenshots (accessible by admin and payment owner only)
+app.get('/uploads/payment-screenshots/:filename', optionalAuth, (req: any, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../uploads/payment-screenshots', filename);
 
-// Serve test HTML files
-app.use('/test-video.html', express.static('test-video.html'));
-app.use('/test-cors.html', express.static('test-cors.html'));
+  console.log('📸 ===== PAYMENT SCREENSHOT REQUEST =====');
+  console.log('📸 Filename:', filename);
+  console.log('📸 User ID:', req.userId);
+  console.log('📸 User Role:', req.userRole);
+  console.log('📸 Cookies:', req.cookies);
+  console.log('📸 Authorization header:', req.headers.authorization);
+
+  // Set CORS headers for screenshots
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    console.log('❌ Screenshot not found:', filePath);
+    return res.status(404).json({ error: 'File not found' });
+  }
+
+  console.log('✅ File exists at:', filePath);
+
+  // Allow admins to access all screenshots
+  if (req.userRole === 'ADMIN' || req.userRole === 'SUPERADMIN') {
+    console.log('✅ Admin access granted - sending file');
+    return res.sendFile(filePath);
+  }
+
+  // For non-admins, we could check if they own the payment (future enhancement)
+  // For now, allow authenticated users to see screenshots
+  if (req.userId) {
+    console.log('✅ Authenticated user access granted - sending file');
+    return res.sendFile(filePath);
+  }
+
+  console.log('❌ Access denied - not authenticated');
+  return res.status(403).json({ error: 'Access denied' });
+});
+
+// IMPORTANT: DO NOT serve uploads directory statically as it bypasses subscription checks
+// Videos are served via the protected route above: /uploads/videos/:filename
+// Other uploads (payment screenshots) should not be publicly accessible
+// app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Serve test HTML files from root directory
+app.get('/test-video-direct.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../test-video-direct.html'));
+});
 app.use(pinoHttp({ logger }));
 
 // Rate limiting configurations
@@ -180,6 +232,7 @@ app.use('/api/users', strictLimiter, usersRouter);
 app.use('/api/admin', strictLimiter, adminRouter);
 app.use('/api/comments', generalLimiter, commentsRouter);
 app.use('/api/video-upload', generalLimiter, videoUploadRouter);
+app.use('/api/manual-payments', generalLimiter, manualPaymentsRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

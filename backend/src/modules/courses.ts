@@ -27,6 +27,30 @@ const courseCreateSchema = z.object({
 const courseUpdateSchema = courseCreateSchema.partial();
 
 // Helper to format course data for public view
+// Helper to format lesson data
+function formatLesson(lesson: any) {
+  return {
+    id: lesson.id,
+    title: lesson.title,
+    courseId: lesson.courseId,
+    type: lesson.type,
+    durationSec: lesson.durationSec,
+    vimeoId: lesson.vimeoId,
+    youtubeId: lesson.youtubeId,
+    pdfUrl: lesson.pdfUrl,
+    videoUrl: lesson.videoUrl,
+    videoSize: lesson.videoSize,
+    videoType: lesson.videoType,
+    uploadedAt: lesson.uploadedAt,
+    isPremium: lesson.isPremium,
+    requiresVideoSubscription: lesson.requiresVideoSubscription,
+    requiresDocumentSubscription: lesson.requiresDocumentSubscription,
+    orderIndex: lesson.orderIndex,
+    views: lesson.views,
+    createdAt: lesson.createdAt
+  };
+}
+
 function getCoursePublic(course: any) {
   return {
     id: course.id,
@@ -37,7 +61,7 @@ function getCoursePublic(course: any) {
     isPremium: course.isPremium,
     views: course.views,
     lessonCount: course.lessons?.length || 0,
-    lessons: course.lessons || [],
+    lessons: course.lessons ? course.lessons.map(formatLesson) : [],
     createdAt: course.createdAt
   };
 }

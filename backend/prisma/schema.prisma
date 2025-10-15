@@ -120,14 +120,21 @@ model Payment {
   id             String        @id @default(cuid())
   user           User          @relation(fields: [userId], references: [id])
   userId         String
-  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
-  subscriptionId String
+  subscription   Subscription?  @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?
+  planId         String        // ID du plan acheté
   provider       PaymentProvider
-  providerRef    String
+  providerRef    String        // Numéro de transaction
+  phoneNumber    String        // Numéro de téléphone du payeur
   amountCents    Int
   currency       String        @default("MRU")
   status         PaymentStatus @default(PENDING)
+  screenshotUrl  String?       // URL de la capture d'écran
+  adminNotes     String?       // Notes de l'admin
+  validatedBy    String?       // ID de l'admin qui a validé
+  validatedAt    DateTime?     // Date de validation
   createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Progress {
@@ -236,7 +243,5 @@ enum ProgressStatus {
 }
 
 enum SubscriptionType {
-  VIDEOS_ONLY
-  DOCUMENTS_ONLY
-  FULL_ACCESS
+  PREMIUM
 }

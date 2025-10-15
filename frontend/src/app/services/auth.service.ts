@@ -10,7 +10,7 @@ export interface User {
   name: string;
   role: 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
   subscription?: {
-    type: 'free' | 'premium' | 'enterprise';
+    type: 'PREMIUM';
     expiresAt: Date | null;
     isActive: boolean;
   };
@@ -31,7 +31,7 @@ export interface BackendUser {
   name: string;
   role: 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
   subscription?: {
-    type: 'free' | 'premium' | 'enterprise';
+    type: 'PREMIUM';
     expiresAt: Date | null;
     isActive: boolean;
   };
@@ -75,7 +75,7 @@ export class AuthService {
   // Use signals for modern reactive state management
   user = signal<User | null>(null);
   isAuthenticated = computed(() => this.user() !== null);
-  isPremium = computed(() => this.user()?.subscription?.type === 'premium' || this.user()?.subscription?.type === 'enterprise');
+  isPremium = computed(() => this.user()?.subscription?.isActive === true);
   isAdmin = computed(() => this.user()?.role === 'admin' || this.user()?.role === 'ADMIN' || this.user()?.role === 'superadmin' || this.user()?.role === 'SUPERADMIN');
 
   constructor(
@@ -145,7 +145,7 @@ export class AuthService {
       password: userData.password,
       name: `${userData.firstName} ${userData.lastName}`.trim(),
       // departmentId expects UUID; map when real departments exist
-      semester: userData.year ?? undefined
+      semester: userData.year ? String(userData.year) : undefined
     };
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, payload)
       .pipe(
@@ -255,8 +255,8 @@ export class AuthService {
   // Check if user has access to premium content
   canAccessPremium(): boolean {
     const user = this.user();
-    return !!(user?.subscription?.isActive && 
-           (user.subscription.type === 'premium' || user.subscription.type === 'enterprise'));
+    if (!user?.subscription) return false;
+    return user.subscription.isActive === true;
   }
 
   // Check if user has specific role

@@ -131,7 +131,7 @@ interface UserStats {
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
-                    +12% ce mois
+                    {{ stats().coursesGrowth >= 0 ? '+' : '' }}{{ stats().coursesGrowth }}% ce mois
                   </p>
                 </div>
                 <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -151,9 +151,9 @@ interface UserStats {
                   <p class="text-4xl font-bold text-green-900">{{ stats().totalUsers }}</p>
                   <p class="text-xs text-green-500 mt-2 flex items-center">
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4-4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
-                    +8% ce mois
+                    {{ stats().usersGrowth >= 0 ? '+' : '' }}{{ stats().usersGrowth }}% ce mois
                   </p>
                 </div>
                 <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -173,9 +173,9 @@ interface UserStats {
                   <p class="text-4xl font-bold text-purple-900">{{ stats().activeSubscriptions }}</p>
                   <p class="text-xs text-purple-500 mt-2 flex items-center">
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4-4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
-                    +15% ce mois
+                    {{ stats().subscriptionsGrowth >= 0 ? '+' : '' }}{{ stats().subscriptionsGrowth }}% ce mois
                   </p>
                 </div>
                 <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -195,9 +195,9 @@ interface UserStats {
                   <p class="text-4xl font-bold text-orange-900">{{ stats().totalRevenue | currency:'MRU':'symbol':'1.0-0' }}</p>
                   <p class="text-xs text-orange-500 mt-2 flex items-center">
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4-4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
-                    +22% ce mois
+                    {{ stats().revenueGrowth >= 0 ? '+' : '' }}{{ stats().revenueGrowth }}% ce mois
                   </p>
                 </div>
                 <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -244,6 +244,17 @@ interface UserStats {
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2">Gérer les Plans</h4>
                 <p class="text-sm text-gray-600">Modifier les abonnements</p>
+              </button>
+
+              <button (click)="goToPaymentsManagement()"
+                      class="group p-6 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border border-amber-200 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 mb-2">Gérer les Paiements</h4>
+                <p class="text-sm text-gray-600">Valider les paiements manuels</p>
               </button>
 
               <button (click)="activeTab.set('analytics')"
@@ -1023,8 +1034,8 @@ interface UserStats {
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm font-medium text-blue-600 mb-1">ARPU (Revenu par Utilisateur)</p>
-                <p class="text-3xl font-bold text-blue-900">{{ getARPU() | currency:'MRU':'symbol':'1.0-0' }}</p>
-                <p class="text-xs text-blue-500 mt-2">+18% ce mois</p>
+                <p class="text-3xl font-bold text-blue-900">{{ analytics().arpu | currency:'MRU':'symbol':'1.0-2' }}</p>
+                <p class="text-xs text-blue-500 mt-2">{{ analytics().arpuGrowth >= 0 ? '+' : '' }}{{ analytics().arpuGrowth }}% ce mois</p>
               </div>
               <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1038,8 +1049,8 @@ interface UserStats {
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm font-medium text-green-600 mb-1">Taux de Rétention</p>
-                <p class="text-3xl font-bold text-green-900">87.3%</p>
-                <p class="text-xs text-green-500 mt-2">+3.2% ce mois</p>
+                <p class="text-3xl font-bold text-green-900">{{ analytics().retentionRate }}%</p>
+                <p class="text-xs text-green-500 mt-2">{{ analytics().retentionGrowth >= 0 ? '+' : '' }}{{ analytics().retentionGrowth }}% ce mois</p>
               </div>
               <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1053,8 +1064,8 @@ interface UserStats {
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm font-medium text-purple-600 mb-1">LTV (Valeur Vie Client)</p>
-                <p class="text-3xl font-bold text-purple-900">2,450 MRU</p>
-                <p class="text-xs text-purple-500 mt-2">+12% ce mois</p>
+                <p class="text-3xl font-bold text-purple-900">{{ analytics().ltv | currency:'MRU':'symbol':'1.0-2' }}</p>
+                <p class="text-xs text-purple-500 mt-2">{{ analytics().ltvGrowth >= 0 ? '+' : '' }}{{ analytics().ltvGrowth }}% ce mois</p>
               </div>
               <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1068,8 +1079,8 @@ interface UserStats {
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm font-medium text-orange-600 mb-1">Engagement Moyen</p>
-                <p class="text-3xl font-bold text-orange-900">4.2h</p>
-                <p class="text-xs text-orange-500 mt-2">+0.8h ce mois</p>
+                <p class="text-3xl font-bold text-orange-900">{{ analytics().avgEngagementHours | number:'1.0-1' }}h</p>
+                <p class="text-xs text-orange-500 mt-2">{{ analytics().engagementGrowth >= 0 ? '+' : '' }}{{ analytics().engagementGrowth }}% ce mois</p>
               </div>
               <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1094,7 +1105,7 @@ interface UserStats {
                   <span class="text-sm text-gray-700">Visiteurs</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-lg font-bold text-gray-900">1,250</span>
+                  <span class="text-lg font-bold text-gray-900">{{ analytics().conversionFunnel.visitors }}</span>
                   <span class="text-xs text-gray-500 ml-2">100%</span>
                 </div>
               </div>
@@ -1106,8 +1117,8 @@ interface UserStats {
                   <span class="text-sm text-gray-700">Inscriptions</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-lg font-bold text-gray-900">312</span>
-                  <span class="text-xs text-gray-500 ml-2">25%</span>
+                  <span class="text-lg font-bold text-gray-900">{{ analytics().conversionFunnel.visitors }}</span>
+                  <span class="text-xs text-gray-500 ml-2">{{ analytics().conversionFunnel.visitors > 0 ? (100).toFixed(1) : '0' }}%</span>
                 </div>
               </div>
               <div class="flex items-center justify-between">
@@ -1118,8 +1129,8 @@ interface UserStats {
                   <span class="text-sm text-gray-700">Abonnements</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-lg font-bold text-gray-900">78</span>
-                  <span class="text-xs text-gray-500 ml-2">6.2%</span>
+                  <span class="text-lg font-bold text-gray-900">{{ analytics().conversionFunnel.paid }}</span>
+                  <span class="text-xs text-gray-500 ml-2">{{ analytics().conversionFunnel.visitors > 0 ? ((analytics().conversionFunnel.paid / analytics().conversionFunnel.visitors) * 100).toFixed(1) : '0' }}%</span>
                 </div>
               </div>
               <div class="flex items-center justify-between">
@@ -1130,8 +1141,8 @@ interface UserStats {
                   <span class="text-sm text-gray-700">Clients Actifs</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-lg font-bold text-gray-900">65</span>
-                  <span class="text-xs text-gray-500 ml-2">5.2%</span>
+                  <span class="text-lg font-bold text-gray-900">{{ analytics().conversionFunnel.activeSubscribers }}</span>
+                  <span class="text-xs text-gray-500 ml-2">{{ analytics().conversionFunnel.visitors > 0 ? ((analytics().conversionFunnel.activeSubscribers / analytics().conversionFunnel.visitors) * 100).toFixed(1) : '0' }}%</span>
                 </div>
               </div>
             </div>
@@ -1335,7 +1346,28 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     totalRevenue: 0,
     monthlyRevenue: 0,
     userGrowth: 0,
-    courseViews: 0
+    courseViews: 0,
+    coursesGrowth: 0,
+    usersGrowth: 0,
+    subscriptionsGrowth: 0,
+    revenueGrowth: 0
+  });
+
+  analytics = signal({
+    arpu: 0,
+    arpuGrowth: 0,
+    retentionRate: 0,
+    retentionGrowth: 0,
+    ltv: 0,
+    ltvGrowth: 0,
+    avgEngagementHours: 0,
+    engagementGrowth: 0,
+    conversionFunnel: {
+      visitors: 0,
+      trials: 0,
+      paid: 0,
+      activeSubscribers: 0
+    }
   });
 
   // Modal states
@@ -1490,6 +1522,49 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
 
   loadData() {
+    // Load dashboard statistics from new API endpoint
+    this.http.get<any>(`${this.API_URL}/admin/dashboard-stats`).subscribe({
+      next: (data) => {
+        console.log('📊 Dashboard stats loaded:', data);
+        this.stats.set({
+          totalCourses: data.totalCourses || 0,
+          totalUsers: data.totalUsers || 0,
+          totalLessons: 0, // Not needed in new endpoint
+          activeSubscriptions: data.activeSubscriptions || 0,
+          totalRevenue: data.totalRevenueMRU || 0,
+          monthlyRevenue: 0, // Not needed yet
+          userGrowth: 0, // Not needed yet
+          courseViews: 0, // Not needed yet
+          coursesGrowth: data.growth?.courses || 0,
+          usersGrowth: data.growth?.users || 0,
+          subscriptionsGrowth: data.growth?.subscriptions || 0,
+          revenueGrowth: data.growth?.revenue || 0
+        });
+
+        // Load analytics data
+        if (data.analytics) {
+          console.log('📈 Analytics data loaded:', data.analytics);
+          this.analytics.set({
+            arpu: data.analytics.arpu || 0,
+            arpuGrowth: data.analytics.arpuGrowth || 0,
+            retentionRate: data.analytics.retentionRate || 0,
+            retentionGrowth: data.analytics.retentionGrowth || 0,
+            ltv: data.analytics.ltv || 0,
+            ltvGrowth: data.analytics.ltvGrowth || 0,
+            avgEngagementHours: data.analytics.avgEngagementHours || 0,
+            engagementGrowth: data.analytics.engagementGrowth || 0,
+            conversionFunnel: {
+              visitors: data.analytics.conversionFunnel?.visitors || 0,
+              trials: data.analytics.conversionFunnel?.trials || 0,
+              paid: data.analytics.conversionFunnel?.paid || 0,
+              activeSubscribers: data.analytics.conversionFunnel?.activeSubscribers || 0
+            }
+          });
+        }
+      },
+      error: (error) => console.error('❌ Error loading dashboard stats:', error)
+    });
+
     // Load courses (admin needs to see all courses, not just premium)
     this.http.get<any>(`${this.API_URL}/courses?isPremium=true`).subscribe({
       next: (response) => this.courses.set(response.courses || []),
@@ -1507,7 +1582,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     });
 
     // Load users
-    this.http.get<User[]>(`${this.API_URL}/users`).subscribe({
+    this.http.get<User[]>(`${this.API_URL}/admin/users`).subscribe({
       next: (data) => this.users.set(data),
       error: (error) => console.error('Error loading users:', error)
     });
@@ -1559,7 +1634,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       totalRevenue: this.subscriptions().reduce((sum, s) => sum + (s.plan.priceCents / 100), 0),
       monthlyRevenue: 0,
       userGrowth: userStatsData?.recentUsers || 0,
-      courseViews: this.courses().reduce((sum, c) => sum + (c.views || 0), 0)
+      courseViews: this.courses().reduce((sum, c) => sum + (c.views || 0), 0),
+      coursesGrowth: 0,
+      usersGrowth: 0,
+      subscriptionsGrowth: 0,
+      revenueGrowth: 0
     };
     this.stats.set(currentStats);
   }
@@ -1574,10 +1653,14 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   }
 
   getCurrentTime(): string {
-    return new Date().toLocaleTimeString('fr-FR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date().toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
+  }
+
+  goToPaymentsManagement(): void {
+    this.router.navigate(['/admin/payments']);
   }
 
   // Form submission methods
@@ -2058,11 +2141,6 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     this.editPlanPrice = 0;
   }
 
-  getARPU(): number {
-    const totalUsers = this.stats().totalUsers;
-    const totalRevenue = this.stats().totalRevenue;
-    return totalUsers > 0 ? totalRevenue / totalUsers : 0;
-  }
 
       // Navigate to lesson video upload
       goToLessonVideoUpload(lessonId: string) {

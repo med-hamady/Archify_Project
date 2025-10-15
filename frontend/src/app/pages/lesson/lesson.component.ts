@@ -14,6 +14,9 @@ interface Lesson {
   vimeoId?: string;
   youtubeId?: string;
   pdfUrl?: string;
+  videoUrl?: string;
+  videoSize?: number;
+  videoType?: string;
   isPremium: boolean;
   orderIndex: number;
   createdAt: string;
@@ -173,15 +176,28 @@ interface LessonProgress {
           <!-- Video/Content Section -->
           <div class="lg:col-span-3">
             <!-- Professional Video Player -->
-            <div *ngIf="lesson()?.type === 'video'" 
+            <div *ngIf="lesson()?.type === 'video'"
                  class="relative mb-8 overflow-hidden rounded-2xl shadow-2xl border border-gray-300 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-              
+
               <!-- Video Container -->
               <div class="aspect-video relative" #videoContainer>
-                <!-- Professional Video Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/20 to-indigo-900/30 flex items-center justify-center cursor-pointer group"
+                <!-- Local Video Player (if videoUrl exists) -->
+                <video *ngIf="lesson()?.videoUrl"
+                       [src]="getVideoUrl(lesson()?.videoUrl)"
+                       controls
+                       controlsList="nodownload"
+                       disablePictureInPicture
+                       class="w-full h-full object-contain"
+                       (play)="onLocalVideoPlay()"
+                       (ended)="onLocalVideoEnded()">
+                  Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+
+                <!-- Vimeo Player Overlay (if vimeoId exists and no videoUrl) -->
+                <div *ngIf="lesson()?.vimeoId && !lesson()?.videoUrl"
+                     class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/20 to-indigo-900/30 flex items-center justify-center cursor-pointer group"
                      (click)="onVideoClick()">
-                  
+
                   <!-- Main Play Button -->
                   <div class="text-center text-white transform transition-all duration-500 group-hover:scale-110">
                     <div class="relative mb-6">
@@ -197,14 +213,14 @@ interface LessonProgress {
                       <!-- Pulse animation -->
                       <div class="absolute inset-0 w-24 h-24 bg-white/20 rounded-full mx-auto animate-ping opacity-75"></div>
                     </div>
-                    
+
                     <!-- Video Info -->
                     <div class="space-y-3">
                       <h3 class="text-2xl font-bold mb-2 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                         {{ lesson()?.title }}
                       </h3>
                       <p class="text-lg opacity-90 mb-4">Contenu premium sécurisé</p>
-                      
+
                       <!-- Security Badge -->
                       <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-full border border-green-400/30 backdrop-blur-sm">
                         <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -782,6 +798,30 @@ export class LessonComponent implements OnInit, OnDestroy {
 
   private generateSessionId(): string {
     return 'sess_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+  }
+
+  getVideoUrl(videoUrl: string | undefined): string {
+    if (!videoUrl) {
+      return '';
+    }
+
+    // With Angular proxy, use relative URLs
+    if (videoUrl.startsWith('http')) {
+      // Remove http://localhost:3000 prefix to use relative URL with proxy
+      return videoUrl.replace('http://localhost:3000', '');
+    }
+
+    // Already a relative URL, return as-is
+    return videoUrl;
+  }
+
+  onLocalVideoPlay(): void {
+    this.updateLessonProgress('in_progress');
+    this.trackLessonView();
+  }
+
+  onLocalVideoEnded(): void {
+    this.updateLessonProgress('viewed');
   }
 
   private addSecurityStyles() {

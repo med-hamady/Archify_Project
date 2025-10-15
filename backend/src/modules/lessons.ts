@@ -150,8 +150,8 @@ lessonsRouter.get('/:id', async (req, res) => {
       return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
     }
 
-    // Check if lesson is premium and user has subscription
-    if (lesson.isPremium) {
+    // ALL VIDEO LESSONS REQUIRE SUBSCRIPTION (except for admins)
+    if (lesson.type === 'VIDEO') {
       // Try to get user from token (optional authentication)
       const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
       let hasAccess = false;
@@ -162,13 +162,16 @@ lessonsRouter.get('/:id', async (req, res) => {
           const jwt = require('jsonwebtoken');
           const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
           const decoded: any = jwt.verify(token, JWT_SECRET);
-          
+
           // Check if user is admin (bypass subscription check)
           const user = await prisma.user.findUnique({
             where: { id: decoded.sub },
             include: {
               subscriptions: {
-                where: { status: 'ACTIVE' },
+                where: {
+                  status: 'ACTIVE',
+                  endAt: { gt: new Date() }
+                },
                 include: { plan: true }
               }
             }
@@ -180,7 +183,11 @@ lessonsRouter.get('/:id', async (req, res) => {
               isAdmin = true;
               hasAccess = true;
             } else if (user.subscriptions.length > 0) {
-              hasAccess = true;
+              // Check if user has PREMIUM subscription
+              const subscription = user.subscriptions[0];
+              if (subscription.plan.type === 'PREMIUM') {
+                hasAccess = true;
+              }
             }
           }
         } catch (error) {
@@ -189,16 +196,71 @@ lessonsRouter.get('/:id', async (req, res) => {
       }
 
       if (!hasAccess) {
-        return res.status(403).json({ 
-          error: { 
-            code: 'SUBSCRIPTION_REQUIRED', 
-            message: 'Premium content requires an active subscription' 
+        return res.status(403).json({
+          error: {
+            code: 'SUBSCRIPTION_REQUIRED',
+            message: 'Video content requires an active subscription'
           },
           lesson: {
             id: lesson.id,
             title: lesson.title,
             isPremium: true,
-            requiresSubscription: true
+            requiresSubscription: true,
+            type: lesson.type
+          }
+        });
+      }
+    } else if (lesson.isPremium && (lesson.type === 'PDF' || lesson.type === 'EXAM')) {
+      // Documents only require subscription if marked as premium
+      const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
+      let hasAccess = false;
+
+      if (token) {
+        try {
+          const jwt = require('jsonwebtoken');
+          const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+          const decoded: any = jwt.verify(token, JWT_SECRET);
+
+          const user = await prisma.user.findUnique({
+            where: { id: decoded.sub },
+            include: {
+              subscriptions: {
+                where: {
+                  status: 'ACTIVE',
+                  endAt: { gt: new Date() }
+                },
+                include: { plan: true }
+              }
+            }
+          });
+
+          if (user) {
+            if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
+              hasAccess = true;
+            } else if (user.subscriptions.length > 0) {
+              const subscription = user.subscriptions[0];
+              if (subscription.plan.type === 'PREMIUM') {
+                hasAccess = true;
+              }
+            }
+          }
+        } catch (error) {
+          // Token invalid, no access
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({
+          error: {
+            code: 'SUBSCRIPTION_REQUIRED',
+            message: 'Premium document content requires an active subscription'
+          },
+          lesson: {
+            id: lesson.id,
+            title: lesson.title,
+            isPremium: true,
+            requiresSubscription: true,
+            type: lesson.type
           }
         });
       }

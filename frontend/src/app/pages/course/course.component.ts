@@ -530,15 +530,15 @@ export class CourseComponent implements OnInit, OnDestroy {
       console.log('❌ No video URL provided');
       return '';
     }
-    // If it's already a full URL, return as is
+    // With Angular proxy, use relative URLs
+    // The proxy will redirect /uploads/* to http://localhost:3000/uploads/*
     if (videoUrl.startsWith('http')) {
-      console.log('✅ Video URL is already complete:', videoUrl);
-      return videoUrl;
+      console.log('⚠️ Removing http://localhost:3000 prefix for proxy compatibility');
+      // Remove http://localhost:3000 if present to use relative URL
+      videoUrl = videoUrl.replace('http://localhost:3000', '');
     }
-    // Otherwise, prepend the backend URL
-    const fullUrl = `http://localhost:3000${videoUrl}`;
-    console.log('🔗 Constructed video URL:', fullUrl);
-    return fullUrl;
+    console.log('✅ Using relative video URL:', videoUrl);
+    return videoUrl;
   }
 
   // Play video in new tab

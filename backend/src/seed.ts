@@ -7,85 +7,28 @@ async function main() {
   console.log('🌱 Starting database seeding...');
 
 
-  // Create subscription plans
+  // Create Premium subscription plan
   const plans = await Promise.all([
     prisma.subscriptionPlan.upsert({
-      where: { id: 'free-plan' },
+      where: { id: 'premium-plan' },
       update: {},
       create: {
-        id: 'free-plan',
-        name: 'Gratuit',
-        description: 'Accès aux cours gratuits uniquement',
-        type: 'FULL_ACCESS',
-        interval: 'monthly',
-        priceCents: 0,
-        currency: 'MRU',
-        features: [
-          'Accès aux cours gratuits',
-          'Vidéos de base',
-          'Support communautaire'
-        ]
-      }
-    }),
-    prisma.subscriptionPlan.upsert({
-      where: { id: 'videos-only' },
-      update: {},
-      create: {
-        id: 'videos-only',
-        name: 'Vidéos Seulement',
-        description: 'Accès à toutes les vidéos de solutions d\'examens',
-        type: 'VIDEOS_ONLY',
+        id: 'premium-plan',
+        name: 'Premium',
+        description: 'Accès complet à tous les cours et ressources de la plateforme Archify',
+        type: 'PREMIUM',
         interval: 'yearly',
-        priceCents: 65000, // 650 MRU
+        priceCents: 50000, // 500 MRU par an
         currency: 'MRU',
         features: [
-          'Accès à toutes les vidéos de solutions',
-          'Vidéos HD illimitées',
-          'Téléchargements offline',
+          'Accès illimité à tous les cours vidéo',
+          'Accès à tous les documents PDF et supports',
+          'Téléchargement des ressources',
           'Support prioritaire',
-          'Accès pour 1 an complet'
-        ]
-      }
-    }),
-    prisma.subscriptionPlan.upsert({
-      where: { id: 'documents-only' },
-      update: {},
-      create: {
-        id: 'documents-only',
-        name: 'Documents Seulement',
-        description: 'Accès à tous les documents PDF et solutions écrites',
-        type: 'DOCUMENTS_ONLY',
-        interval: 'yearly',
-        priceCents: 50000, // 500 MRU
-        currency: 'MRU',
-        features: [
-          'Accès à tous les documents PDF',
-          'Solutions écrites détaillées',
-          'Archives d\'examens complets',
-          'Téléchargements illimités',
-          'Accès pour 1 an complet'
-        ]
-      }
-    }),
-    prisma.subscriptionPlan.upsert({
-      where: { id: 'full-access' },
-      update: {},
-      create: {
-        id: 'full-access',
-        name: 'Accès Complet',
-        description: 'Accès à toutes les vidéos ET documents',
-        type: 'FULL_ACCESS',
-        interval: 'yearly',
-        priceCents: 100000, // 1000 MRU
-        currency: 'MRU',
-        features: [
-          'Tout du plan Vidéos',
-          'Tout du plan Documents',
-          'Accès prioritaire aux nouveaux contenus',
-          'Support premium 24/7',
-          'Certificats de fin de cours',
-          'Accès pour 1 an complet'
-        ]
+          'Mises à jour et nouveaux contenus inclus',
+          'Valable pendant 1 an'
+        ],
+        isActive: true
       }
     })
   ]);
@@ -361,10 +304,10 @@ async function main() {
     create: {
       id: 'sub-1',
       userId: student.id,
-      planId: plans[1].id, // Premium monthly
+      planId: plans[0].id, // Premium plan
       status: 'ACTIVE',
       startAt: new Date(),
-      endAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+      endAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
     }
   });
 

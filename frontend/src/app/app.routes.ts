@@ -10,11 +10,13 @@ export const routes: Routes = [
   },
   {
     path: 'catalog',
-    loadComponent: () => import('./pages/catalog/catalog.component').then(m => m.CatalogComponent)
+    loadComponent: () => import('./pages/catalog/catalog.component').then(m => m.CatalogComponent),
+    canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'course/:id',
-    loadComponent: () => import('./pages/course/course.component').then(m => m.CourseComponent)
+    loadComponent: () => import('./pages/course/course.component').then(m => m.CourseComponent),
+    canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'lesson/:id',
@@ -55,8 +57,23 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent)
   },
   {
+    path: 'payment/submit',
+    loadComponent: () => import('./pages/payment/payment-form.component').then(m => m.PaymentFormComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'my-payments',
+    loadComponent: () => import('./pages/payment/my-payments.component').then(m => m.MyPaymentsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin-enhanced.component').then(m => m.AdminEnhancedComponent),
+    canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
+  },
+  {
+    path: 'admin/payments',
+    loadComponent: () => import('./pages/admin/admin-payments.component').then(m => m.AdminPaymentsComponent),
     canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
   },
   {

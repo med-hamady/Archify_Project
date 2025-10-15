@@ -47,6 +47,18 @@ function clearAuthCookies(res: any) {
 }
 
 function getUserPublic(user: any) {
+  // Extract active subscription data if available
+  let subscriptionData: any = null;
+
+  if (user.subscriptions && user.subscriptions.length > 0) {
+    const activeSub = user.subscriptions[0]; // First active subscription
+    subscriptionData = {
+      type: activeSub.plan?.type || activeSub.type,
+      isActive: activeSub.status === 'ACTIVE',
+      expiresAt: activeSub.expiresAt,
+    };
+  }
+
   return {
     id: user.id,
     email: user.email,
@@ -55,11 +67,7 @@ function getUserPublic(user: any) {
     semester: user.semester,
     createdAt: user.createdAt,
     lastLoginAt: user.lastLoginAt,
-    subscription: {
-      type: 'free',
-      isActive: false,
-      expiresAt: null,
-    },
+    subscription: subscriptionData,
     profile: {
       avatar: user.avatarUrl ?? undefined,
       department: undefined,
@@ -81,6 +89,26 @@ export function requireAuth(req: any, res: any, next: any) {
     return next();
   } catch (_e) {
     return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
+  }
+}
+
+// Optional auth middleware - does not block if no token
+export function optionalAuth(req: any, res: any, next: any) {
+  const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
+  if (!token) {
+    req.userId = null;
+    req.userRole = null;
+    return next();
+  }
+  try {
+    const decoded: any = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.sub;
+    req.userRole = decoded.role;
+    return next();
+  } catch (_e) {
+    req.userId = null;
+    req.userRole = null;
+    return next();
   }
 }
 
@@ -106,7 +134,7 @@ authRouter.post('/register', async (req, res) => {
       return res.status(409).json({ error: { code: 'EMAIL_EXISTS', message: 'Email already in use' } });
     }
     const passwordHash = await bcrypt.hash(body.password, 10);
-    const user = await prisma.user.create({
+    let user = await prisma.user.create({
       data: {
         email: body.email,
         passwordHash,
@@ -114,6 +142,17 @@ authRouter.post('/register', async (req, res) => {
         semester: body.semester ?? 'S1',
       },
     });
+
+    // Fetch user with subscription data
+    user = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+      include: {
+        subscriptions: {
+          where: { status: 'ACTIVE' },
+          include: { plan: true }
+        }
+      }
+    }) as any;
 
     const accessToken = signAccessToken({ sub: user.id, role: user.role });
     const refreshToken = signRefreshToken({ sub: user.id });
@@ -132,7 +171,15 @@ authRouter.post('/register', async (req, res) => {
 authRouter.post('/login', async (req, res) => {
   try {
     const body = loginSchema.parse(req.body);
-    const user = await prisma.user.findUnique({ where: { email: body.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: body.email },
+      include: {
+        subscriptions: {
+          where: { status: 'ACTIVE' },
+          include: { plan: true }
+        }
+      }
+    });
     if (!user) return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' } });
     const ok = await bcrypt.compare(body.password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' } });
@@ -158,7 +205,15 @@ authRouter.post('/refresh', async (req, res) => {
   if (!token) return res.status(401).json({ error: { code: 'NO_REFRESH', message: 'No refresh token' } });
   try {
     const decoded: any = jwt.verify(token, JWT_REFRESH_SECRET);
-    const user = await prisma.user.findUnique({ where: { id: decoded.sub } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      include: {
+        subscriptions: {
+          where: { status: 'ACTIVE' },
+          include: { plan: true }
+        }
+      }
+    });
     if (!user) return res.status(401).json({ error: { code: 'INVALID_REFRESH', message: 'Invalid refresh' } });
     const newAccess = signAccessToken({ sub: user.id, role: user.role });
     const newRefresh = signRefreshToken({ sub: user.id });
@@ -200,7 +255,15 @@ authRouter.get('/verify', async (req, res) => {
   if (!token) return res.status(401).json({ error: { code: 'NO_TOKEN', message: 'No token' } });
   try {
     const decoded: any = jwt.verify(token, JWT_SECRET);
-    const user = await prisma.user.findUnique({ where: { id: decoded.sub } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      include: {
+        subscriptions: {
+          where: { status: 'ACTIVE' },
+          include: { plan: true }
+        }
+      }
+    });
     if (!user) return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
     return res.json({ user: getUserPublic(user), valid: true });
   } catch (e) {
@@ -212,13 +275,6 @@ authRouter.get('/verify', async (req, res) => {
 authRouter.post('/logout', async (_req, res) => {
   clearAuthCookies(res);
   return res.status(204).send();
-});
-
-// GET /me (also exported for mounting at /api/me)
-authRouter.get('/me', requireAuth, async (req: any, res) => {
-  const user = await prisma.user.findUnique({ where: { id: req.userId } });
-  if (!user) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'User not found' } });
-  return res.json({ user: getUserPublic(user) });
 });
 
 // PUT /profile

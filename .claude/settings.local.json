@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(mkdir:*)",
+      "Bash(shopt:*)",
+      "Bash(for:*)",
+      "Bash(do [ \"$item\" != \"Archify_Project\" ])",
+      "Bash(done)",
+      "Bash(node:*)",
+      "Bash(npm --version)",
+      "Bash(psql:*)",
+      "Bash(docker:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build)",
+      "Bash(npm run dev)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npm run start)",
+      "Bash(npm start)",
+      "Bash(taskkill:*)",
+      "Bash(SET PGPASSWORD=postgres)",
+      "Bash(npx prisma generate:*)",
+      "Bash(timeout:*)",
+      "Bash(exit 0)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

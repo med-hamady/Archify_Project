@@ -265,7 +265,7 @@ adminRouter.post('/init', async (req, res) => {
         }
       }
     });
-    
+
     if (adminCount > 0) {
       return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Admin accounts already exist' } });
     }
@@ -297,6 +297,236 @@ adminRouter.post('/init', async (req, res) => {
     });
   } catch (err: any) {
     console.error('Error initializing superadmin:', err);
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
+});
+
+// GET /api/admin/dashboard-stats - Get dashboard statistics (Admin only)
+adminRouter.get('/dashboard-stats', requireAuth, async (req: any, res) => {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only admin can view dashboard stats' } });
+  }
+
+  try {
+    // Get total courses count
+    const totalCourses = await prisma.course.count();
+
+    // Get total users count (excluding admins)
+    const totalUsers = await prisma.user.count({
+      where: {
+        role: 'STUDENT'
+      }
+    });
+
+    // Get active subscriptions count
+    const activeSubscriptions = await prisma.subscription.count({
+      where: {
+        status: 'ACTIVE',
+        endAt: {
+          gt: new Date()
+        }
+      }
+    });
+
+    // Get total revenue from completed payments
+    const paymentsResult = await prisma.payment.aggregate({
+      where: {
+        status: 'COMPLETED'
+      },
+      _sum: {
+        amountCents: true
+      }
+    });
+
+    const totalRevenueCents = paymentsResult._sum.amountCents || 0;
+    const totalRevenueMRU = totalRevenueCents / 100; // Convert cents to MRU
+
+    // Calculate growth percentages (comparing with last month)
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+    // Courses growth
+    const coursesLastMonth = await prisma.course.count({
+      where: {
+        createdAt: {
+          lt: lastMonth
+        }
+      }
+    });
+    const coursesGrowth = coursesLastMonth > 0
+      ? Math.round(((totalCourses - coursesLastMonth) / coursesLastMonth) * 100)
+      : totalCourses > 0 ? 100 : 0;
+
+    // Users growth
+    const usersLastMonth = await prisma.user.count({
+      where: {
+        role: 'STUDENT',
+        createdAt: {
+          lt: lastMonth
+        }
+      }
+    });
+    const usersGrowth = usersLastMonth > 0
+      ? Math.round(((totalUsers - usersLastMonth) / usersLastMonth) * 100)
+      : totalUsers > 0 ? 100 : 0;
+
+    // Subscriptions growth
+    const subscriptionsLastMonth = await prisma.subscription.count({
+      where: {
+        status: 'ACTIVE',
+        createdAt: {
+          lt: lastMonth
+        }
+      }
+    });
+    const subscriptionsGrowth = subscriptionsLastMonth > 0
+      ? Math.round(((activeSubscriptions - subscriptionsLastMonth) / subscriptionsLastMonth) * 100)
+      : activeSubscriptions > 0 ? 100 : 0;
+
+    // Revenue growth
+    const revenueLastMonthResult = await prisma.payment.aggregate({
+      where: {
+        status: 'COMPLETED',
+        createdAt: {
+          lt: lastMonth
+        }
+      },
+      _sum: {
+        amountCents: true
+      }
+    });
+    const revenueLastMonthCents = revenueLastMonthResult._sum.amountCents || 0;
+    const revenueGrowth = revenueLastMonthCents > 0
+      ? Math.round(((totalRevenueCents - revenueLastMonthCents) / revenueLastMonthCents) * 100)
+      : totalRevenueCents > 0 ? 100 : 0;
+
+    // Advanced Analytics Metrics
+
+    // ARPU (Average Revenue Per User)
+    const arpu = totalUsers > 0 ? totalRevenueMRU / totalUsers : 0;
+
+    // ARPU Growth
+    const usersLastMonthForARPU = usersLastMonth || 1; // Avoid division by zero
+    const arpuLastMonth = revenueLastMonthCents > 0 && usersLastMonthForARPU > 0
+      ? (revenueLastMonthCents / 100) / usersLastMonthForARPU
+      : 0;
+    const arpuGrowth = arpuLastMonth > 0
+      ? Math.round(((arpu - arpuLastMonth) / arpuLastMonth) * 100)
+      : arpu > 0 ? 100 : 0;
+
+    // Retention Rate (active subscriptions / total subscriptions ever created)
+    const totalSubscriptionsEver = await prisma.subscription.count();
+    const retentionRate = totalSubscriptionsEver > 0
+      ? Math.round((activeSubscriptions / totalSubscriptionsEver) * 100 * 10) / 10 // 1 decimal
+      : 0;
+
+    // Retention Rate last month
+    const activeSubscriptionsLastMonthCount = subscriptionsLastMonth || 1;
+    const totalSubscriptionsLastMonth = await prisma.subscription.count({
+      where: {
+        createdAt: {
+          lt: lastMonth
+        }
+      }
+    });
+    const retentionRateLastMonth = totalSubscriptionsLastMonth > 0
+      ? Math.round((activeSubscriptionsLastMonthCount / totalSubscriptionsLastMonth) * 100 * 10) / 10
+      : 0;
+    const retentionGrowth = retentionRateLastMonth > 0
+      ? Math.round(((retentionRate - retentionRateLastMonth) / retentionRateLastMonth) * 100 * 10) / 10
+      : retentionRate > 0 ? 100 : 0;
+
+    // LTV (Lifetime Value) - Simple calculation: Total Revenue / Total Users Ever
+    const totalUsersEver = await prisma.user.count({
+      where: {
+        role: 'STUDENT'
+      }
+    });
+    const ltv = totalUsersEver > 0 ? totalRevenueMRU / totalUsersEver : 0;
+
+    // LTV last month
+    const totalUsersEverLastMonth = usersLastMonth || 1;
+    const ltvLastMonth = totalUsersEverLastMonth > 0 && revenueLastMonthCents > 0
+      ? (revenueLastMonthCents / 100) / totalUsersEverLastMonth
+      : 0;
+    const ltvGrowth = ltvLastMonth > 0
+      ? Math.round(((ltv - ltvLastMonth) / ltvLastMonth) * 100)
+      : ltv > 0 ? 100 : 0;
+
+    // Average Engagement Time (sum of all lesson durations viewed / total users)
+    // For now, we'll calculate total available content duration
+    const totalLessonDuration = await prisma.lesson.aggregate({
+      _sum: {
+        durationSec: true
+      }
+    });
+    const totalDurationHours = (totalLessonDuration._sum.durationSec || 0) / 3600;
+    const avgEngagementHours = totalUsers > 0 ? totalDurationHours / totalUsers : 0;
+
+    // Engagement growth (simplified - based on new lessons added)
+    const lessonsLastMonth = await prisma.lesson.count({
+      where: {
+        createdAt: {
+          lt: lastMonth
+        }
+      }
+    });
+    const totalLessons = await prisma.lesson.count();
+    const engagementGrowth = lessonsLastMonth > 0
+      ? Math.round(((totalLessons - lessonsLastMonth) / lessonsLastMonth) * 100)
+      : totalLessons > 0 ? 100 : 0;
+
+    // Conversion Funnel
+    const totalVisitors = totalUsers; // Simplified: all registered users
+    const trialUsers = await prisma.user.count({
+      where: {
+        role: 'STUDENT',
+        subscriptions: {
+          none: {}
+        }
+      }
+    });
+    const paidUsers = await prisma.user.count({
+      where: {
+        role: 'STUDENT',
+        subscriptions: {
+          some: {
+            status: 'ACTIVE'
+          }
+        }
+      }
+    });
+
+    return res.json({
+      totalCourses,
+      totalUsers,
+      activeSubscriptions,
+      totalRevenueMRU,
+      growth: {
+        courses: coursesGrowth,
+        users: usersGrowth,
+        subscriptions: subscriptionsGrowth,
+        revenue: revenueGrowth
+      },
+      analytics: {
+        arpu: Math.round(arpu * 100) / 100, // 2 decimals
+        arpuGrowth,
+        retentionRate,
+        retentionGrowth,
+        ltv: Math.round(ltv * 100) / 100, // 2 decimals
+        ltvGrowth,
+        avgEngagementHours: Math.round(avgEngagementHours * 10) / 10, // 1 decimal
+        engagementGrowth,
+        conversionFunnel: {
+          visitors: totalVisitors,
+          trials: trialUsers,
+          paid: paidUsers,
+          activeSubscribers: paidUsers
+        }
+      }
+    });
+  } catch (err: any) {
+    console.error('Error fetching dashboard stats:', err);
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });

@@ -135,28 +135,43 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
         if (!lesson) {
             return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
         }
-        // Check if lesson is premium and user has subscription
-        if (lesson.isPremium) {
+        // ALL VIDEO LESSONS REQUIRE SUBSCRIPTION (except for admins)
+        if (lesson.type === 'VIDEO') {
             // Try to get user from token (optional authentication)
             const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
             let hasAccess = false;
+            let isAdmin = false;
             if (token) {
                 try {
                     const jwt = require('jsonwebtoken');
                     const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
                     const decoded = jwt.verify(token, JWT_SECRET);
-                    // Check if user has active subscription
+                    // Check if user is admin (bypass subscription check)
                     const user = await prisma.user.findUnique({
                         where: { id: decoded.sub },
                         include: {
                             subscriptions: {
-                                where: { status: 'ACTIVE' },
+                                where: {
+                                    status: 'ACTIVE',
+                                    endAt: { gt: new Date() }
+                                },
                                 include: { plan: true }
                             }
                         }
                     });
-                    if (user && user.subscriptions.length > 0) {
-                        hasAccess = true;
+                    if (user) {
+                        // Admin bypass - admins can access all content
+                        if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
+                            isAdmin = true;
+                            hasAccess = true;
+                        }
+                        else if (user.subscriptions.length > 0) {
+                            // Check if user has PREMIUM subscription
+                            const subscription = user.subscriptions[0];
+                            if (subscription.plan.type === 'PREMIUM') {
+                                hasAccess = true;
+                            }
+                        }
                     }
                 }
                 catch (error) {
@@ -167,13 +182,67 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
                 return res.status(403).json({
                     error: {
                         code: 'SUBSCRIPTION_REQUIRED',
-                        message: 'Premium content requires an active subscription'
+                        message: 'Video content requires an active subscription'
                     },
                     lesson: {
                         id: lesson.id,
                         title: lesson.title,
                         isPremium: true,
-                        requiresSubscription: true
+                        requiresSubscription: true,
+                        type: lesson.type
+                    }
+                });
+            }
+        }
+        else if (lesson.isPremium && (lesson.type === 'PDF' || lesson.type === 'EXAM')) {
+            // Documents only require subscription if marked as premium
+            const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
+            let hasAccess = false;
+            if (token) {
+                try {
+                    const jwt = require('jsonwebtoken');
+                    const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+                    const decoded = jwt.verify(token, JWT_SECRET);
+                    const user = await prisma.user.findUnique({
+                        where: { id: decoded.sub },
+                        include: {
+                            subscriptions: {
+                                where: {
+                                    status: 'ACTIVE',
+                                    endAt: { gt: new Date() }
+                                },
+                                include: { plan: true }
+                            }
+                        }
+                    });
+                    if (user) {
+                        if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
+                            hasAccess = true;
+                        }
+                        else if (user.subscriptions.length > 0) {
+                            const subscription = user.subscriptions[0];
+                            if (subscription.plan.type === 'PREMIUM') {
+                                hasAccess = true;
+                            }
+                        }
+                    }
+                }
+                catch (error) {
+                    // Token invalid, no access
+                }
+            }
+            if (!hasAccess) {
+                return res.status(403).json({
+                    error: {
+                        code: 'SUBSCRIPTION_REQUIRED',
+                        message: 'Premium document content requires an active subscription'
+                    },
+                    lesson: {
+                        id: lesson.id,
+                        title: lesson.title,
+                        isPremium: true,
+                        requiresSubscription: true,
+                        type: lesson.type
                     }
                 });
             }
@@ -201,7 +270,7 @@ exports.lessonsRouter.get('/:id/assets', async (req, res) => {
 });
 // POST /lessons - Create a new lesson (Admin only)
 exports.lessonsRouter.post('/', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -233,7 +302,7 @@ exports.lessonsRouter.post('/', auth_1.requireAuth, async (req, res) => {
 });
 // PUT /lessons/:id - Update a lesson (Admin only)
 exports.lessonsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
@@ -259,7 +328,7 @@ exports.lessonsRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
 });
 // DELETE /lessons/:id - Delete a lesson (Admin only)
 exports.lessonsRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'admin' && req.userRole !== 'superadmin' && req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
     }
     try {
