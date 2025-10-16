@@ -1,0 +1,52 @@
+# Node modules (will be installed during build)
+node_modules/
+backend/node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Frontend (not needed for backend)
+frontend/
+
+# Tests
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files (will be set by Railway)
+.env
+.env.*
+
+# Build artifacts
+backend/dist/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+.tmp/
+
+# Railway config files (not needed in Docker)
+railway.toml
+backend/railway.toml
+
+# Other config files
+test-video-direct.html
