@@ -64,6 +64,8 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   user: BackendUser;
+  accessToken: string;
+  refreshToken: string;
 }
 
 @Injectable({
@@ -72,6 +74,8 @@ export interface AuthResponse {
 export class AuthService {
   private readonly API_URL = environment.apiUrl;
   private readonly USER_KEY = 'archify_user';
+  private readonly TOKEN_KEY = 'archify_access_token';
+  private readonly REFRESH_TOKEN_KEY = 'archify_refresh_token';
 
   // Use signals for modern reactive state management
   user = signal<User | null>(null);
@@ -171,10 +175,12 @@ export class AuthService {
     // Inform backend and clear stored data
     this.http.post<void>(`${this.API_URL}/auth/logout`, {}).subscribe({ next: () => {}, error: () => {} });
     localStorage.removeItem(this.USER_KEY);
-    
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+
     // Clear signal
     this.user.set(null);
-    
+
     // Redirect to home
     this.router.navigate(['/']);
   }
@@ -231,9 +237,14 @@ export class AuthService {
       ...response.user,
       role: response.user.role as 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN'
     };
-    
+
+    // Store user data
     localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
-    
+
+    // Store JWT tokens
+    localStorage.setItem(this.TOKEN_KEY, response.accessToken);
+    localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
+
     // Update signal
     this.user.set(userData);
   }
@@ -249,7 +260,10 @@ export class AuthService {
   }
 
   getAuthHeaders(): { [key: string]: string } {
-    // Cookies are used for auth; return empty headers by default
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (token) {
+      return { 'Authorization': `Bearer ${token}` };
+    }
     return {};
   }
 
