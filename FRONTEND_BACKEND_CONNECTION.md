@@ -172,9 +172,9 @@ app.use(cors({
 - [x] Migrations Prisma exécutées
 - [x] Backend testé et fonctionnel
 - [x] `environment.prod.ts` configuré avec URL Render
-- [ ] Changements commités et poussés sur GitHub
-- [ ] Frontend redéployé sur Vercel
-- [ ] Tests end-to-end effectués
+- [x] Changements commités et poussés sur GitHub
+- [x] Frontend redéployé sur Vercel (auto-deploy actif)
+- [ ] Tests end-to-end à effectuer
 
 ---
 
