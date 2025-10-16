@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 interface Course {
   id: string;
@@ -180,7 +181,7 @@ interface CourseResponse {
   `
 })
 export class CatalogComponent implements OnInit {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   // Signals
   private coursesSignal = signal<Course[]>([]);

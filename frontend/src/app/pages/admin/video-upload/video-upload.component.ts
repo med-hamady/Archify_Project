@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface UploadProgress {
   loaded: number;
@@ -167,7 +168,7 @@ interface UploadProgress {
   `
 })
 export class VideoUploadComponent {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   // Signals
   courses = signal<any[]>([]);

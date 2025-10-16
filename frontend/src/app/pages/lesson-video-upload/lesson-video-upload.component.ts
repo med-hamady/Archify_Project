@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { VideoUploadComponent } from '../../components/video-upload/video-upload.component';
+import { environment } from '../../../environments/environment';
 
 interface Lesson {
   id: string;
@@ -153,7 +154,7 @@ interface Lesson {
   `
 })
 export class LessonVideoUploadComponent implements OnInit, OnDestroy {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   // Signals
   lesson = signal<Lesson | undefined>(undefined);

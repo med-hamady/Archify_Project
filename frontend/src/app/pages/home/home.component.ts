@@ -2,6 +2,7 @@ import { Component, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -380,7 +381,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   `
 })
 export class HomeComponent implements OnInit {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   // Dynamic statistics
   stats = signal({

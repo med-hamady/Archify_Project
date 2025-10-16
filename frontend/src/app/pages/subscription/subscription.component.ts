@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { PaymentService, SubscriptionPlan, CheckoutRequest, CheckoutResponse } from '../../services/payment.service';
+import { environment } from '../../../environments/environment';
 
 interface SubscriptionPlanUI {
   id: string;
@@ -175,7 +176,7 @@ interface SubscriptionPlanUI {
   `
 })
 export class SubscriptionComponent implements OnInit {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
   selectedPlan = signal<string | null>(null);
   selectedProvider = signal<'bankily' | 'masrivi' | 'sedad'>('bankily');
   isLoading = signal(false);

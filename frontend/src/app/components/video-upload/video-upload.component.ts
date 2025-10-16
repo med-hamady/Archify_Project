@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-video-upload',
@@ -241,7 +242,7 @@ export class VideoUploadComponent {
   @Output() videoUploaded = new EventEmitter<any>();
   @Output() videoRemoved = new EventEmitter<void>();
 
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   // Signals
   isUploading = signal(false);

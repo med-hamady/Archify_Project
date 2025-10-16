@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { VideoPlayerComponent } from '../../components/video-player/video-player.component';
+import { environment } from '../../../environments/environment';
 
 interface Course {
   id: string;
@@ -335,7 +336,7 @@ interface Lesson {
   `
 })
 export class CourseComponent implements OnInit, OnDestroy {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
   
   // Signals
   private courseSignal = signal<Course | undefined>(undefined);

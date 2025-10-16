@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface User {
   id: string;
@@ -69,7 +70,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000/api'; // Will be updated for production
+  private readonly API_URL = environment.apiUrl;
   private readonly USER_KEY = 'archify_user';
 
   // Use signals for modern reactive state management

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { VideoUploadComponent } from '../../components/video-upload/video-upload.component';
+import { environment } from '../../../environments/environment';
 
 interface Lesson {
   id: string;
@@ -252,7 +253,7 @@ interface Lesson {
   `
 })
 export class LessonManagementComponent implements OnInit {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   lessons = signal<Lesson[]>([]);
   selectedLesson = signal<Lesson | null>(null);

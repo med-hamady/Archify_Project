@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import Player from '@vimeo/player';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { environment } from '../../../environments/environment';
 
 interface Lesson {
   id: string;
@@ -546,7 +547,7 @@ interface LessonProgress {
 })
 export class LessonComponent implements OnInit, OnDestroy {
   @ViewChild('videoContainer', { static: false }) videoContainer?: ElementRef<HTMLDivElement>;
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
   
   // Signals
   private lessonSignal = signal<Lesson | undefined>(undefined);
