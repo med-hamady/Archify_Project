@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 
 interface Course {
@@ -1328,7 +1329,7 @@ interface UserStats {
   `
 })
 export class AdminEnhancedComponent implements OnInit, OnDestroy {
-  readonly API_URL = 'http://localhost:3000/api';
+  readonly API_URL = environment.apiUrl;
 
   // Signals
   activeTab = signal('overview');
