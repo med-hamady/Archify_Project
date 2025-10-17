@@ -80,14 +80,31 @@ function getUserPublic(user: any) {
 
 // Auth middleware
 export function requireAuth(req: any, res: any, next: any) {
-  const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
-  if (!token) return res.status(401).json({ error: { code: 'NO_TOKEN', message: 'No token' } });
+  const cookieToken = req.cookies?.access_token;
+  const authHeader = req.headers.authorization;
+  const headerToken = authHeader?.split(' ')[1];
+  const token = cookieToken || headerToken || '';
+
+  console.log('[requireAuth]', req.url, {
+    hasCookieToken: !!cookieToken,
+    hasAuthHeader: !!authHeader,
+    hasHeaderToken: !!headerToken,
+    tokenSource: cookieToken ? 'cookie' : headerToken ? 'header' : 'none',
+    tokenPreview: token ? token.substring(0, 20) + '...' : 'none'
+  });
+
+  if (!token) {
+    console.log('[requireAuth] No token found, returning 401');
+    return res.status(401).json({ error: { code: 'NO_TOKEN', message: 'No token' } });
+  }
   try {
     const decoded: any = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.sub;
     req.userRole = decoded.role;
+    console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
     return next();
   } catch (_e) {
+    console.log('[requireAuth] Token verification failed:', _e.message);
     return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
   }
 }
@@ -193,6 +210,15 @@ authRouter.post('/login', async (req, res) => {
     const accessToken = signAccessToken({ sub: user.id, role: user.role });
     const refreshToken = signRefreshToken({ sub: user.id });
     setAuthCookies(res, accessToken, refreshToken);
+
+    console.log('[Auth] Login successful:', {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      hasAccessToken: !!accessToken,
+      hasRefreshToken: !!refreshToken,
+      accessTokenPreview: accessToken.substring(0, 20) + '...'
+    });
 
     return res.json({
       user: getUserPublic(user),
