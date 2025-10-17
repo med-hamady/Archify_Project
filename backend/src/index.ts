@@ -25,7 +25,7 @@ dotenv.config();
 const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app')
   .split(',')
   .map((o) => o.trim());
 
