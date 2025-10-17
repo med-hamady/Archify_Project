@@ -5,22 +5,29 @@ import { requireAuth } from './auth';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const prisma = new PrismaClient();
 export const manualPaymentsRouter = Router();
 
-// Configure multer for screenshot uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../../uploads/payment-screenshots');
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'payment-' + uniqueSuffix + path.extname(file.originalname));
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Configure multer with Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'archify/payment-screenshots',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+      transformation: [{ width: 1000, height: 1000, crop: 'limit' }],
+      public_id: `payment-${Date.now()}-${Math.round(Math.random() * 1E9)}`
+    };
   }
 });
 
@@ -78,7 +85,9 @@ manualPaymentsRouter.post('/', requireAuth, upload.single('screenshot'), async (
       });
     }
 
-    const screenshotUrl = `/uploads/payment-screenshots/${req.file.filename}`;
+    // Cloudinary URL is available in req.file.path
+    const screenshotUrl = (req.file as any).path || (req.file as any).url;
+    console.log('📸 Screenshot uploaded to Cloudinary:', screenshotUrl);
 
     // Créer le paiement en statut PENDING
     const payment = await prisma.payment.create({

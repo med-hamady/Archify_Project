@@ -1108,9 +1108,12 @@ export class AdminPaymentsComponent implements OnInit {
 
     console.log('📸 Loading screenshot as blob:', fullUrl);
 
+    // Determine if we need credentials (for backend URLs) or not (for Cloudinary)
+    const needsCredentials = !fullUrl.startsWith('https://res.cloudinary.com');
+
     this.http.get(fullUrl, {
       responseType: 'blob',
-      withCredentials: true
+      withCredentials: needsCredentials
     }).subscribe({
       next: (blob) => {
         console.log('✅ Screenshot blob loaded successfully');
@@ -1204,6 +1207,10 @@ export class AdminPaymentsComponent implements OnInit {
   }
 
   getFullScreenshotUrl(url: string): string {
+    // If URL is already a full URL (Cloudinary, etc.), return as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
     // Si l'URL commence par /uploads, c'est déjà une URL relative valide
     if (url.startsWith('/uploads')) {
       // Construire l'URL complète : http://localhost:3000/uploads/...
