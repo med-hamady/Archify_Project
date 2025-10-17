@@ -16,7 +16,7 @@ async function main() {
         id: 'premium-plan',
         name: 'Premium',
         description: 'Accès complet à tous les cours et ressources de la plateforme Archify',
-        type: 'PREMIUM',
+        type: 'FULL_ACCESS',
         interval: 'yearly',
         priceCents: 50000, // 500 MRU par an
         currency: 'MRU',

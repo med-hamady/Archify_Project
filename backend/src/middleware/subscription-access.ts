@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
  */
 export async function hasActiveSubscription(userId: string): Promise<{
   hasSubscription: boolean;
-  subscriptionType?: 'PREMIUM';
+  subscriptionType?: 'VIDEOS_ONLY' | 'DOCUMENTS_ONLY' | 'FULL_ACCESS';
 }> {
   const subscription = await prisma.subscription.findFirst({
     where: {
@@ -42,8 +42,8 @@ export async function canAccessVideo(userId: string, lessonId?: string): Promise
     return false;
   }
 
-  // PREMIUM subscription grants access to all videos
-  if (subscriptionType === 'PREMIUM') {
+  // FULL_ACCESS or VIDEOS_ONLY subscription grants access to all videos
+  if (subscriptionType === 'FULL_ACCESS' || subscriptionType === 'VIDEOS_ONLY') {
     return true;
   }
 
@@ -61,8 +61,8 @@ export async function canAccessDocument(userId: string, lessonId?: string): Prom
     return false;
   }
 
-  // PREMIUM subscription grants access to all documents
-  if (subscriptionType === 'PREMIUM') {
+  // FULL_ACCESS or DOCUMENTS_ONLY subscription grants access to all documents
+  if (subscriptionType === 'FULL_ACCESS' || subscriptionType === 'DOCUMENTS_ONLY') {
     return true;
   }
 
