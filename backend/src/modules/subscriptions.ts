@@ -50,20 +50,28 @@ const subscriptionCreateSchema = z.object({
 subscriptionsRouter.get('/plans', async (req, res) => {
   try {
     const plans = await prisma.subscriptionPlan.findMany({
+      where: { isActive: true },
       orderBy: { priceCents: 'asc' }
     });
+
+    console.log('[Subscriptions] Found plans:', plans.length);
 
     res.json({
       plans: plans.map(plan => ({
         id: plan.id,
         name: plan.name,
+        description: plan.description,
         interval: plan.interval,
         priceCents: plan.priceCents,
         price: (plan.priceCents / 100).toFixed(2),
-        currency: plan.currency
+        currency: plan.currency,
+        type: plan.type,
+        features: plan.features,
+        isActive: plan.isActive
       }))
     });
   } catch (err: any) {
+    console.error('[Subscriptions] Error loading plans:', err);
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });
