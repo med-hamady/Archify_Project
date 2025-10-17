@@ -103,7 +103,7 @@ export function requireAuth(req: any, res: any, next: any) {
     req.userRole = decoded.role;
     console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
     return next();
-  } catch (_e) {
+  } catch (_e: any) {
     console.log('[requireAuth] Token verification failed:', _e.message);
     return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
   }
