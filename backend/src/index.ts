@@ -136,6 +136,20 @@ app.get('/uploads/videos/:filename', optionalAuth, checkVideoFileAccess, (req, r
   res.sendFile(filePath);
 });
 
+// Handle CORS preflight for payment screenshots
+app.options('/uploads/payment-screenshots/:filename', (req, res) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).end();
+});
+
 // Serve payment screenshots (accessible by admin and payment owner only)
 app.get('/uploads/payment-screenshots/:filename', optionalAuth, (req: any, res) => {
   const filename = req.params.filename;
@@ -147,9 +161,20 @@ app.get('/uploads/payment-screenshots/:filename', optionalAuth, (req: any, res) 
   console.log('📸 User Role:', req.userRole);
   console.log('📸 Cookies:', req.cookies);
   console.log('📸 Authorization header:', req.headers.authorization);
+  console.log('📸 Origin:', req.headers.origin);
 
-  // Set CORS headers for screenshots
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  // IMPORTANT: Remove all CSP headers for screenshot files (like we do for videos)
+  res.removeHeader('Content-Security-Policy');
+  res.removeHeader('Content-Security-Policy-Report-Only');
+
+  // Set CORS headers for screenshots - Allow both localhost and production
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    // Fallback to localhost for development
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  }
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Cache-Control', 'public, max-age=3600');
