@@ -243,5 +243,7 @@ enum ProgressStatus {
 }
 
 enum SubscriptionType {
-  PREMIUM
+  VIDEOS_ONLY
+  DOCUMENTS_ONLY
+  FULL_ACCESS
 }
