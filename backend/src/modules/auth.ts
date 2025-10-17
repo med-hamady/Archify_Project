@@ -158,7 +158,11 @@ authRouter.post('/register', async (req, res) => {
     const refreshToken = signRefreshToken({ sub: user.id });
     setAuthCookies(res, accessToken, refreshToken);
 
-    return res.status(201).json({ user: getUserPublic(user) });
+    return res.status(201).json({
+      user: getUserPublic(user),
+      accessToken,
+      refreshToken
+    });
   } catch (err: any) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
@@ -190,7 +194,11 @@ authRouter.post('/login', async (req, res) => {
     const refreshToken = signRefreshToken({ sub: user.id });
     setAuthCookies(res, accessToken, refreshToken);
 
-    return res.json({ user: getUserPublic(user) });
+    return res.json({
+      user: getUserPublic(user),
+      accessToken,
+      refreshToken
+    });
   } catch (err: any) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
