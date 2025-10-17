@@ -93,12 +93,29 @@ export class AuthService {
 
   private initializeAuth() {
     const user = this.getStoredUser();
-    if (user) {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+
+    console.log('[AuthService] Initializing auth:', { hasUser: !!user, hasToken: !!token });
+
+    if (user && token) {
       this.user.set(user);
+      console.log('[AuthService] Verifying token...');
       this.verifyToken().subscribe({
-        next: (response) => this.updateUser(response.user),
-        error: () => this.logout(),
+        next: (response) => {
+          console.log('[AuthService] Token verified successfully');
+          this.updateUser(response.user);
+        },
+        error: (err) => {
+          console.error('[AuthService] Token verification failed:', err.status, err.message);
+          console.log('[AuthService] Clearing invalid session');
+          this.logout();
+        },
       });
+    } else if (user && !token) {
+      // User data exists but no token (old session) - clear it
+      console.log('[AuthService] Found user without token, clearing old session');
+      localStorage.removeItem(this.USER_KEY);
+      this.user.set(null);
     }
   }
 
@@ -128,6 +145,12 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/login`, credentials)
       .pipe(
         tap(response => {
+          console.log('[AuthService] Login successful:', {
+            user: response.user.email,
+            role: response.user.role,
+            hasAccessToken: !!response.accessToken,
+            hasRefreshToken: !!response.refreshToken
+          });
           this.setAuthData(response);
           // Redirect admins to admin dashboard, others to user dashboard
           const userRole = response.user.role.toLowerCase();
@@ -138,7 +161,7 @@ export class AuthService {
           }
         }),
         catchError(error => {
-          console.error('Login error:', error);
+          console.error('[AuthService] Login error:', error);
           return throwError(() => error);
         })
       );
