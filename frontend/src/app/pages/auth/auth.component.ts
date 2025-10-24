@@ -17,7 +17,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
             {{ isLoginMode() ? 'Connexion' : 'Créer un compte' }}
           </h2>
           <p class="mt-2 text-sm text-gray-600">
-            {{ isLoginMode() ? 'Accédez à votre compte Archify' : 'Rejoignez la communauté Archify' }}
+            {{ isLoginMode() ? 'Accédez à votre compte FacGame' : 'Rejoignez la communauté FacGame' }}
           </p>
         </div>
 
