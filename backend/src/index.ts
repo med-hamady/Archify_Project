@@ -23,6 +23,7 @@ import { leaderboardRouter } from './modules/leaderboard';
 import { challengeRouter } from './modules/challenge';
 import { examRouter } from './modules/exam';
 import { questionsRouter } from './modules/questions';
+import { adminImportRouter } from './modules/admin-import';
 
 dotenv.config();
 
@@ -234,6 +235,7 @@ app.use('/api/leaderboard', generalLimiter, leaderboardRouter);
 app.use('/api/challenge', generalLimiter, challengeRouter);
 app.use('/api/exam', generalLimiter, examRouter);
 app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
+app.use('/api/admin', strictLimiter, adminImportRouter); // Admin import/db tools
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
