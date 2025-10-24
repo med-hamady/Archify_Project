@@ -52,6 +52,52 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]
   },
+  // FacGame Routes
+  {
+    path: 'facgame-dashboard',
+    loadComponent: () => import('./pages/facgame-dashboard/facgame-dashboard.component').then(m => m.FacgameDashboardComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'subjects',
+    loadComponent: () => import('./pages/subjects/subjects.component').then(m => m.SubjectsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'chapters/:subjectId',
+    loadComponent: () => import('./pages/chapters/chapters.component').then(m => m.ChaptersComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'quiz/:chapterId',
+    loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'challenge/:chapterId',
+    loadComponent: () => import('./pages/challenge/challenge.component').then(m => m.ChallengeComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'exam',
+    loadComponent: () => import('./pages/exam/exam.component').then(m => m.ExamComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'exam/:subjectId',
+    loadComponent: () => import('./pages/exam/exam.component').then(m => m.ExamComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () => import('./pages/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent),
+    canActivate: [authGuard]
+  },
   {
     path: 'subscription',
     loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent)

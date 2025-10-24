@@ -1,0 +1,130 @@
+<div class="chapters-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" (click)="navigateToSubjects()">← Matières</button>
+    <div class="subject-info" *ngIf="subject">
+      <h1>{{ subject.title }}</h1>
+      <span class="semester-badge">{{ subject.semester }}</span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des chapitres...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadSubjectAndChapters()">Réessayer</button>
+  </div>
+
+  <!-- Chapters Content -->
+  <div *ngIf="!loading && !error && subject" class="chapters-content">
+
+    <!-- Subject Progress Card -->
+    <div class="subject-progress-card">
+      <div class="progress-header">
+        <h2>Progression globale</h2>
+        <span class="progress-percent">{{ subject.progressPercent.toFixed(0) }}%</span>
+      </div>
+      <div class="progress-bar-large">
+        <div
+          class="progress-fill-large"
+          [style.width.%]="subject.progressPercent">
+        </div>
+      </div>
+      <div class="progress-stats">
+        <div class="stat">
+          <span class="stat-icon">📖</span>
+          <span class="stat-text">{{ subject.totalChapters }} Chapitres</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">❓</span>
+          <span class="stat-text">{{ subject.totalQuestions }} Questions</span>
+        </div>
+        <div class="stat" [class.unlocked]="subject.examUnlocked">
+          <span class="stat-icon">{{ subject.examUnlocked ? '✅' : '🔒' }}</span>
+          <span class="stat-text">Mode Examen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapters List -->
+    <div class="chapters-list">
+      <div
+        *ngFor="let chapter of chapters"
+        class="chapter-card"
+        [class]="getProgressClass(chapter.progressPercent)">
+
+        <!-- Chapter Header -->
+        <div class="chapter-header">
+          <div class="chapter-position">{{ chapter.position }}</div>
+          <div class="chapter-info">
+            <h3>{{ chapter.title }}</h3>
+            <div class="chapter-meta">
+              <span class="meta-item">
+                <span class="meta-icon">❓</span>
+                {{ chapter.questionsCount }} questions
+              </span>
+              <span class="meta-item challenge" [class.unlocked]="chapter.challengeUnlocked">
+                <span class="meta-icon">{{ chapter.challengeUnlocked ? '🎯' : '🔒' }}</span>
+                Challenge
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="chapter-progress">
+          <div class="progress-label">
+            <span>Progression</span>
+            <span class="progress-value">{{ chapter.progressPercent.toFixed(0) }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="chapter.progressPercent">
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="chapter-actions">
+          <button
+            class="btn-action btn-primary"
+            (click)="navigateToQuiz(chapter.id)">
+            <span class="btn-icon">📝</span>
+            <span class="btn-text">{{ chapter.progressPercent > 0 ? 'Continuer' : 'Commencer' }}</span>
+          </button>
+
+          <button
+            *ngIf="chapter.challengeUnlocked"
+            class="btn-action btn-challenge"
+            (click)="navigateToChallenge(chapter.id)">
+            <span class="btn-icon">🎯</span>
+            <span class="btn-text">Challenge</span>
+          </button>
+
+          <button
+            *ngIf="!chapter.challengeUnlocked"
+            class="btn-action btn-disabled"
+            disabled
+            title="Débloquez à 50% ou niveau OR">
+            <span class="btn-icon">🔒</span>
+            <span class="btn-text">Challenge</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="chapters.length === 0" class="empty-state">
+      <p>Aucun chapitre disponible pour cette matière</p>
+      <p class="hint">Les chapitres seront bientôt ajoutés!</p>
+    </div>
+
+  </div>
+</div>

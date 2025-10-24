@@ -1,0 +1,286 @@
+<div class="profile-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement du profil...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadProfile()">Réessayer</button>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading && !error && profile" class="profile-content">
+
+    <!-- Header Section -->
+    <div class="profile-header">
+      <div class="avatar-section">
+        <div class="avatar-circle">
+          <span class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
+        </div>
+        <div class="level-badge-overlay" [style.background]="getLevelInfo()?.color">
+          {{ getLevelInfo()?.icon }}
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h1>{{ profile.name }}</h1>
+        <p class="email">{{ profile.email }}</p>
+        <p class="semester">Semestre {{ profile.semester }}</p>
+
+        <div class="quick-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ profile.xpTotal }}</span>
+            <span class="stat-label">XP Total</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ getLevelInfo()?.label }}</span>
+            <span class="stat-label">Niveau</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ profile.consecutiveGoodAnswers }}</span>
+            <span class="stat-label">Série</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ profile.legendQuestionsCompleted }}</span>
+            <span class="stat-label">Légendes</span>
+          </div>
+        </div>
+
+        <!-- XP Progress Bar -->
+        <div class="xp-progress-section" *ngIf="getLevelInfo()">
+          <div class="xp-info">
+            <span>{{ getLevelInfo()?.xpInLevel }} / {{ getLevelInfo()?.xpNeeded }} XP</span>
+            <span class="next-level">Prochain niveau: {{ getLevelInfo()?.label === 'Mondial' ? 'MAX' : getLevelInfo()?.label }}</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" [style.width.%]="getLevelInfo()?.progressPercent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'badges'"
+        (click)="setActiveTab('badges')">
+        🏆 Badges
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'activity'"
+        (click)="setActiveTab('activity')">
+        📊 Activité
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'stats'"
+        (click)="setActiveTab('stats')">
+        📈 Statistiques
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+      <!-- Badges Tab -->
+      <div *ngIf="activeTab === 'badges'" class="badges-tab">
+        <div class="badge-category" *ngIf="getBadgesByCategory('LEVEL').length > 0">
+          <h2>🎖️ Badges de Niveau</h2>
+          <div class="badges-grid">
+            <div class="badge-card" *ngFor="let badge of getBadgesByCategory('LEVEL')">
+              <div class="badge-icon">{{ badge.iconUrl || '🏆' }}</div>
+              <h3>{{ badge.name }}</h3>
+              <p>{{ badge.description }}</p>
+              <span class="earned-date" *ngIf="badge.earnedAt">
+                Obtenu le {{ formatDate(badge.earnedAt) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="badge-category" *ngIf="getBadgesByCategory('ACHIEVEMENT').length > 0">
+          <h2>⭐ Badges de Succès</h2>
+          <div class="badges-grid">
+            <div class="badge-card" *ngFor="let badge of getBadgesByCategory('ACHIEVEMENT')">
+              <div class="badge-icon">{{ badge.iconUrl || '⭐' }}</div>
+              <h3>{{ badge.name }}</h3>
+              <p>{{ badge.description }}</p>
+              <span class="earned-date" *ngIf="badge.earnedAt">
+                Obtenu le {{ formatDate(badge.earnedAt) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="badge-category" *ngIf="getBadgesByCategory('SPECIAL').length > 0">
+          <h2>💎 Badges Spéciaux</h2>
+          <div class="badges-grid">
+            <div class="badge-card" *ngFor="let badge of getBadgesByCategory('SPECIAL')">
+              <div class="badge-icon">{{ badge.iconUrl || '💎' }}</div>
+              <h3>{{ badge.name }}</h3>
+              <p>{{ badge.description }}</p>
+              <span class="earned-date" *ngIf="badge.earnedAt">
+                Obtenu le {{ formatDate(badge.earnedAt) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="badges.length === 0" class="empty-state">
+          <p>Aucun badge obtenu pour le moment</p>
+          <p class="hint">Continuez à répondre aux questions pour débloquer des badges!</p>
+        </div>
+      </div>
+
+      <!-- Activity Tab -->
+      <div *ngIf="activeTab === 'activity'" class="activity-tab">
+        <div class="activity-timeline">
+          <div class="activity-item" *ngFor="let activity of activities">
+            <div class="activity-icon">{{ getActivityIcon(activity.type) }}</div>
+            <div class="activity-content">
+              <p class="activity-description">{{ activity.description }}</p>
+              <span class="activity-date">{{ formatDate(activity.createdAt) }}</span>
+            </div>
+            <div class="activity-xp" *ngIf="activity.xpEarned">
+              <span>+{{ activity.xpEarned }} XP</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="activities.length === 0" class="empty-state">
+          <p>Aucune activité récente</p>
+          <p class="hint">Commencez à jouer pour voir votre activité ici!</p>
+        </div>
+      </div>
+
+      <!-- Stats Tab -->
+      <div *ngIf="activeTab === 'stats'" class="stats-tab">
+        <div class="stats-grid" *ngIf="stats">
+
+          <!-- Overview Stats -->
+          <div class="stat-card overview-card">
+            <h3>📊 Vue d'ensemble</h3>
+            <div class="stat-rows">
+              <div class="stat-row">
+                <span class="label">Questions totales:</span>
+                <span class="value">{{ stats.totalQuestions }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Réponses correctes:</span>
+                <span class="value success">{{ stats.correctAnswers }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Réponses incorrectes:</span>
+                <span class="value error">{{ stats.incorrectAnswers }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Taux de réussite:</span>
+                <span class="value highlight">{{ stats.successRate.toFixed(1) }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Stats -->
+          <div class="stat-card performance-card">
+            <h3>🎯 Performance</h3>
+            <div class="stat-rows">
+              <div class="stat-row">
+                <span class="label">XP Total gagné:</span>
+                <span class="value">{{ stats.totalXPEarned }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Tentatives moyennes:</span>
+                <span class="value">{{ stats.averageAttempts.toFixed(2) }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Scores parfaits:</span>
+                <span class="value highlight">{{ stats.perfectScores }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Difficulty Distribution -->
+          <div class="stat-card difficulty-card">
+            <h3>⚡ Difficultés résolues</h3>
+            <div class="difficulty-bars">
+              <div class="difficulty-bar">
+                <div class="difficulty-label">
+                  <span>Facile</span>
+                  <span class="count">{{ stats.difficultyCounts.FACILE }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill facile" [style.width.%]="(stats.difficultyCounts.FACILE / stats.totalQuestions * 100)"></div>
+                </div>
+              </div>
+              <div class="difficulty-bar">
+                <div class="difficulty-label">
+                  <span>Moyen</span>
+                  <span class="count">{{ stats.difficultyCounts.MOYEN }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill moyen" [style.width.%]="(stats.difficultyCounts.MOYEN / stats.totalQuestions * 100)"></div>
+                </div>
+              </div>
+              <div class="difficulty-bar">
+                <div class="difficulty-label">
+                  <span>Difficile</span>
+                  <span class="count">{{ stats.difficultyCounts.DIFFICILE }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill difficile" [style.width.%]="(stats.difficultyCounts.DIFFICILE / stats.totalQuestions * 100)"></div>
+                </div>
+              </div>
+              <div class="difficulty-bar">
+                <div class="difficulty-label">
+                  <span>Légende</span>
+                  <span class="count">{{ stats.difficultyCounts.LEGENDE }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill legende" [style.width.%]="(stats.difficultyCounts.LEGENDE / stats.totalQuestions * 100)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Challenge & Exam Stats -->
+          <div class="stat-card modes-card">
+            <h3>🎮 Modes de jeu</h3>
+            <div class="stat-rows">
+              <div class="stat-row">
+                <span class="label">Challenges complétés:</span>
+                <span class="value">{{ stats.challengesCompleted }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Examens complétés:</span>
+                <span class="value">{{ stats.examsCompleted }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="label">Examens réussis:</span>
+                <span class="value success">{{ stats.examsPassed }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div *ngIf="!stats" class="empty-state">
+          <p>Aucune statistique disponible</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Back to Dashboard Button -->
+    <div class="actions">
+      <button class="btn btn-secondary" routerLink="/dashboard">
+        ← Retour au tableau de bord
+      </button>
+    </div>
+
+  </div>
+</div>

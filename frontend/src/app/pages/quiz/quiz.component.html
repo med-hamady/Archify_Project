@@ -1,0 +1,168 @@
+<div class="quiz-container">
+  <!-- Header -->
+  <div class="quiz-header">
+    <button (click)="goBack()" class="back-btn">
+      ← Retour
+    </button>
+    <div *ngIf="currentQuestion" class="progress-info">
+      <span class="question-counter">
+        Question {{ currentQuestion.position }} / {{ currentQuestion.totalQuestions }}
+      </span>
+      <div class="progress-bar-mini">
+        <div
+          class="progress-fill-mini"
+          [style.width.%]="(currentQuestion.position / currentQuestion.totalQuestions) * 100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement de la question...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="goBack()" class="btn btn-secondary">
+      Retour au Dashboard
+    </button>
+  </div>
+
+  <!-- Question Card -->
+  <div *ngIf="currentQuestion && !loading" class="question-card">
+    <!-- Difficulty Badge -->
+    <div
+      class="difficulty-badge"
+      [style.background]="getDifficultyConfig()?.color">
+      <span class="difficulty-label">{{ getDifficultyConfig()?.label }}</span>
+      <span class="base-xp">{{ getDifficultyConfig()?.baseXP }} XP</span>
+    </div>
+
+    <!-- Chapter Info -->
+    <div class="chapter-info">
+      📖 {{ currentQuestion.chapterTitle }}
+    </div>
+
+    <!-- Question Text -->
+    <div class="question-text">
+      <h2>{{ currentQuestion.questionText }}</h2>
+    </div>
+
+    <!-- Answer Options -->
+    <div class="answer-options">
+      <button
+        *ngFor="let option of currentQuestion.options; let i = index"
+        class="answer-option"
+        [class.selected]="selectedAnswer === i"
+        [class.correct]="showResult && result?.correctAnswer === i"
+        [class.incorrect]="showResult && selectedAnswer === i && !result?.correct"
+        [class.disabled]="answered"
+        (click)="selectAnswer(i)">
+        <span class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
+        <span class="option-text">{{ option }}</span>
+
+        <!-- Result Icons -->
+        <span *ngIf="showResult && result?.correctAnswer === i" class="result-icon correct-icon">
+          ✓
+        </span>
+        <span *ngIf="showResult && selectedAnswer === i && !result?.correct" class="result-icon incorrect-icon">
+          ✗
+        </span>
+      </button>
+    </div>
+
+    <!-- Submit/Next Button -->
+    <div class="action-section">
+      <button
+        *ngIf="!answered"
+        (click)="submitAnswer()"
+        [disabled]="selectedAnswer === null"
+        class="btn btn-primary btn-large">
+        Valider la réponse
+      </button>
+
+      <button
+        *ngIf="answered"
+        (click)="nextQuestion()"
+        class="btn btn-primary btn-large">
+        Question suivante →
+      </button>
+    </div>
+
+    <!-- Result Panel -->
+    <div *ngIf="showResult && result" class="result-panel" [class.correct-result]="result.correct" [class.incorrect-result]="!result.correct">
+      <div class="result-header">
+        <span class="result-icon-large">
+          {{ result.correct ? '🎉' : '😔' }}
+        </span>
+        <h3>{{ result.correct ? 'Bonne réponse !' : 'Mauvaise réponse' }}</h3>
+      </div>
+
+      <!-- XP Earned -->
+      <div class="xp-earned">
+        <span class="xp-label">XP gagné</span>
+        <span class="xp-value">+{{ result.xpEarned }} XP</span>
+      </div>
+
+      <!-- Total XP -->
+      <div class="total-xp">
+        Total: {{ result.totalXP }} XP
+      </div>
+
+      <!-- Level Progress -->
+      <div class="level-progress">
+        <div class="level-info-mini">
+          <span>{{ result.levelInfo.current }}</span>
+          <span class="level-bar">
+            <span
+              class="level-fill"
+              [style.width.%]="result.levelInfo.progressPercent">
+            </span>
+          </span>
+          <span>{{ result.levelInfo.next }}</span>
+        </div>
+        <div class="xp-to-next">
+          {{ result.levelInfo.xpForNext }} XP jusqu'au prochain niveau
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div *ngIf="result.explanation" class="explanation">
+        <h4>💡 Explication</h4>
+        <p>{{ result.explanation }}</p>
+      </div>
+
+      <!-- Bonuses -->
+      <div *ngIf="result.consecutiveBonus" class="bonus-alert">
+        🔥 Série de {{ result.consecutiveBonus.count }} ! +{{ result.consecutiveBonus.bonusXP }} XP bonus !
+      </div>
+    </div>
+  </div>
+
+  <!-- Animations -->
+  <div *ngIf="showXPAnimation" class="xp-animation">
+    <div class="xp-popup">
+      +{{ result?.xpEarned }} XP
+    </div>
+  </div>
+
+  <div *ngIf="showLevelUpAnimation" class="levelup-animation">
+    <div class="levelup-popup">
+      <h2>🎊 LEVEL UP! 🎊</h2>
+      <p>Nouveau niveau: {{ result?.levelUp?.newLevel }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="showBadgeAnimation && result?.newBadges" class="badge-animation">
+    <div class="badge-popup">
+      <h2>🏆 Nouveau Badge! 🏆</h2>
+      <div *ngFor="let badge of result?.newBadges" class="badge-item">
+        <h3>{{ badge.name }}</h3>
+        <p>{{ badge.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

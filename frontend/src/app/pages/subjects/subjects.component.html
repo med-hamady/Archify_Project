@@ -1,0 +1,90 @@
+<div class="subjects-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" routerLink="/dashboard">← Tableau de bord</button>
+    <h1>📚 Choisissez une matière</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des matières...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadSubjects()">Réessayer</button>
+  </div>
+
+  <!-- Subjects Grid -->
+  <div *ngIf="!loading && !error" class="subjects-grid">
+    <div
+      *ngFor="let subject of subjects"
+      class="subject-card"
+      [class]="getProgressClass(subject.progressPercent)"
+      (click)="navigateToChapters(subject.id)">
+
+      <!-- Subject Header -->
+      <div class="subject-header">
+        <h2>{{ subject.title }}</h2>
+        <span class="semester-badge">{{ subject.semester }}</span>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Progression</span>
+          <span class="progress-percent">{{ subject.progressPercent.toFixed(0) }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            [style.width.%]="subject.progressPercent">
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="subject-stats">
+        <div class="stat">
+          <span class="stat-icon">📖</span>
+          <div class="stat-info">
+            <span class="stat-value">{{ subject.totalChapters }}</span>
+            <span class="stat-label">Chapitres</span>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">❓</span>
+          <div class="stat-info">
+            <span class="stat-value">{{ subject.totalQuestions }}</span>
+            <span class="stat-label">Questions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unlock Badges -->
+      <div class="unlock-badges">
+        <div class="unlock-badge exam" [class.unlocked]="subject.examUnlocked">
+          <span class="badge-icon">{{ subject.examUnlocked ? '✅' : '🔒' }}</span>
+          <span class="badge-label">Mode Examen</span>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="subject-action">
+        <button class="btn-start">
+          {{ subject.progressPercent > 0 ? 'Continuer' : 'Commencer' }}
+          <span class="arrow">→</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && subjects.length === 0" class="empty-state">
+    <p>Aucune matière disponible</p>
+    <p class="hint">Les matières seront bientôt ajoutées!</p>
+  </div>
+</div>

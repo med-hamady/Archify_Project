@@ -1,0 +1,225 @@
+<div class="leaderboard-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" routerLink="/dashboard">← Retour</button>
+    <h1>🏆 Classement</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement du classement...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadLeaderboard()">Réessayer</button>
+  </div>
+
+  <!-- Leaderboard Content -->
+  <div *ngIf="!loading && !error" class="leaderboard-content">
+
+    <!-- Filters -->
+    <div class="filters-section">
+
+      <!-- Scope Filter -->
+      <div class="filter-group">
+        <label>Portée</label>
+        <div class="filter-buttons">
+          <button
+            class="filter-btn"
+            [class.active]="activeScope === 'global'"
+            (click)="setScope('global')">
+            🌍 Global
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="activeScope === 'semester'"
+            (click)="setScope('semester')">
+            📚 Mon Semestre
+          </button>
+        </div>
+      </div>
+
+      <!-- Timeframe Filter -->
+      <div class="filter-group">
+        <label>Période</label>
+        <div class="filter-buttons">
+          <button
+            class="filter-btn"
+            [class.active]="activeTimeframe === 'all-time'"
+            (click)="setTimeframe('all-time')">
+            ⏳ Tout temps
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="activeTimeframe === 'monthly'"
+            (click)="setTimeframe('monthly')">
+            📅 Ce mois
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="activeTimeframe === 'weekly'"
+            (click)="setTimeframe('weekly')">
+            📆 Cette semaine
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="leaderboard-table">
+
+      <!-- Top 3 Podium -->
+      <div class="podium" *ngIf="entries.length >= 3">
+
+        <!-- 2nd Place -->
+        <div class="podium-place second">
+          <div class="podium-rank">🥈</div>
+          <div class="podium-avatar">
+            <span>{{ entries[1].name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="podium-level" [style.background]="getLevelInfo(entries[1].level).color">
+            {{ getLevelInfo(entries[1].level).icon }}
+          </div>
+          <div class="podium-name">{{ entries[1].name }}</div>
+          <div class="podium-xp">{{ entries[1].xpTotal }} XP</div>
+        </div>
+
+        <!-- 1st Place -->
+        <div class="podium-place first">
+          <div class="crown">👑</div>
+          <div class="podium-rank">🥇</div>
+          <div class="podium-avatar">
+            <span>{{ entries[0].name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="podium-level" [style.background]="getLevelInfo(entries[0].level).color">
+            {{ getLevelInfo(entries[0].level).icon }}
+          </div>
+          <div class="podium-name">{{ entries[0].name }}</div>
+          <div class="podium-xp">{{ entries[0].xpTotal }} XP</div>
+        </div>
+
+        <!-- 3rd Place -->
+        <div class="podium-place third">
+          <div class="podium-rank">🥉</div>
+          <div class="podium-avatar">
+            <span>{{ entries[2].name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="podium-level" [style.background]="getLevelInfo(entries[2].level).color">
+            {{ getLevelInfo(entries[2].level).icon }}
+          </div>
+          <div class="podium-name">{{ entries[2].name }}</div>
+          <div class="podium-xp">{{ entries[2].xpTotal }} XP</div>
+        </div>
+
+      </div>
+
+      <!-- Rankings List (4+) -->
+      <div class="rankings-list" *ngIf="entries.length > 3">
+        <div
+          *ngFor="let entry of entries.slice(3)"
+          class="ranking-row"
+          [class.current-user]="isCurrentUser(entry)"
+          [class]="getRankClass(entry.rank)">
+
+          <div class="rank-number">
+            <span class="rank-icon" *ngIf="getRankIcon(entry.rank)">{{ getRankIcon(entry.rank) }}</span>
+            <span *ngIf="!getRankIcon(entry.rank)">#{{ entry.rank }}</span>
+          </div>
+
+          <div class="user-avatar">
+            <span>{{ entry.name.charAt(0).toUpperCase() }}</span>
+          </div>
+
+          <div class="user-info">
+            <div class="user-name">
+              {{ entry.name }}
+              <span class="you-badge" *ngIf="isCurrentUser(entry)">Vous</span>
+            </div>
+            <div class="user-semester">{{ entry.semester }}</div>
+          </div>
+
+          <div class="level-badge" [style.background]="getLevelInfo(entry.level).color">
+            <span class="level-icon">{{ getLevelInfo(entry.level).icon }}</span>
+            <span class="level-label">{{ getLevelInfo(entry.level).label }}</span>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">XP</span>
+              <span class="stat-value">{{ entry.xpTotal }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Série</span>
+              <span class="stat-value">{{ entry.consecutiveGoodAnswers }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Légendes</span>
+              <span class="stat-value">{{ entry.legendQuestionsCompleted }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Rankings List (all if less than 3) -->
+      <div class="rankings-list" *ngIf="entries.length <= 3 && entries.length > 0">
+        <div
+          *ngFor="let entry of entries"
+          class="ranking-row"
+          [class.current-user]="isCurrentUser(entry)"
+          [class]="getRankClass(entry.rank)">
+
+          <div class="rank-number">
+            <span class="rank-icon" *ngIf="getRankIcon(entry.rank)">{{ getRankIcon(entry.rank) }}</span>
+            <span *ngIf="!getRankIcon(entry.rank)">#{{ entry.rank }}</span>
+          </div>
+
+          <div class="user-avatar">
+            <span>{{ entry.name.charAt(0).toUpperCase() }}</span>
+          </div>
+
+          <div class="user-info">
+            <div class="user-name">
+              {{ entry.name }}
+              <span class="you-badge" *ngIf="isCurrentUser(entry)">Vous</span>
+            </div>
+            <div class="user-semester">{{ entry.semester }}</div>
+          </div>
+
+          <div class="level-badge" [style.background]="getLevelInfo(entry.level).color">
+            <span class="level-icon">{{ getLevelInfo(entry.level).icon }}</span>
+            <span class="level-label">{{ getLevelInfo(entry.level).label }}</span>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">XP</span>
+              <span class="stat-value">{{ entry.xpTotal }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Série</span>
+              <span class="stat-value">{{ entry.consecutiveGoodAnswers }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Légendes</span>
+              <span class="stat-value">{{ entry.legendQuestionsCompleted }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="entries.length === 0" class="empty-state">
+        <p>Aucun classement disponible</p>
+        <p class="hint">Soyez le premier à jouer!</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
