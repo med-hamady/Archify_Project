@@ -35,7 +35,7 @@ subscriptionsRouter.get('/', requireAuth, async (req: any, res) => {
 const subscriptionPlanCreateSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
-  type: z.enum(['VIDEOS_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']),
+  type: z.enum(['QUIZ_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']), // FacGame: Updated
   interval: z.enum(['yearly']), // Only yearly subscriptions
   priceCents: z.number().int().min(0),
   currency: z.string().length(3).default('MRU'),
@@ -528,11 +528,14 @@ subscriptionsRouter.delete('/plans/:id', requireAuth, async (req: any, res) => {
   }
 });
 
+// DISABLED - Old Archify route (uses Lesson model which no longer exists in FacGame)
 // GET /check-access/:lessonId - Check if user has access to lesson
+// TODO: Replace with check-access/:chapterId for FacGame
+/*
 subscriptionsRouter.get('/check-access/:lessonId', requireAuth, async (req: any, res) => {
   try {
     const { lessonId } = req.params;
-    
+
     // Get lesson details
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
@@ -542,7 +545,7 @@ subscriptionsRouter.get('/check-access/:lessonId', requireAuth, async (req: any,
         }
       }
     });
-    
+
     if (!lesson) {
       return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
     }
@@ -564,9 +567,10 @@ subscriptionsRouter.get('/check-access/:lessonId', requireAuth, async (req: any,
     if (subscription) {
       return res.json({ hasAccess: true, reason: 'active_subscription' });
     }
-    
+
     res.json({ hasAccess: false, reason: 'subscription_required' });
   } catch (err: any) {
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });
+*/

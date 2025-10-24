@@ -109,6 +109,18 @@ export function requireAuth(req: any, res: any, next: any) {
   }
 }
 
+// Admin check middleware - must be used after requireAuth
+export function requireAdmin(req: any, res: any, next: any) {
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    console.log('[requireAdmin] Access denied for role:', req.userRole);
+    return res.status(403).json({
+      error: { code: 'FORBIDDEN', message: 'Admin access required' }
+    });
+  }
+  console.log('[requireAdmin] Admin access granted:', req.userRole);
+  return next();
+}
+
 // Optional auth middleware - does not block if no token
 export function optionalAuth(req: any, res: any, next: any) {
   const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');

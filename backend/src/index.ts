@@ -10,15 +10,19 @@ import path from 'path';
 import fs from 'fs';
 
 import { authRouter, optionalAuth } from './modules/auth';
-import { coursesRouter } from './modules/courses';
-import { lessonsRouter } from './modules/lessons';
 import { subscriptionsRouter } from './modules/subscriptions';
 import { usersRouter } from './modules/users';
-import { adminRouter } from './modules/admin';
-import { commentsRouter } from './modules/comments';
-import { videoUploadRouter } from './modules/video-upload';
 import { manualPaymentsRouter } from './modules/manual-payments';
-import { checkVideoFileAccess } from './middleware/subscription-access';
+
+// FacGame routes
+import { quizRouter } from './modules/quiz';
+import { subjectsRouter } from './modules/subjects';
+import { chaptersRouter } from './modules/chapters';
+import { profileRouter } from './modules/profile';
+import { leaderboardRouter } from './modules/leaderboard';
+import { challengeRouter } from './modules/challenge';
+import { examRouter } from './modules/exam';
+import { questionsRouter } from './modules/questions';
 
 dotenv.config();
 
@@ -97,44 +101,11 @@ app.use('/uploads', (req, res, next) => {
   next();
 });
 
+// DISABLED - Old Archify video route (no longer needed for FacGame)
 // Custom route handler for video files with proper CORS and subscription check
-app.get('/uploads/videos/:filename', optionalAuth, checkVideoFileAccess, (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, '../uploads/videos', filename);
-
-  console.log('🎬 Video request:', filename);
-  console.log('🎬 Origin header:', req.headers.origin);
-  console.log('🎬 Referer header:', req.headers.referer);
-
-  // IMPORTANT: Remove all CSP headers for video files
-  res.removeHeader('Content-Security-Policy');
-  res.removeHeader('Content-Security-Policy-Report-Only');
-
-  // Set CORS headers - Allow all origins for video files
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Range');
-  res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
-
-  // Set video-specific headers
-  res.setHeader('Content-Type', 'video/mp4');
-  res.setHeader('Accept-Ranges', 'bytes');
-  res.setHeader('Cache-Control', 'public, max-age=31536000');
-  res.setHeader('Content-Disposition', 'inline');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-
-  console.log('🎬 CORS headers set with wildcard origin');
-
-  // Check if file exists
-  if (!fs.existsSync(filePath)) {
-    console.log('❌ File not found:', filePath);
-    return res.status(404).json({ error: 'File not found' });
-  }
-
-  console.log('✅ Sending video file:', filePath);
-  // Send the file
-  res.sendFile(filePath);
-});
+// app.get('/uploads/videos/:filename', optionalAuth, checkVideoFileAccess, (req, res) => {
+//   ... (commented out)
+// });
 
 // Handle CORS preflight for payment screenshots
 app.options('/uploads/payment-screenshots/:filename', (req, res) => {
@@ -250,14 +221,19 @@ app.get('/test-cors', (req, res) => {
 
 // Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, authRouter);
-app.use('/api/courses', generalLimiter, coursesRouter);
-app.use('/api/lessons', generalLimiter, lessonsRouter);
 app.use('/api/subscriptions', generalLimiter, subscriptionsRouter);
 app.use('/api/users', strictLimiter, usersRouter);
-app.use('/api/admin', strictLimiter, adminRouter);
-app.use('/api/comments', generalLimiter, commentsRouter);
-app.use('/api/video-upload', generalLimiter, videoUploadRouter);
 app.use('/api/manual-payments', generalLimiter, manualPaymentsRouter);
+
+// FacGame routes
+app.use('/api/quiz', generalLimiter, quizRouter);
+app.use('/api/subjects', generalLimiter, subjectsRouter);
+app.use('/api/chapters', generalLimiter, chaptersRouter);
+app.use('/api/profile', generalLimiter, profileRouter);
+app.use('/api/leaderboard', generalLimiter, leaderboardRouter);
+app.use('/api/challenge', generalLimiter, challengeRouter);
+app.use('/api/exam', generalLimiter, examRouter);
+app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
