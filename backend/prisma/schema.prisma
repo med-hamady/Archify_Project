@@ -11,153 +11,237 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(cuid())
-  email             String              @unique
-  passwordHash      String
-  name              String
-  semester          String
-  role              UserRole            @default(STUDENT)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  subscriptions     Subscription[]
-  comments          Comment[]
-  progresses        Progress[]
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  semester     String
+  role         UserRole @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // FacGame: Système de gamification
+  xpTotal                  Int       @default(0)
+  level                    GameLevel @default(BOIS)
+  consecutiveGoodAnswers   Int       @default(0)
+  legendQuestionsCompleted Int       @default(0)
+  lastActivityAt           DateTime?
+
+  // Relations existantes
+  subscriptions       Subscription[]
+  comments            Comment[]
   passwordResetTokens PasswordResetToken[]
-  payments          Payment[]
+  payments            Payment[]
+
+  // FacGame: Nouvelles relations
+  quizAttempts      QuizAttempt[]
+  userBadges        UserBadge[]
+  challengeResults  ChallengeResult[]
+  examResults       ExamResult[]
+  chapterProgresses ChapterProgress[]
+  subjectProgresses SubjectProgress[]
 }
 
-
-model Course {
-  id          String    @id @default(cuid())
-  title       String
+// FacGame: Matières (Anatomie, Histologie, Physiologie)
+model Subject {
+  id          String   @id @default(cuid())
+  title       String // Ex: "Anatomie", "Histologie", "Physiologie"
   description String?
   semester    String
   tags        String[]
-  createdAt   DateTime    @default(now())
-  isPremium   Boolean     @default(false)
-  lessons     Lesson[]
-  views       Int         @default(0)
+  totalQCM    Int      @default(600) // Nombre total de QCM par matière
+  createdAt   DateTime @default(now())
+  views       Int      @default(0)
+
+  chapters          Chapter[]
+  subjectProgresses SubjectProgress[]
+  examResults       ExamResult[]
 }
 
-model Lesson {
-  id           String    @id @default(cuid())
-  course       Course    @relation(fields: [courseId], references: [id])
-  courseId     String
-  title        String
-  type         LessonType
-  durationSec  Int       @default(0)
-  vimeoId      String?   
-  youtubeId    String?   
-  pdfUrl       String?   
-  // Video upload fields
-  videoUrl     String?   // Local video file path
-  videoSize    Int?      // File size in bytes
-  videoType    String?   // MIME type (video/mp4, etc.)
-  uploadedAt   DateTime? // Upload timestamp
-  isPremium    Boolean   @default(false)
-  requiresVideoSubscription Boolean @default(false)
-  requiresDocumentSubscription Boolean @default(false)
-  orderIndex   Int       @default(0)
-  views        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  lessonAssets LessonAsset[]
-  comments     Comment[]
-  progresses   Progress[]
-  quizzes      Quiz[]
+// FacGame: Chapitres dans une matière
+model Chapter {
+  id          String  @id @default(cuid())
+  subject     Subject @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  title       String
+  description String?
+  orderIndex  Int     @default(0)
 
-  @@index([courseId, orderIndex], map: "lessons_course_order_idx")
-}
+  // Support PDF (cours théoriques)
+  pdfUrl String?
 
-model LessonAsset {
-  id       String @id @default(cuid())
-  lesson   Lesson @relation(fields: [lessonId], references: [id])
-  lessonId String
-  kind     AssetKind
-  url      String
-  title    String
-}
-
-model Comment {
-  id        String   @id @default(cuid())
-  lesson    Lesson   @relation(fields: [lessonId], references: [id])
-  lessonId  String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  content   String
-  status    CommentStatus @default(VISIBLE)
+  // Métadonnées
   createdAt DateTime @default(now())
+  views     Int      @default(0)
+
+  // Relations
+  questions         Question[]
+  comments          Comment[]
+  chapterProgresses ChapterProgress[]
+  challengeResults  ChallengeResult[]
+
+  @@index([subjectId, orderIndex], map: "chapters_subject_order_idx")
+}
+
+// FacGame: Questions QCM
+model Question {
+  id        String  @id @default(cuid())
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+
+  questionText String @db.Text
+
+  // Structure des options: [{text: string, isCorrect: boolean, justification?: string}]
+  options Json // Array d'objets avec text, isCorrect, justification
+
+  explanation String? @db.Text // Commentaire général de la question
+
+  difficulty QuestionDifficulty @default(FACILE)
+  orderIndex Int                @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  attempts QuizAttempt[]
+
+  @@index([chapterId, orderIndex], map: "questions_chapter_order_idx")
+  @@index([difficulty], map: "questions_difficulty_idx")
+}
+
+// FacGame: Commentaires sur les chapitres
+model Comment {
+  id        String        @id @default(cuid())
+  chapter   Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  content   String        @db.Text
+  status    CommentStatus @default(VISIBLE)
+  createdAt DateTime      @default(now())
+
+  @@index([chapterId], map: "comments_chapter_idx")
+  @@index([userId], map: "comments_user_idx")
 }
 
 model SubscriptionPlan {
-  id           String  @id @default(cuid())
-  name         String
-  description  String?
-  type         SubscriptionType
-  interval     String
-  priceCents   Int
-  currency     String  @default("MRU")
-  features     String[]
-  isActive     Boolean @default(true)
-  createdAt    DateTime @default(now())
+  id            String           @id @default(cuid())
+  name          String
+  description   String?
+  type          SubscriptionType
+  interval      String
+  priceCents    Int
+  currency      String           @default("MRU")
+  features      String[]
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
   subscriptions Subscription[]
 }
 
 model Subscription {
-  id         String              @id @default(cuid())
-  user       User                @relation(fields: [userId], references: [id])
-  userId     String
-  plan       SubscriptionPlan    @relation(fields: [planId], references: [id])
-  planId     String
-  status     SubscriptionStatus  @default(ACTIVE)
-  startAt    DateTime
-  endAt      DateTime
-  cancelAt   DateTime?
-  createdAt  DateTime           @default(now())
-  payments   Payment[]
+  id        String             @id @default(cuid())
+  user      User               @relation(fields: [userId], references: [id])
+  userId    String
+  plan      SubscriptionPlan   @relation(fields: [planId], references: [id])
+  planId    String
+  status    SubscriptionStatus @default(ACTIVE)
+  startAt   DateTime
+  endAt     DateTime
+  cancelAt  DateTime?
+  createdAt DateTime           @default(now())
+  payments  Payment[]
 }
 
 model Payment {
-  id             String        @id @default(cuid())
-  user           User          @relation(fields: [userId], references: [id])
+  id             String          @id @default(cuid())
+  user           User            @relation(fields: [userId], references: [id])
   userId         String
-  subscription   Subscription?  @relation(fields: [subscriptionId], references: [id])
+  subscription   Subscription?   @relation(fields: [subscriptionId], references: [id])
   subscriptionId String?
-  planId         String        // ID du plan acheté
+  planId         String // ID du plan acheté
   provider       PaymentProvider
-  providerRef    String        // Numéro de transaction
-  phoneNumber    String        // Numéro de téléphone du payeur
+  providerRef    String // Numéro de transaction
+  phoneNumber    String // Numéro de téléphone du payeur
   amountCents    Int
-  currency       String        @default("MRU")
-  status         PaymentStatus @default(PENDING)
-  screenshotUrl  String?       // URL de la capture d'écran
-  adminNotes     String?       // Notes de l'admin
-  validatedBy    String?       // ID de l'admin qui a validé
-  validatedAt    DateTime?     // Date de validation
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  currency       String          @default("MRU")
+  status         PaymentStatus   @default(PENDING)
+  screenshotUrl  String? // URL de la capture d'écran
+  adminNotes     String? // Notes de l'admin
+  validatedBy    String? // ID de l'admin qui a validé
+  validatedAt    DateTime? // Date de validation
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
-model Progress {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
+// FacGame: Tentatives de réponse aux questions
+model QuizAttempt {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String
+
+  attemptNumber  Int // 1ère, 2ème, 3ème tentative
+  selectedAnswer Int // Index de la réponse choisie
+  isCorrect      Boolean
+
+  xpEarned Int // XP calculé pour cette tentative
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, questionId], map: "quiz_attempts_user_question_idx")
+  @@index([userId], map: "quiz_attempts_user_idx")
+}
+
+// FacGame: Progression par chapitre
+model ChapterProgress {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
   userId    String
-  lesson    Lesson   @relation(fields: [lessonId], references: [id])
-  lessonId  String
-  status    ProgressStatus @default(VIEWED)
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+
+  questionsAnswered Int   @default(0) // Nombre de questions répondues
+  questionsCorrect  Int   @default(0) // Nombre de bonnes réponses
+  progressPercent   Float @default(0) // Pourcentage de progression (0-100)
+
+  challengeUnlocked Boolean @default(false) // Challenge débloqué pour ce chapitre
+  examUnlocked      Boolean @default(false) // Examen débloqué
+
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, lessonId])
+  @@unique([userId, chapterId])
+  @@index([userId], map: "chapter_progress_user_idx")
+}
+
+// FacGame: Progression globale par matière
+model SubjectProgress {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  totalQuestionsAnswered Int   @default(0)
+  progressPercent        Float @default(0) // Pourcentage global (0-100)
+
+  challengeUnlockedGlobal Boolean @default(false) // Déblocage niveau Or
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subjectId])
+  @@index([userId], map: "subject_progress_user_idx")
 }
 
 model Coupon {
-  id             String   @id @default(cuid())
-  code           String   @unique
+  id              String   @id @default(cuid())
+  code            String   @unique
   discountPercent Int
-  validFrom      DateTime
-  validTo        DateTime
-  maxRedemptions Int?
-  usedCount      Int      @default(0)
-  createdAt      DateTime @default(now())
+  validFrom       DateTime
+  validTo         DateTime
+  maxRedemptions  Int?
+  usedCount       Int      @default(0)
+  createdAt       DateTime @default(now())
 }
 
 model PasswordResetToken {
@@ -169,31 +253,75 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 }
 
-model Quiz {
-  id       String     @id @default(cuid())
-  lesson   Lesson     @relation(fields: [lessonId], references: [id])
-  lessonId String
-  title    String
-  questions QuizQuestion[]
+// FacGame: Résultats du Mode Challenge
+model ChallengeResult {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+
+  questionsTotal   Int
+  questionsCorrect Int
+  timeSpentSec     Int // Temps passé en secondes
+  score            Float // Pourcentage de réussite (0-100)
+
+  xpBonus Int @default(0) // Bonus XP si 100%
+
+  completedAt DateTime @default(now())
+
+  @@index([userId], map: "challenge_results_user_idx")
+  @@index([chapterId], map: "challenge_results_chapter_idx")
 }
 
-model QuizQuestion {
+// FacGame: Résultats du Mode Examen
+model ExamResult {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  questionsTotal   Int
+  questionsCorrect Int
+  timeSpentSec     Int // Temps passé en secondes
+  score            Float // Note sur 20
+  passed           Boolean // Seuil 10/20
+
+  completedAt DateTime @default(now())
+
+  @@index([userId], map: "exam_results_user_idx")
+  @@index([subjectId], map: "exam_results_subject_idx")
+}
+
+// FacGame: Système de badges
+model Badge {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  description String
+  iconUrl     String?
+  requirement BadgeRequirement
+
+  userBadges UserBadge[]
+  createdAt  DateTime    @default(now())
+}
+
+model UserBadge {
   id      String @id @default(cuid())
-  quiz    Quiz   @relation(fields: [quizId], references: [id])
-  quizId  String
-  question String
-  options String[]
-  correctAnswer Int
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  badge   Badge  @relation(fields: [badgeId], references: [id])
+  badgeId String
+
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId], map: "user_badges_user_idx")
 }
 
-model QuizAnswer {
-  id       String @id @default(cuid())
-  userId   String
-  questionId String
-  answer   Int
-  isCorrect Boolean
-  createdAt DateTime @default(now())
-}
+// ============================================
+// ENUMS
+// ============================================
 
 enum UserRole {
   STUDENT
@@ -201,15 +329,39 @@ enum UserRole {
   SUPERADMIN
 }
 
-enum LessonType {
-  VIDEO
-  PDF
-  EXAM
+// FacGame: Niveaux de gamification
+enum GameLevel {
+  BOIS // 0-800 XP
+  BRONZE // 801-1600 XP
+  ARGENT // 1601-2800 XP
+  OR // 2801-4000 XP
+  PLATINUM // 4001-5500 XP
+  LEGENDAIRE // 5501-9000 XP
+  MONDIAL // 9001+ XP
 }
 
-enum AssetKind {
-  PDF
-  ATTACHMENT
+// FacGame: Difficultés des questions
+enum QuestionDifficulty {
+  FACILE // +5 XP base
+  MOYEN // +10 XP base
+  DIFFICILE // +20 XP base
+  LEGENDE // +30 XP base (questions spéciales)
+}
+
+// FacGame: Exigences pour badges
+enum BadgeRequirement {
+  REACH_BRONZE
+  REACH_ARGENT
+  REACH_OR
+  REACH_PLATINUM
+  REACH_LEGENDAIRE
+  REACH_MONDIAL
+  COMPLETE_100_LEGEND_QCM
+  STREAK_5_CORRECT
+  STREAK_10_CORRECT
+  CHALLENGE_100_PERCENT
+  FIRST_EXAM_PASSED
+  PERFECT_CHAPTER
 }
 
 enum CommentStatus {
@@ -237,13 +389,9 @@ enum PaymentStatus {
   REFUNDED
 }
 
-enum ProgressStatus {
-  VIEWED
-  IN_PROGRESS
-}
-
+// FacGame: Types d'abonnement adaptés
 enum SubscriptionType {
-  VIDEOS_ONLY
-  DOCUMENTS_ONLY
-  FULL_ACCESS
+  QUIZ_ONLY // Ancien VIDEOS_ONLY - accès aux quiz uniquement
+  DOCUMENTS_ONLY // Accès aux PDF uniquement
+  FULL_ACCESS // Accès complet quiz + documents
 }
