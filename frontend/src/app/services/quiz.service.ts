@@ -2,45 +2,55 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { QuestionOption, BaseQuestion } from '../models/question.model';
+
+// Alias pour compatibilité
+export type QuizOption = QuestionOption;
 
 export interface QuizQuestion {
   id: string;
   questionText: string;
-  options: string[];
+  options: QuizOption[];  // Nouveau format JSON
   difficulty: 'FACILE' | 'MOYEN' | 'DIFFICILE' | 'LEGENDE';
-  chapterId: string;
-  chapterTitle: string;
-  position: number;
-  totalQuestions: number;
+  chapterId?: string;
+  chapterTitle?: string;
+  position?: number;
+  totalQuestions?: number;
+  orderIndex?: number;
 }
 
 export interface QuizAnswerResponse {
   success: boolean;
   result: {
     correct: boolean;
-    correctAnswer: number;
+    selectedAnswer: number;  // Index de la réponse sélectionnée
+    options: QuizOption[];  // Options avec feedback (isCorrect, justification, wasSelected)
     explanation?: string;
+    attemptNumber?: number;
     xpEarned: number;
     totalXP: number;
     levelInfo: {
-      current: string;
-      next: string;
-      progressPercent: number;
-      xpForNext: number;
+      current: number;
+      name: string;
+      progress: number;
+      xpToNext: number;
     };
     levelUp?: {
-      oldLevel: string;
-      newLevel: string;
-    };
+      newLevel: number;
+      oldLevel?: number;
+      rewards?: any;
+      message?: string;
+    } | null;
     consecutiveBonus?: {
-      count: number;
-      bonusXP: number;
-    };
+      type: string;
+      xpBonus: number;
+      message: string;
+    } | null;
     newBadges?: Array<{
+      id: string;
       name: string;
       description: string;
-      iconUrl?: string;
-    }>;
+    }> | null;
   };
 }
 

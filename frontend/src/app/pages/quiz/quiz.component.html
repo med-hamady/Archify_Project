@@ -6,12 +6,12 @@
     </button>
     <div *ngIf="currentQuestion" class="progress-info">
       <span class="question-counter">
-        Question {{ currentQuestion.position }} / {{ currentQuestion.totalQuestions }}
+        Question {{ (currentQuestion.position || currentQuestion.orderIndex || 0) + 1 }} / {{ currentQuestion.totalQuestions || 0 }}
       </span>
       <div class="progress-bar-mini">
         <div
           class="progress-fill-mini"
-          [style.width.%]="(currentQuestion.position / currentQuestion.totalQuestions) * 100">
+          [style.width.%]="((currentQuestion.position || currentQuestion.orderIndex || 0) / (currentQuestion.totalQuestions || 1)) * 100">
         </div>
       </div>
     </div>
@@ -57,20 +57,26 @@
         *ngFor="let option of currentQuestion.options; let i = index"
         class="answer-option"
         [class.selected]="selectedAnswer === i"
-        [class.correct]="showResult && result?.correctAnswer === i"
-        [class.incorrect]="showResult && selectedAnswer === i && !result?.correct"
+        [class.correct]="showResult && result?.options?.[i]?.isCorrect"
+        [class.incorrect]="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect"
         [class.disabled]="answered"
         (click)="selectAnswer(i)">
-        <span class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
-        <span class="option-text">{{ option }}</span>
+        <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E'][i] }}</span>
+        <span class="option-text">{{ option.text }}</span>
 
         <!-- Result Icons -->
-        <span *ngIf="showResult && result?.correctAnswer === i" class="result-icon correct-icon">
+        <span *ngIf="showResult && result?.options?.[i]?.isCorrect" class="result-icon correct-icon">
           ✓
         </span>
-        <span *ngIf="showResult && selectedAnswer === i && !result?.correct" class="result-icon incorrect-icon">
+        <span *ngIf="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect" class="result-icon incorrect-icon">
           ✗
         </span>
+
+        <!-- Justification pour les réponses fausses -->
+        <div *ngIf="showResult && result?.options?.[i]?.justification && !result?.options?.[i]?.isCorrect" class="justification">
+          <span class="justification-icon">💡</span>
+          <span class="justification-text">{{ result?.options?.[i]?.justification }}</span>
+        </div>
       </button>
     </div>
 
@@ -115,17 +121,16 @@
       <!-- Level Progress -->
       <div class="level-progress">
         <div class="level-info-mini">
-          <span>{{ result.levelInfo.current }}</span>
+          <span>Niveau {{ result.levelInfo.current }} - {{ result.levelInfo.name }}</span>
           <span class="level-bar">
             <span
               class="level-fill"
-              [style.width.%]="result.levelInfo.progressPercent">
+              [style.width.%]="result.levelInfo.progress">
             </span>
           </span>
-          <span>{{ result.levelInfo.next }}</span>
         </div>
         <div class="xp-to-next">
-          {{ result.levelInfo.xpForNext }} XP jusqu'au prochain niveau
+          {{ result.levelInfo.xpToNext }} XP jusqu'au prochain niveau
         </div>
       </div>
 
@@ -137,7 +142,7 @@
 
       <!-- Bonuses -->
       <div *ngIf="result.consecutiveBonus" class="bonus-alert">
-        🔥 Série de {{ result.consecutiveBonus.count }} ! +{{ result.consecutiveBonus.bonusXP }} XP bonus !
+        🔥 {{ result.consecutiveBonus.message }} ! +{{ result.consecutiveBonus.xpBonus }} XP bonus !
       </div>
     </div>
   </div>

@@ -633,3 +633,37 @@
     font-size: 2rem;
   }
 }
+
+/* Justifications des réponses fausses */
+.justification {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #FFC107;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.justification-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.justification-text {
+  flex: 1;
+  color: #fff;
+  opacity: 0.95;
+}
+
+.answer-option.incorrect .justification {
+  background: rgba(244, 67, 54, 0.15);
+  border-left-color: #F44336;
+}
+
+.answer-option.correct .justification {
+  display: none; /* Les bonnes réponses n'ont pas de justification */
+}
