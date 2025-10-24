@@ -4,32 +4,16 @@ import { roleGuard } from './core/guards/role.guard';
 import { subscriptionGuard } from './core/guards/subscription.guard';
 
 export const routes: Routes = [
+  // Redirect root to FacGame dashboard
   {
     path: '',
-    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+    redirectTo: 'facgame-dashboard',
+    pathMatch: 'full'
   },
-  {
-    path: 'catalog',
-    loadComponent: () => import('./pages/catalog/catalog.component').then(m => m.CatalogComponent),
-    canActivate: [authGuard, subscriptionGuard]
-  },
-  {
-    path: 'course/:id',
-    loadComponent: () => import('./pages/course/course.component').then(m => m.CourseComponent),
-    canActivate: [authGuard, subscriptionGuard]
-  },
-  {
-    path: 'lesson/:id',
-    loadComponent: () => import('./pages/lesson/lesson.component').then(m => m.LessonComponent),
-    canActivate: [authGuard, subscriptionGuard]
-  },
+  // Auth routes
   {
     path: 'auth',
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
-  },
-  {
-    path: 'forgot-password',
-    loadComponent: () => import('./pages/password-reset/password-reset.component').then(m => m.PasswordResetComponent)
   },
   {
     path: 'login',
@@ -40,6 +24,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/password-reset/password-reset.component').then(m => m.PasswordResetComponent)
+  },
+  {
     path: 'terms',
     loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent)
   },
@@ -47,10 +35,26 @@ export const routes: Routes = [
     path: 'admin-init',
     loadComponent: () => import('./pages/admin-init/admin-init.component').then(m => m.AdminInitComponent)
   },
+  // Redirect old Archify routes to FacGame
   {
     path: 'dashboard',
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [authGuard]
+    redirectTo: 'facgame-dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'catalog',
+    redirectTo: 'subjects',
+    pathMatch: 'full'
+  },
+  {
+    path: 'course/:id',
+    redirectTo: 'subjects',
+    pathMatch: 'full'
+  },
+  {
+    path: 'lesson/:id',
+    redirectTo: 'subjects',
+    pathMatch: 'full'
   },
   // FacGame Routes
   {
@@ -112,6 +116,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/payment/my-payments.component').then(m => m.MyPaymentsComponent),
     canActivate: [authGuard]
   },
+  // Admin routes
   {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin-enhanced.component').then(m => m.AdminEnhancedComponent),
@@ -122,20 +127,5 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/admin-payments.component').then(m => m.AdminPaymentsComponent),
     canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
   },
-  {
-    path: 'admin/upload',
-    loadComponent: () => import('./pages/admin/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
-    canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
-  },
-      {
-        path: 'admin/lessons',
-        loadComponent: () => import('./pages/lesson-management/lesson-management.component').then(m => m.LessonManagementComponent),
-        canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
-      },
-      {
-        path: 'admin/lesson/:lessonId/video',
-        loadComponent: () => import('./pages/lesson-video-upload/lesson-video-upload.component').then(m => m.LessonVideoUploadComponent),
-        canActivate: [authGuard, roleGuard(['admin', 'superadmin'])]
-      },
   { path: '**', redirectTo: '' }
 ];
