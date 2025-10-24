@@ -1,0 +1,629 @@
+import express from 'express';
+import { z } from 'zod';
+import { PrismaClient, QuestionDifficulty, GameLevel } from '@prisma/client';
+import { requireAuth } from './auth';
+import { BASE_XP } from '../services/xp.service';
+import { getLevelInfo, checkLevelUp } from '../services/level.service';
+import { checkAndAwardBadges } from '../services/badge.service';
+
+const prisma = new PrismaClient();
+
+export const examRouter = express.Router();
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Vérifie si l'utilisateur peut accéder au mode Examen
+ * Conditions: 80% progression dans la matière ET niveau ARGENT minimum
+ */
+async function canAccessExamMode(userId: string, subjectId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { level: true }
+  });
+
+  if (!user) return false;
+
+  // Vérifier niveau ARGENT minimum
+  const LEVELS_ORDER: GameLevel[] = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+  const userLevelIndex = LEVELS_ORDER.indexOf(user.level);
+  const argentIndex = LEVELS_ORDER.indexOf('ARGENT');
+
+  if (userLevelIndex < argentIndex) {
+    return false;
+  }
+
+  // Vérifier progression 80% dans la matière
+  const progress = await prisma.subjectProgress.findUnique({
+    where: {
+      userId_subjectId: {
+        userId,
+        subjectId
+      }
+    }
+  });
+
+  return progress ? progress.progressPercent >= 80 : false;
+}
+
+function getGrade(score: number): string {
+  if (score >= 18) return 'A+';
+  if (score >= 16) return 'A';
+  if (score >= 14) return 'B+';
+  if (score >= 12) return 'B';
+  if (score >= 10) return 'C';
+  return 'F';
+}
+
+// ============================================
+// DÉMARRER UN EXAMEN
+// ============================================
+
+/**
+ * POST /api/exam/:subjectId/start
+ * Démarre un examen pour une matière
+ * Conditions: 80% progression dans la matière ET niveau ARGENT minimum
+ */
+examRouter.post('/:subjectId/start', requireAuth, async (req: any, res) => {
+  try {
+    const { subjectId } = req.params;
+    const userId = req.userId;
+
+    // Vérifier que la matière existe
+    const subject: any = await prisma.subject.findUnique({
+      where: { id: subjectId },
+      include: {
+        chapters: {
+          include: {
+            questions: {
+              orderBy: { orderIndex: 'asc' }
+            }
+          }
+        }
+      }
+    });
+
+    if (!subject) {
+      return res.status(404).json({
+        error: { code: 'NOT_FOUND', message: 'Matière non trouvée' }
+      });
+    }
+
+    // Compter le total de questions
+    const totalQuestions = subject.chapters.reduce(
+      (sum: number, chapter: any) => sum + chapter.questions.length,
+      0
+    );
+
+    if (totalQuestions === 0) {
+      return res.status(400).json({
+        error: {
+          code: 'NO_QUESTIONS',
+          message: 'Cette matière ne contient pas de questions'
+        }
+      });
+    }
+
+    // Vérifier les conditions d'accès à l'Examen
+    const canAccess = await canAccessExamMode(userId, subjectId);
+
+    if (!canAccess) {
+      return res.status(403).json({
+        error: {
+          code: 'ACCESS_DENIED',
+          message: 'Examen non débloqué. Requis: 80% de progression dans la matière ET niveau ARGENT minimum'
+        }
+      });
+    }
+
+    // Vérifier s'il y a déjà un examen récent (moins de 24h)
+    const recentExam = await prisma.examResult.findFirst({
+      where: {
+        userId,
+        subjectId,
+        completedAt: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+        }
+      }
+    });
+
+    if (recentExam) {
+      return res.status(400).json({
+        error: {
+          code: 'EXAM_COOLDOWN',
+          message: 'Veuillez attendre 24h avant de refaire cet examen'
+        }
+      });
+    }
+
+    // Préparer toutes les questions avec options sanitisées
+    const allQuestions = subject.chapters.flatMap((chapter: any) =>
+      chapter.questions.map((q: any) => {
+        const options = q.options as any[];
+        return {
+          id: q.id,
+          chapterId: chapter.id,
+          chapterTitle: chapter.title,
+          questionText: q.questionText,
+          options: options.map((opt: any) => ({
+            text: opt.text
+            // Ne pas inclure isCorrect ni justification avant la soumission
+          })),
+          difficulty: q.difficulty
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      exam: {
+        subjectId: subject.id,
+        subjectName: subject.title,
+        totalQuestions,
+        totalChapters: subject.chapters.length,
+        questions: allQuestions
+      }
+    });
+
+  } catch (err: any) {
+    console.error('Error starting exam:', err);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors du démarrage de l\'examen' }
+    });
+  }
+});
+
+// ============================================
+// SOUMETTRE RÉPONSES EXAMEN
+// ============================================
+
+const submitExamSchema = z.object({
+  answers: z.array(z.object({
+    questionId: z.string(),
+    selectedAnswer: z.number().int().min(0).max(4) // 0-4 pour les options A-E
+  })),
+  timeSpentSec: z.number().int().min(0).optional()
+});
+
+/**
+ * POST /api/exam/:subjectId/submit
+ * Soumet les réponses d'un examen et calcule le résultat
+ */
+examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
+  try {
+    const { subjectId } = req.params;
+    const userId = req.userId;
+
+    // Valider les données
+    const validation = submitExamSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Données invalides',
+          details: validation.error.issues
+        }
+      });
+    }
+
+    const { answers, timeSpentSec } = validation.data;
+
+    // Récupérer la matière avec toutes les questions
+    const subject = await prisma.subject.findUnique({
+      where: { id: subjectId },
+      include: {
+        chapters: {
+          include: {
+            questions: true
+          }
+        }
+      }
+    });
+
+    if (!subject) {
+      return res.status(404).json({
+        error: { code: 'NOT_FOUND', message: 'Matière non trouvée' }
+      });
+    }
+
+    // Créer une map des questions
+    const questionsMap = new Map();
+    for (const chapter of subject.chapters) {
+      for (const question of chapter.questions) {
+        questionsMap.set(question.id, question);
+      }
+    }
+
+    // Calculer le score
+    let questionsCorrect = 0;
+    let totalXPEarned = 0;
+    const detailedResults = [];
+
+    for (const answer of answers) {
+      const question: any = questionsMap.get(answer.questionId);
+      if (!question) continue;
+
+      // Vérifier la réponse avec le nouveau format JSON
+      const options = question.options as any[];
+      if (!Array.isArray(options) || answer.selectedAnswer >= options.length) {
+        detailedResults.push({
+          questionId: question.id,
+          questionText: question.questionText,
+          correct: false,
+          xpEarned: 0,
+          difficulty: question.difficulty,
+          error: 'Invalid answer index'
+        });
+        continue;
+      }
+
+      const isCorrect = options[answer.selectedAnswer]?.isCorrect === true;
+
+      // Préparer les options avec feedback
+      const optionsWithFeedback = options.map((opt: any, index: number) => ({
+        text: opt.text,
+        isCorrect: opt.isCorrect,
+        justification: !opt.isCorrect ? opt.justification : undefined,
+        wasSelected: index === answer.selectedAnswer
+      }));
+
+      if (isCorrect) {
+        questionsCorrect++;
+
+        // XP avec bonus Examen (×2)
+        const baseXP = BASE_XP[question.difficulty as QuestionDifficulty];
+        const examXP = baseXP * 2;
+        totalXPEarned += examXP;
+
+        detailedResults.push({
+          questionId: question.id,
+          questionText: question.questionText,
+          correct: true,
+          xpEarned: examXP,
+          difficulty: question.difficulty,
+          options: optionsWithFeedback,
+          explanation: question.explanation
+        });
+      } else {
+        detailedResults.push({
+          questionId: question.id,
+          questionText: question.questionText,
+          correct: false,
+          xpEarned: 0,
+          difficulty: question.difficulty,
+          options: optionsWithFeedback,
+          explanation: question.explanation
+        });
+      }
+    }
+
+    const totalQuestions = questionsMap.size;
+    const scorePercent = (questionsCorrect / totalQuestions) * 100;
+    const scoreSur20 = (scorePercent / 100) * 20;
+    const passed = scoreSur20 >= 10;
+
+    // Récupérer l'utilisateur
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+      });
+    }
+
+    const oldXP = user.xpTotal;
+    const newXP = oldXP + totalXPEarned;
+
+    // Créer le résultat de l'examen
+    await prisma.examResult.create({
+      data: {
+        userId,
+        subjectId,
+        questionsTotal: totalQuestions,
+        questionsCorrect,
+        timeSpentSec: timeSpentSec || 0,
+        score: scoreSur20,
+        passed
+      }
+    });
+
+    // Mettre à jour l'utilisateur
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        xpTotal: newXP,
+        level: getLevelInfo(newXP).current
+      }
+    });
+
+    // Vérifier level-up
+    const levelUpResult = checkLevelUp(oldXP, newXP);
+
+    // Vérifier nouveaux badges
+    const badgeResult = await checkAndAwardBadges(userId, {
+      consecutiveGoodAnswers: updatedUser.consecutiveGoodAnswers,
+      legendQuestionsCompleted: updatedUser.legendQuestionsCompleted,
+      level: updatedUser.level
+    });
+
+    res.json({
+      success: true,
+      result: {
+        score: scoreSur20,
+        scorePercent,
+        passed,
+        grade: getGrade(scoreSur20),
+        questionsCorrect,
+        questionsTotal: totalQuestions,
+        xpEarned: totalXPEarned,
+        totalXP: newXP,
+        levelInfo: getLevelInfo(newXP),
+        levelUp: levelUpResult.leveledUp ? {
+          oldLevel: levelUpResult.oldLevel,
+          newLevel: levelUpResult.newLevel
+        } : null,
+        newBadges: badgeResult.badges.length > 0 ? badgeResult.badges : null,
+        detailedResults
+      }
+    });
+
+  } catch (err: any) {
+    console.error('Error submitting exam:', err);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la soumission de l\'examen' }
+    });
+  }
+});
+
+// ============================================
+// CORRECTION DÉTAILLÉE EXAMEN
+// ============================================
+
+/**
+ * GET /api/exam/:examId/correction
+ * Récupère la correction détaillée d'un examen
+ */
+examRouter.get('/:examId/correction', requireAuth, async (req: any, res) => {
+  try {
+    const { examId } = req.params;
+    const userId = req.userId;
+
+    const exam: any = await prisma.examResult.findUnique({
+      where: { id: examId },
+      include: {
+        subject: {
+          include: {
+            chapters: {
+              include: {
+                questions: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!exam) {
+      return res.status(404).json({
+        error: { code: 'NOT_FOUND', message: 'Examen non trouvé' }
+      });
+    }
+
+    if (exam.userId !== userId) {
+      return res.status(403).json({
+        error: { code: 'FORBIDDEN', message: 'Cet examen ne vous appartient pas' }
+      });
+    }
+
+    // Récupérer les tentatives de l'utilisateur autour de la date de l'examen
+    const questionIds = exam.subject.chapters.flatMap(
+      (chapter: any) => chapter.questions.map((q: any) => q.id)
+    );
+
+    const attempts = await prisma.quizAttempt.findMany({
+      where: {
+        userId,
+        questionId: { in: questionIds },
+        createdAt: {
+          gte: new Date(exam.completedAt.getTime() - 3 * 60 * 60 * 1000), // 3h avant
+          lte: new Date(exam.completedAt.getTime() + 1 * 60 * 60 * 1000)  // 1h après
+        }
+      },
+      include: {
+        question: true
+      }
+    });
+
+    // Organiser par chapitre
+    const correctionByChapter = exam.subject.chapters.map((chapter: any) => {
+      const questions = chapter.questions.map((question: any) => {
+        const attempt = attempts.find(a => a.questionId === question.id);
+        const options = question.options as any[];
+
+        // Préparer les options avec feedback
+        const optionsWithFeedback = options.map((opt: any, index: number) => ({
+          text: opt.text,
+          isCorrect: opt.isCorrect,
+          justification: !opt.isCorrect ? opt.justification : undefined,
+          wasSelected: attempt ? index === attempt.selectedAnswer : false
+        }));
+
+        return {
+          questionId: question.id,
+          questionText: question.questionText,
+          options: optionsWithFeedback,
+          userAnswer: attempt?.selectedAnswer ?? null,
+          isCorrect: attempt?.isCorrect ?? false,
+          explanation: question.explanation,
+          difficulty: question.difficulty
+        };
+      });
+
+      const correctCount = questions.filter((q: any) => q.isCorrect).length;
+
+      return {
+        chapterId: chapter.id,
+        chapterTitle: chapter.title,
+        questions,
+        correctCount,
+        totalCount: questions.length,
+        chapterScore: Math.round((correctCount / questions.length) * 20)
+      };
+    });
+
+    res.json({
+      success: true,
+      correction: {
+        examId: exam.id,
+        subjectName: exam.subject.name,
+        score: exam.score,
+        passed: exam.passed,
+        grade: getGrade(exam.score),
+        questionsCorrect: exam.questionsCorrect,
+        questionsTotal: exam.questionsTotal,
+        completedAt: exam.completedAt,
+        chapters: correctionByChapter
+      }
+    });
+
+  } catch (err: any) {
+    console.error('Error fetching exam correction:', err);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération de la correction' }
+    });
+  }
+});
+
+// ============================================
+// HISTORIQUE EXAMENS
+// ============================================
+
+/**
+ * GET /api/exam/history/:subjectId
+ * Récupère l'historique des examens pour une matière
+ */
+examRouter.get('/history/:subjectId', requireAuth, async (req: any, res) => {
+  try {
+    const { subjectId } = req.params;
+    const userId = req.userId;
+
+    const exams = await prisma.examResult.findMany({
+      where: {
+        userId,
+        subjectId
+      },
+      orderBy: { completedAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        score: true,
+        passed: true,
+        questionsCorrect: true,
+        questionsTotal: true,
+        timeSpentSec: true,
+        completedAt: true
+      }
+    });
+
+    // Calculer statistiques
+    const bestScore = exams.length > 0
+      ? Math.max(...exams.map((e: any) => e.score))
+      : 0;
+
+    const averageScore = exams.length > 0
+      ? Math.round((exams.reduce((sum: number, e: any) => sum + e.score, 0) / exams.length) * 10) / 10
+      : 0;
+
+    const passedCount = exams.filter((e: any) => e.passed).length;
+
+    const examsWithGrades = exams.map((exam: any) => ({
+      ...exam,
+      grade: getGrade(exam.score)
+    }));
+
+    res.json({
+      success: true,
+      exams: examsWithGrades,
+      stats: {
+        totalExams: exams.length,
+        passedExams: passedCount,
+        failedExams: exams.length - passedCount,
+        bestScore,
+        bestGrade: getGrade(bestScore),
+        averageScore
+      }
+    });
+
+  } catch (err: any) {
+    console.error('Error fetching exam history:', err);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération de l\'historique' }
+    });
+  }
+});
+
+// ============================================
+// LEADERBOARD EXAMEN
+// ============================================
+
+/**
+ * GET /api/exam/leaderboard/:subjectId
+ * Récupère le classement pour une matière spécifique
+ */
+examRouter.get('/leaderboard/:subjectId', requireAuth, async (req: any, res) => {
+  try {
+    const { subjectId } = req.params;
+
+    // Récupérer les meilleurs scores
+    const topScores = await prisma.examResult.findMany({
+      where: { subjectId, passed: true },
+      orderBy: [
+        { score: 'desc' },
+        { timeSpentSec: 'asc' }
+      ],
+      take: 20,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            level: true
+          }
+        }
+      }
+    });
+
+    // Grouper par utilisateur (garder le meilleur score)
+    const userBestScores = new Map();
+    for (const result of topScores) {
+      if (!userBestScores.has(result.userId)) {
+        userBestScores.set(result.userId, {
+          userId: result.user.id,
+          userName: result.user.name,
+          userLevel: result.user.level,
+          score: result.score,
+          grade: getGrade(result.score),
+          timeSpentSec: result.timeSpentSec,
+          completedAt: result.completedAt
+        });
+      }
+    }
+
+    const leaderboard = Array.from(userBestScores.values()).slice(0, 10);
+
+    res.json({
+      success: true,
+      leaderboard
+    });
+
+  } catch (err: any) {
+    console.error('Error fetching exam leaderboard:', err);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération du classement' }
+    });
+  }
+});
