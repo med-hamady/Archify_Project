@@ -1,0 +1,200 @@
+🧠 Chapitre 3 – Physiologie du système nerveux (1 → 20)
+1️⃣ Question : Le neurone.
+
+A. Est une cellule excitable ✔️
+B. Possède un corps cellulaire, des dendrites et un axone ✔️
+C. Se divise activement après la naissance ❌ — Non renouvelable.
+D. Transmet l’influx nerveux ✔️
+E. Produit des neurotransmetteurs ✔️
+
+💬 Le neurone est la cellule fonctionnelle du système nerveux, spécialisée dans la transmission électrique.
+
+2️⃣ Question : Le potentiel d’action neuronal.
+
+A. Résulte d’une entrée de Na⁺ ✔️
+B. Se propage sans atténuation ✔️
+C. Se produit uniquement dans les dendrites ❌ — Axone.
+D. Suit une période réfractaire ✔️
+E. Peut être modulé en amplitude ❌ — Toujours même amplitude.
+
+💬 Le potentiel d’action est un signal électrique de type tout ou rien.
+
+3️⃣ Question : La gaine de myéline.
+
+A. Augmente la vitesse de conduction ✔️
+B. Est formée par les cellules de Schwann ✔️
+C. Est absente dans le système central ❌ — Présente (oligodendrocytes).
+D. Permet la conduction saltatoire ✔️
+E. Consomme plus d’énergie ❌ — Moins.
+
+💬 La myéline isole électriquement l’axone et accélère l’influx nerveux.
+
+4️⃣ Question : La synapse chimique.
+
+A. Nécessite un neurotransmetteur ✔️
+B. Présente un délai de transmission ✔️
+C. Comporte une fente synaptique ✔️
+D. Transmet toujours le signal dans les deux sens ❌ — Sens unique.
+E. Implique des canaux ioniques ✔️
+
+💬 Les synapses chimiques permettent la communication neuronale directionnelle.
+
+5️⃣ Question : Les neurotransmetteurs.
+
+A. Sont stockés dans des vésicules ✔️
+B. Sont libérés par exocytose ✔️
+C. Se fixent sur des récepteurs post-synaptiques ✔️
+D. Ont toujours un effet excitateur ❌ — Parfois inhibiteur.
+E. Sont dégradés ou recaptés ✔️
+
+💬 Les neurotransmetteurs assurent la transmission rapide entre neurones.
+
+6️⃣ Question : L’acétylcholine.
+
+A. Est un neurotransmetteur ✔️
+B. Agit sur les récepteurs nicotiniques et muscariniques ✔️
+C. Est libérée par les motoneurones ✔️
+D. Est dégradée par l’acétylcholinestérase ✔️
+E. Est inhibitrice au niveau neuromusculaire ❌ — Excitatrice.
+
+💬 L’acétylcholine est le médiateur principal de la jonction neuromusculaire.
+
+7️⃣ Question : Les synapses électriques.
+
+A. Transmettent le signal sans neurotransmetteur ✔️
+B. Sont reliées par des jonctions communicantes ✔️
+C. Permettent un passage bidirectionnel ✔️
+D. Présentent un retard synaptique ❌ — Transmission instantanée.
+E. Sont rares dans le cerveau adulte ✔️
+
+💬 Les synapses électriques assurent une communication rapide et coordonnée.
+
+8️⃣ Question : Le système nerveux central (SNC).
+
+A. Comprend le cerveau et la moelle épinière ✔️
+B. Est protégé par les méninges ✔️
+C. Est entouré de liquide céphalo-rachidien ✔️
+D. Contrôle les fonctions volontaires ✔️
+E. Contient les nerfs périphériques ❌ — SNP.
+
+💬 Le SNC est le centre d’intégration et de commande.
+
+9️⃣ Question : Le système nerveux périphérique (SNP).
+
+A. Comprend les nerfs crâniens et spinaux ✔️
+B. Relie le SNC aux organes ✔️
+C. Contient les ganglions ✔️
+D. Comprend les hémisphères cérébraux ❌ — SNC.
+E. Transporte uniquement des informations sensitives ❌ — Sensitives et motrices.
+
+💬 Le SNP relie le système nerveux central à l’ensemble du corps.
+
+🔟 Question : L’arc réflexe.
+
+A. Est une voie de réponse automatique ✔️
+B. Implique un neurone sensitif ✔️
+C. Passe toujours par le cerveau ❌ — Peut rester médullaire.
+D. Implique un neurone moteur ✔️
+E. Peut comporter un interneurone ✔️
+
+💬 L’arc réflexe permet une réponse rapide sans intervention consciente.
+
+11️⃣ Question : Le système nerveux végétatif (autonome).
+
+A. Contrôle les fonctions involontaires ✔️
+B. Comprend les systèmes sympathique et parasympathique ✔️
+C. Agit sur les muscles squelettiques ❌ — Lisses et glandes.
+D. Participe à la régulation du cœur ✔️
+E. Est sous contrôle conscient ❌ — Involontaire.
+
+💬 Le SNA maintient les fonctions vitales automatiques.
+
+12️⃣ Question : Le système sympathique.
+
+A. Prépare à l’action (“fight or flight”) ✔️
+B. Accélère le rythme cardiaque ✔️
+C. Dilate les pupilles ✔️
+D. Inhibe la digestion ✔️
+E. Diminue la pression artérielle ❌ — L’augmente.
+
+💬 Le sympathique mobilise l’organisme en situation de stress.
+
+13️⃣ Question : Le système parasympathique.
+
+A. Ralentit le cœur ✔️
+B. Favorise la digestion ✔️
+C. Contracte les pupilles ✔️
+D. Est actif au repos ✔️
+E. Accélère la respiration ❌ — La calme.
+
+💬 Le parasympathique favorise le repos et la récupération.
+
+14️⃣ Question : Les cellules gliales.
+
+A. Soutiennent les neurones ✔️
+B. Participent à la nutrition neuronale ✔️
+C. Maintiennent l’environnement ionique ✔️
+D. Conduisent l’influx nerveux ❌ — Non excitables.
+E. Participent à la myélinisation ✔️
+
+💬 Les cellules gliales assurent le soutien, la nutrition et la protection des neurones.
+
+15️⃣ Question : Le liquide céphalo-rachidien.
+
+A. Protège le cerveau ✔️
+B. Transporte les nutriments ✔️
+C. Circule dans les ventricules cérébraux ✔️
+D. Est produit par les plexus choroïdes ✔️
+E. Contient des globules rouges ❌ — Seulement en cas d’hémorragie.
+
+💬 Le LCR protège et nourrit le système nerveux central.
+
+16️⃣ Question : Le neurotransmetteur dopamine.
+
+A. Est impliqué dans le plaisir et la motivation ✔️
+B. Joue un rôle dans la motricité ✔️
+C. Est déficitaire dans la maladie de Parkinson ✔️
+D. Est exciteur au niveau musculaire ❌ — Non.
+E. Peut être transformé en adrénaline ✔️
+
+💬 La dopamine intervient dans le contrôle moteur et la récompense.
+
+17️⃣ Question : Les potentiels gradués.
+
+A. Varient en amplitude ✔️
+B. Peuvent s’additionner ✔️
+C. Se propagent sans régénération ✔️
+D. Obéissent au principe du tout ou rien ❌ — Non.
+E. Peuvent déclencher un potentiel d’action ✔️
+
+💬 Les potentiels gradués déterminent si un neurone va se dépolariser jusqu’au seuil.
+
+18️⃣ Question : La conduction nerveuse (aucune bonne réponse)
+
+A. Est purement chimique ❌ — Électro-chimique.
+B. Se produit sans ions ❌ — Dépend d’eux.
+C. Est instantanée sur toute la fibre ❌ — Progression segmentaire.
+D. N’utilise pas de canaux ioniques ❌ — Indispensables.
+E. Peut se produire sans membrane ❌ — Nécessite une membrane cellulaire.
+
+💬 Aucune de ces propositions n’est exacte : la conduction dépend des canaux et des gradients ioniques.
+
+19️⃣ Question : Les neurotransmetteurs excitateurs (toutes justes)
+
+A. Glutamate ✔️
+B. Acétylcholine ✔️
+C. Noradrénaline ✔️
+D. Dopamine ✔️
+E. Sérotonine ✔️
+
+💬 Ces neurotransmetteurs augmentent la probabilité de dépolarisation post-synaptique.
+
+20️⃣ Question : Les fonctions du système nerveux (toutes justes)
+
+A. Réception de l’information ✔️
+B. Intégration et analyse ✔️
+C. Réponse motrice ✔️
+D. Régulation des fonctions internes ✔️
+E. Communication rapide de l’organisme ✔️
+
+💬 Le système nerveux contrôle, coordonne et relie toutes les fonctions du corps.

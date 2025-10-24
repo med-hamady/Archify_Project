@@ -1,0 +1,201 @@
+🧠 Chapitre 3 – Tronc cérébral et nerfs crâniens
+1️⃣ Localisation générale
+
+Question : Le tronc cérébral est situé :
+A. Entre le cerveau et la moelle épinière ✔️
+B. En avant du cervelet ✔️
+C. Dans la fosse postérieure du crâne ✔️
+D. Dans le lobe frontal ❌ — Il appartient à l’encéphale profond, pas au cortex.
+E. Dans la cavité thoracique ❌ — Entièrement intracrânien.
+
+Justification générale : Le tronc cérébral relie le cerveau à la moelle et contient les centres vitaux.
+
+2️⃣ Composition
+
+A. Mésencéphale ✔️
+B. Pont ✔️
+C. Bulbe rachidien ✔️
+D. Moelle épinière ❌ — Structure distincte.
+E. Thalamus ❌ — Fait partie du diencéphale.
+
+Justification générale : Le tronc cérébral se compose de trois parties superposées, chacune ayant des fonctions vitales.
+
+3️⃣ Fonctions principales
+
+A. Contrôle des réflexes vitaux ✔️
+B. Transmission des voies nerveuses ✔️
+C. Régulation de la respiration ✔️
+D. Analyse consciente ❌ — Fonction corticale.
+E. Commande hormonale ❌ — Relève de l’hypothalamus.
+
+Justification générale : Il assure les fonctions automatiques indispensables à la vie et le relais des voies nerveuses.
+
+4️⃣ Formation réticulée
+
+A. Réseau de neurones ✔️
+B. Régule la vigilance ✔️
+C. Située dans le tronc cérébral ✔️
+D. Responsable de la motricité fine ❌ — Cervelet.
+E. Localisée dans le thalamus ❌ — Non, dans tout le tronc.
+
+Justification générale : La formation réticulée contrôle l’éveil, le tonus musculaire et les réflexes automatiques.
+
+5️⃣ Bulbe rachidien
+
+A. Contrôle respiratoire ✔️
+B. Contrôle cardiaque ✔️
+C. Contient les pyramides bulbaires ✔️
+D. Gère la mémoire ❌ — Fonction corticale.
+E. Fait partie du système limbique ❌ — Non, structure autonome du tronc.
+
+Justification générale : Le bulbe abrite les centres vitaux et les voies pyramidales motrices.
+
+6️⃣ Pont
+
+A. Relie le bulbe et le mésencéphale ✔️
+B. Contient des noyaux moteurs ✔️
+C. Contrôle la respiration ✔️
+D. Émerge les nerfs V, VI, VII ✔️
+E. Partie du diencéphale ❌ — Non, tronc cérébral.
+
+Justification générale : Le pont est un centre de relais et de coordination entre moelle, cervelet et cerveau.
+
+7️⃣ Mésencéphale
+
+A. Contient les colliculi supérieurs et inférieurs ✔️
+B. Siège des réflexes visuels et auditifs ✔️
+C. Contient le noyau rouge ✔️
+D. Comporte le thalamus ❌ — Structure du diencéphale.
+E. Localisé au-dessus du bulbe ✔️
+
+Justification générale : Le mésencéphale joue un rôle dans le contrôle moteur et les réflexes sensoriels.
+
+8️⃣ Nerfs crâniens – généralités
+
+A. 12 paires ✔️
+B. Reliés au tronc cérébral ✔️
+C. Tous moteurs ❌ — Certains sont sensitifs ou mixtes.
+D. Numérotés du bas vers le haut ❌ — Du haut vers le bas.
+E. Appartiennent au système périphérique ✔️
+
+Justification générale : Les nerfs crâniens forment la connexion périphérique directe du tronc cérébral.
+
+9️⃣ Nerf olfactif (I)
+
+A. Sensitif ✔️
+B. Passe par la lame criblée ✔️
+C. Origine mésencéphalique ❌ — Origine télencéphalique.
+D. Transporte les informations gustatives ❌ — Olfactives.
+E. Relié au bulbe olfactif ✔️
+
+Justification générale : Premier nerf crânien, exclusivement sensoriel, chargé de l’odorat.
+
+🔟 Nerf optique (II)
+
+A. Sensitif ✔️
+B. Transporte la vision ✔️
+C. Décusse partiellement au chiasma ✔️
+D. Contrôle la motricité oculaire ❌ — Nerfs III, IV, VI.
+E. Prolonge le diencéphale ✔️
+
+Justification générale : Le nerf optique est un prolongement du SNC spécialisé dans la vision.
+
+11️⃣ Nerf oculomoteur (III)
+
+A. Moteur ✔️
+B. Innerve la majorité des muscles oculaires ✔️
+C. Responsable de la constriction pupillaire ✔️
+D. Émerge du mésencéphale ✔️
+E. Donne la sensibilité de la cornée ❌ — Nerf trijumeau (V).
+
+Justification générale : Le III contrôle la motricité oculaire et la réaction pupillaire à la lumière.
+
+12️⃣ Nerf trochléaire (IV)
+
+A. Moteur ✔️
+B. Innerve le muscle oblique supérieur ✔️
+C. Émerge de la face dorsale du tronc ✔️
+D. Sensitif ❌ — Exclusivement moteur.
+E. Émerge du pont ❌ — Du mésencéphale.
+
+Justification générale : Seul nerf sortant par l’arrière du tronc, pour le muscle oblique supérieur.
+
+13️⃣ Nerf trijumeau (V)
+
+A. Sensitif et moteur ✔️
+B. Sensibilité faciale ✔️
+C. Commande la mastication ✔️
+D. Émerge du pont ✔️
+E. Contrôle les muscles du cou ❌ — Nerf XI.
+
+Justification générale : Le trijumeau est le principal nerf de la sensibilité de la face et de la mastication.
+
+14️⃣ Nerf facial (VII)
+
+A. Moteur et sensoriel ✔️
+B. Impliqué dans le goût ✔️
+C. Innerve les muscles de la face ✔️
+D. Contrôle la vision ❌ — Non lié.
+E. Émerge du bulbe ❌ — Du pont.
+
+Justification générale : Le facial gère les expressions faciales et la gustation antérieure.
+
+15️⃣ Nerf vestibulo-cochléaire (VIII)
+
+A. Sensitif ✔️
+B. Transporte les informations auditives ✔️
+C. Impliqué dans l’équilibre ✔️
+D. Commande les muscles oculaires ❌ — Nerfs III, IV, VI.
+E. Émerge du pont ✔️
+
+Justification générale : Nerf sensoriel double : audition (cochlée) et équilibre (vestibule).
+
+16️⃣ Nerf glossopharyngien (IX)
+
+A. Mixte ✔️
+B. Goût du tiers postérieur de la langue ✔️
+C. Contrôle la parotide ✔️
+D. Régule la vision ❌ — Sans rapport.
+E. Émerge du bulbe ✔️
+
+Justification générale : Il participe à la déglutition, à la gustation postérieure et à la sécrétion salivaire.
+
+17️⃣ Nerf vague (X)
+
+A. Nerf moteur et sensitif ✔️
+B. Contrôle parasympathique viscéral ✔️
+C. Agit sur cœur et tube digestif ✔️
+D. Innerve le bras ❌ — Non, viscères thoraco-abdominaux.
+E. Émerge du bulbe ✔️
+
+Justification générale : Le nerf X est la voie principale du système parasympathique vers les organes internes.
+
+18️⃣ Nerf accessoire (XI)
+
+A. Moteur ✔️
+B. Innerve trapèze et sternocléidomastoïdien ✔️
+C. Émerge du bulbe et de la moelle ✔️
+D. Fournit la sensibilité du cou ❌ — Sensitif = plexus cervical.
+E. Dirige les mouvements du visage ❌ — Nerf facial (VII).
+
+Justification générale : Le XI contrôle les muscles du cou et de la ceinture scapulaire.
+
+19️⃣ Nerf hypoglosse (XII)
+
+A. Moteur ✔️
+B. Commande la langue ✔️
+C. Impliqué dans la mastication ✔️
+D. Responsable de la phonation ✔️
+E. Émerge du pont ❌ — Du bulbe rachidien.
+
+Justification générale : Ce nerf permet les mouvements précis de la langue pour la parole et la déglutition.
+
+20️⃣ Lésions du tronc cérébral
+
+A. Paralysies alternes ✔️
+B. Troubles respiratoires ✔️
+C. Perte de conscience ✔️
+D. Hyperactivité cérébelleuse ❌ — Plutôt hypotonie.
+E. Mort possible ✔️
+
+Justification générale : Les lésions du tronc cérébral entraînent des troubles graves, car elles touchent les centres vitaux et les voies de communication.

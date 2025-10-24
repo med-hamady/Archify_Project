@@ -1,0 +1,201 @@
+🧬 Chapitre 2 – Moelle épinière et voies nerveuses
+1️⃣ Localisation générale
+
+Question : La moelle épinière est :
+A. Située dans le canal rachidien ✔️
+B. Directement attachée aux vertèbres ❌ — Elle est suspendue dans le canal, séparée par les méninges et le LCS.
+C. Protégée par les méninges ✔️
+D. Reliée au cerveau par le tronc cérébral ✔️
+E. Logée dans le crâne ❌ — Elle se situe dans la colonne vertébrale.
+
+Justification générale : La moelle épinière occupe le canal rachidien et assure la continuité entre le cerveau et les nerfs périphériques.
+
+2️⃣ Limites anatomiques
+
+A. Commence au foramen magnum ✔️
+B. Se termine à L1–L2 ✔️
+C. S’étend jusqu’au coccyx ❌ — Elle s’arrête bien plus haut.
+D. Continue par la queue de cheval ✔️
+E. Sort par les foramina crâniens ❌ — Elle quitte le canal vertébral par les foramens intervertébraux.
+
+Justification générale : La moelle débute à la base du crâne et se termine vers L1–L2, où naissent les racines de la queue de cheval.
+
+3️⃣ Morphologie externe
+
+A. Présente deux renflements ✔️
+B. En forme de cône terminal ✔️
+C. Recouverte de substance blanche ✔️
+D. Possède des racines antérieures et postérieures ✔️
+E. Porte des hémisphères ❌ — Structure propre au cerveau.
+
+Justification générale : La moelle présente une structure segmentaire avec des renflements pour les membres.
+
+4️⃣ Substance grise
+
+A. Située en périphérie ❌ — Elle se trouve au centre.
+B. En forme de papillon ✔️
+C. Contient les corps cellulaires ✔️
+D. Forme les cornes motrices et sensitives ✔️
+E. Myélinisée ❌ — Non, c’est la substance blanche.
+
+Justification générale : La substance grise renferme les neurones responsables de l’intégration réflexe.
+
+5️⃣ Substance blanche
+
+A. En périphérie ✔️
+B. Formée de fibres myélinisées ✔️
+C. Regroupe les faisceaux ascendantes et descendantes ✔️
+D. Sans organisation précise ❌ — Elle est divisée en cordons bien définis.
+E. Riche en corps cellulaires ❌ — Ceux-ci se trouvent dans la grise.
+
+Justification générale : La substance blanche constitue les voies de conduction reliant moelle et cerveau.
+
+6️⃣ Racines nerveuses
+
+A. Antérieure = motrice ✔️
+B. Postérieure = sensitive ✔️
+C. Ganglion spinal sur la racine postérieure ✔️
+D. Racine antérieure = sensitive ❌ — Elle véhicule les ordres moteurs.
+E. Fusionnent en un nerf spinal ✔️
+
+Justification générale : Les racines antérieure et postérieure s’unissent pour former un nerf mixte.
+
+7️⃣ Nerfs spinaux
+
+A. 31 paires ✔️
+B. Uniquement sensitifs ❌ — Ce sont des nerfs mixtes.
+C. Sortent du canal rachidien ✔️
+D. Appartiennent au SNC ❌ — Au SNP.
+E. Reliés à la moelle épinière ✔️
+
+Justification générale : Chaque nerf spinal relie un segment médullaire à une région du corps.
+
+8️⃣ Plexus nerveux
+
+A. Réseaux nerveux périphériques ✔️
+B. Thoracique, lombaire et sacré uniquement ❌ — Il y a aussi un plexus cervical.
+C. Issus des nerfs spinaux ✔️
+D. Innervent les membres ✔️
+E. Sécrètent des neurotransmetteurs ❌ — Ce sont les neurones qui le font.
+
+Justification générale : Les plexus regroupent des fibres de plusieurs nerfs spinaux assurant l’innervation coordonnée des membres.
+
+9️⃣ Voies ascendantes
+
+A. Transmettent les influx sensoriels ✔️
+B. Descendent du cerveau ❌ — Elles montent vers lui.
+C. Comprennent les faisceaux spinothalamiques ✔️
+D. Aboutissent au cortex moteur ❌ — Elles finissent dans les aires sensitives.
+E. Passent dans la substance blanche ✔️
+
+Justification générale : Les voies ascendantes véhiculent les informations sensitives vers les centres supérieurs.
+
+🔟 Voies descendantes
+
+A. Origine corticale ✔️
+B. Acheminent les ordres moteurs ✔️
+C. Montent vers le thalamus ❌ — Elles descendent jusqu’à la moelle.
+D. Font relais dans le bulbe ✔️
+E. Contrôlent les muscles squelettiques ✔️
+
+Justification générale : Ces voies conduisent les signaux moteurs volontaires vers les motoneurones de la moelle.
+
+11️⃣ Faisceau cortico-spinal
+
+A. Aussi appelé voie pyramidale ✔️
+B. Décusse dans le bulbe ✔️
+C. Contrôle la motricité fine ✔️
+D. Transmet la douleur ❌ — Fonction sensitive.
+E. D’origine hypothalamique ❌ — Origine corticale.
+
+Justification générale : La voie pyramidale transmet les ordres volontaires du cortex moteur.
+
+12️⃣ Faisceau spinothalamique
+
+A. Sensibilité thermique ✔️
+B. Sensibilité douloureuse ✔️
+C. Sensibilité fine ❌ — Transportée par les faisceaux postérieurs.
+D. Décusse dans la moelle ✔️
+E. Se termine au thalamus ✔️
+
+Justification générale : Il véhicule la douleur, la température et le toucher grossier.
+
+13️⃣ Faisceaux gracile et cunéiforme
+
+A. Transmettent la proprioception consciente ✔️
+B. Montent sans décusser dans la moelle ✔️
+C. Décussent dans le bulbe ✔️
+D. Transportent la douleur ❌ — Non, c’est spinothalamique.
+E. Aboutissent au thalamus ✔️
+
+Justification générale : Ces faisceaux postérieurs conduisent les sensations fines et la position corporelle.
+
+14️⃣ Arc réflexe
+
+A. Comporte un récepteur ✔️
+B. Nécessite le cerveau ❌ — Il est médullaire.
+C. Implique un neurone moteur ✔️
+D. Fonctionne sans voie sensitive ❌ — Nécessite afférente et efférente.
+E. Réponse automatique ✔️
+
+Justification générale : Le réflexe spinal est un circuit simple garantissant une réaction rapide et inconsciente.
+
+15️⃣ Méninges spinales
+
+A. Dure-mère ✔️
+B. Arachnoïde ✔️
+C. Pie-mère ✔️
+D. Enveloppes cardiaques ❌ — C’est le péricarde.
+E. Circulation du LCS ✔️
+
+Justification générale : Les trois enveloppes protègent la moelle et assurent la circulation du liquide cérébrospinal.
+
+16️⃣ Liquide cérébrospinal
+
+A. Produit par la moelle ❌ — Par les plexus choroïdes du cerveau.
+B. Circule dans l’espace sous-arachnoïdien ✔️
+C. Protège mécaniquement la moelle ✔️
+D. Se renouvelle continuellement ✔️
+E. Comporte des hormones ❌ — Non, il transporte des nutriments et déchets.
+
+Justification générale : Le LCS amortit les chocs et maintient l’équilibre chimique du SNC.
+
+17️⃣ Queue de cheval
+
+A. Regroupe les racines lombaires et sacrées ✔️
+B. Contient des neurones moteurs centraux ❌ — Uniquement des fibres périphériques.
+C. Située sous le cône médullaire ✔️
+D. Terminaison du filum terminale ❌ — Ce sont deux structures distinctes.
+E. Située dans le canal rachidien ✔️
+
+Justification générale : C’est un faisceau de racines nerveuses prolongeant la moelle dans le canal rachidien inférieur.
+
+18️⃣ Vascularisation médullaire
+
+A. Artère spinale antérieure ✔️
+B. Artères spinales postérieures ✔️
+C. Artère radiculaire magna (Adamkiewicz) ✔️
+D. Veines spinales ✔️
+E. Réseau lymphatique ❌ — Le SNC en est dépourvu.
+
+Justification générale : L’apport sanguin médullaire dépend de trois axes longitudinaux et d’un réseau segmentaire.
+
+19️⃣ Lésions médullaires
+
+A. Section complète = paralysie totale ✔️
+B. Hémisection = syndrome de Brown-Séquard ✔️
+C. Lésion antérieure = perte motrice ✔️
+D. Lésion postérieure = perte sensitive ✔️
+E. Régénération rapide ❌ — Très limitée dans le SNC.
+
+Justification générale : Les conséquences d’une lésion dépendent du siège et de la nature des fibres atteintes.
+
+20️⃣ Fonctions globales
+
+A. Conduction nerveuse ✔️
+B. Centre réflexe ✔️
+C. Communication entre cerveau et organes ✔️
+D. Production hormonale ❌ — Pas endocrinienne.
+E. Fonction digestive ❌ — Non concernée.
+
+Justification générale : La moelle épinière agit comme centre d’intégration réflexe et voie de communication bidirectionnelle entre corps et cerveau.

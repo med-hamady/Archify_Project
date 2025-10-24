@@ -1,0 +1,204 @@
+🧬 Chapitre 4 : Tissu musculaire (squelettique, cardiaque et lisse)
+
+(20 QCM – difficulté progressive)
+
+1️⃣ Types de tissu musculaire
+
+Question : Les trois types de tissus musculaires sont :
+A. Squelettique ✔️
+B. Cardiaque ✔️
+C. Lisse ✔️
+D. Nerveux ❌ — C’est un autre tissu excitable.
+E. Épithélial ❌
+
+Justification : Le tissu musculaire se divise en trois types selon structure et mode de contraction.
+
+2️⃣ Caractéristiques générales
+
+A. Constitués de cellules contractiles ✔️
+B. Riche en mitochondries ✔️
+C. Non vascularisés ❌ — Très vascularisés.
+D. Responsables du mouvement ✔️
+E. Incapables de consommer l’ATP ❌
+
+Justification : La contraction musculaire consomme beaucoup d’ATP et nécessite apport sanguin important.
+
+3️⃣ Muscle squelettique
+
+A. Strié transversalement ✔️
+B. Contraction volontaire ✔️
+C. Cellules longues et multinucléées ✔️
+D. Noyaux centraux ❌ — Périphériques.
+E. Cellules courtes ❌
+
+Justification : Fibres cylindriques longues, plurinucléées, sous contrôle volontaire.
+
+4️⃣ Organisation du muscle squelettique
+
+A. Endomysium ✔️
+B. Périmysium ✔️
+C. Épimysium ✔️
+D. Endoste ❌ — Tissu osseux.
+E. Périchondre ❌ — Cartilage.
+
+Justification : Chaque fibre, faisceau et muscle entier sont entourés de gaines conjonctives.
+
+5️⃣ Myofibrilles
+
+A. Alignées parallèlement ✔️
+B. Constituées de sarcomères ✔️
+C. Non striées ❌ — Striées.
+D. Composées d’actine et myosine ✔️
+E. Présentes uniquement dans muscle lisse ❌
+
+Justification : Les myofibrilles sont les unités contractiles organisées en sarcomères.
+
+6️⃣ Sarcomère
+
+A. Unité fonctionnelle du muscle strié ✔️
+B. Délimitée par les lignes Z ✔️
+C. Contient les bandes A et I ✔️
+D. Contient un noyau ❌
+E. Se raccourcit lors de la contraction ✔️
+
+Justification : Le sarcomère se contracte par glissement des filaments d’actine et de myosine.
+
+7️⃣ Contraction musculaire
+
+A. Nécessite du calcium ✔️
+B. Dépend de l’ATP ✔️
+C. Indépendante du système nerveux ❌ — Nécessite un influx.
+D. Se produit au niveau des sarcomères ✔️
+E. Ne consomme pas d’énergie ❌
+
+Justification : Le calcium déclenche la contraction, l’ATP permet le glissement des filaments.
+
+8️⃣ Jonction neuromusculaire
+
+A. Lieu de communication nerve-muscle ✔️
+B. Contient de l’acétylcholine ✔️
+C. Se trouve dans muscle lisse ❌ — Spécifique au squelettique.
+D. Transmet influx nerveux ✔️
+E. Fonctionne sans récepteurs ❌ — Récepteurs nicotiniques requis.
+
+Justification : La plaque motrice convertit le signal nerveux en contraction musculaire.
+
+9️⃣ Muscle cardiaque
+
+A. Strié ✔️
+B. Cellules mononucléées ✔️
+C. Noyaux centraux ✔️
+D. Contraction volontaire ❌ — Involontaire.
+E. Disques intercalaires ✔️
+
+Justification : Le muscle cardiaque est strié comme le squelettique mais involontaire et mononucléé.
+
+10️⃣ Disques intercalaires
+
+A. Relient les cellules cardiaques ✔️
+B. Contiennent des jonctions communicantes ✔️
+C. Assurent cohésion mécanique ✔️
+D. Absents dans muscle squelettique ✔️
+E. Non conducteurs ❌ — Assurent conduction électrique.
+
+Justification : Les disques intercalaires synchronisent contraction cardiaque.
+
+11️⃣ Tissu nodal cardiaque
+
+A. Génère l’influx électrique ✔️
+B. Constitué de fibres de Purkinje ✔️
+C. Situé dans le myocarde ✔️
+D. Soumis au contrôle volontaire ❌
+E. Contrôle la fréquence cardiaque ✔️
+
+Justification : Le tissu nodal régule rythme cardiaque autonome.
+
+12️⃣ Vascularisation du muscle cardiaque
+
+A. Très riche ✔️
+B. Artères coronaires ✔️
+C. Peu d’anastomoses ❌ — Présentes.
+D. Endomysium vascularisé ✔️
+E. Sans capillaires ❌
+
+Justification : Chaque fibre cardiaque est entourée d’un réseau capillaire dense.
+
+13️⃣ Muscle lisse
+
+A. Non strié ✔️
+B. Uninucléé ✔️
+C. Contrôle involontaire ✔️
+D. Présent dans la paroi digestive ✔️
+E. Rapide et fatiguable ❌ — Lent et résistant.
+
+Justification : Les cellules fusiformes assurent mouvements lents involontaires des viscères.
+
+14️⃣ Organisation du muscle lisse
+
+A. Pas de sarcomères ✔️
+B. Filaments d’actine et myosine ✔️
+C. Présence de corps denses ✔️
+D. Cellules cylindriques ❌ — Fusiformes.
+E. Disques intercalaires ❌
+
+Justification : La contraction est diffuse grâce aux corps denses remplaçant les lignes Z.
+
+15️⃣ Innervation du muscle lisse
+
+A. Système nerveux autonome ✔️
+B. Plaques motrices ❌ — Absentes.
+C. Neurotransmetteurs variés ✔️
+D. Synapses multiples ✔️
+E. Commande consciente ❌
+
+Justification : Commande involontaire, modulée par système sympathique et parasympathique.
+
+16️⃣ Muscle lisse multi-unitaire
+
+A. Fibres indépendantes ✔️
+B. Contrôle précis ✔️
+C. Présent dans l’iris ✔️
+D. Présent dans l’utérus ❌ — C’est le viscéral.
+E. Nécessite une innervation individuelle ✔️
+
+Justification : Chaque fibre reçoit son influx, contraction fine (ex. iris).
+
+17️⃣ Muscle lisse viscéral
+
+A. Cellules couplées par jonctions communicantes ✔️
+B. Contraction coordonnée ✔️
+C. Présent dans l’intestin ✔️
+D. Contrôle volontaire ❌
+E. Fibres isolées ❌
+
+Justification : Contraction lente et synchrone des viscères.
+
+18️⃣ Régénération musculaire
+
+A. Forte dans muscle squelettique ❌ — Limitée.
+B. Par cellules satellites ✔️
+C. Très limitée dans muscle cardiaque ✔️
+D. Bonne dans muscle lisse ✔️
+E. Impossible dans tous les muscles ❌
+
+Justification : Le muscle lisse se régénère mieux ; cardiaque presque pas.
+
+19️⃣ Métabolisme musculaire
+
+A. Utilise glycogène ✔️
+B. Utilise lipides ✔️
+C. Produit lactate ✔️
+D. Dépend de l’oxygène ✔️
+E. Sans mitochondries ❌
+
+Justification : Les fibres utilisent voies aérobies ou anaérobies selon type.
+
+20️⃣ Types de fibres musculaires squelettiques
+
+A. Fibres lentes rouges ✔️
+B. Fibres rapides blanches ✔️
+C. Fibres intermédiaires ✔️
+D. Fibres sans mitochondries ❌
+E. Fibres identiques partout ❌
+
+Justification : Les muscles contiennent des fibres variées selon la fonction (posture, rapidité).

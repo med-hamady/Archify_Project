@@ -1,0 +1,204 @@
+🧬 Chapitre 10 : Glandes endocrines
+
+(20 QCM – difficulté progressive)
+
+1️⃣ Définition générale
+
+Question : Les glandes endocrines :
+A. Déversent leurs sécrétions dans le sang ✔️
+B. Possèdent un canal excréteur ❌ — Absent.
+C. Sécrètent des hormones ✔️
+D. Sont dépourvues de capillaires ❌ — Très riches en capillaires.
+E. Ont une organisation épithéliale ✔️
+
+Justification : Glandes sans canal, sécrétant des hormones dans la circulation.
+
+2️⃣ Principales glandes endocrines
+
+A. Hypophyse ✔️
+B. Thyroïde ✔️
+C. Parathyroïdes ✔️
+D. Surrénales ✔️
+E. Pancréas endocrinien ✔️
+
+Justification : Ces glandes régulent les grandes fonctions métaboliques et hormonales.
+
+3️⃣ Hypophyse
+
+A. Glande double d’origine embryonnaire ✔️
+B. Adénohypophyse et neurohypophyse ✔️
+C. Reliée à l’hypothalamus ✔️
+D. Sécrète insuline ❌ — Pancréas.
+E. Régule d’autres glandes ✔️
+
+Justification : Centre endocrinien principal contrôlé par l’hypothalamus.
+
+4️⃣ Adénohypophyse
+
+A. Tissu glandulaire ✔️
+B. Sécrète GH, ACTH, TSH, FSH, LH, PRL ✔️
+C. Cellules acidophiles et basophiles ✔️
+D. Myélinisée ❌ — Pas nerveuse.
+E. Contrôlée par des hormones hypothalamiques ✔️
+
+Justification : Partie antérieure de l’hypophyse à sécrétion hormonale.
+
+5️⃣ Neurohypophyse
+
+A. Tissu nerveux ✔️
+B. Stocke ADH et ocytocine ✔️
+C. Sécrète directement ces hormones ❌ — Stockées puis libérées.
+D. Contient des fibres non myélinisées ✔️
+E. Cellules pituicytes ✔️
+
+Justification : Partie postérieure servant de réservoir aux hormones hypothalamiques.
+
+6️⃣ Hypothalamus
+
+A. Régule l’hypophyse ✔️
+B. Sécrète des hormones de libération ✔️
+C. Reçoit des signaux nerveux ✔️
+D. Situé dans le tronc cérébral ❌ — Sous le thalamus.
+E. Lien entre système nerveux et endocrinien ✔️
+
+Justification : Centre de commande neuroendocrinien.
+
+7️⃣ Thyroïde
+
+A. Deux lobes reliés par un isthme ✔️
+B. Follicules remplis de colloïde ✔️
+C. Sécrète T3 et T4 ✔️
+D. Cellules parafolliculaires sécrètent la calcitonine ✔️
+E. Sans capillaires ❌
+
+Justification : Glande folliculaire stockant les hormones iodées dans la colloïde.
+
+8️⃣ Follicule thyroïdien
+
+A. Épithélium cubique simple ✔️
+B. Lumen rempli de colloïde ✔️
+C. Synthèse de thyroglobuline ✔️
+D. Stockage extracellulaire ✔️
+E. Épithélium pavimenteux stratifié ❌
+
+Justification : Unité fonctionnelle responsable de la production hormonale iodée.
+
+9️⃣ Cellules parafolliculaires (C)
+
+A. Entre les follicules ✔️
+B. Sécrètent la calcitonine ✔️
+C. Diminuent la calcémie ✔️
+D. Stimulent les ostéoclastes ❌ — Inhibent.
+E. Hypersensibles à la TSH ❌
+
+Justification : Régulent la concentration de calcium sanguin.
+
+10️⃣ Parathyroïdes
+
+A. Quatre petites glandes ✔️
+B. Sécrètent la parathormone (PTH) ✔️
+C. Augmentent la calcémie ✔️
+D. Inhibent les ostéoclastes ❌ — Les stimulent.
+E. Situées derrière la thyroïde ✔️
+
+Justification : Glandes régulant le métabolisme du calcium et du phosphore.
+
+11️⃣ Glandes surrénales
+
+A. Situées au-dessus des reins ✔️
+B. Cortex et médulla ✔️
+C. Cortex : hormones stéroïdes ✔️
+D. Médulla : catécholamines ✔️
+E. Sécrètent insuline ❌
+
+Justification : Glandes mixtes sécrétant hormones métaboliques et de stress.
+
+12️⃣ Cortex surrénalien
+
+A. Trois zones : glomérulée, fasciculée, réticulée ✔️
+B. Sécrète aldostérone, cortisol, androgènes ✔️
+C. Dérivé ectodermique ❌ — Mésodermique.
+D. Cellules riches en lipides ✔️
+E. Pas de capillaires ❌
+
+Justification : Organisation zonée en fonction des hormones produites.
+
+13️⃣ Médulla surrénale
+
+A. Dérivée du système nerveux sympathique ✔️
+B. Cellules chromaffines ✔️
+C. Sécrète adrénaline et noradrénaline ✔️
+D. Activée par le stress ✔️
+E. Sécrétion lente ❌ — Très rapide.
+
+Justification : Réponse immédiate au stress, contrôlée par le système nerveux.
+
+14️⃣ Pancréas endocrinien
+
+A. Îlots de Langerhans ✔️
+B. Cellules α, β, δ ✔️
+C. Sécrète insuline, glucagon, somatostatine ✔️
+D. Fonction exocrine principale ❌ — C’est l’autre partie.
+E. Régule la glycémie ✔️
+
+Justification : Unité endocrine contrôlant le métabolisme glucidique.
+
+15️⃣ Cellules des îlots de Langerhans
+
+A. α → glucagon ✔️
+B. β → insuline ✔️
+C. δ → somatostatine ✔️
+D. ε → ghréline ✔️
+E. γ → adrénaline ❌
+
+Justification : Différentes cellules endocrines agissant sur la glycémie et la digestion.
+
+16️⃣ Hypophyse – vascularisation
+
+A. Réseau porte hypophysaire ✔️
+B. Relie hypothalamus et adénohypophyse ✔️
+C. Apporte hormones de libération ✔️
+D. Absent dans la neurohypophyse ❌ — Présent aussi.
+E. Permet contrôle direct ✔️
+
+Justification : Permet le transport rapide des signaux hormonaux hypothalamiques.
+
+17️⃣ Épiphyse (glande pinéale)
+
+A. Sécrète mélatonine ✔️
+B. Régule rythme circadien ✔️
+C. Contient des pinéalocytes ✔️
+D. Située dans le thalamus ❌ — Dans l’épithalamus.
+E. Stimule la croissance ❌
+
+Justification : Joue un rôle clé dans la régulation veille-sommeil.
+
+18️⃣ Thymus (aspect endocrinien)
+
+A. Sécrète thymosine ✔️
+B. Influence la maturation lymphocytaire ✔️
+C. Actif chez l’enfant ✔️
+D. Devient graisseux après puberté ✔️
+E. Sécrète adrénaline ❌
+
+Justification : Glande endocrine et immunitaire transitoire.
+
+19️⃣ Ovaires (fonction endocrine)
+
+A. Sécrètent œstrogènes ✔️
+B. Sécrètent progestérone ✔️
+C. Sécrètent testostérone en petite quantité ✔️
+D. Dépendent de la FSH et LH ✔️
+E. Sécrètent cortisol ❌
+
+Justification : Glande mixte régulée par l’hypophyse et les gonadotrophines.
+
+20️⃣ Testicules (fonction endocrine)
+
+A. Cellules de Leydig ✔️
+B. Sécrètent testostérone ✔️
+C. Sous contrôle de la LH ✔️
+D. Produisent la FSH ❌ — Sécrétée par l’hypophyse.
+E. Contrôlent la spermatogenèse ✔️
+
+Justification : Rôle hormonal masculin assurant virilisation et fertilité.

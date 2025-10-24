@@ -1,0 +1,200 @@
+Chapitre 4 – Cervelet et coordination motrice (niveau sélectif : 0–2 réponses justes)
+1️⃣ Localisation
+
+A. Situé sous les lobes occipitaux ✔️
+B. En avant du tronc cérébral ❌ — Il est en arrière du tronc.
+C. Dans la fosse postérieure du crâne ✔️
+D. Dans le lobe temporal ❌ — Ce n’est pas une partie du télencéphale.
+E. En dessous du bulbe ❌ — Il est postérieur, pas inférieur.
+
+Justification générale : Le cervelet se trouve à l’arrière du tronc cérébral, sous les hémisphères cérébraux.
+
+2️⃣ Structure générale
+
+A. Composé de deux hémisphères et d’un vermis médian ✔️
+B. Ne contient pas de substance blanche ❌ — Elle est présente au centre.
+C. Formé uniquement de matière grise ❌ — Les deux substances coexistent.
+D. Relié au cerveau par des pédoncules cérébelleux ✔️
+E. Relié directement à la moelle ❌ — Par l’intermédiaire du tronc cérébral.
+
+Justification générale : Le cervelet relie ses structures par trois paires de pédoncules.
+
+3️⃣ Couches du cortex cérébelleux
+
+A. Moléculaire ✔️
+B. Granulaire ✔️
+C. Moyenne ❌ — Aucune couche ne porte ce nom.
+D. Interne pyramidale ❌ — Type cortical cérébral, pas cérébelleux.
+E. Interne fibreuse ❌ — Nomenclature incorrecte.
+
+Justification générale : Le cortex cérébelleux a trois couches : moléculaire, de Purkinje, granulaire.
+
+4️⃣ Cellules de Purkinje
+
+A. Neurones inhibiteurs ✔️
+B. Se projettent vers les noyaux profonds ✔️
+C. Sécrètent de la mélatonine ❌ — Hormone pinéale.
+D. Se trouvent dans la substance blanche ❌ — Dans le cortex.
+E. Responsables de la motricité volontaire ❌ — Elles corrigent, pas initient.
+
+Justification générale : Les cellules de Purkinje sont les grandes cellules de sortie du cortex cérébelleux.
+
+5️⃣ Pédoncules cérébelleux
+
+A. Supérieur = efférent ✔️
+B. Moyen = afférent ✔️
+C. Inférieur = purement moteur ❌ — Contient des fibres sensitives.
+D. Unique par côté ❌ — Trois paires existent.
+E. Relié au thalamus ❌ — Indirectement via d’autres relais.
+
+Justification générale : Les pédoncules relient le cervelet au mésencéphale, pont et bulbe selon la direction des fibres.
+
+6️⃣ Fonctions principales
+
+A. Coordination ✔️
+B. Équilibre ✔️
+C. Commande volontaire ❌ — Cortex moteur.
+D. Régulation hormonale ❌ — Hypothalamus.
+E. Perception sensorielle ❌ — Aires corticales.
+
+Justification générale : Le cervelet assure la précision et la fluidité des mouvements.
+
+7️⃣ Cervelet vestibulaire
+
+A. Lobe flocculo-nodulaire ✔️
+B. Rôle dans la posture ✔️
+C. Contrôle la parole ❌ — Non concerné.
+D. Lié à la vision ❌ — Pas directement.
+E. Gère la mémoire motrice ❌ — Cérébrocérébellum.
+
+Justification générale : Le vestibulocérébellum régule équilibre et mouvements oculaires réflexes.
+
+8️⃣ Cervelet spinal
+
+A. Vermis ✔️
+B. Paravermis ✔️
+C. Reçoit les voies optiques ❌ — C’est le cortex occipital.
+D. Coordonne les muscles viscéraux ❌ — Fonction autonome.
+E. Gère la posture ✔️
+
+Justification générale : Le spinocérébellum ajuste le tonus et la posture corporelle.
+
+9️⃣ Cervelet cérébral (néocérébellum)
+
+A. Hémisphères latéraux ✔️
+B. Coordination fine ✔️
+C. Équilibre statique ❌ — Vestibulaire.
+D. Contrôle viscéral ❌ — Pas son rôle.
+E. Mémoire déclarative ❌ — Fonction corticale.
+
+Justification générale : Le néocérébellum perfectionne la précision des gestes complexes.
+
+🔟 Afférences cérébelleuses
+
+A. Spino-cérébelleuses ✔️
+B. Vestibulo-cérébelleuses ✔️
+C. Cérébello-pontiques ❌ — Ce sont des efférences.
+D. Cortico-médullaires ❌ — N’existent pas.
+E. Olfactives ❌ — Non reliées.
+
+Justification générale : Le cervelet reçoit des informations proprioceptives et vestibulaires.
+
+11️⃣ Efférences cérébelleuses
+
+A. Vers les noyaux profonds ✔️
+B. Vers le thalamus ✔️
+C. Directement vers les muscles ❌ — Par relais médullaires.
+D. Vers le cortex moteur ✔️
+E. Vers les ganglions de la base ❌ — Autres circuits moteurs.
+
+Justification générale : Les signaux sortent via les noyaux profonds vers le thalamus et le cortex moteur.
+
+12️⃣ Ataxie cérébelleuse
+
+A. Trouble de la coordination ✔️
+B. Réflexe spinal ❌ — Autre mécanisme.
+C. Gait instable ✔️
+D. Paralysie ❌ — Force préservée.
+E. Troubles sensitifs ❌ — Touchent les voies spinothalamiques.
+
+Justification générale : L’ataxie résulte d’une mauvaise synchronisation motrice sans perte de force.
+
+13️⃣ Dysmétrie
+
+A. Erreur d’amplitude du mouvement ✔️
+B. Hypotonie ✔️
+C. Hypertonie ❌ — Inverse.
+D. Lésion corticale ❌ — Cérébelleuse.
+E. Trouble auditif ❌ — Non concerné.
+
+Justification générale : La dysmétrie traduit un défaut d’ajustement moteur lié au cervelet.
+
+14️⃣ Syndrome cérébelleux
+
+A. Hypotonie ✔️
+B. Dysarthrie ✔️
+C. Hyperréflexie ❌ — Signe pyramidal.
+D. Paralysie complète ❌ — Non présente.
+E. Tremblement intentionnel ✔️
+
+Justification générale : Le syndrome cérébelleux associe hypotonie, dysarthrie et tremblements d’action.
+
+15️⃣ Lésion unilatérale du cervelet
+
+A. Troubles ipsilatéraux ✔️
+B. Troubles contralatéraux ❌ — Organisation non croisée.
+C. Hypertonie ❌ — Plutôt hypotonie.
+D. Ataxie du côté atteint ✔️
+E. Perte de sensibilité ❌ — Non sensorielle.
+
+Justification générale : Les symptômes apparaissent du même côté que la lésion.
+
+16️⃣ Noyaux cérébelleux profonds
+
+A. Dentelé ✔️
+B. Fastigial ✔️
+C. Caudé ❌ — Noyau du télencéphale.
+D. Lentiforme ❌ — Noyau basal.
+E. Globuleux ✔️
+
+Justification générale : Les noyaux profonds constituent les relais de sortie du cervelet.
+
+17️⃣ Rôle dans l’apprentissage moteur
+
+A. Ajustement des mouvements ✔️
+B. Mémorisation des séquences motrices ✔️
+C. Réflexe archaïque ❌ — Non lié.
+D. Fonction sensorielle pure ❌ — C’est moteur.
+E. Émotionnel ❌ — Système limbique.
+
+Justification générale : Le cervelet participe à l’apprentissage et à la répétition des gestes coordonnés.
+
+18️⃣ Fonctions cognitives du cervelet
+
+A. Langage ✔️
+B. Planification motrice ✔️
+C. Vision ❌ — Aire occipitale.
+D. Équilibre ❌ — Vestibulaire.
+E. Perception olfactive ❌ — Cortex temporal.
+
+Justification générale : Le cervelet a aussi un rôle dans certaines fonctions cognitives comme la parole et la planification.
+
+19️⃣ Lésions bilatérales
+
+A. Troubles majeurs de la marche ✔️
+B. Mutisme cérébelleux ✔️
+C. Paralysie des membres ❌ — Les muscles gardent leur force.
+D. Surdité ❌ — Nerf VIII.
+E. Hémianopsie ❌ — Lobe occipital.
+
+Justification générale : Les lésions bilatérales entraînent une perte massive de coordination et parfois un mutisme.
+
+20️⃣ Cervelet et homéostasie
+
+A. Régule la glycémie ❌ — Rôle pancréatique.
+B. Régule la posture ✔️
+C. Contrôle cardiaque ❌ — Bulbe rachidien.
+D. Ajuste la tension musculaire ✔️
+E. Déclenche les réflexes de douleur ❌ — Moelle épinière.
+
+Justification générale : Le cervelet participe au maintien de la posture et du tonus pour l’équilibre général.

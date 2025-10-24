@@ -311,7 +311,8 @@ async function importSubjectQuizzes(
 async function main() {
   console.log('🚀 Début de l\'importation des quiz...\n');
 
-  const baseDir = 'C:\\Users\\pc\\Desktop\\FAC GAME';
+  // Chemin relatif depuis le dossier backend (fonctionnera en local et sur Render)
+  const baseDir = path.join(__dirname, '..', 'data', 'quiz');
 
   try {
     // ===== PCEM1 - S International =====
@@ -322,21 +323,21 @@ async function main() {
     await importSubjectQuizzes(
       'Anatomie',
       'PCEM1',
-      path.join(baseDir, 'pcem1', 'S inetrnational', 'quiz pcem1', 'anatomie'),
+      path.join(baseDir, 'pcem1', 'anatomie'),
       'Anatomie du membre supérieur et inférieur'
     );
 
     await importSubjectQuizzes(
       'Histologie',
       'PCEM1',
-      path.join(baseDir, 'pcem1', 'S inetrnational', 'quiz pcem1', 'histo'),
+      path.join(baseDir, 'pcem1', 'histo'),
       'Histologie des tissus et organes'
     );
 
     await importSubjectQuizzes(
       'Physiologie',
       'PCEM1',
-      path.join(baseDir, 'pcem1', 'S inetrnational', 'quiz pcem1', 'physio'),
+      path.join(baseDir, 'pcem1', 'physio'),
       'Physiologie cellulaire et des systèmes'
     );
 
@@ -348,21 +349,21 @@ async function main() {
     await importSubjectQuizzes(
       'Anatomie',
       'PCEM2',
-      path.join(baseDir, 'pcem2', 'S INETR', 'quiz pcem2', 'anatomie'),
+      path.join(baseDir, 'pcem2', 'anatomie'),
       'Anatomie niveau PCEM2'
     );
 
     await importSubjectQuizzes(
       'Histologie',
       'PCEM2',
-      path.join(baseDir, 'pcem2', 'S INETR', 'quiz pcem2', 'histo'),
+      path.join(baseDir, 'pcem2', 'histo'),
       'Histologie niveau PCEM2'
     );
 
     await importSubjectQuizzes(
       'Physiologie',
       'PCEM2',
-      path.join(baseDir, 'pcem2', 'S INETR', 'quiz pcem2', 'physio'),
+      path.join(baseDir, 'pcem2', 'physio'),
       'Physiologie niveau PCEM2'
     );
 

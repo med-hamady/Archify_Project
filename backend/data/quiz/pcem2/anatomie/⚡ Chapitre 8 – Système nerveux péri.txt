@@ -1,0 +1,200 @@
+⚡ Chapitre 8 – Système nerveux périphérique et autonome (0 à 5 bonnes réponses)
+1️⃣ Organisation générale du SNP
+
+A. Composé des nerfs crâniens ✔️
+B. Composé des nerfs spinaux ✔️
+C. Contient la moelle épinière ❌ — Elle appartient au SNC.
+D. Contient les ganglions ✔️
+E. Fait partie du cerveau ❌ — Il se situe hors du SNC.
+
+Justification générale : Le SNP relie le système nerveux central au reste du corps via les nerfs et ganglions.
+
+2️⃣ Types de nerfs
+
+A. Nerfs sensitifs ✔️
+B. Nerfs moteurs ✔️
+C. Nerfs mixtes ✔️
+D. Nerfs centraux ❌ — Ce terme n’existe pas.
+E. Nerfs hormonaux ❌ — Pas de rôle endocrinien.
+
+Justification générale : Les nerfs périphériques transmettent les influx sensitifs, moteurs ou les deux.
+
+3️⃣ Nerfs crâniens
+
+A. 12 paires ✔️
+B. Rattachés au tronc cérébral ✔️
+C. Tous mixtes ❌ — Certains sont exclusivement sensitifs ou moteurs.
+D. Reliés au cervelet ❌ — Ils émergent du tronc.
+E. Contrôlent les organes des sens ✔️
+
+Justification générale : Les nerfs crâniens assurent la motricité et la sensibilité de la tête et du cou.
+
+4️⃣ Nerfs spinaux
+
+A. 31 paires ✔️
+B. Mixtes ✔️
+C. Sortent de la moelle ✔️
+D. Unilatéraux ❌ — Symétriques droite/gauche.
+E. Pas de racines ❌ — Chaque nerf a une racine antérieure et postérieure.
+
+Justification générale : Les nerfs spinaux sont des voies de communication entre la moelle et les organes périphériques.
+
+5️⃣ Racines nerveuses
+
+A. Antérieure motrice ✔️
+B. Postérieure sensitive ✔️
+C. Ganglion spinal sur la postérieure ✔️
+D. Antérieure sensitive ❌ — Motrice.
+E. Se rejoignent pour former un nerf ✔️
+
+Justification générale : Les racines antérieures et postérieures forment les nerfs spinaux mixtes.
+
+6️⃣ Ganglions
+
+A. Amas de corps neuronaux ✔️
+B. Situés dans le SNC ❌ — Toujours périphériques.
+C. Peuvent être sensitifs ✔️
+D. Peuvent être autonomes ✔️
+E. Contiennent uniquement des axones ❌ — Contiennent surtout des somas.
+
+Justification générale : Les ganglions sont les relais entre SNC et périphérie, sensitifs ou végétatifs.
+
+7️⃣ Système nerveux autonome (SNA)
+
+A. Contrôle involontaire ✔️
+B. Régule le cœur ✔️
+C. Régule les glandes ✔️
+D. Commande les muscles squelettiques ❌ — Fonction somatique.
+E. Régule les organes internes ✔️
+
+Justification générale : Le SNA contrôle toutes les fonctions automatiques vitales de l’organisme.
+
+8️⃣ Divisions du SNA
+
+A. Sympathique ✔️
+B. Parasympathique ✔️
+C. Entérique ✔️
+D. Somatique ❌ — Système volontaire.
+E. Sensoriel ❌ — Fonction distincte.
+
+Justification générale : Le SNA se divise en systèmes complémentaires et automatiques.
+
+9️⃣ Système sympathique
+
+A. Prépare à l’action ✔️
+B. Dilate les pupilles ✔️
+C. Accélère le cœur ✔️
+D. Inhibe la digestion ✔️
+E. Active la sécrétion d’insuline ❌ — Il la réduit.
+
+Justification générale : Le système sympathique mobilise l’énergie et les ressources en cas de stress.
+
+🔟 Système parasympathique
+
+A. Favorise la détente ✔️
+B. Ralentit le cœur ✔️
+C. Stimule la digestion ✔️
+D. Contracte les pupilles ✔️
+E. Active la sueur ❌ — Fonction sympathique.
+
+Justification générale : Le parasympathique favorise le repos, la récupération et les fonctions digestives.
+
+11️⃣ Centres de contrôle du SNA
+
+A. Hypothalamus ✔️
+B. Tronc cérébral ✔️
+C. Moelle épinière ✔️
+D. Cortex moteur ❌ — Volontaire.
+E. Cervelet ❌ — Coordination motrice.
+
+Justification générale : Le SNA est sous contrôle de centres végétatifs situés dans l’hypothalamus et le tronc.
+
+12️⃣ Neurotransmetteurs du SNA
+
+A. Acétylcholine ✔️
+B. Noradrénaline ✔️
+C. Adrénaline ✔️
+D. Dopamine ❌ — Rôle dans les voies centrales.
+E. GABA ❌ — Inhibiteur central, pas autonome.
+
+Justification générale : Les principaux médiateurs du SNA sont l’acétylcholine et la noradrénaline.
+
+13️⃣ Récepteurs autonomes
+
+A. Nicotiniques ✔️
+B. Muscariniques ✔️
+C. Adrénergiques ✔️
+D. Dopaminergiques ❌ — Moins fréquents.
+E. Glutamatergiques ❌ — SNC.
+
+Justification générale : Les récepteurs du SNA assurent la transmission entre neurones et organes cibles.
+
+14️⃣ Effets du système sympathique
+
+A. Tachycardie ✔️
+B. Mydriase ✔️
+C. Relaxation bronchique ✔️
+D. Vasodilatation cutanée ❌ — Vasoconstriction.
+E. Stimulation de la digestion ❌ — Inhibition.
+
+Justification générale : Le sympathique augmente la performance en situation de stress.
+
+15️⃣ Effets du parasympathique
+
+A. Bradycardie ✔️
+B. Myosis ✔️
+C. Sécrétion salivaire ✔️
+D. Augmentation du péristaltisme ✔️
+E. Inhibition digestive ❌ — L’effet inverse.
+
+Justification générale : Il favorise le repos, la digestion et la conservation d’énergie.
+
+16️⃣ Système entérique
+
+A. Autonome ✔️
+B. Situé dans la paroi digestive ✔️
+C. Fonctionne indépendamment ✔️
+D. Dirigé uniquement par le sympathique ❌ — Il est autonome.
+E. Ne contient pas de neurones ❌ — Il en contient des millions.
+
+Justification générale : Le système entérique contrôle localement les mouvements et sécrétions du tube digestif.
+
+17️⃣ Réflexes autonomes
+
+A. Inconscients ✔️
+B. Impliquent le tronc cérébral ✔️
+C. Peuvent passer par la moelle ✔️
+D. Dépendent de la volonté ❌ — Automatiques.
+E. Provoquent une réaction hormonale ✔️
+
+Justification générale : Les réflexes autonomes régulent la respiration, la pression et la digestion.
+
+18️⃣ Nerfs du SNA
+
+A. Fibres préganglionnaires ✔️
+B. Fibres postganglionnaires ✔️
+C. Un seul neurone par voie ❌ — Deux neurones successifs.
+D. Axones myélinisés ✔️
+E. Se terminent sur des glandes ou muscles lisses ✔️
+
+Justification générale : Les voies autonomes utilisent deux neurones pour atteindre leur organe cible.
+
+19️⃣ Lésions du SNA
+
+A. Troubles de la transpiration ✔️
+B. Hypotension orthostatique ✔️
+C. Paralysie volontaire ❌ — Somatique.
+D. Troubles digestifs ✔️
+E. Perte de la mémoire ❌ — Structure limbique.
+
+Justification générale : Les atteintes du SNA affectent la régulation automatique du corps.
+
+20️⃣ Fonctions globales du SNA
+
+A. Maintien de l’homéostasie ✔️
+B. Contrôle des fonctions vitales ✔️
+C. Régulation inconsciente ✔️
+D. Action volontaire ❌ — Automatique.
+E. Coordination motrice fine ❌ — Cervelet.
+
+Justification générale : Le SNA garantit la stabilité interne en agissant sur les organes vitaux sans contrôle conscient.

@@ -1,0 +1,400 @@
+⚡ Chapitre 2 – Physiologie cellulaire et membranaire (1 → 40)
+1️⃣ Question : La membrane plasmique.
+
+A. Est constituée d’une bicouche lipidique ✔️
+B. Contient des protéines intégrées ✔️
+C. Est imperméable à toutes les substances ❌ — Sélective.
+D. Est symétrique sur ses deux faces ❌ — Asymétrique.
+E. Contient du cholestérol ✔️
+
+💬 La membrane est une barrière sélective formée de lipides, protéines et glucides.
+
+2️⃣ Question : Les lipides membranaires.
+
+A. Sont principalement des phospholipides ✔️
+B. Se déplacent librement dans le plan de la membrane ✔️
+C. Sont orientés avec leurs queues hydrophiles ❌ — Hydrophobes.
+D. Forment une matrice fluide ✔️
+E. Ne participent pas à la perméabilité ❌ — Joue un rôle clé.
+
+💬 Les lipides assurent la fluidité et la structure de la membrane.
+
+3️⃣ Question : Les protéines membranaires.
+
+A. Peuvent être périphériques ou intégrales ✔️
+B. Servent de récepteurs ✔️
+C. Participent au transport actif ✔️
+D. Ne bougent jamais ❌ — Certaines sont mobiles.
+E. Ne sont pas glycosylées ❌ — Certaines le sont.
+
+💬 Les protéines confèrent des fonctions spécifiques à la membrane.
+
+4️⃣ Question : Les glucides membranaires.
+
+A. Se trouvent sur la face externe ✔️
+B. Forment le glycocalyx ✔️
+C. Participent à la reconnaissance cellulaire ✔️
+D. Sont absents des cellules animales ❌ — Présents.
+E. Servent à la rigidité membranaire ❌ — Rôle de signalisation.
+
+💬 Le glycocalyx protège et identifie la cellule.
+
+5️⃣ Question : Le transport passif.
+
+A. Se fait sans dépense d’énergie ✔️
+B. Suit le gradient de concentration ✔️
+C. Peut être facilité par des protéines ✔️
+D. Permet le passage du Na⁺ contre gradient ❌ — Non.
+E. Nécessite toujours un transporteur ❌ — Diffusion simple possible.
+
+💬 Le transport passif équilibre les concentrations sans ATP.
+
+6️⃣ Question : La diffusion simple.
+
+A. Concerne les gaz et les molécules liposolubles ✔️
+B. Nécessite des protéines transmembranaires ❌ — Non.
+C. Se fait selon le gradient de concentration ✔️
+D. Peut saturer les transporteurs ❌ — Pas de transporteur.
+E. Est lente sur de longues distances ✔️
+
+💬 La diffusion simple est efficace sur de courtes distances.
+
+7️⃣ Question : La diffusion facilitée.
+
+A. Nécessite des protéines de transport ✔️
+B. Se fait selon le gradient de concentration ✔️
+C. Nécessite de l’ATP ❌ — Passive.
+D. Peut saturer ✔️
+E. Est spécifique à certaines molécules ✔️
+
+💬 La diffusion facilitée est passive mais spécifique.
+
+8️⃣ Question : Le transport actif.
+
+A. Nécessite de l’énergie ✔️
+B. Permet de déplacer les solutés contre leur gradient ✔️
+C. Utilise des transporteurs spécifiques ✔️
+D. Est toujours secondaire ❌ — Primaire ou secondaire.
+E. N’utilise jamais d’ATP ❌ — Faux.
+
+💬 Le transport actif maintient les gradients ioniques vitaux.
+
+9️⃣ Question : La pompe Na⁺/K⁺ ATPase.
+
+A. Fait sortir 3 Na⁺ et entrer 2 K⁺ ✔️
+B. Consomme de l’ATP ✔️
+C. Maintient le potentiel de repos ✔️
+D. Est inhibée par l’ouabaïne ✔️
+E. Fonctionne sans énergie ❌ — ATP-dépendante.
+
+💬 Cette pompe stabilise les gradients ioniques cellulaires.
+
+🔟 Question : Le potentiel de repos.
+
+A. Est négatif à l’intérieur ✔️
+B. Résulte d’un déséquilibre ionique ✔️
+C. Est maintenu par la pompe Na⁺/K⁺ ✔️
+D. Est dû uniquement au sodium ❌ — Principalement au potassium.
+E. Est identique dans toutes les cellules ❌ — Varie selon le type cellulaire.
+
+💬 Le potentiel de repos dépend de la distribution ionique et des perméabilités membranaires.
+
+11️⃣ Question : Le potentiel d’action.
+
+A. Est une dépolarisation transitoire ✔️
+B. Résulte d’une entrée de Na⁺ ✔️
+C. Se termine par une sortie de K⁺ ✔️
+D. Se propage sans atténuation ✔️
+E. Est propre aux cellules non excitables ❌ — Uniquement excitables.
+
+💬 Le potentiel d’action est le signal électrique fondamental.
+
+12️⃣ Question : La période réfractaire.
+
+A. Suit un potentiel d’action ✔️
+B. Empêche une excitation prématurée ✔️
+C. Garantit une propagation unidirectionnelle ✔️
+D. Est due à l’inactivation des canaux Na⁺ ✔️
+E. Dure plusieurs secondes ❌ — Millisecondes.
+
+💬 Elle assure la sécurité et le sens unique de propagation.
+
+13️⃣ Question : Les canaux ioniques.
+
+A. Peuvent être voltage-dépendants ✔️
+B. Peuvent être ligand-dépendants ✔️
+C. Sont spécifiques à un ion ✔️
+D. Nécessitent toujours de l’ATP ❌ — Pas pour les canaux.
+E. S’ouvrent toujours en permanence ❌ — Régulés.
+
+💬 Les canaux contrôlent la perméabilité sélective de la membrane.
+
+14️⃣ Question : Le courant sodique.
+
+A. Est entrant ✔️
+B. Provoque la dépolarisation ✔️
+C. Est bloqué par la tétrodotoxine ✔️
+D. Est lent ❌ — Rapide.
+E. Persiste pendant la repolarisation ❌ — Cesse avant.
+
+💬 L’entrée rapide de Na⁺ déclenche le potentiel d’action.
+
+15️⃣ Question : Le courant potassique.
+
+A. Est sortant ✔️
+B. Provoque la repolarisation ✔️
+C. Se maintient plus longtemps ✔️
+D. Est bloqué par la tétrodotoxine ❌ — Non.
+E. Est responsable de la dépolarisation ❌ — Opposé.
+
+💬 La sortie de K⁺ ramène la cellule vers son potentiel de repos.
+
+16️⃣ Question : Les jonctions communicantes.
+
+A. Permettent le passage direct d’ions ✔️
+B. Relient les cytoplasmes ✔️
+C. Sont formées de connexons ✔️
+D. Empêchent toute communication ❌ — L’opposé.
+E. Sont spécifiques aux cellules nerveuses ❌ — Présentes dans divers tissus.
+
+💬 Les jonctions communicantes assurent la synchronisation cellulaire.
+
+17️⃣ Question : Les récepteurs membranaires.
+
+A. Sont des protéines ✔️
+B. Reconnaissent des ligands spécifiques ✔️
+C. Peuvent activer des seconds messagers ✔️
+D. Ne modifient jamais l’activité cellulaire ❌ — C’est leur fonction.
+E. Sont absents des cellules musculaires ❌ — Présents.
+
+💬 Les récepteurs traduisent un signal extracellulaire en réponse intracellulaire.
+
+18️⃣ Question : Les seconds messagers.
+
+A. Sont produits après activation d’un récepteur ✔️
+B. Incluent l’AMPc ✔️
+C. Incluent le Ca²⁺ ✔️
+D. Sont sécrétés hors de la cellule ❌ — Agissent à l’intérieur.
+E. Amplifient le signal ✔️
+
+💬 Les seconds messagers transforment une activation unique en réponse amplifiée.
+
+19️⃣ Question : Les pompes ioniques.
+
+A. Maintiennent les gradients électrochimiques ✔️
+B. Consomment de l’ATP ✔️
+C. Sont toutes électrogènes ✔️
+D. Fonctionnent indépendamment des besoins ❌ — Régulées.
+E. N’existent que dans le rein ❌ — Universelles.
+
+💬 Les pompes assurent l’équilibre ionique et le potentiel de repos.
+
+20️⃣ Question : Le potentiel de repos (valeurs typiques).
+
+A. Environ -70 mV ✔️
+B. Plus positif à l’extérieur ✔️
+C. Dépend du potassium ✔️
+D. Dépend de la perméabilité membranaire ✔️
+E. Est constant pour tous les tissus ❌ — Varie.
+
+💬 Le potentiel de repos reflète un équilibre électrochimique stable.
+
+21️⃣ Question : La propagation de l’influx.
+
+A. Se fait sans atténuation ✔️
+B. Nécessite une période réfractaire ✔️
+C. Est plus rapide dans les fibres myélinisées ✔️
+D. Se fait dans les deux sens ❌ — Un seul.
+E. Est purement chimique ❌ — Électrique.
+
+💬 La propagation est électrique et dépend de la myéline.
+
+22️⃣ Question : La conduction saltatoire.
+
+A. Se produit dans les fibres myélinisées ✔️
+B. Est plus rapide ✔️
+C. Économise de l’énergie ✔️
+D. Se produit sur toute la membrane ❌ — Aux nœuds de Ranvier.
+E. Nécessite plus de canaux ioniques ❌ — Moins.
+
+💬 La myéline accélère la conduction en isolant l’axone.
+
+23️⃣ Question : Le calcium intracellulaire.
+
+A. Est un second messager ✔️
+B. Déclenche des réponses enzymatiques ✔️
+C. Est stocké dans le réticulum endoplasmique ✔️
+D. Est toujours élevé dans le cytosol ❌ — Très faible au repos.
+E. N’intervient pas dans la contraction musculaire ❌ — Essentiel.
+
+💬 Le Ca²⁺ est un signal universel intracellulaire.
+
+24️⃣ Question : Le potassium intracellulaire.
+
+A. Est le principal cation intracellulaire ✔️
+B. Est maintenu par la pompe Na⁺/K⁺ ✔️
+C. Est en concentration plus faible que le Na⁺ ❌ — Plus élevée.
+D. Influence le potentiel de repos ✔️
+E. Est en équilibre parfait ❌ — Gradient actif.
+
+💬 Le K⁺ contrôle le potentiel membranaire et la stabilité électrique.
+
+25️⃣ Question : Le sodium extracellulaire.
+
+A. Est le principal cation du liquide extracellulaire ✔️
+B. Est en concentration plus faible que le potassium ❌ — Plus élevée.
+C. Est essentiel au potentiel d’action ✔️
+D. Est transporté activement vers l’extérieur par la pompe Na⁺/K⁺ ✔️
+E. Est sécrété uniquement par les reins ❌ — Distribué partout.
+
+💬 Le Na⁺ joue un rôle majeur dans l’équilibre osmotique et électrique.
+
+26️⃣ Question : Les échanges ioniques transmembranaires.
+
+A. Dépendent des gradients de concentration ✔️
+B. Peuvent impliquer des échanges Na⁺/Ca²⁺ ✔️
+C. Se font uniquement par diffusion simple ❌ — Aussi active.
+D. Sont toujours symétriques ❌ — Variables selon le type cellulaire.
+E. Ne nécessitent jamais de protéines ❌ — Souvent médiés.
+
+💬 Les échanges ioniques assurent les potentiels et la stabilité cellulaire.
+
+27️⃣ Question : L’énergie cellulaire.
+
+A. Est fournie principalement par l’ATP ✔️
+B. Provient de la glycolyse et de la respiration mitochondriale ✔️
+C. Est nécessaire pour le transport actif ✔️
+D. Est consommée par la diffusion simple ❌ — Pas d’énergie.
+E. Ne joue aucun rôle dans les pompes ioniques ❌ — Indispensable.
+
+💬 L’ATP alimente la plupart des processus cellulaires actifs.
+
+28️⃣ Question : Le potentiel d’action (aucune bonne réponse)
+
+A. Est un phénomène mécanique ❌ — Électrique.
+B. Est stable dans le temps ❌ — Transitoire.
+C. Est identique dans toutes les cellules ❌ — Spécifique aux excitables.
+D. Ne dépend pas du sodium ❌ — Na⁺ déclenche la dépolarisation.
+E. Se propage sans canaux ioniques ❌ — Impossible.
+
+💬 Toutes ces affirmations sont fausses : le potentiel d’action est un phénomène électrique dépendant des canaux ioniques.
+
+29️⃣ Question : La pompe Ca²⁺ ATPase.
+
+A. Maintient le calcium cytosolique faible ✔️
+B. Transporte activement le Ca²⁺ ✔️
+C. Se trouve sur le réticulum endoplasmique et la membrane plasmique ✔️
+D. Fonctionne sans ATP ❌ — ATPase.
+E. Fait entrer du Ca²⁺ dans le cytosol ❌ — Le sort.
+
+💬 Cette pompe garde le calcium intracellulaire sous contrôle.
+
+30️⃣ Question : Les récepteurs couplés aux protéines G.
+
+A. Sont activés par un ligand ✔️
+B. Activent une protéine G ✔️
+C. Peuvent stimuler l’adénylate cyclase ✔️
+D. Sont des canaux ioniques ❌ — Protéines membranaires.
+E. Fonctionnent sans ligand ❌ — Dépendent de leur activation.
+
+💬 Ces récepteurs déclenchent une cascade intracellulaire par seconds messagers.
+
+31️⃣ Question : L’AMP cyclique (AMPc).
+
+A. Est un second messager ✔️
+B. Est produit par l’adénylate cyclase ✔️
+C. Active la protéine kinase A ✔️
+D. Est dégradé par la phosphodiestérase ✔️
+E. Traverse librement la membrane ❌ — Non diffusible.
+
+💬 L’AMPc est un messager clé de nombreuses voies de signalisation.
+
+32️⃣ Question : Le phosphatidylinositol et ses dérivés.
+
+A. Donnent naissance à l’IP₃ et au DAG ✔️
+B. Participent à la libération du Ca²⁺ intracellulaire ✔️
+C. Agissent via les récepteurs tyrosine kinase ❌ — Via Gq.
+D. Font partie de la membrane plasmique ✔️
+E. N’interviennent pas dans la signalisation ❌ — Second messager important.
+
+💬 L’IP₃ et le DAG activent la libération de calcium et la protéine kinase C.
+
+33️⃣ Question : Les récepteurs ionotropes.
+
+A. Sont des canaux ligand-dépendants ✔️
+B. Permettent une réponse rapide ✔️
+C. Sont impliqués dans les synapses excitatrices ✔️
+D. Utilisent des seconds messagers ❌ — Pas nécessaires.
+E. Ont une action lente ❌ — Instantanée.
+
+💬 Ces récepteurs assurent la transmission nerveuse rapide.
+
+34️⃣ Question : Les récepteurs métabotropes.
+
+A. Utilisent une protéine G ✔️
+B. Sont plus lents ✔️
+C. Provoquent une amplification du signal ✔️
+D. Sont des canaux ioniques ❌ — Protéines réceptrices.
+E. N’affectent jamais le métabolisme cellulaire ❌ — C’est leur rôle.
+
+💬 Les métabotropes contrôlent les fonctions enzymatiques et métaboliques.
+
+35️⃣ Question : Le rôle du calcium intracellulaire.
+
+A. Déclenche la contraction musculaire ✔️
+B. Active des enzymes ✔️
+C. Régule la sécrétion d’hormones ✔️
+D. Maintient la polarité électrique ❌ — Rôle secondaire.
+E. Est stocké dans le réticulum ✔️
+
+💬 Le Ca²⁺ intracellulaire est un régulateur universel de signal cellulaire.
+
+36️⃣ Question : Le transport vésiculaire.
+
+A. Permet l’exocytose ✔️
+B. Permet l’endocytose ✔️
+C. Nécessite de l’énergie ✔️
+D. N’utilise jamais la membrane plasmique ❌ — En dépend.
+E. Est limité aux bactéries ❌ — Universel.
+
+💬 Le transport vésiculaire déplace de grandes molécules ou particules.
+
+37️⃣ Question : Le transport actif secondaire.
+
+A. Utilise l’énergie d’un gradient ionique ✔️
+B. Transporte des solutés contre leur gradient ✔️
+C. Est indépendant de l’ATP direct ✔️
+D. Est toujours inhibé par l’ouabaïne ❌ — Pas directement.
+E. Ne nécessite pas de transporteurs ❌ — Essentiels.
+
+💬 Ce mécanisme couple un flux passif à un flux actif.
+
+38️⃣ Question : Les protéines de canal (aucune bonne réponse)
+
+A. Sont des enzymes ❌ — Pas leur fonction.
+B. Nécessitent toujours de l’ATP ❌ — Souvent passives.
+C. Sont identiques à la pompe Na⁺/K⁺ ❌ — Différentes.
+D. Permettent uniquement la diffusion d’eau ❌ — Aussi d’ions.
+E. Restent constamment fermées ❌ — S’ouvrent selon stimulus.
+
+💬 Aucun de ces énoncés n’est exact : les canaux ioniques assurent la perméabilité sélective contrôlée.
+
+39️⃣ Question : Le potassium extracellulaire.
+
+A. Influence le potentiel de repos ✔️
+B. Sa hausse provoque une dépolarisation ✔️
+C. Est contrôlé par le rein ✔️
+D. Est plus concentré dans la cellule ❌ — Inversement.
+E. Est stocké dans le foie ❌ — Non.
+
+💬 Le K⁺ extracellulaire régule la polarité membranaire.
+
+40️⃣ Question : La communication cellulaire (aucune bonne réponse)
+
+A. Se fait uniquement par contact direct ❌ — Aussi chimique.
+B. Ne concerne que les cellules nerveuses ❌ — Universelle.
+C. Ne dépend pas des récepteurs ❌ — Toujours médiée.
+D. N’implique jamais d’hormones ❌ — Hormones = messagers.
+E. Se fait sans molécules signal ❌ — Dépend d’elles.
+
+💬 La communication cellulaire repose sur des signaux chimiques et des récepteurs.

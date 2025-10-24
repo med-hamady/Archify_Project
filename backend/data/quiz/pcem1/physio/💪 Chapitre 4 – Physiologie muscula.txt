@@ -1,0 +1,200 @@
+💪 Chapitre 4 – Physiologie musculaire (1 → 20)
+1️⃣ Question : Les types de muscles.
+
+A. Muscle squelettique → contrôle volontaire ✔️
+B. Muscle cardiaque → contrôle involontaire ✔️
+C. Muscle lisse → contraction rapide ❌ — Contraction lente.
+D. Muscle squelettique → striations transversales ✔️
+E. Muscle lisse → présence de sarcomères ❌ — Absent.
+
+💬 Les muscles se différencient par leur commande et leur structure microscopique.
+
+2️⃣ Question : La fibre musculaire squelettique.
+
+A. Est multinucléée ✔️
+B. Contient des myofibrilles ✔️
+C. Présente des tubules T ✔️
+D. Est entourée par le sarcolemme ✔️
+E. Possède un noyau central ❌ — Périphérique.
+
+💬 L’organisation de la fibre explique la transmission rapide du potentiel d’action.
+
+3️⃣ Question : Le sarcomère.
+
+A. Est l’unité contractile du muscle ✔️
+B. Comporte les bandes A et I ✔️
+C. Se raccourcit lors de la contraction ✔️
+D. Se trouve dans les muscles lisses ❌ — Uniquement striés.
+E. Contient actine et myosine ✔️
+
+💬 Le sarcomère assure le glissement des filaments d’actine et de myosine.
+
+4️⃣ Question : Le couplage excitation-contraction.
+
+A. Commence par un potentiel d’action motoneuronal ✔️
+B. Implique l’entrée de Ca²⁺ dans le cytosol ✔️
+C. Nécessite l’ATP ✔️
+D. Se produit sans variation ionique ❌ — Ca²⁺ indispensable.
+E. Aboutit à la contraction du sarcomère ✔️
+
+💬 La dépolarisation libère le Ca²⁺ qui déclenche l’interaction actine-myosine.
+
+5️⃣ Question : La tropomyosine et la troponine.
+
+A. Régulent l’interaction actine-myosine ✔️
+B. Masquent le site actif de l’actine au repos ✔️
+C. Fixent le Ca²⁺ ✔️
+D. Font partie des myofilaments fins ✔️
+E. Sont absentes des fibres cardiaques ❌ — Présentes.
+
+💬 Ces protéines contrôlent le début et la fin de la contraction.
+
+6️⃣ Question : L’ATP dans la contraction.
+
+A. Nécessaire au détachement myosine-actine ✔️
+B. Fourni par la créatine phosphate ✔️
+C. Reformé par la glycolyse et la phosphorylation oxydative ✔️
+D. Inutile au cycle de contraction ❌ — Indispensable.
+E. Produit exclusivement dans le noyau ❌ — Dans la mitochondrie.
+
+💬 L’ATP alimente le mécanisme moteur et le recyclage des ponts d’union.
+
+7️⃣ Question : Les fibres musculaires rapides.
+
+A. Sont glycolytiques ✔️
+B. Se fatiguent rapidement ✔️
+C. Ont beaucoup de mitochondries ❌ — Peu.
+D. Sont adaptées aux efforts brefs ✔️
+E. Sont rouges ❌ — Blanches.
+
+💬 Elles fournissent une force élevée mais peu durable.
+
+8️⃣ Question : Les fibres musculaires lentes.
+
+A. Riche en mitochondries ✔️
+B. Utilisent l’oxygène ✔️
+C. Sont résistantes à la fatigue ✔️
+D. Sont blanches ❌ — Rouges.
+E. Sont glycolytiques ❌ — Oxydatives.
+
+💬 Adaptées à l’endurance et aux contractions prolongées.
+
+9️⃣ Question : Le muscle cardiaque.
+
+A. Possède des disques intercalaires ✔️
+B. Se contracte de façon rythmique ✔️
+C. Est sous contrôle volontaire ❌ — Involontaire.
+D. Présente une conduction rapide grâce aux jonctions communicantes ✔️
+E. Se régénère facilement ❌ — Non.
+
+💬 Le cœur bat grâce à l’automatisme du tissu nodal.
+
+10️⃣ Question : Le muscle lisse.
+
+A. Se trouve dans les viscères ✔️
+B. Est contrôlé par le SNA ✔️
+C. Ne présente pas de sarcomères ✔️
+D. Se contracte plus lentement ✔️
+E. Est multinucléé ❌ — Mononucléé.
+
+💬 Le muscle lisse assure les mouvements involontaires des organes.
+
+11️⃣ Question : L’unité motrice.
+
+A. Comprend un motoneurone et les fibres qu’il innerve ✔️
+B. Est la base de la commande motrice ✔️
+C. Chaque fibre reçoit plusieurs motoneurones ❌ — Un seul.
+D. La force dépend du nombre d’unités recrutées ✔️
+E. N’existe pas dans le muscle squelettique ❌ — Typique.
+
+💬 Le recrutement progressif des unités motrices module la force.
+
+12️⃣ Question : La fatigue musculaire.
+
+A. Résulte d’un manque d’ATP ✔️
+B. Peut venir d’une accumulation de lactate ✔️
+C. Peut être d’origine centrale ✔️
+D. Augmente l’efficacité contractile ❌ — La réduit.
+E. Diminue la force de contraction ✔️
+
+💬 La fatigue traduit un déséquilibre énergétique ou neuromusculaire.
+
+13️⃣ Question : L’électromyographie (EMG).
+
+A. Enregistre l’activité électrique du muscle ✔️
+B. Évalue la fonction neuromusculaire ✔️
+C. Utilise des électrodes ✔️
+D. Permet de diagnostiquer certaines neuropathies ✔️
+E. Mesure la pression artérielle ❌ — Non.
+
+💬 L’EMG analyse l’activité électrique musculaire au repos et à l’effort.
+
+14️⃣ Question : La jonction neuromusculaire.
+
+A. Est une synapse entre neurone et fibre ✔️
+B. Utilise l’acétylcholine ✔️
+C. Possède des récepteurs nicotiniques ✔️
+D. Assure le déclenchement du potentiel d’action musculaire ✔️
+E. Fonctionne sans calcium ❌ — Ca²⁺ indispensable.
+
+💬 Cette jonction transforme le signal nerveux en signal mécanique.
+
+15️⃣ Question : La courbe force-longueur.
+
+A. Montre une force maximale à longueur optimale ✔️
+B. Dépend du nombre de ponts actine-myosine ✔️
+C. Diminue quand le muscle est trop étiré ✔️
+D. Est constante pour tous les muscles ❌ — Varie.
+E. N’a aucun intérêt physiologique ❌ — Fondamentale.
+
+💬 Elle explique la relation entre structure et force développée.
+
+16️⃣ Question : Le rôle du Ca²⁺.
+
+A. Déclenche la liaison actine-myosine ✔️
+B. Est libéré par le réticulum sarcoplasmique ✔️
+C. Est restitué par une pompe Ca²⁺ ATPase ✔️
+D. Est inhibiteur de la contraction ❌ — Activateur.
+E. Est absent du muscle cardiaque ❌ — Présent.
+
+💬 Le Ca²⁺ est le messager essentiel de l’excitation-contraction.
+
+17️⃣ Question : Le tonus musculaire.
+
+A. Est une contraction permanente faible ✔️
+B. Dépend de l’activité nerveuse ✔️
+C. Disparaît en cas de lésion motrice ✔️
+D. S’observe uniquement pendant l’effort ❌ — Même au repos.
+E. Est sans rôle postural ❌ — Assure la stabilité.
+
+💬 Le tonus maintient la posture et prêt le muscle à l’action.
+
+18️⃣ Question : Le muscle cardiaque (aucune bonne réponse)
+
+A. Se contracte sous commande volontaire ❌ — Automatique.
+B. N’a aucune activité électrique ❌ — Très électrique.
+C. Ne contient pas de Ca²⁺ ❌ — En contient.
+D. Est isolé du système nerveux ❌ — Influencé par le SNA.
+E. Peut se régénérer rapidement ❌ — Très limité.
+
+💬 Toutes ces affirmations sont fausses : le cœur fonctionne automatiquement avec contrôle nerveux végétatif.
+
+19️⃣ Question : Les fonctions musculaires (toutes justes)
+
+A. Mouvement ✔️
+B. Posture ✔️
+C. Circulation du sang ✔️
+D. Thermogenèse ✔️
+E. Protection des organes ✔️
+
+💬 Les muscles assurent le mouvement, le maintien et la production de chaleur.
+
+20️⃣ Question : Les phénomènes énergétiques du muscle (toutes justes)
+
+A. Utilisent l’ATP ✔️
+B. Font appel à la créatine-phosphate ✔️
+C. Incluent la glycolyse ✔️
+D. Dépendent de l’oxygène ✔️
+E. Produisent de la chaleur ✔️
+
+💬 L’énergie chimique est convertie en travail mécanique et en chaleur.

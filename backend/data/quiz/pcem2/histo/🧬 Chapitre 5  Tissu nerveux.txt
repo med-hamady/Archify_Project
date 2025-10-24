@@ -1,0 +1,204 @@
+🧬 Chapitre 5 : Tissu nerveux
+
+(20 QCM – difficulté progressive)
+
+1️⃣ Définition
+
+Question : Le tissu nerveux est caractérisé par :
+A. Une excitabilité ✔️
+B. Une conductivité ✔️
+C. Une régénération rapide ❌ — Très limitée.
+D. Une matrice extracellulaire abondante ❌ — Presque absente.
+E. Une origine ectodermique ✔️
+
+Justification : Le tissu nerveux transmet l’influx nerveux grâce à ses cellules spécialisées.
+
+2️⃣ Composition
+
+A. Neurones ✔️
+B. Cellules gliales ✔️
+C. Fibroblastes ❌
+D. Capillaires ✔️
+E. Chondrocytes ❌
+
+Justification : Constitué de neurones et de cellules de soutien (gliales).
+
+3️⃣ Corps cellulaire du neurone
+
+A. Contient le noyau ✔️
+B. Contient des corps de Nissl ✔️
+C. Contient des mitochondries ✔️
+D. Contient des myofibrilles ❌ — Pas de structures contractiles.
+E. Responsable de la synthèse protéique ✔️
+
+Justification : Le soma assure la production des protéines et le métabolisme cellulaire.
+
+4️⃣ Dendrites
+
+A. Prolongements courts ✔️
+B. Reçoivent les signaux ✔️
+C. Transmettent l’influx vers le corps cellulaire ✔️
+D. Myélinisées ❌ — Généralement non.
+E. Présentes en un seul exemplaire ❌ — Souvent multiples.
+
+Justification : Les dendrites augmentent la surface de réception du neurone.
+
+5️⃣ Axone
+
+A. Unique ✔️
+B. Transmet l’influx loin du soma ✔️
+C. Toujours myélinisé ❌ — Pas toujours.
+D. Peut atteindre 1 mètre ✔️
+E. Contient le noyau ❌
+
+Justification : L’axone conduit le potentiel d’action jusqu’aux terminaisons nerveuses.
+
+6️⃣ Myéline
+
+A. Enveloppe isolante ✔️
+B. Augmente la vitesse de conduction ✔️
+C. Produite par les oligodendrocytes et cellules de Schwann ✔️
+D. Présente uniquement dans le système central ❌ — Aussi périphérique.
+E. Se renouvelle facilement ❌ — Altération irréversible souvent.
+
+Justification : La gaine de myéline permet la conduction saltatoire rapide.
+
+7️⃣ Noeuds de Ranvier
+
+A. Espaces entre gaines de myéline ✔️
+B. Lieu de régénération du potentiel d’action ✔️
+C. Présents uniquement dans le SNC ❌ — Aussi dans le SNP.
+D. Absents des fibres amyéliniques ✔️
+E. Contiennent des synapses ❌
+
+Justification : Les noeuds de Ranvier assurent la conduction saltatoire.
+
+8️⃣ Synapse
+
+A. Jonction entre deux neurones ✔️
+B. Jonction entre neurone et cellule effectrice ✔️
+C. Transmission électrique ou chimique ✔️
+D. Contient neurotransmetteurs ✔️
+E. Présente un contact direct entre cytoplasmes ❌ — Séparés par fente synaptique.
+
+Justification : La synapse assure la transmission de l’influx nerveux.
+
+9️⃣ Types de synapses
+
+A. Axo-dendritiques ✔️
+B. Axo-somatiques ✔️
+C. Axo-axoniques ✔️
+D. Dendro-dendritiques ✔️
+E. Synapses neuromusculaires ✔️
+
+Justification : Les synapses se forment selon les structures en contact.
+
+10️⃣ Neurotransmetteurs
+
+A. Acétylcholine ✔️
+B. Dopamine ✔️
+C. Adrénaline ✔️
+D. Hémoglobine ❌
+E. Sérotonine ✔️
+
+Justification : Les neurotransmetteurs assurent la communication chimique entre neurones.
+
+11️⃣ Cellules gliales
+
+A. Plus nombreuses que les neurones ✔️
+B. Soutien et protection ✔️
+C. Partagent la conduction nerveuse ❌ — Non excitables.
+D. Assurent nutrition neuronale ✔️
+E. Impliquées dans l’immunité ✔️
+
+Justification : Les cellules gliales maintiennent l’environnement neuronal stable.
+
+12️⃣ Oligodendrocytes
+
+A. Produisent la myéline du SNC ✔️
+B. Entourent plusieurs axones ✔️
+C. Présents dans le SNP ❌ — Dans le SNC.
+D. Soutien structurel ✔️
+E. Cellules immunitaires ❌
+
+Justification : Myélinisation multiple dans le SNC.
+
+13️⃣ Cellules de Schwann
+
+A. Myélinisent un seul axone ✔️
+B. Présentes dans le SNP ✔️
+C. Aident à la régénération axonale ✔️
+D. Appartiennent au SNC ❌
+E. Fabriquent neurotransmetteurs ❌
+
+Justification : Spécifiques du SNP, favorisent régénération.
+
+14️⃣ Astrocytes
+
+A. Forme étoilée ✔️
+B. Barrière hémato-encéphalique ✔️
+C. Régulent le milieu extracellulaire ✔️
+D. Phagocytaires ❌ — Fonction de soutien.
+E. Présents dans le SNP ❌
+
+Justification : Principales cellules de soutien métabolique du SNC.
+
+15️⃣ Microglie
+
+A. Dérive du mésoderme ✔️
+B. Fonction phagocytaire ✔️
+C. Immunité du SNC ✔️
+D. Produit la myéline ❌
+E. Maintient les synapses ✔️
+
+Justification : Cellules immunitaires résidentes du système nerveux central.
+
+16️⃣ Épendymocytes
+
+A. Tapissent les ventricules cérébraux ✔️
+B. Tapissent le canal central médullaire ✔️
+C. Produisent le liquide cérébrospinal ✔️
+D. Phagocytaires ❌
+E. Myélinisants ❌
+
+Justification : Cellules ciliées favorisant la circulation du LCS.
+
+17️⃣ Substance grise
+
+A. Corps cellulaires ✔️
+B. Dendrites ✔️
+C. Synapses ✔️
+D. Myéline abondante ❌ — C’est la blanche.
+E. Localisée en périphérie du cerveau ✔️
+
+Justification : Zone d’intégration des signaux nerveux.
+
+18️⃣ Substance blanche
+
+A. Axones myélinisés ✔️
+B. Cellules gliales ✔️
+C. Corps cellulaires ❌ — Rares.
+D. Rôle dans la conduction ✔️
+E. Riche en sang ❌ — Moins vascularisée que la grise.
+
+Justification : Fait circuler les influx nerveux entre zones cérébrales.
+
+19️⃣ Régénération neuronale
+
+A. Possible dans le SNC ❌ — Très limitée.
+B. Possible dans le SNP ✔️
+C. Aide des cellules de Schwann ✔️
+D. Possible pour les neurones centraux ✔️ — Partielle (rare).
+E. Nécessite corps cellulaire intact ✔️
+
+Justification : La régénération dépend du type de neurone et de son environnement.
+
+20️⃣ Barrière hémato-encéphalique
+
+A. Formée par les astrocytes ✔️
+B. Protège le cerveau ✔️
+C. Perméable aux grosses molécules ❌
+D. Régule le passage du sang vers le SNC ✔️
+E. Absente dans le cerveau ❌
+
+Justification : Filtre biologique assurant protection et stabilité du SNC.

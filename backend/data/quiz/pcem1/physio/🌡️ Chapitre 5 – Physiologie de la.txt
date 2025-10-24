@@ -1,0 +1,200 @@
+🌡️ Chapitre 5 – Physiologie de la thermorégulation (1 → 20)
+1️⃣ Question : La température corporelle normale.
+
+A. Environ 37 °C ✔️
+B. Constante malgré les variations extérieures ✔️
+C. Identique dans toutes les régions du corps ❌ — Centrale > périphérique.
+D. Varie selon le rythme circadien ✔️
+E. Plus élevée pendant le sommeil ❌ — Plus basse.
+
+💬 La température corporelle est régulée étroitement autour de 37 °C, avec des variations circadiennes.
+
+2️⃣ Question : La thermorégulation.
+
+A. Maintient la température constante ✔️
+B. Repose sur l’hypothalamus ✔️
+C. Est un mécanisme homéostatique ✔️
+D. Fonctionne sans système nerveux ❌ — Régulée par lui.
+E. Dépend des mécanismes de gain et perte de chaleur ✔️
+
+💬 L’hypothalamus agit comme le centre intégrateur de la température corporelle.
+
+3️⃣ Question : Les sources de chaleur corporelle.
+
+A. Métabolisme cellulaire ✔️
+B. Activité musculaire ✔️
+C. Circulation sanguine ✔️
+D. Respiration cellulaire ✔️
+E. Rayonnement solaire direct ❌ — Influence mais pas production interne.
+
+💬 La chaleur provient du métabolisme, notamment musculaire et cellulaire.
+
+4️⃣ Question : La thermolyse (perte de chaleur).
+
+A. Se fait par radiation ✔️
+B. Par convection ✔️
+C. Par conduction ✔️
+D. Par évaporation ✔️
+E. Par photosynthèse ❌ — N’existe pas chez l’humain.
+
+💬 L’organisme dissipe la chaleur par des mécanismes physiques et par la sueur.
+
+5️⃣ Question : Les glandes sudoripares.
+
+A. Permettent l’évaporation de la sueur ✔️
+B. Sont stimulées par le système sympathique ✔️
+C. Diminuent la température corporelle ✔️
+D. Fonctionnent même en hypothermie ❌ — Inactives au froid.
+E. Sont situées dans tout le corps ✔️
+
+💬 La transpiration est un moyen essentiel de thermolyse.
+
+6️⃣ Question : Le rôle de la peau.
+
+A. Régule la chaleur par vasodilatation ✔️
+B. Participe à la thermolyse ✔️
+C. Est isolante grâce au tissu sous-cutané ✔️
+D. Joue un rôle mineur dans la régulation ❌ — Majeur.
+E. Est un organe sensoriel thermique ✔️
+
+💬 La peau est à la fois capteur et effecteur de la thermorégulation.
+
+7️⃣ Question : L’hypothalamus.
+
+A. Sert de centre intégrateur thermique ✔️
+B. Compare la température mesurée à une valeur de consigne ✔️
+C. Commande des réponses de correction ✔️
+D. Fonctionne indépendamment du système nerveux ❌ — En fait partie.
+E. Reçoit les informations des thermorécepteurs ✔️
+
+💬 L’hypothalamus antérieur régule la thermolyse, le postérieur la thermogenèse.
+
+8️⃣ Question : La thermogenèse (production de chaleur).
+
+A. Est augmentée par le frisson ✔️
+B. Dépend de l’activité musculaire ✔️
+C. Implique la thyroxine ✔️
+D. Diminue pendant le froid ❌ — Augmente.
+E. Peut être chimique ✔️
+
+💬 La thermogenèse musculaire et hormonale compense les pertes de chaleur.
+
+9️⃣ Question : Les frissons thermiques.
+
+A. Sont des contractions involontaires ✔️
+B. Augmentent la production de chaleur ✔️
+C. Sont déclenchés par l’hypothalamus ✔️
+D. Diminuent la température ❌ — L’élèvent.
+E. Se produisent uniquement en hyperthermie ❌ — En hypothermie.
+
+💬 Le frisson est un mécanisme réflexe de défense contre le froid.
+
+🔟 Question : La thyroxine (T4).
+
+A. Augmente le métabolisme basal ✔️
+B. Participe à la thermogenèse ✔️
+C. Est sécrétée par la thyroïde ✔️
+D. Diminue la production de chaleur ❌ — L’augmente.
+E. Est inhibée en cas de froid ❌ — Stimulée.
+
+💬 L’hormone thyroïdienne augmente la consommation d’oxygène et la chaleur corporelle.
+
+11️⃣ Question : Les mécanismes de perte de chaleur.
+
+A. Vasodilatation cutanée ✔️
+B. Sudation ✔️
+C. Augmentation du flux sanguin périphérique ✔️
+D. Diminution de la fréquence cardiaque ❌ — Peu influente.
+E. Augmentation de la respiration ✔️
+
+💬 Ces réponses favorisent la dissipation thermique.
+
+12️⃣ Question : La fièvre.
+
+A. Résulte d’une élévation du point de consigne hypothalamique ✔️
+B. Est due à des pyrogènes ✔️
+C. Peut être bénéfique ✔️
+D. Est toujours pathologique ❌ — Peut aider à la défense immunitaire.
+E. Diminue l’immunité ❌ — La stimule.
+
+💬 La fièvre est une réponse adaptative contrôlée par l’hypothalamus.
+
+13️⃣ Question : L’hypothermie.
+
+A. Correspond à une baisse de la température corporelle ✔️
+B. Peut entraîner un ralentissement cardiaque ✔️
+C. Est dangereuse sous 35 °C ✔️
+D. Augmente la thermolyse ❌ — Diminue.
+E. Diminue le métabolisme ✔️
+
+💬 L’hypothermie réduit les fonctions vitales et demande une réchauffe progressive.
+
+14️⃣ Question : L’hyperthermie.
+
+A. Résulte d’un excès de production de chaleur ✔️
+B. Peut survenir lors d’efforts intenses ✔️
+C. S’accompagne d’une déshydratation ✔️
+D. Répond à une élévation du point de consigne ❌ — Fièvre.
+E. Peut être mortelle ✔️
+
+💬 L’hyperthermie résulte d’un déséquilibre entre production et perte de chaleur.
+
+15️⃣ Question : Le système nerveux sympathique.
+
+A. Active la sudation ✔️
+B. Favorise la vasoconstriction au froid ✔️
+C. Active la thermogenèse ✔️
+D. Réduit le tonus musculaire ❌ — Augmente parfois.
+E. Participe à la régulation thermique ✔️
+
+💬 Le sympathique contrôle les réactions thermiques réflexes.
+
+16️⃣ Question : La thermorégulation chez l’enfant.
+
+A. Est moins efficace ✔️
+B. En raison d’une surface corporelle élevée ✔️
+C. D’une faible masse musculaire ✔️
+D. D’une activité thyroïdienne réduite ❌ — Active.
+E. D’une maturation incomplète de l’hypothalamus ✔️
+
+💬 L’enfant se refroidit plus vite à cause d’une régulation encore immature.
+
+17️⃣ Question : La thermorégulation chez la personne âgée.
+
+A. Est diminuée ✔️
+B. Les frissons sont moins efficaces ✔️
+C. La perception du froid est altérée ✔️
+D. La vasodilatation est exagérée ❌ — Diminution.
+E. Le risque d’hypothermie est accru ✔️
+
+💬 Le vieillissement réduit la sensibilité et la réponse thermique.
+
+18️⃣ Question : La fièvre (toutes justes)
+
+A. Est régulée par l’hypothalamus ✔️
+B. Implique des pyrogènes endogènes ✔️
+C. Stimule la réponse immunitaire ✔️
+D. Diminue la prolifération bactérienne ✔️
+E. Peut être bénéfique ✔️
+
+💬 La fièvre est une réaction défensive physiologique de l’organisme.
+
+19️⃣ Question : L’équilibre thermique (aucune bonne réponse)
+
+A. Se maintient sans contrôle nerveux ❌ — Hypothalamus essentiel.
+B. Dépend uniquement de la transpiration ❌ — Multiples mécanismes.
+C. N’est pas influencé par les hormones ❌ — Thyroxine, adrénaline, etc.
+D. Se maintient automatiquement sans capteurs ❌ — Thermorécepteurs nécessaires.
+E. Est invariable quelle que soit la température extérieure ❌ — Fausse.
+
+💬 Aucune affirmation correcte : la thermorégulation nécessite une régulation nerveuse et hormonale complexe.
+
+20️⃣ Question : Les moyens de lutte contre le froid (toutes justes)
+
+A. Frisson thermique ✔️
+B. Vasoconstriction cutanée ✔️
+C. Stimulation du métabolisme ✔️
+D. Augmentation de la thyroxine ✔️
+E. Activation du tissu adipeux brun ✔️
+
+💬 Ces mécanismes préservent la chaleur interne et maintiennent la température corporelle.

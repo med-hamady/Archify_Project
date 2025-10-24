@@ -1,0 +1,201 @@
+🧠 Chapitre 1 – Organisation générale du système nerveux
+1️⃣ Le rôle du système nerveux
+
+Question : Le système nerveux a pour rôle principal :
+A. De réguler les fonctions vitales ✔️
+B. De contrôler uniquement les muscles du cœur ❌ — Il contrôle tous les muscles et les glandes, pas seulement cardiaques.
+C. D’assurer la communication interne de l’organisme ✔️
+D. De produire des hormones ❌ — C’est le rôle du système endocrinien.
+E. De maintenir l’homéostasie ✔️
+
+Justification générale : Le système nerveux coordonne les fonctions de l’organisme en maintenant son équilibre interne.
+
+2️⃣ Les grandes divisions anatomiques
+
+A. Système nerveux central (SNC) ✔️
+B. Système nerveux périphérique (SNP) ✔️
+C. Système endocrinien ❌ — Ce dernier est séparé, bien qu’interconnecté au SNC.
+D. Moelle épinière ✔️
+E. Reins ❌ — Organe excréteur, non nerveux.
+
+Justification générale : Le SNC (encéphale + moelle) et le SNP (nerfs, ganglions) constituent les deux grandes divisions.
+
+3️⃣ Le système nerveux central
+
+A. Composé du cerveau, du cervelet et de la moelle épinière ✔️
+B. Comprend les nerfs périphériques ❌ — Ces nerfs appartiennent au SNP.
+C. Protégé par les méninges ✔️
+D. Situé dans le canal rachidien et la boîte crânienne ✔️
+E. Contient des ganglions sensitifs ❌ — Ceux-ci sont périphériques.
+
+Justification générale : Le SNC regroupe les structures intégratrices et de commande.
+
+4️⃣ Le système nerveux périphérique
+
+A. Composé de nerfs crâniens et spinaux ✔️
+B. Contient des ganglions ✔️
+C. Contrôle le cortex cérébral ❌ — C’est l’inverse.
+D. Sert de voie de communication entre organes et SNC ✔️
+E. Produit les hormones ❌ — Non, rôle endocrinien.
+
+Justification générale : Le SNP transporte l’information entre les récepteurs, les muscles et le SNC.
+
+5️⃣ Les fonctions du système nerveux
+
+A. Sensorielle ✔️
+B. Motrice ✔️
+C. Intégrative ✔️
+D. Hormonale ❌ — Système endocrinien.
+E. Excrétoire ❌ — Système urinaire.
+
+Justification générale : Il reçoit, traite et répond aux stimulations internes et externes.
+
+6️⃣ Le système nerveux somatique
+
+A. Contrôle des muscles squelettiques ✔️
+B. Responsable des réflexes viscéraux ❌ — Autonome.
+C. Impliqué dans les mouvements volontaires ✔️
+D. Régule les glandes salivaires ❌ — Autonome.
+E. Permet la perception consciente ✔️
+
+Justification générale : Le système somatique régule les activités volontaires et la sensibilité consciente.
+
+7️⃣ Le système nerveux autonome
+
+A. Régule les fonctions involontaires ✔️
+B. Contrôle les muscles lisses ✔️
+C. Agit sur les glandes ✔️
+D. Dépend de la volonté ❌ — Fonctionne automatiquement.
+E. Inactif pendant le sommeil ❌ — Reste actif pour maintenir les fonctions vitales.
+
+Justification générale : Le système autonome régule les fonctions internes (digestion, respiration, etc.) indépendamment de la volonté.
+
+8️⃣ Système sympathique
+
+A. Prépare à l’action (“fuite ou lutte”) ✔️
+B. Dilate les pupilles ✔️
+C. Diminue la fréquence cardiaque ❌ — Il l’augmente.
+D. Augmente la pression artérielle ✔️
+E. Stimule la digestion ❌ — Il l’inhibe.
+
+Justification générale : Le système sympathique prépare le corps aux situations de stress et d’urgence.
+
+9️⃣ Système parasympathique
+
+A. Favorise la détente et la digestion ✔️
+B. Diminue la fréquence cardiaque ✔️
+C. Contracte les pupilles ✔️
+D. Augmente la glycémie ❌ — C’est le sympathique.
+E. Agit de façon complémentaire au sympathique ✔️
+
+Justification générale : Il permet la récupération et le retour à l’équilibre après l’effort.
+
+🔟 Les neurones
+
+A. Cellules excitables ✔️
+B. Capables de division active ❌ — La plupart ne se divisent plus après la naissance.
+C. Transmettent l’influx nerveux ✔️
+D. Cellules de soutien ❌ — Ce sont les cellules gliales.
+E. Contiennent un corps cellulaire ✔️
+
+Justification générale : Les neurones assurent la transmission rapide et ciblée de l’information nerveuse.
+
+11️⃣ Les cellules gliales
+
+A. Soutiennent et nourrissent les neurones ✔️
+B. Produisent la myéline ✔️
+C. Participent à la défense immunitaire ✔️
+D. Transmettent l’influx nerveux ❌ — Rôle non conducteur.
+E. Sont moins nombreuses que les neurones ❌ — Elles sont plus nombreuses.
+
+Justification générale : Les cellules gliales maintiennent l’environnement fonctionnel du tissu nerveux.
+
+12️⃣ Substance grise et blanche
+
+A. Grise = axones myélinisés ❌ — Grise = corps cellulaires.
+B. Blanche = fibres myélinisées ✔️
+C. Grise = centres d’intégration ✔️
+D. Blanche = voies de conduction ✔️
+E. Inversées entre cerveau et moelle ✔️
+
+Justification générale : La substance grise contient les corps neuronaux, la blanche les fibres conductrices.
+
+13️⃣ Centres nerveux
+
+A. Situés dans la substance blanche ❌ — Dans la grise.
+B. Intègrent les informations ✔️
+C. Délivrent les réponses motrices ✔️
+D. Se limitent à la moelle ❌ — Présents aussi dans le cerveau.
+E. Contrôlent les réflexes ✔️
+
+Justification générale : Les centres nerveux assurent l’analyse et la réponse adaptée aux stimulations.
+
+14️⃣ Les voies afférentes
+
+A. Transportent l’influx moteur ❌ — Ce sont les voies efférentes.
+B. Acheminent les informations sensitives vers le SNC ✔️
+C. Naissent des récepteurs sensoriels ✔️
+D. Descendent du cortex vers les muscles ❌ — Ce sont les efférentes.
+E. Relient moelle et cerveau ✔️
+
+Justification générale : Les voies afférentes conduisent les messages sensoriels au centre d’analyse.
+
+15️⃣ Les voies efférentes
+
+A. Descendent du SNC vers les effecteurs ✔️
+B. Contrôlent les muscles ✔️
+C. Transmettent les sensations ❌ — Non, ce sont les afférentes.
+D. Sortent par les racines postérieures ❌ — Par les antérieures.
+E. Permettent la réponse motrice ✔️
+
+Justification générale : Elles transmettent les ordres moteurs du SNC aux organes effecteurs.
+
+16️⃣ Réflexe spinal
+
+A. Réponse automatique ✔️
+B. Nécessite le cortex ❌ — Géré par la moelle seule.
+C. Comporte un récepteur et un effecteur ✔️
+D. Lente ❌ — C’est une réaction rapide.
+E. Fonctionne même sans conscience ✔️
+
+Justification générale : Le réflexe spinal est une réponse inconsciente et rapide assurant la protection du corps.
+
+17️⃣ Organisation topographique
+
+A. SNC : cerveau + moelle épinière ✔️
+B. SNP : nerfs et ganglions ✔️
+C. SNA inclus dans le SNP ✔️
+D. Cervelet = périphérique ❌ — Fait partie du SNC.
+E. Cortex = SNP ❌
+
+Justification générale : Le système nerveux est organisé hiérarchiquement en structures centrales et périphériques.
+
+18️⃣ Plasticité neuronale
+
+A. Capacité d’adaptation du système nerveux ✔️
+B. Formation de nouvelles synapses ✔️
+C. Division neuronale ❌ — Ne se multiplient pas.
+D. Réorganisation des circuits ✔️
+E. Impossible chez l’adulte ❌ — Réduite mais existante.
+
+Justification générale : La plasticité permet l’apprentissage et la récupération partielle après lésion.
+
+19️⃣ Homéostasie nerveuse
+
+A. Maintien de l’équilibre interne ✔️
+B. Implique le système nerveux et endocrinien ✔️
+C. Régule la température corporelle ✔️
+D. Contrôle hormonal seul ❌ — Coopère avec hormones.
+E. Non concernée par le stress ❌ — Le stress la perturbe.
+
+Justification générale : Le système nerveux ajuste continuellement les paramètres physiologiques.
+
+20️⃣ Intégration fonctionnelle
+
+A. SNC : analyse et décision ✔️
+B. SNP : exécution et transmission ✔️
+C. SNA : contrôle conscient ❌ — Inconscient.
+D. Moelle : relais sensoriel et moteur ✔️
+E. Cervelet : posture et coordination ✔️
+
+Justification générale : Chaque division du système nerveux assure un rôle complémentaire dans la régulation globale du corps.
