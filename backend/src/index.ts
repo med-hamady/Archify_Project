@@ -238,6 +238,47 @@ app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, adminImportRouter); // Admin import/db tools
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+
+// Auto-import quizzes si la base de données est vide
+async function autoImportQuizzes() {
+  try {
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
+    // Vérifier si des questions existent déjà
+    const questionsCount = await prisma.question.count();
+
+    if (questionsCount === 0) {
+      logger.info('🔄 Base de données vide, importation automatique des quiz...');
+
+      // Exécuter le script d'importation
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+
+      const { stdout, stderr } = await execAsync('node dist/import-quizzes.js');
+
+      if (stderr && !stderr.includes('warning')) {
+        logger.error({ stderr }, 'Erreur lors de l\'importation automatique');
+      } else {
+        logger.info('✅ Importation automatique terminée avec succès');
+        logger.info({ output: stdout }, 'Résultat de l\'importation');
+      }
+    } else {
+      logger.info({ questionsCount }, '✅ Questions déjà présentes dans la base');
+    }
+
+    await prisma.$disconnect();
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-import');
+  }
+}
+
+app.listen(port, async () => {
   logger.info({ port }, 'Backend listening');
+
+  // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
+  autoImportQuizzes().catch(err => {
+    logger.error({ error: err.message }, 'Auto-import failed');
+  });
 });
