@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,19 +47,23 @@ const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const auth_1 = require("./modules/auth");
-const courses_1 = require("./modules/courses");
-const lessons_1 = require("./modules/lessons");
 const subscriptions_1 = require("./modules/subscriptions");
 const users_1 = require("./modules/users");
-const admin_1 = require("./modules/admin");
-const comments_1 = require("./modules/comments");
-const video_upload_1 = require("./modules/video-upload");
 const manual_payments_1 = require("./modules/manual-payments");
-const subscription_access_1 = require("./middleware/subscription-access");
+// FacGame routes
+const quiz_1 = require("./modules/quiz");
+const subjects_1 = require("./modules/subjects");
+const chapters_1 = require("./modules/chapters");
+const profile_1 = require("./modules/profile");
+const leaderboard_1 = require("./modules/leaderboard");
+const challenge_1 = require("./modules/challenge");
+const exam_1 = require("./modules/exam");
+const questions_1 = require("./modules/questions");
+const admin_import_1 = require("./modules/admin-import");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app')
     .split(',')
     .map((o) => o.trim());
 app.use((0, helmet_1.default)({
@@ -93,36 +130,24 @@ app.use('/uploads', (req, res, next) => {
     }
     next();
 });
+// DISABLED - Old Archify video route (no longer needed for FacGame)
 // Custom route handler for video files with proper CORS and subscription check
-app.get('/uploads/videos/:filename', auth_1.optionalAuth, subscription_access_1.checkVideoFileAccess, (req, res) => {
-    const filename = req.params.filename;
-    const filePath = path_1.default.join(__dirname, '../uploads/videos', filename);
-    console.log('🎬 Video request:', filename);
-    console.log('🎬 Origin header:', req.headers.origin);
-    console.log('🎬 Referer header:', req.headers.referer);
-    // IMPORTANT: Remove all CSP headers for video files
-    res.removeHeader('Content-Security-Policy');
-    res.removeHeader('Content-Security-Policy-Report-Only');
-    // Set CORS headers - Allow all origins for video files
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Range');
-    res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
-    // Set video-specific headers
-    res.setHeader('Content-Type', 'video/mp4');
-    res.setHeader('Accept-Ranges', 'bytes');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-    res.setHeader('Content-Disposition', 'inline');
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    console.log('🎬 CORS headers set with wildcard origin');
-    // Check if file exists
-    if (!fs_1.default.existsSync(filePath)) {
-        console.log('❌ File not found:', filePath);
-        return res.status(404).json({ error: 'File not found' });
+// app.get('/uploads/videos/:filename', optionalAuth, checkVideoFileAccess, (req, res) => {
+//   ... (commented out)
+// });
+// Handle CORS preflight for payment screenshots
+app.options('/uploads/payment-screenshots/:filename', (req, res) => {
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
     }
-    console.log('✅ Sending video file:', filePath);
-    // Send the file
-    res.sendFile(filePath);
+    else {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(200).end();
 });
 // Serve payment screenshots (accessible by admin and payment owner only)
 app.get('/uploads/payment-screenshots/:filename', auth_1.optionalAuth, (req, res) => {
@@ -134,8 +159,19 @@ app.get('/uploads/payment-screenshots/:filename', auth_1.optionalAuth, (req, res
     console.log('📸 User Role:', req.userRole);
     console.log('📸 Cookies:', req.cookies);
     console.log('📸 Authorization header:', req.headers.authorization);
-    // Set CORS headers for screenshots
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    console.log('📸 Origin:', req.headers.origin);
+    // IMPORTANT: Remove all CSP headers for screenshot files (like we do for videos)
+    res.removeHeader('Content-Security-Policy');
+    res.removeHeader('Content-Security-Policy-Report-Only');
+    // Set CORS headers for screenshots - Allow both localhost and production
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    else {
+        // Fallback to localhost for development
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    }
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
     res.setHeader('Cache-Control', 'public, max-age=3600');
@@ -198,16 +234,56 @@ app.get('/test-cors', (req, res) => {
 });
 // Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, auth_1.authRouter);
-app.use('/api/courses', generalLimiter, courses_1.coursesRouter);
-app.use('/api/lessons', generalLimiter, lessons_1.lessonsRouter);
 app.use('/api/subscriptions', generalLimiter, subscriptions_1.subscriptionsRouter);
 app.use('/api/users', strictLimiter, users_1.usersRouter);
-app.use('/api/admin', strictLimiter, admin_1.adminRouter);
-app.use('/api/comments', generalLimiter, comments_1.commentsRouter);
-app.use('/api/video-upload', generalLimiter, video_upload_1.videoUploadRouter);
 app.use('/api/manual-payments', generalLimiter, manual_payments_1.manualPaymentsRouter);
+// FacGame routes
+app.use('/api/quiz', generalLimiter, quiz_1.quizRouter);
+app.use('/api/subjects', generalLimiter, subjects_1.subjectsRouter);
+app.use('/api/chapters', generalLimiter, chapters_1.chaptersRouter);
+app.use('/api/profile', generalLimiter, profile_1.profileRouter);
+app.use('/api/leaderboard', generalLimiter, leaderboard_1.leaderboardRouter);
+app.use('/api/challenge', generalLimiter, challenge_1.challengeRouter);
+app.use('/api/exam', generalLimiter, exam_1.examRouter);
+app.use('/api/questions', strictLimiter, questions_1.questionsRouter); // Admin only
+app.use('/api/admin', strictLimiter, admin_import_1.adminImportRouter); // Admin import/db tools
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+// Auto-import quizzes si la base de données est vide
+async function autoImportQuizzes() {
+    try {
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        // Vérifier si des questions existent déjà
+        const questionsCount = await prisma.question.count();
+        if (questionsCount === 0) {
+            logger.info('🔄 Base de données vide, importation automatique des quiz...');
+            // Exécuter le script d'importation
+            const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+            const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+            const execAsync = promisify(exec);
+            const { stdout, stderr } = await execAsync('node dist/import-quizzes.js');
+            if (stderr && !stderr.includes('warning')) {
+                logger.error({ stderr }, 'Erreur lors de l\'importation automatique');
+            }
+            else {
+                logger.info('✅ Importation automatique terminée avec succès');
+                logger.info({ output: stdout }, 'Résultat de l\'importation');
+            }
+        }
+        else {
+            logger.info({ questionsCount }, '✅ Questions déjà présentes dans la base');
+        }
+        await prisma.$disconnect();
+    }
+    catch (error) {
+        logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-import');
+    }
+}
+app.listen(port, async () => {
     logger.info({ port }, 'Backend listening');
+    // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
+    autoImportQuizzes().catch(err => {
+        logger.error({ error: err.message }, 'Auto-import failed');
+    });
 });
 //# sourceMappingURL=index.js.map

@@ -166,9 +166,9 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
                             hasAccess = true;
                         }
                         else if (user.subscriptions.length > 0) {
-                            // Check if user has PREMIUM subscription
+                            // Check if user has subscription with video access
                             const subscription = user.subscriptions[0];
-                            if (subscription.plan.type === 'PREMIUM') {
+                            if (subscription.plan.type === 'FULL_ACCESS' || subscription.plan.type === 'VIDEOS_ONLY') {
                                 hasAccess = true;
                             }
                         }
@@ -220,8 +220,9 @@ exports.lessonsRouter.get('/:id', async (req, res) => {
                             hasAccess = true;
                         }
                         else if (user.subscriptions.length > 0) {
+                            // Check if user has subscription with document access
                             const subscription = user.subscriptions[0];
-                            if (subscription.plan.type === 'PREMIUM') {
+                            if (subscription.plan.type === 'FULL_ACCESS' || subscription.plan.type === 'DOCUMENTS_ONLY') {
                                 hasAccess = true;
                             }
                         }

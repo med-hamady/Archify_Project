@@ -119,6 +119,27 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
                 </div>
               </div>
 
+              <!-- Semester (PCEM1 or PCEM2) -->
+              <div>
+                <label for="semester" class="block text-sm font-medium text-gray-700 mb-2">
+                  Niveau d'étude
+                </label>
+                <select
+                  id="semester"
+                  formControlName="semester"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  [class.border-red-500]="authForm.get('semester')?.invalid && authForm.get('semester')?.touched"
+                >
+                  <option value="">Sélectionner votre niveau</option>
+                  <option value="PCEM1">PCEM1 (Première année)</option>
+                  <option value="PCEM2">PCEM2 (Deuxième année)</option>
+                </select>
+                <div *ngIf="authForm.get('semester')?.invalid && authForm.get('semester')?.touched"
+                     class="mt-1 text-sm text-red-600">
+                  Le niveau d'étude est requis
+                </div>
+              </div>
+
               <!-- University -->
               <div>
                 <label for="university" class="block text-sm font-medium text-gray-700 mb-2">
@@ -307,6 +328,7 @@ export class AuthComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       firstName: ['', this.isLoginMode() ? [] : [Validators.required]],
       lastName: ['', this.isLoginMode() ? [] : [Validators.required]],
+      semester: ['', this.isLoginMode() ? [] : [Validators.required]],
       university: [''],
       department: [''],
       year: [''],
@@ -372,6 +394,7 @@ export class AuthComponent implements OnInit {
         password: formValue.password,
         firstName: formValue.firstName,
         lastName: formValue.lastName,
+        semester: formValue.semester,
         university: formValue.university,
         department: formValue.department,
         year: formValue.year ? parseInt(formValue.year) : undefined

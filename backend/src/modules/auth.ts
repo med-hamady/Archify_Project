@@ -146,7 +146,7 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   name: z.string().min(1),
-  semester: z.string().optional(),
+  semester: z.enum(['PCEM1', 'PCEM2']),
 });
 
 const loginSchema = z.object({
@@ -168,7 +168,7 @@ authRouter.post('/register', async (req, res) => {
         email: body.email,
         passwordHash,
         name: body.name,
-        semester: body.semester ?? 'S1',
+        semester: body.semester,
       },
     });
 

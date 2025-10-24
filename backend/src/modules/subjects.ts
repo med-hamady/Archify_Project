@@ -48,8 +48,23 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
   try {
     const userId = req.userId;
 
-    // Récupérer toutes les matières
+    // Récupérer le niveau de l'utilisateur (PCEM1 ou PCEM2)
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { semester: true }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+      });
+    }
+
+    // Récupérer uniquement les matières du niveau de l'utilisateur
     const subjects = await prisma.subject.findMany({
+      where: {
+        semester: user.semester // Filtre par PCEM1 ou PCEM2
+      },
       orderBy: { title: 'asc' },
       include: {
         chapters: {

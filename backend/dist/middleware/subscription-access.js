@@ -38,8 +38,8 @@ async function canAccessVideo(userId, lessonId) {
     if (!hasSubscription) {
         return false;
     }
-    // PREMIUM subscription grants access to all videos
-    if (subscriptionType === 'PREMIUM') {
+    // FULL_ACCESS or VIDEOS_ONLY subscription grants access to all videos
+    if (subscriptionType === 'FULL_ACCESS' || subscriptionType === 'VIDEOS_ONLY') {
         return true;
     }
     return false;
@@ -53,8 +53,8 @@ async function canAccessDocument(userId, lessonId) {
     if (!hasSubscription) {
         return false;
     }
-    // PREMIUM subscription grants access to all documents
-    if (subscriptionType === 'PREMIUM') {
+    // FULL_ACCESS or DOCUMENTS_ONLY subscription grants access to all documents
+    if (subscriptionType === 'FULL_ACCESS' || subscriptionType === 'DOCUMENTS_ONLY') {
         return true;
     }
     return false;

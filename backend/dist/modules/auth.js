@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRouter = void 0;
 exports.requireAuth = requireAuth;
+exports.requireAdmin = requireAdmin;
 exports.optionalAuth = optionalAuth;
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
@@ -79,18 +80,43 @@ function getUserPublic(user) {
 }
 // Auth middleware
 function requireAuth(req, res, next) {
-    const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
-    if (!token)
+    const cookieToken = req.cookies?.access_token;
+    const authHeader = req.headers.authorization;
+    const headerToken = authHeader?.split(' ')[1];
+    const token = cookieToken || headerToken || '';
+    console.log('[requireAuth]', req.url, {
+        hasCookieToken: !!cookieToken,
+        hasAuthHeader: !!authHeader,
+        hasHeaderToken: !!headerToken,
+        tokenSource: cookieToken ? 'cookie' : headerToken ? 'header' : 'none',
+        tokenPreview: token ? token.substring(0, 20) + '...' : 'none'
+    });
+    if (!token) {
+        console.log('[requireAuth] No token found, returning 401');
         return res.status(401).json({ error: { code: 'NO_TOKEN', message: 'No token' } });
+    }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
         req.userId = decoded.sub;
         req.userRole = decoded.role;
+        console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
         return next();
     }
     catch (_e) {
+        console.log('[requireAuth] Token verification failed:', _e.message);
         return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
     }
+}
+// Admin check middleware - must be used after requireAuth
+function requireAdmin(req, res, next) {
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+        console.log('[requireAdmin] Access denied for role:', req.userRole);
+        return res.status(403).json({
+            error: { code: 'FORBIDDEN', message: 'Admin access required' }
+        });
+    }
+    console.log('[requireAdmin] Admin access granted:', req.userRole);
+    return next();
 }
 // Optional auth middleware - does not block if no token
 function optionalAuth(req, res, next) {
@@ -117,7 +143,7 @@ const registerSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(8),
     name: zod_1.z.string().min(1),
-    semester: zod_1.z.string().optional(),
+    semester: zod_1.z.enum(['PCEM1', 'PCEM2']),
 });
 const loginSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
@@ -137,7 +163,7 @@ exports.authRouter.post('/register', async (req, res) => {
                 email: body.email,
                 passwordHash,
                 name: body.name,
-                semester: body.semester ?? 'S1',
+                semester: body.semester,
             },
         });
         // Fetch user with subscription data
@@ -153,7 +179,11 @@ exports.authRouter.post('/register', async (req, res) => {
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
         const refreshToken = signRefreshToken({ sub: user.id });
         setAuthCookies(res, accessToken, refreshToken);
-        return res.status(201).json({ user: getUserPublic(user) });
+        return res.status(201).json({
+            user: getUserPublic(user),
+            accessToken,
+            refreshToken
+        });
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {
@@ -184,7 +214,19 @@ exports.authRouter.post('/login', async (req, res) => {
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
         const refreshToken = signRefreshToken({ sub: user.id });
         setAuthCookies(res, accessToken, refreshToken);
-        return res.json({ user: getUserPublic(user) });
+        console.log('[Auth] Login successful:', {
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            hasAccessToken: !!accessToken,
+            hasRefreshToken: !!refreshToken,
+            accessTokenPreview: accessToken.substring(0, 20) + '...'
+        });
+        return res.json({
+            user: getUserPublic(user),
+            accessToken,
+            refreshToken
+        });
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {

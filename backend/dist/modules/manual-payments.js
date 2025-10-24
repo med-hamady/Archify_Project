@@ -10,21 +10,26 @@ const zod_1 = require("zod");
 const auth_1 = require("./auth");
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
+const cloudinary_1 = require("cloudinary");
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
 const prisma = new client_1.PrismaClient();
 exports.manualPaymentsRouter = (0, express_1.Router)();
-// Configure multer for screenshot uploads
-const storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path_1.default.join(__dirname, '../../uploads/payment-screenshots');
-        if (!fs_1.default.existsSync(uploadPath)) {
-            fs_1.default.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'payment-' + uniqueSuffix + path_1.default.extname(file.originalname));
+// Configure Cloudinary
+cloudinary_1.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+// Configure multer with Cloudinary storage
+const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
+    cloudinary: cloudinary_1.v2,
+    params: async (req, file) => {
+        return {
+            folder: 'archify/payment-screenshots',
+            allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+            transformation: [{ width: 1000, height: 1000, crop: 'limit' }],
+            public_id: `payment-${Date.now()}-${Math.round(Math.random() * 1E9)}`
+        };
     }
 });
 const upload = (0, multer_1.default)({
@@ -75,7 +80,9 @@ exports.manualPaymentsRouter.post('/', auth_1.requireAuth, upload.single('screen
                 error: { code: 'SCREENSHOT_REQUIRED', message: 'Payment screenshot is required' }
             });
         }
-        const screenshotUrl = `/uploads/payment-screenshots/${req.file.filename}`;
+        // Cloudinary URL is available in req.file.path
+        const screenshotUrl = req.file.path || req.file.url;
+        console.log('📸 Screenshot uploaded to Cloudinary:', screenshotUrl);
         // Créer le paiement en statut PENDING
         const payment = await prisma.payment.create({
             data: {

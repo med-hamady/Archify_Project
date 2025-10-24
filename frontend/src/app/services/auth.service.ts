@@ -57,6 +57,7 @@ export interface RegisterRequest {
   password: string;
   firstName: string;
   lastName: string;
+  semester: 'PCEM1' | 'PCEM2';
   university?: string;
   department?: string;
   year?: number;
@@ -172,8 +173,7 @@ export class AuthService {
       email: userData.email,
       password: userData.password,
       name: `${userData.firstName} ${userData.lastName}`.trim(),
-      // departmentId expects UUID; map when real departments exist
-      semester: userData.year ? String(userData.year) : undefined
+      semester: userData.semester
     };
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, payload)
       .pipe(

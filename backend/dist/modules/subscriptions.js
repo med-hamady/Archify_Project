@@ -33,7 +33,7 @@ exports.subscriptionsRouter.get('/', auth_1.requireAuth, async (req, res) => {
 const subscriptionPlanCreateSchema = zod_1.z.object({
     name: zod_1.z.string().min(1),
     description: zod_1.z.string().optional(),
-    type: zod_1.z.enum(['PREMIUM']),
+    type: zod_1.z.enum(['QUIZ_ONLY', 'DOCUMENTS_ONLY', 'FULL_ACCESS']), // FacGame: Updated
     interval: zod_1.z.enum(['yearly']), // Only yearly subscriptions
     priceCents: zod_1.z.number().int().min(0),
     currency: zod_1.z.string().length(3).default('MRU'),
@@ -46,20 +46,27 @@ const subscriptionCreateSchema = zod_1.z.object({
 exports.subscriptionsRouter.get('/plans', async (req, res) => {
     try {
         const plans = await prisma.subscriptionPlan.findMany({
+            where: { isActive: true },
             orderBy: { priceCents: 'asc' }
         });
+        console.log('[Subscriptions] Found plans:', plans.length);
         res.json({
             plans: plans.map(plan => ({
                 id: plan.id,
                 name: plan.name,
+                description: plan.description,
                 interval: plan.interval,
                 priceCents: plan.priceCents,
                 price: (plan.priceCents / 100).toFixed(2),
-                currency: plan.currency
+                currency: plan.currency,
+                type: plan.type,
+                features: plan.features,
+                isActive: plan.isActive
             }))
         });
     }
     catch (err) {
+        console.error('[Subscriptions] Error loading plans:', err);
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
@@ -472,41 +479,50 @@ exports.subscriptionsRouter.delete('/plans/:id', auth_1.requireAuth, async (req,
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
+// DISABLED - Old Archify route (uses Lesson model which no longer exists in FacGame)
 // GET /check-access/:lessonId - Check if user has access to lesson
-exports.subscriptionsRouter.get('/check-access/:lessonId', auth_1.requireAuth, async (req, res) => {
-    try {
-        const { lessonId } = req.params;
-        // Get lesson details
-        const lesson = await prisma.lesson.findUnique({
-            where: { id: lessonId },
-            include: {
-                course: {
-                    select: { isPremium: true }
-                }
-            }
-        });
-        if (!lesson) {
-            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
+// TODO: Replace with check-access/:chapterId for FacGame
+/*
+subscriptionsRouter.get('/check-access/:lessonId', requireAuth, async (req: any, res) => {
+  try {
+    const { lessonId } = req.params;
+
+    // Get lesson details
+    const lesson = await prisma.lesson.findUnique({
+      where: { id: lessonId },
+      include: {
+        course: {
+          select: { isPremium: true }
         }
-        // If lesson is not premium, user has access
-        if (!lesson.isPremium && !lesson.course.isPremium) {
-            return res.json({ hasAccess: true, reason: 'free_content' });
-        }
-        // Check if user has active subscription
-        const subscription = await prisma.subscription.findFirst({
-            where: {
-                userId: req.userId,
-                status: 'ACTIVE',
-                endAt: { gt: new Date() }
-            }
-        });
-        if (subscription) {
-            return res.json({ hasAccess: true, reason: 'active_subscription' });
-        }
-        res.json({ hasAccess: false, reason: 'subscription_required' });
+      }
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Lesson not found' } });
     }
-    catch (err) {
-        return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    
+    // If lesson is not premium, user has access
+    if (!lesson.isPremium && !lesson.course.isPremium) {
+      return res.json({ hasAccess: true, reason: 'free_content' });
     }
+    
+    // Check if user has active subscription
+    const subscription = await prisma.subscription.findFirst({
+      where: {
+        userId: req.userId,
+        status: 'ACTIVE',
+        endAt: { gt: new Date() }
+      }
+    });
+    
+    if (subscription) {
+      return res.json({ hasAccess: true, reason: 'active_subscription' });
+    }
+
+    res.json({ hasAccess: false, reason: 'subscription_required' });
+  } catch (err: any) {
+    return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+  }
 });
+*/ 
 //# sourceMappingURL=subscriptions.js.map
