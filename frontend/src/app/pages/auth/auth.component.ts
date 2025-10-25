@@ -140,56 +140,6 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.
                 </div>
               </div>
 
-              <!-- University -->
-              <div>
-                <label for="university" class="block text-sm font-medium text-gray-700 mb-2">
-                  Université (optionnel)
-                </label>
-                <input
-                  id="university"
-                  type="text"
-                  formControlName="university"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="ISCAE"
-                />
-              </div>
-
-              <!-- Department -->
-              <div>
-                <label for="department" class="block text-sm font-medium text-gray-700 mb-2">
-                  Département (optionnel)
-                </label>
-                <select
-                  id="department"
-                  formControlName="department"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Sélectionner un département</option>
-                  <option value="informatique">Informatique de Gestion</option>
-                  <option value="gestion">Gestion</option>
-                  <option value="comptabilite">Comptabilité</option>
-                  <option value="marketing">Marketing</option>
-                </select>
-              </div>
-
-              <!-- Year -->
-              <div>
-                <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
-                  Année d'étude (optionnel)
-                </label>
-                <select
-                  id="year"
-                  formControlName="year"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Sélectionner une année</option>
-                  <option value="1">1ère année</option>
-                  <option value="2">2ème année</option>
-                  <option value="3">3ème année</option>
-                  <option value="4">4ème année</option>
-                  <option value="5">5ème année</option>
-                </select>
-              </div>
             </div>
 
             <!-- Remember Me / Terms -->
@@ -329,9 +279,6 @@ export class AuthComponent implements OnInit {
       firstName: ['', this.isLoginMode() ? [] : [Validators.required]],
       lastName: ['', this.isLoginMode() ? [] : [Validators.required]],
       semester: ['', this.isLoginMode() ? [] : [Validators.required]],
-      university: [''],
-      department: [''],
-      year: [''],
       rememberMe: [false],
       terms: [false, this.isLoginMode() ? [] : [Validators.requiredTrue]]
     });
@@ -394,10 +341,7 @@ export class AuthComponent implements OnInit {
         password: formValue.password,
         firstName: formValue.firstName,
         lastName: formValue.lastName,
-        semester: formValue.semester,
-        university: formValue.university,
-        department: formValue.department,
-        year: formValue.year ? parseInt(formValue.year) : undefined
+        semester: formValue.semester
       };
 
       this.authService.register(registerData).subscribe({

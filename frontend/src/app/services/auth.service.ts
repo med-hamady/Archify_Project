@@ -58,9 +58,6 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   semester: 'PCEM1' | 'PCEM2';
-  university?: string;
-  department?: string;
-  year?: number;
 }
 
 export interface AuthResponse {
