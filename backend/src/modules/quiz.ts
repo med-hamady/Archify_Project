@@ -310,6 +310,8 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, async (req: any, res: an
 
     if (!nextQuestion) {
       return res.json({
+        success: true,
+        question: null,
         completed: true,
         message: 'Chapter completed! All questions answered correctly.'
       });
@@ -323,16 +325,16 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, async (req: any, res: an
     }));
 
     return res.json({
+      success: true,
       question: {
         id: nextQuestion.id,
-        text: nextQuestion.questionText,
+        questionText: nextQuestion.questionText,
         options: sanitizedOptions,
         difficulty: nextQuestion.difficulty,
-        orderIndex: nextQuestion.orderIndex
-      },
-      progress: {
-        current: allQuestions.findIndex(q => q.id === nextQuestion.id) + 1,
-        total: allQuestions.length
+        chapterId: nextQuestion.chapterId,
+        orderIndex: nextQuestion.orderIndex,
+        position: allQuestions.findIndex(q => q.id === nextQuestion.id) + 1,
+        totalQuestions: allQuestions.length
       }
     });
 
