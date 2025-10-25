@@ -232,6 +232,36 @@ app.get('/test-cors', (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.status(200).json({ message: 'CORS test successful' });
 });
+// Test database status endpoint (public for debugging)
+app.get('/api/test/db-status', async (_req, res) => {
+    try {
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        const [subjectsCount, chaptersCount, questionsCount, usersCount] = await Promise.all([
+            prisma.subject.count(),
+            prisma.chapter.count(),
+            prisma.question.count(),
+            prisma.user.count()
+        ]);
+        await prisma.$disconnect();
+        return res.json({
+            status: 'ok',
+            database: {
+                subjects: subjectsCount,
+                chapters: chaptersCount,
+                questions: questionsCount,
+                users: usersCount
+            },
+            timestamp: new Date().toISOString()
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+});
 // Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, auth_1.authRouter);
 app.use('/api/subscriptions', generalLimiter, subscriptions_1.subscriptionsRouter);
