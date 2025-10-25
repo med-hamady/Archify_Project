@@ -103,7 +103,7 @@ export class FacgameDashboardComponent implements OnInit {
   }
 
   navigateToSubject(subjectId: string) {
-    this.router.navigate(['/quiz', subjectId]);
+    this.router.navigate(['/chapters', subjectId]);
   }
 
   navigateToProfile() {
