@@ -256,6 +256,41 @@ app.post('/api/admin/fix-anatomie', async (_req, res) => {
   }
 });
 
+// Clean empty chapters endpoint (public for emergency cleanup)
+app.post('/api/admin/clean-empty-chapters', async (_req, res) => {
+  try {
+    logger.info('🧹 Manual empty chapters cleanup triggered');
+
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    const { stdout, stderr } = await execAsync('node dist/clean-empty-chapters.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      logger.error({ stderr }, 'Erreur lors du nettoyage des chapitres vides');
+      return res.status(500).json({
+        status: 'error',
+        message: stderr
+      });
+    }
+
+    logger.info('✅ Chapitres vides nettoyés avec succès');
+
+    return res.json({
+      status: 'success',
+      message: 'Empty chapters have been cleaned',
+      output: stdout
+    });
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors du nettoyage manuel');
+    return res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // Test database status endpoint (public for debugging)
 app.get('/api/test/db-status', async (_req, res) => {
   try {
