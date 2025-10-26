@@ -262,6 +262,51 @@ app.get('/api/test/db-status', async (_req, res) => {
         });
     }
 });
+// TEMPORARY: Fix all users semester values (public endpoint for emergency fix)
+app.post('/api/test/fix-all-users-semester', async (_req, res) => {
+    try {
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        // Get all users first to see their current semester values
+        const allUsers = await prisma.user.findMany({
+            select: {
+                id: true,
+                email: true,
+                semester: true
+            }
+        });
+        console.log('=== USERS BEFORE FIX ===');
+        allUsers.forEach(u => {
+            console.log(`  ${u.email}: semester="${u.semester}"`);
+        });
+        // Find users without valid semester
+        const usersToFix = allUsers.filter(u => u.semester !== 'PCEM1' && u.semester !== 'PCEM2');
+        // Update all invalid users to PCEM1
+        const result = await prisma.user.updateMany({
+            where: {
+                semester: { not: { in: ['PCEM1', 'PCEM2'] } }
+            },
+            data: {
+                semester: 'PCEM1'
+            }
+        });
+        await prisma.$disconnect();
+        return res.json({
+            status: 'ok',
+            message: `Fixed ${result.count} users`,
+            totalUsers: allUsers.length,
+            usersBefore: allUsers.map(u => ({ email: u.email, semester: u.semester })),
+            usersFixed: usersToFix.map(u => ({ email: u.email, oldSemester: u.semester, newSemester: 'PCEM1' })),
+            timestamp: new Date().toISOString()
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+});
 // Routes with appropriate rate limiting
 app.use('/api/auth', authLimiter, auth_1.authRouter);
 app.use('/api/subscriptions', generalLimiter, subscriptions_1.subscriptionsRouter);
