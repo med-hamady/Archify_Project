@@ -480,6 +480,16 @@ async function autoFixAnatomie() {
     } else {
       logger.info('✅ Anatomie PCEM2 corrigé avec succès');
       logger.info({ output: stdout }, 'Résultat de la correction');
+
+      // Après la correction, nettoyer les chapitres vides
+      logger.info('🧹 Nettoyage automatique des chapitres vides...');
+      try {
+        const cleanResult = await execAsync('node dist/clean-empty-chapters.js');
+        logger.info('✅ Chapitres vides nettoyés automatiquement');
+        logger.info({ output: cleanResult.stdout }, 'Résultat du nettoyage');
+      } catch (cleanError: any) {
+        logger.error({ error: cleanError.message }, '❌ Erreur lors du nettoyage automatique');
+      }
     }
 
     await prisma.$disconnect();
