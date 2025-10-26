@@ -57,8 +57,19 @@ export class ProfileComponent implements OnInit {
     this.error = null;
 
     this.profileService.getProfile().subscribe({
-      next: (res) => {
-        this.profile = res.profile;
+      next: (res: any) => {
+        // Adapter la structure backend à l'interface frontend
+        this.profile = {
+          id: res.profile.id,
+          name: res.profile.name,
+          email: res.profile.email,
+          semester: res.profile.semester,
+          xpTotal: res.profile.gamification.xpTotal,
+          level: res.profile.gamification.level.current,
+          consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
+          legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
+          createdAt: res.profile.createdAt
+        };
         this.loadBadges();
         this.loadActivity();
         this.loadStats();
@@ -108,7 +119,7 @@ export class ProfileComponent implements OnInit {
 
   getLevelInfo() {
     if (!this.profile) return null;
-    const level = this.profile.level;
+    const level = this.profile.level as keyof typeof this.levelConfig;
     const thresholds = this.levelThresholds[level];
     const currentXP = this.profile.xpTotal;
 
