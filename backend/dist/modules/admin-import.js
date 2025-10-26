@@ -133,4 +133,61 @@ exports.adminImportRouter.get('/db-status', auth_1.requireAuth, async (req, res)
         });
     }
 });
+/**
+ * POST /api/admin/fix-users-semester
+ * Corrige les utilisateurs sans semester PCEM1/PCEM2 (admin uniquement)
+ */
+exports.adminImportRouter.post('/fix-users-semester', auth_1.requireAuth, async (req, res) => {
+    try {
+        // Vérifier que l'utilisateur est admin
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+            return res.status(403).json({
+                error: { code: 'FORBIDDEN', message: 'Admin access required' }
+            });
+        }
+        // Trouver tous les utilisateurs
+        const allUsers = await prisma.user.findMany({
+            select: {
+                id: true,
+                email: true,
+                semester: true
+            }
+        });
+        // Compter ceux qui n'ont pas PCEM1 ou PCEM2
+        const usersToFix = allUsers.filter(u => u.semester !== 'PCEM1' && u.semester !== 'PCEM2');
+        console.log(`[fix-users-semester] Total users: ${allUsers.length}`);
+        console.log(`[fix-users-semester] Users to fix: ${usersToFix.length}`);
+        usersToFix.forEach(u => {
+            console.log(`  - ${u.email}: semester="${u.semester}"`);
+        });
+        // Mettre à jour tous vers PCEM1 par défaut
+        const result = await prisma.user.updateMany({
+            where: {
+                semester: { not: { in: ['PCEM1', 'PCEM2'] } }
+            },
+            data: {
+                semester: 'PCEM1'
+            }
+        });
+        console.log(`[fix-users-semester] Updated ${result.count} users to PCEM1`);
+        return res.json({
+            success: true,
+            message: `Fixed ${result.count} users`,
+            usersFixed: usersToFix.map(u => ({ email: u.email, oldSemester: u.semester }))
+        });
+    }
+    catch (error) {
+        console.error('Error fixing users semester:', error);
+        return res.status(500).json({
+            error: {
+                code: 'FIX_USERS_ERROR',
+                message: 'Failed to fix users semester',
+                details: error.message
+            }
+        });
+    }
+});
 //# sourceMappingURL=admin-import.js.map
