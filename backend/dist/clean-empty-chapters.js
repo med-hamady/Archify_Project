@@ -77,6 +77,13 @@ async function cleanEmptyChapters() {
             updatedSubject.chapters.forEach((ch, index) => {
                 console.log(`   ${index + 1}. ${ch.title} (${ch._count.questions} questions)`);
             });
+            // Mettre à jour le totalQCM du sujet avec le nombre réel de questions
+            console.log(`\n🔧 Mise à jour du totalQCM du sujet...`);
+            await prisma.subject.update({
+                where: { id: anatomieSubject.id },
+                data: { totalQCM: totalQuestions }
+            });
+            console.log(`✅ totalQCM mis à jour: ${totalQuestions}`);
         }
         await prisma.$disconnect();
     }
