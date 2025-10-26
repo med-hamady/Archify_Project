@@ -27,12 +27,12 @@
     <div class="subject-progress-card">
       <div class="progress-header">
         <h2>Progression globale</h2>
-        <span class="progress-percent">{{ subject.progressPercent.toFixed(0) }}%</span>
+        <span class="progress-percent">{{ (subject.progressPercent || 0).toFixed(0) }}%</span>
       </div>
       <div class="progress-bar-large">
         <div
           class="progress-fill-large"
-          [style.width.%]="subject.progressPercent">
+          [style.width.%]="subject.progressPercent || 0">
         </div>
       </div>
       <div class="progress-stats">
@@ -80,12 +80,12 @@
         <div class="chapter-progress">
           <div class="progress-label">
             <span>Progression</span>
-            <span class="progress-value">{{ chapter.progressPercent.toFixed(0) }}%</span>
+            <span class="progress-value">{{ (chapter.progressPercent || 0).toFixed(0) }}%</span>
           </div>
           <div class="progress-bar">
             <div
               class="progress-fill"
-              [style.width.%]="chapter.progressPercent">
+              [style.width.%]="chapter.progressPercent || 0">
             </div>
           </div>
         </div>

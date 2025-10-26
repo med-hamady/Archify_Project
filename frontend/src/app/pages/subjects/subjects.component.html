@@ -35,12 +35,12 @@
       <div class="progress-section">
         <div class="progress-label">
           <span>Progression</span>
-          <span class="progress-percent">{{ subject.progressPercent.toFixed(0) }}%</span>
+          <span class="progress-percent">{{ (subject.progressPercent || 0).toFixed(0) }}%</span>
         </div>
         <div class="progress-bar">
           <div
             class="progress-fill"
-            [style.width.%]="subject.progressPercent">
+            [style.width.%]="subject.progressPercent || 0">
           </div>
         </div>
       </div>
