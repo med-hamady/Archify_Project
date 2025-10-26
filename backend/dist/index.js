@@ -356,11 +356,65 @@ async function autoImportQuizzes() {
         logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-import');
     }
 }
+// Auto-fix anatomie PCEM2 si nécessaire
+async function autoFixAnatomie() {
+    try {
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        // Vérifier si anatomie PCEM2 a le bon nombre de questions
+        const anatomieSubject = await prisma.subject.findFirst({
+            where: {
+                title: { contains: 'Anatomie', mode: 'insensitive' },
+                semester: 'PCEM2'
+            },
+            include: {
+                chapters: {
+                    include: {
+                        _count: { select: { questions: true } }
+                    }
+                }
+            }
+        });
+        if (!anatomieSubject) {
+            logger.info('✅ Anatomie PCEM2 not found, skipping fix');
+            await prisma.$disconnect();
+            return;
+        }
+        const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        // Si on a déjà 200 questions, pas besoin de corriger
+        if (totalQuestions === 200) {
+            logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions');
+            await prisma.$disconnect();
+            return;
+        }
+        logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing, running fix script...');
+        // Exécuter le script de correction
+        const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+        const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+        const execAsync = promisify(exec);
+        const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
+        if (stderr && !stderr.includes('warning')) {
+            logger.error({ stderr }, 'Erreur lors de la correction anatomie');
+        }
+        else {
+            logger.info('✅ Anatomie PCEM2 corrigé avec succès');
+            logger.info({ output: stdout }, 'Résultat de la correction');
+        }
+        await prisma.$disconnect();
+    }
+    catch (error) {
+        logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-fix anatomie');
+    }
+}
 app.listen(port, async () => {
     logger.info({ port }, 'Backend listening');
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
     autoImportQuizzes().catch(err => {
         logger.error({ error: err.message }, 'Auto-import failed');
+    });
+    // Lancer l'auto-fix anatomie en arrière-plan
+    autoFixAnatomie().catch(err => {
+        logger.error({ error: err.message }, 'Auto-fix anatomie failed');
     });
 });
 //# sourceMappingURL=index.js.map
