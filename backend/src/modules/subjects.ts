@@ -95,21 +95,11 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
         description: subject.description,
         semester: subject.semester,
         tags: subject.tags,
-        totalQCM: subject.totalQCM,
-        chaptersCount: subject.chapters.length,
-        progress: progress ? {
-          questionsAnswered: progress.questionsAnswered,
-          progressPercent: progress.progressPercent,
-          chaptersCompleted: progress.chaptersCompleted,
-          chaptersTotal: progress.chaptersTotal,
-          challengeUnlocked: progress.challengeUnlockedGlobal
-        } : {
-          questionsAnswered: 0,
-          progressPercent: 0,
-          chaptersCompleted: 0,
-          chaptersTotal: subject.chapters.length,
-          challengeUnlocked: false
-        }
+        totalQuestions: subject.totalQCM,
+        totalChapters: subject.chapters.length,
+        progressPercent: progress ? progress.progressPercent : 0,
+        examUnlocked: progress ? progress.challengeUnlockedGlobal : false,
+        chapters: subject.chapters
       };
     });
 
