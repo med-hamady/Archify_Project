@@ -441,6 +441,23 @@ async function autoFixAnatomie() {
             return;
         }
         const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        const emptyChapters = anatomieSubject.chapters.filter(ch => ch._count.questions === 0);
+        // Import exec/promisify dès maintenant pour pouvoir les utiliser partout
+        const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+        const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+        const execAsync = promisify(exec);
+        // Toujours nettoyer les chapitres vides, même si le nombre de questions est correct
+        if (emptyChapters.length > 0) {
+            logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
+            try {
+                const cleanResult = await execAsync('node dist/clean-empty-chapters.js');
+                logger.info('✅ Chapitres vides nettoyés automatiquement');
+                logger.info({ output: cleanResult.stdout }, 'Résultat du nettoyage');
+            }
+            catch (cleanError) {
+                logger.error({ error: cleanError.message }, '❌ Erreur lors du nettoyage automatique');
+            }
+        }
         // Si on a déjà 200 questions, pas besoin de corriger
         if (totalQuestions === 200) {
             logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions');
@@ -448,10 +465,6 @@ async function autoFixAnatomie() {
             return;
         }
         logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing, running fix script...');
-        // Exécuter le script de correction
-        const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
-        const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
-        const execAsync = promisify(exec);
         const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
         if (stderr && !stderr.includes('warning')) {
             logger.error({ stderr }, 'Erreur lors de la correction anatomie');

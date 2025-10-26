@@ -458,6 +458,24 @@ async function autoFixAnatomie() {
     }
 
     const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+    const emptyChapters = anatomieSubject.chapters.filter(ch => ch._count.questions === 0);
+
+    // Import exec/promisify dès maintenant pour pouvoir les utiliser partout
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    // Toujours nettoyer les chapitres vides, même si le nombre de questions est correct
+    if (emptyChapters.length > 0) {
+      logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
+      try {
+        const cleanResult = await execAsync('node dist/clean-empty-chapters.js');
+        logger.info('✅ Chapitres vides nettoyés automatiquement');
+        logger.info({ output: cleanResult.stdout }, 'Résultat du nettoyage');
+      } catch (cleanError: any) {
+        logger.error({ error: cleanError.message }, '❌ Erreur lors du nettoyage automatique');
+      }
+    }
 
     // Si on a déjà 200 questions, pas besoin de corriger
     if (totalQuestions === 200) {
@@ -467,11 +485,6 @@ async function autoFixAnatomie() {
     }
 
     logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing, running fix script...');
-
-    // Exécuter le script de correction
-    const { exec } = await import('child_process');
-    const { promisify } = await import('util');
-    const execAsync = promisify(exec);
 
     const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
 
