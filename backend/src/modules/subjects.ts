@@ -51,7 +51,7 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
     // Récupérer le niveau de l'utilisateur (PCEM1 ou PCEM2)
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { semester: true }
+      select: { semester: true, email: true }
     });
 
     if (!user) {
@@ -59,6 +59,8 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
         error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
       });
     }
+
+    console.log(`[subjects/] User ${user.email} with semester: "${user.semester}"`);
 
     // Récupérer uniquement les matières du niveau de l'utilisateur
     const subjects = await prisma.subject.findMany({
@@ -74,6 +76,11 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
         }
       }
     });
+
+    console.log(`[subjects/] Found ${subjects.length} subjects for semester "${user.semester}"`);
+    if (subjects.length > 0) {
+      console.log(`[subjects/] Subjects: ${subjects.map(s => `${s.title} (${s.semester})`).join(', ')}`);
+    }
 
     // Récupérer la progression de l'utilisateur
     const progressData = await getUserSubjectsProgress(userId);
