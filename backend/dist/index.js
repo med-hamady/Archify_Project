@@ -233,6 +233,36 @@ app.get('/test-cors', (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.status(200).json({ message: 'CORS test successful' });
 });
+// Manual fix anatomie endpoint (public for emergency fix)
+app.post('/api/admin/fix-anatomie', async (_req, res) => {
+    try {
+        logger.info('🔧 Manual anatomie fix triggered');
+        const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+        const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+        const execAsync = promisify(exec);
+        const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
+        if (stderr && !stderr.includes('warning')) {
+            logger.error({ stderr }, 'Erreur lors de la correction anatomie');
+            return res.status(500).json({
+                status: 'error',
+                message: stderr
+            });
+        }
+        logger.info('✅ Anatomie PCEM2 corrigé manuellement avec succès');
+        return res.json({
+            status: 'success',
+            message: 'Anatomie PCEM2 has been fixed',
+            output: stdout
+        });
+    }
+    catch (error) {
+        logger.error({ error: error.message }, '❌ Erreur lors du fix manuel');
+        return res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+});
 // Test database status endpoint (public for debugging)
 app.get('/api/test/db-status', async (_req, res) => {
     try {
