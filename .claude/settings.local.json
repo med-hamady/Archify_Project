@@ -27,7 +27,10 @@
       "Bash(exit 0)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npx tsc:*)",
+      "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/physio/**)",
+      "Bash(npm run fix:physio:*)"
     ],
     "deny": [],
     "ask": []

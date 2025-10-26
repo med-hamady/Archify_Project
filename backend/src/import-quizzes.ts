@@ -55,7 +55,8 @@ function parseQuizFile(filePath: string): ChapterData {
     // Détecter une nouvelle question (ligne commençant par un numéro + emoji)
     // Format 1: "1️⃣ Question : ..." (avec "Question :")
     // Format 2: "1️⃣ Définition générale" (titre de section, question sur ligne suivante)
-    const questionMatch = line.match(/^(\d+)️⃣\s*Question\s*:\s*(.+)/);
+    // Supporte aussi 🔟 pour le numéro 10
+    const questionMatch = line.match(/^((?:\d+)️⃣|🔟)\s*Question\s*:\s*(.+)/);
     if (questionMatch) {
       // Sauvegarder la question précédente
       if (currentQuestion) {
@@ -100,7 +101,7 @@ function parseQuizFile(filePath: string): ChapterData {
         let sectionTitle = 'Question sans titre';
         for (let j = Math.max(0, i - 5); j < i; j++) {
           const prevLine = lines[j].trim();
-          const sectionMatch = prevLine.match(/^(\d+)️⃣\s*(.+)/);
+          const sectionMatch = prevLine.match(/^((?:\d+)️⃣|🔟)\s*(.+)/);
           if (sectionMatch) {
             sectionTitle = sectionMatch[2].trim();
           }
