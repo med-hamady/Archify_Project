@@ -208,6 +208,31 @@ async function main() {
     console.log(`\n🎉 Import terminé avec succès !`);
     console.log(`📊 Total: ${totalQuestionsImported} questions importées dans ${files.length} chapitres`);
 
+    // 4. Supprimer les chapitres vides (anciens chapitres qui n'ont plus de questions)
+    console.log(`\n🗑️  Nettoyage des chapitres vides...`);
+
+    const allChapters = await prisma.chapter.findMany({
+      where: { subjectId: anatomieSubject.id },
+      include: {
+        _count: { select: { questions: true } }
+      }
+    });
+
+    const emptyChapters = allChapters.filter(ch => ch._count.questions === 0);
+
+    if (emptyChapters.length > 0) {
+      console.log(`   Chapitres vides trouvés: ${emptyChapters.length}`);
+
+      for (const chapter of emptyChapters) {
+        await prisma.chapter.delete({ where: { id: chapter.id } });
+        console.log(`   ✓ Supprimé: ${chapter.title}`);
+      }
+
+      console.log(`\n✅ ${emptyChapters.length} chapitres vides supprimés`);
+    } else {
+      console.log(`   ✓ Aucun chapitre vide à supprimer`);
+    }
+
   } catch (error) {
     console.error('❌ Erreur lors de l\'import:', error);
     throw error;
