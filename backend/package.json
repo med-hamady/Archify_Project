@@ -16,7 +16,8 @@
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:studio": "prisma studio",
     "seed": "ts-node src/seed.ts",
-    "import:quizzes": "node dist/import-quizzes.js"
+    "import:quizzes": "node dist/import-quizzes.js",
+    "fix:anatomie": "node dist/fix-anatomie-pcem2.js"
   },
   "keywords": [],
   "author": "",
