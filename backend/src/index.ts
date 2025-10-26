@@ -477,6 +477,16 @@ async function autoFixAnatomie() {
       }
     }
 
+    // Vérifier et corriger le totalQCM si nécessaire
+    if (totalQuestions === 200 && anatomieSubject.totalQCM !== 200) {
+      logger.info({ currentTotalQCM: anatomieSubject.totalQCM, actualQuestions: totalQuestions }, '🔧 Correction du totalQCM...');
+      await prisma.subject.update({
+        where: { id: anatomieSubject.id },
+        data: { totalQCM: 200 }
+      });
+      logger.info('✅ totalQCM corrigé de ' + anatomieSubject.totalQCM + ' → 200');
+    }
+
     // Si on a déjà 200 questions, pas besoin de corriger
     if (totalQuestions === 200) {
       logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions');
