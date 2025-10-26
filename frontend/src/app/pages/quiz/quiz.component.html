@@ -56,11 +56,14 @@
       <button
         *ngFor="let option of currentQuestion.options; let i = index"
         class="answer-option"
-        [class.selected]="selectedAnswer === i"
+        [class.selected]="isSelected(i)"
         [class.correct]="showResult && result?.options?.[i]?.isCorrect"
         [class.incorrect]="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect"
         [class.disabled]="answered"
         (click)="selectAnswer(i)">
+        <span class="option-checkbox">
+          <span *ngIf="isSelected(i)" class="checkbox-check">✓</span>
+        </span>
         <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E'][i] }}</span>
         <span class="option-text">{{ option.text }}</span>
 
@@ -85,9 +88,9 @@
       <button
         *ngIf="!answered"
         (click)="submitAnswer()"
-        [disabled]="selectedAnswer === null"
+        [disabled]="selectedAnswers.length === 0"
         class="btn btn-primary btn-large">
-        Valider la réponse
+        Valider {{ selectedAnswers.length > 0 ? '(' + selectedAnswers.length + ' réponse' + (selectedAnswers.length > 1 ? 's' : '') + ')' : 'la réponse' }}
       </button>
 
       <button

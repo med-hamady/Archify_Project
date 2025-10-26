@@ -26,7 +26,7 @@ export const quizRouter = Router();
 
 const answerQuestionSchema = z.object({
   questionId: z.string(),
-  selectedAnswer: z.number().int().min(0).max(4) // 0-4 pour les options A-E
+  selectedAnswers: z.array(z.number().int().min(0).max(4)).min(1) // Array of answer indices (0-4)
 });
 
 // ============================================
@@ -39,7 +39,7 @@ const answerQuestionSchema = z.object({
  */
 quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
   try {
-    const { questionId, selectedAnswer } = answerQuestionSchema.parse(req.body);
+    const { questionId, selectedAnswers } = answerQuestionSchema.parse(req.body);
     const userId = req.userId;
 
     // 1. Récupérer la question avec son chapitre
@@ -60,15 +60,35 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
       });
     }
 
-    // 2. Vérifier si la réponse est correcte en utilisant le nouveau format JSON
+    // 2. Vérifier si les réponses sont correctes en utilisant le nouveau format JSON
     const options = question.options as any[];
-    if (!Array.isArray(options) || selectedAnswer >= options.length) {
+    if (!Array.isArray(options)) {
       return res.status(400).json({
-        error: { code: 'INVALID_ANSWER', message: 'Selected answer index out of range' }
+        error: { code: 'INVALID_OPTIONS', message: 'Question options are invalid' }
       });
     }
 
-    const isCorrect = options[selectedAnswer]?.isCorrect === true;
+    // Vérifier que tous les indices sont valides
+    for (const answerIndex of selectedAnswers) {
+      if (answerIndex >= options.length) {
+        return res.status(400).json({
+          error: { code: 'INVALID_ANSWER', message: 'Selected answer index out of range' }
+        });
+      }
+    }
+
+    // Trouver toutes les bonnes réponses
+    const correctAnswerIndices = options
+      .map((opt: any, index: number) => opt.isCorrect ? index : -1)
+      .filter((index: number) => index !== -1);
+
+    // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses
+    const selectedSet = new Set(selectedAnswers);
+    const correctSet = new Set(correctAnswerIndices);
+
+    const isCorrect =
+      selectedSet.size === correctSet.size &&
+      [...selectedSet].every(index => correctSet.has(index));
 
     // 3. Compter le nombre de tentatives précédentes
     const previousAttempts = await prisma.quizAttempt.count({
@@ -116,13 +136,13 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
       xpEarned = xpResult.xpEarned;
     }
 
-    // 8. Enregistrer la tentative
+    // 8. Enregistrer la tentative (stocker le premier index sélectionné pour compatibilité)
     await prisma.quizAttempt.create({
       data: {
         userId,
         questionId,
         attemptNumber,
-        selectedAnswer,
+        selectedAnswer: selectedAnswers[0], // Pour compatibilité avec le schéma existant
         isCorrect,
         xpEarned
       }
@@ -203,7 +223,7 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
       text: opt.text,
       isCorrect: opt.isCorrect,
       justification: !opt.isCorrect ? opt.justification : undefined,
-      wasSelected: index === selectedAnswer
+      wasSelected: selectedAnswers.includes(index)
     }));
 
     // 13. Réponse complète
@@ -211,7 +231,7 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
       success: true,
       result: {
         correct: isCorrect,
-        selectedAnswer,
+        selectedAnswers,
         options: optionsWithFeedback, // Renvoyer toutes les options avec justifications
         explanation: question.explanation,
         attemptNumber,

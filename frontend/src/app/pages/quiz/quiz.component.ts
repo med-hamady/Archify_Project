@@ -17,7 +17,7 @@ export class QuizComponent implements OnInit {
 
   chapterId: string | null = null;
   currentQuestion: QuizQuestion | null = null;
-  selectedAnswer: number | null = null;
+  selectedAnswers: number[] = [];
   answered = false;
   showResult = false;
   result: QuizAnswerResponse['result'] | null = null;
@@ -52,7 +52,7 @@ export class QuizComponent implements OnInit {
 
     this.loading = true;
     this.error = null;
-    this.selectedAnswer = null;
+    this.selectedAnswers = [];
     this.answered = false;
     this.showResult = false;
     this.result = null;
@@ -77,15 +77,26 @@ export class QuizComponent implements OnInit {
 
   selectAnswer(index: number) {
     if (this.answered) return;
-    this.selectedAnswer = index;
+
+    // Toggle selection: if already selected, remove it; otherwise add it
+    const indexPosition = this.selectedAnswers.indexOf(index);
+    if (indexPosition > -1) {
+      this.selectedAnswers.splice(indexPosition, 1);
+    } else {
+      this.selectedAnswers.push(index);
+    }
+  }
+
+  isSelected(index: number): boolean {
+    return this.selectedAnswers.includes(index);
   }
 
   submitAnswer() {
-    if (this.selectedAnswer === null || !this.currentQuestion) return;
+    if (this.selectedAnswers.length === 0 || !this.currentQuestion) return;
 
     this.answered = true;
 
-    this.quizService.answerQuestion(this.currentQuestion.id, this.selectedAnswer).subscribe({
+    this.quizService.answerQuestion(this.currentQuestion.id, this.selectedAnswers).subscribe({
       next: (res) => {
         this.result = res.result;
         this.showResult = true;

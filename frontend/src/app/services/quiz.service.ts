@@ -23,7 +23,7 @@ export interface QuizAnswerResponse {
   success: boolean;
   result: {
     correct: boolean;
-    selectedAnswer: number;  // Index de la réponse sélectionnée
+    selectedAnswers: number[];  // Array of selected answer indices
     options: QuizOption[];  // Options avec feedback (isCorrect, justification, wasSelected)
     explanation?: string;
     attemptNumber?: number;
@@ -82,12 +82,12 @@ export class QuizService {
   }
 
   /**
-   * Répondre à une question
+   * Répondre à une question (avec plusieurs réponses possibles)
    */
-  answerQuestion(questionId: string, selectedAnswer: number): Observable<QuizAnswerResponse> {
+  answerQuestion(questionId: string, selectedAnswers: number[]): Observable<QuizAnswerResponse> {
     return this.http.post<QuizAnswerResponse>(`${this.baseUrl}/answer`, {
       questionId,
-      selectedAnswer
+      selectedAnswers
     });
   }
 
