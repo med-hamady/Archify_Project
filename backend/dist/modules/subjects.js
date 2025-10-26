@@ -146,42 +146,25 @@ exports.subjectsRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
             return {
                 id: chapter.id,
                 title: chapter.title,
-                description: chapter.description,
-                orderIndex: chapter.orderIndex,
-                pdfUrl: chapter.pdfUrl,
+                position: chapter.orderIndex,
                 questionsCount: chapter.questions.length,
-                progress: progress ? {
-                    questionsAnswered: progress.questionsAnswered,
-                    questionsCorrect: progress.questionsCorrect,
-                    progressPercent: progress.progressPercent,
-                    challengeUnlocked: progress.challengeUnlocked,
-                    examUnlocked: progress.examUnlocked
-                } : {
-                    questionsAnswered: 0,
-                    questionsCorrect: 0,
-                    progressPercent: 0,
-                    challengeUnlocked: false,
-                    examUnlocked: false
-                }
+                progressPercent: progress ? progress.progressPercent : 0,
+                challengeUnlocked: progress ? progress.challengeUnlocked : false
             };
         });
         return res.json({
+            success: true,
             subject: {
                 id: subject.id,
                 title: subject.title,
                 description: subject.description,
                 semester: subject.semester,
                 tags: subject.tags,
-                totalQCM: subject.totalQCM,
-                createdAt: subject.createdAt,
-                chapters: chaptersWithProgress,
-                progress: subjectProgress ? {
-                    questionsAnswered: subjectProgress.questionsAnswered,
-                    progressPercent: subjectProgress.progressPercent,
-                    chaptersCompleted: subjectProgress.chaptersCompleted,
-                    chaptersTotal: subjectProgress.chaptersTotal,
-                    challengeUnlocked: subjectProgress.challengeUnlockedGlobal
-                } : null
+                totalQuestions: subject.totalQCM,
+                totalChapters: subject.chapters.length,
+                progressPercent: subjectProgress ? subjectProgress.progressPercent : 0,
+                examUnlocked: subjectProgress ? subjectProgress.challengeUnlockedGlobal : false,
+                chapters: chaptersWithProgress
             }
         });
     }
