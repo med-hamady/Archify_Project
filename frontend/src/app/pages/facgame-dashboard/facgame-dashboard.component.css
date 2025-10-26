@@ -362,48 +362,6 @@
   margin-left: auto;
 }
 
-/* Quick Actions */
-.quick-actions-section {
-  margin: 2rem 0;
-}
-
-.actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.action-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.action-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-}
-
-.action-icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-}
-
-.action-card h3 {
-  margin: 0.5rem 0;
-  color: #333;
-}
-
-.action-card p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
 .empty-state {
   text-align: center;
   padding: 3rem;
