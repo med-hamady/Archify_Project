@@ -42,7 +42,8 @@ profileRouter.get('/me', requireAuth, async (req: any, res: any) => {
         consecutiveGoodAnswers: true,
         legendQuestionsCompleted: true,
         lastActivityAt: true,
-        createdAt: true
+        createdAt: true,
+        profilePicture: true
       }
     });
 
@@ -70,6 +71,7 @@ profileRouter.get('/me', requireAuth, async (req: any, res: any) => {
         role: user.role,
         createdAt: user.createdAt,
         lastActivityAt: user.lastActivityAt,
+        profilePicture: user.profilePicture,
         gamification: {
           xpTotal: user.xpTotal,
           level: {

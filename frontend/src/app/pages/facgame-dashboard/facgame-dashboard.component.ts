@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProfileService, UserProfile, SubjectProgress } from '../../services/profile.service';
@@ -11,6 +11,8 @@ import { ProfileService, UserProfile, SubjectProgress } from '../../services/pro
   styleUrls: ['./facgame-dashboard.component.css']
 })
 export class FacgameDashboardComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   private profileService = inject(ProfileService);
   private router = inject(Router);
 
@@ -18,6 +20,7 @@ export class FacgameDashboardComponent implements OnInit {
   progress: SubjectProgress[] = [];
   loading = true;
   error: string | null = null;
+  uploadingPicture = false;
 
   // Niveau config
   levelConfig = {
@@ -62,7 +65,8 @@ export class FacgameDashboardComponent implements OnInit {
           level: res.profile.gamification.level.current,
           consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
           legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
-          createdAt: res.profile.createdAt
+          createdAt: res.profile.createdAt,
+          profilePicture: res.profile.profilePicture
         };
         this.loadProgress();
       },
@@ -132,5 +136,57 @@ export class FacgameDashboardComponent implements OnInit {
 
   navigateToLeaderboard() {
     this.router.navigate(['/leaderboard']);
+  }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('L\'image ne doit pas dépasser 5 Mo');
+      return;
+    }
+
+    // Convert to base64 and upload
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = reader.result as string;
+      this.uploadProfilePicture(base64Data);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadProfilePicture(imageData: string) {
+    this.uploadingPicture = true;
+
+    this.profileService.uploadProfilePicture(imageData).subscribe({
+      next: (res) => {
+        if (this.profile) {
+          this.profile.profilePicture = res.profilePicture;
+        }
+        this.uploadingPicture = false;
+        console.log('Profile picture uploaded successfully');
+      },
+      error: (err) => {
+        console.error('Error uploading profile picture:', err);
+        alert('Erreur lors de l\'upload de la photo de profil');
+        this.uploadingPicture = false;
+      }
+    });
   }
 }

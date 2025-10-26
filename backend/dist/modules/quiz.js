@@ -25,7 +25,7 @@ exports.quizRouter = (0, express_1.Router)();
 // ============================================
 const answerQuestionSchema = zod_1.z.object({
     questionId: zod_1.z.string(),
-    selectedAnswer: zod_1.z.number().int().min(0).max(4) // 0-4 pour les options A-E
+    selectedAnswers: zod_1.z.array(zod_1.z.number().int().min(0).max(4)).min(1) // Array of answer indices (0-4)
 });
 // ============================================
 // ROUTES
@@ -36,7 +36,7 @@ const answerQuestionSchema = zod_1.z.object({
  */
 exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
     try {
-        const { questionId, selectedAnswer } = answerQuestionSchema.parse(req.body);
+        const { questionId, selectedAnswers } = answerQuestionSchema.parse(req.body);
         const userId = req.userId;
         // 1. Récupérer la question avec son chapitre
         const question = await prisma.question.findUnique({
@@ -54,14 +54,30 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
                 error: { code: 'QUESTION_NOT_FOUND', message: 'Question not found' }
             });
         }
-        // 2. Vérifier si la réponse est correcte en utilisant le nouveau format JSON
+        // 2. Vérifier si les réponses sont correctes en utilisant le nouveau format JSON
         const options = question.options;
-        if (!Array.isArray(options) || selectedAnswer >= options.length) {
+        if (!Array.isArray(options)) {
             return res.status(400).json({
-                error: { code: 'INVALID_ANSWER', message: 'Selected answer index out of range' }
+                error: { code: 'INVALID_OPTIONS', message: 'Question options are invalid' }
             });
         }
-        const isCorrect = options[selectedAnswer]?.isCorrect === true;
+        // Vérifier que tous les indices sont valides
+        for (const answerIndex of selectedAnswers) {
+            if (answerIndex >= options.length) {
+                return res.status(400).json({
+                    error: { code: 'INVALID_ANSWER', message: 'Selected answer index out of range' }
+                });
+            }
+        }
+        // Trouver toutes les bonnes réponses
+        const correctAnswerIndices = options
+            .map((opt, index) => opt.isCorrect ? index : -1)
+            .filter((index) => index !== -1);
+        // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses
+        const selectedSet = new Set(selectedAnswers);
+        const correctSet = new Set(correctAnswerIndices);
+        const isCorrect = selectedSet.size === correctSet.size &&
+            [...selectedSet].every(index => correctSet.has(index));
         // 3. Compter le nombre de tentatives précédentes
         const previousAttempts = await prisma.quizAttempt.count({
             where: {
@@ -99,13 +115,13 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
             });
             xpEarned = xpResult.xpEarned;
         }
-        // 8. Enregistrer la tentative
+        // 8. Enregistrer la tentative (stocker le premier index sélectionné pour compatibilité)
         await prisma.quizAttempt.create({
             data: {
                 userId,
                 questionId,
                 attemptNumber,
-                selectedAnswer,
+                selectedAnswer: selectedAnswers[0], // Pour compatibilité avec le schéma existant
                 isCorrect,
                 xpEarned
             }
@@ -176,14 +192,14 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
             text: opt.text,
             isCorrect: opt.isCorrect,
             justification: !opt.isCorrect ? opt.justification : undefined,
-            wasSelected: index === selectedAnswer
+            wasSelected: selectedAnswers.includes(index)
         }));
         // 13. Réponse complète
         return res.json({
             success: true,
             result: {
                 correct: isCorrect,
-                selectedAnswer,
+                selectedAnswers,
                 options: optionsWithFeedback, // Renvoyer toutes les options avec justifications
                 explanation: question.explanation,
                 attemptNumber,

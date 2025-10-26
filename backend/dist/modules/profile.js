@@ -40,7 +40,8 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
                 consecutiveGoodAnswers: true,
                 legendQuestionsCompleted: true,
                 lastActivityAt: true,
-                createdAt: true
+                createdAt: true,
+                profilePicture: true
             }
         });
         if (!user) {
@@ -63,6 +64,7 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
                 role: user.role,
                 createdAt: user.createdAt,
                 lastActivityAt: user.lastActivityAt,
+                profilePicture: user.profilePicture,
                 gamification: {
                     xpTotal: user.xpTotal,
                     level: {
@@ -212,54 +214,72 @@ exports.profileRouter.get('/progress', auth_1.requireAuth, async (req, res) => {
 exports.profileRouter.get('/stats/detailed', auth_1.requireAuth, async (req, res) => {
     try {
         const userId = req.userId;
-        // Stats par difficulté
-        const attemptsByDifficulty = await prisma.quizAttempt.findMany({
+        // Récupérer toutes les tentatives
+        const allAttempts = await prisma.quizAttempt.findMany({
             where: { userId },
             include: {
                 question: {
                     select: {
-                        difficulty: true
+                        difficulty: true,
+                        id: true
                     }
                 }
             }
         });
-        const statsByDifficulty = {
-            FACILE: { total: 0, correct: 0, avgXP: 0, totalXP: 0 },
-            MOYEN: { total: 0, correct: 0, avgXP: 0, totalXP: 0 },
-            DIFFICILE: { total: 0, correct: 0, avgXP: 0, totalXP: 0 },
-            LEGENDE: { total: 0, correct: 0, avgXP: 0, totalXP: 0 }
+        // Calculer les stats globales
+        const totalQuestions = allAttempts.length;
+        const correctAnswers = allAttempts.filter(a => a.isCorrect).length;
+        const incorrectAnswers = totalQuestions - correctAnswers;
+        const successRate = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+        const totalXPEarned = allAttempts.reduce((sum, a) => sum + a.xpEarned, 0);
+        // Calculer la moyenne des tentatives
+        const questionAttempts = new Map();
+        allAttempts.forEach(attempt => {
+            const qId = attempt.questionId;
+            questionAttempts.set(qId, (questionAttempts.get(qId) || 0) + 1);
+        });
+        const averageAttempts = questionAttempts.size > 0
+            ? Array.from(questionAttempts.values()).reduce((sum, count) => sum + count, 0) / questionAttempts.size
+            : 0;
+        // Compter les questions répondues correctement du premier coup
+        const firstAttempts = new Map();
+        allAttempts.forEach(attempt => {
+            const qId = attempt.questionId;
+            if (!firstAttempts.has(qId)) {
+                firstAttempts.set(qId, attempt.isCorrect);
+            }
+        });
+        const perfectScores = Array.from(firstAttempts.values()).filter(v => v).length;
+        // Stats par difficulté
+        const difficultyCounts = {
+            FACILE: 0,
+            MOYEN: 0,
+            DIFFICILE: 0,
+            LEGENDE: 0
         };
-        attemptsByDifficulty.forEach(attempt => {
+        allAttempts.forEach(attempt => {
             const diff = attempt.question.difficulty;
-            statsByDifficulty[diff].total++;
-            if (attempt.isCorrect) {
-                statsByDifficulty[diff].correct++;
-            }
-            statsByDifficulty[diff].totalXP += attempt.xpEarned;
+            difficultyCounts[diff]++;
         });
-        // Calculer les moyennes
-        Object.keys(statsByDifficulty).forEach(key => {
-            const stats = statsByDifficulty[key];
-            stats.avgXP = stats.total > 0 ? Math.round(stats.totalXP / stats.total) : 0;
-        });
-        // Stats par tentative
-        const attemptsByNumber = await prisma.quizAttempt.groupBy({
-            by: ['attemptNumber'],
-            where: { userId },
-            _count: {
-                id: true
-            },
-            _sum: {
-                xpEarned: true
-            }
-        });
+        // Compter les challenges et examens (pour l'instant 0, à implémenter plus tard)
+        const challengesCompleted = 0;
+        const examsCompleted = 0;
+        const examsPassed = 0;
         return res.json({
-            statsByDifficulty,
-            attemptsByNumber: attemptsByNumber.map(a => ({
-                attemptNumber: a.attemptNumber,
-                count: a._count.id,
-                totalXP: a._sum.xpEarned || 0
-            }))
+            success: true,
+            stats: {
+                totalQuestions,
+                correctAnswers,
+                incorrectAnswers,
+                successRate,
+                averageAttempts,
+                totalXPEarned,
+                challengesCompleted,
+                examsCompleted,
+                examsPassed,
+                perfectScores,
+                difficultyCounts
+            }
         });
     }
     catch (error) {

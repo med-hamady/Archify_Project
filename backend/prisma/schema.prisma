@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  semester     String
-  role         UserRole @default(STUDENT)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  passwordHash    String
+  name            String
+  semester        String
+  role            UserRole @default(STUDENT)
+  profilePicture  String?  // URL de la photo de profil
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   // FacGame: Système de gamification
   xpTotal                  Int       @default(0)

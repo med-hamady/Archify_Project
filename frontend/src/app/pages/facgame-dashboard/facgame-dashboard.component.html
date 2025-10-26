@@ -27,9 +27,14 @@
     <section class="stats-section">
       <div class="user-card">
         <div class="user-header">
-          <div class="avatar">
-            {{ profile.name.charAt(0).toUpperCase() }}
+          <div class="avatar" (click)="triggerFileInput()" [class.has-picture]="profile.profilePicture">
+            <img *ngIf="profile.profilePicture" [src]="profile.profilePicture" alt="Profile Picture" class="profile-picture">
+            <span *ngIf="!profile.profilePicture" class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
+            <div class="avatar-overlay">
+              <span class="camera-icon">📷</span>
+            </div>
           </div>
+          <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
           <div class="user-info">
             <h2>{{ profile.name }}</h2>
             <p class="semester">{{ profile.semester }}</p>

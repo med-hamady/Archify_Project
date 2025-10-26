@@ -13,6 +13,7 @@ export interface UserProfile {
   consecutiveGoodAnswers: number;
   legendQuestionsCompleted: number;
   createdAt: string;
+  profilePicture?: string;
 }
 
 export interface Badge {
@@ -102,5 +103,19 @@ export class ProfileService {
    */
   getDetailedStats(): Observable<{ success: boolean; stats: DetailedStats }> {
     return this.http.get<{ success: boolean; stats: DetailedStats }>(`${this.baseUrl}/stats/detailed`);
+  }
+
+  /**
+   * Upload profile picture
+   */
+  uploadProfilePicture(imageData: string): Observable<{ success: boolean; profilePicture: string }> {
+    return this.http.post<{ success: boolean; profilePicture: string }>(`${this.baseUrl}/picture`, { imageData });
+  }
+
+  /**
+   * Delete profile picture
+   */
+  deleteProfilePicture(): Observable<{ success: boolean; message: string }> {
+    return this.http.delete<{ success: boolean; message: string }>(`${this.baseUrl}/picture`);
   }
 }
