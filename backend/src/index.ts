@@ -633,14 +633,22 @@ async function autoFixAnatomiePCEM1() {
       logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 200');
     }
 
-    // Si on a déjà 200 questions, pas besoin de corriger
-    if (totalQuestions === 200) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions');
+    // Vérifier si les titres contiennent des annotations à nettoyer
+    const hasAnnotations = anatomieSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
+
+    // Si on a déjà 200 questions ET pas d'annotations, pas besoin de corriger
+    if (totalQuestions === 200 && !hasAnnotations) {
+      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions and clean titles');
       await prisma.$disconnect();
       return;
     }
 
-    logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
+    // Si on a 200 questions mais des annotations, on doit nettoyer
+    if (totalQuestions === 200 && hasAnnotations) {
+      logger.info('🔧 Anatomie PCEM1 has correct question count but titles need cleaning...');
+    } else {
+      logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
+    }
 
     const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem1.js');
 
