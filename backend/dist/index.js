@@ -557,6 +557,66 @@ async function autoFixPhysiologie() {
         logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-fix physiologie');
     }
 }
+// Auto-fix anatomie PCEM1 si nécessaire
+async function autoFixAnatomiePCEM1() {
+    try {
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        // Vérifier si anatomie PCEM1 a le bon nombre de questions
+        const anatomieSubject = await prisma.subject.findFirst({
+            where: {
+                title: { contains: 'Anatomie', mode: 'insensitive' },
+                semester: 'PCEM1'
+            },
+            include: {
+                chapters: {
+                    include: {
+                        _count: { select: { questions: true } }
+                    }
+                }
+            }
+        });
+        if (!anatomieSubject) {
+            logger.info('✅ Anatomie PCEM1 not found, skipping fix');
+            await prisma.$disconnect();
+            return;
+        }
+        const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        // Import exec/promisify
+        const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+        const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+        const execAsync = promisify(exec);
+        // Vérifier et corriger le totalQCM si nécessaire
+        // Note: Le fichier source a 199 questions (chapitre 4 manque questions 10 et 32)
+        if (totalQuestions === 199 && anatomieSubject.totalQCM !== 199) {
+            logger.info({ currentTotalQCM: anatomieSubject.totalQCM, actualQuestions: totalQuestions }, '🔧 Correction du totalQCM Anatomie PCEM1...');
+            await prisma.subject.update({
+                where: { id: anatomieSubject.id },
+                data: { totalQCM: 199 }
+            });
+            logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 199');
+        }
+        // Si on a déjà 199 questions, pas besoin de corriger
+        if (totalQuestions === 199) {
+            logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions (199 - source files missing Q10 & Q32 in Ch4)');
+            await prisma.$disconnect();
+            return;
+        }
+        logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 199), running fix script...');
+        const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem1.js');
+        if (stderr && !stderr.includes('warning')) {
+            logger.error({ stderr }, 'Erreur lors de la correction anatomie PCEM1');
+        }
+        else {
+            logger.info('✅ Anatomie PCEM1 corrigé avec succès');
+            logger.info({ output: stdout }, 'Résultat de la correction');
+        }
+        await prisma.$disconnect();
+    }
+    catch (error) {
+        logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-fix anatomie PCEM1');
+    }
+}
 app.listen(port, async () => {
     logger.info({ port }, 'Backend listening');
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
@@ -570,6 +630,10 @@ app.listen(port, async () => {
     // Lancer l'auto-fix physiologie en arrière-plan
     autoFixPhysiologie().catch(err => {
         logger.error({ error: err.message }, 'Auto-fix physiologie failed');
+    });
+    // Lancer l'auto-fix anatomie PCEM1 en arrière-plan
+    autoFixAnatomiePCEM1().catch(err => {
+        logger.error({ error: err.message }, 'Auto-fix anatomie PCEM1 failed');
     });
 });
 //# sourceMappingURL=index.js.map

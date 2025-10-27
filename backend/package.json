@@ -17,7 +17,8 @@
     "prisma:studio": "prisma studio",
     "seed": "ts-node src/seed.ts",
     "import:quizzes": "node dist/import-quizzes.js",
-    "fix:anatomie": "node dist/fix-anatomie-pcem2.js",
+    "fix:anatomie:pcem2": "node dist/fix-anatomie-pcem2.js",
+    "fix:anatomie:pcem1": "node dist/fix-anatomie-pcem1.js",
     "fix:physio": "node dist/fix-physiologie-pcem1.js",
     "clean:empty-chapters": "node dist/clean-empty-chapters.js"
   },

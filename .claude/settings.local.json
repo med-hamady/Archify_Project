@@ -30,7 +30,9 @@
       "Bash(git push:*)",
       "Bash(npx tsc:*)",
       "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/physio/**)",
-      "Bash(npm run fix:physio:*)"
+      "Bash(npm run fix:physio:*)",
+      "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/anatomie/**)",
+      "Bash(npm run fix:anatomie:pcem1:*)"
     ],
     "deny": [],
     "ask": []
