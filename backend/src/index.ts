@@ -657,6 +657,74 @@ async function autoFixAnatomiePCEM1() {
   }
 }
 
+// Auto-fix physiologie PCEM2 si nécessaire
+async function autoFixPhysioPCEM2() {
+  try {
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
+    // Vérifier si physiologie PCEM2 a le bon nombre de questions
+    const physioSubject = await prisma.subject.findFirst({
+      where: {
+        title: { contains: 'Physiologie', mode: 'insensitive' },
+        semester: 'PCEM2'
+      },
+      include: {
+        chapters: {
+          include: {
+            _count: { select: { questions: true } }
+          }
+        }
+      }
+    });
+
+    if (!physioSubject) {
+      logger.info('✅ Physiologie PCEM2 not found, skipping fix');
+      await prisma.$disconnect();
+      return;
+    }
+
+    const totalQuestions = physioSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+
+    // Import exec/promisify
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    // Vérifier et corriger le totalQCM si nécessaire
+    if (totalQuestions === 40 && physioSubject.totalQCM !== 40) {
+      logger.info({ currentTotalQCM: physioSubject.totalQCM, actualQuestions: totalQuestions }, '🔧 Correction du totalQCM Physiologie PCEM2...');
+      await prisma.subject.update({
+        where: { id: physioSubject.id },
+        data: { totalQCM: 40 }
+      });
+      logger.info('✅ totalQCM Physiologie PCEM2 corrigé de ' + physioSubject.totalQCM + ' → 40');
+    }
+
+    // Si on a déjà 40 questions, pas besoin de corriger
+    if (totalQuestions === 40) {
+      logger.info({ totalQuestions }, '✅ Physiologie PCEM2 already has correct number of questions');
+      await prisma.$disconnect();
+      return;
+    }
+
+    logger.info({ totalQuestions }, '🔄 Physiologie PCEM2 needs fixing (expected 40), running fix script...');
+
+    const { stdout, stderr } = await execAsync('node dist/fix-physiologie-pcem2.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      logger.error({ stderr }, 'Erreur lors de la correction physiologie PCEM2');
+    } else {
+      logger.info('✅ Physiologie PCEM2 corrigé avec succès');
+      logger.info({ output: stdout }, 'Résultat de la correction');
+    }
+
+    await prisma.$disconnect();
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-fix physiologie PCEM2');
+  }
+}
+
 app.listen(port, async () => {
   logger.info({ port }, 'Backend listening');
 
@@ -678,5 +746,10 @@ app.listen(port, async () => {
   // Lancer l'auto-fix anatomie PCEM1 en arrière-plan
   autoFixAnatomiePCEM1().catch(err => {
     logger.error({ error: err.message }, 'Auto-fix anatomie PCEM1 failed');
+  });
+
+  // Lancer l'auto-fix physiologie PCEM2 en arrière-plan
+  autoFixPhysioPCEM2().catch(err => {
+    logger.error({ error: err.message }, 'Auto-fix physiologie PCEM2 failed');
   });
 });

@@ -32,7 +32,9 @@
       "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/physio/**)",
       "Bash(npm run fix:physio:*)",
       "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/anatomie/**)",
-      "Bash(npm run fix:anatomie:pcem1:*)"
+      "Bash(npm run fix:anatomie:pcem1:*)",
+      "Read(//c/Users/pc/Desktop/FAC GAME/pcem2/S INETR/quiz pcem2/physio/**)",
+      "Bash(npm run fix:physio:pcem2:*)"
     ],
     "deny": [],
     "ask": []
