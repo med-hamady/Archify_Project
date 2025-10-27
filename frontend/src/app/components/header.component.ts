@@ -22,8 +22,8 @@ import { AuthService } from '../services/auth.service';
               <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
             <div>
-              <span class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Archify</span>
-              <p class="text-xs text-gray-500 font-medium">Solutions d'Archives</p>
+              <span class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">FacGame</span>
+              <p class="text-xs text-gray-500 font-medium">Quiz Médical Gamifié</p>
             </div>
           </a>
           
