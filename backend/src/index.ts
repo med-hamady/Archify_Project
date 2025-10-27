@@ -624,24 +624,23 @@ async function autoFixAnatomiePCEM1() {
     const execAsync = promisify(exec);
 
     // Vérifier et corriger le totalQCM si nécessaire
-    // Note: Le fichier source a 199 questions (chapitre 4 manque questions 10 et 32)
-    if (totalQuestions === 199 && anatomieSubject.totalQCM !== 199) {
+    if (totalQuestions === 200 && anatomieSubject.totalQCM !== 200) {
       logger.info({ currentTotalQCM: anatomieSubject.totalQCM, actualQuestions: totalQuestions }, '🔧 Correction du totalQCM Anatomie PCEM1...');
       await prisma.subject.update({
         where: { id: anatomieSubject.id },
-        data: { totalQCM: 199 }
+        data: { totalQCM: 200 }
       });
-      logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 199');
+      logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 200');
     }
 
-    // Si on a déjà 199 questions, pas besoin de corriger
-    if (totalQuestions === 199) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions (199 - source files missing Q10 & Q32 in Ch4)');
+    // Si on a déjà 200 questions, pas besoin de corriger
+    if (totalQuestions === 200) {
+      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions');
       await prisma.$disconnect();
       return;
     }
 
-    logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 199), running fix script...');
+    logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
 
     const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem1.js');
 
