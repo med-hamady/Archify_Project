@@ -358,7 +358,19 @@ export async function getSubjectProgress(
 export async function getUserSubjectsProgress(
   userId: string
 ): Promise<SubjectProgressInfo[]> {
+  // Récupérer le semestre de l'utilisateur
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { semester: true }
+  });
+
+  if (!user) return [];
+
+  // Filtrer les matières par semestre de l'utilisateur
   const subjects = await prisma.subject.findMany({
+    where: {
+      semester: user.semester
+    },
     include: {
       chapters: {
         include: {
