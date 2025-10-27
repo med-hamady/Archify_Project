@@ -153,7 +153,7 @@ async function fixPhysioPCEM1() {
     console.log(`✅ ${physioSubject.chapters.length} anciens chapitres supprimés\n`);
 
     // Réimporter depuis les fichiers sources
-    const physioDir = 'C:\\Users\\pc\\Desktop\\FAC GAME\\pcem1\\S inetrnational\\quiz pcem1\\physio';
+    const physioDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem1', 'physio');
 
     if (!fs.existsSync(physioDir)) {
       console.log(`❌ Dossier non trouvé: ${physioDir}`);
