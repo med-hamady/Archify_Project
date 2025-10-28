@@ -256,6 +256,41 @@ app.post('/api/admin/fix-anatomie', async (_req, res) => {
   }
 });
 
+// Fix anatomie count endpoint (public for emergency fix)
+app.post('/api/admin/fix-anatomie-count', async (_req, res) => {
+  try {
+    logger.info('🔧 Manual anatomie count fix triggered');
+
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    const { stdout, stderr } = await execAsync('node dist/check-anatomie-count.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      logger.error({ stderr }, 'Erreur lors de la correction du count');
+      return res.status(500).json({
+        status: 'error',
+        message: stderr
+      });
+    }
+
+    logger.info('✅ Anatomie PCEM2 count corrigé avec succès');
+
+    return res.json({
+      status: 'success',
+      message: 'Anatomie PCEM2 count has been fixed',
+      output: stdout
+    });
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors du fix count');
+    return res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // Clean empty chapters endpoint (public for emergency cleanup)
 app.post('/api/admin/clean-empty-chapters', async (_req, res) => {
   try {
