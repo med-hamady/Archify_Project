@@ -26,7 +26,7 @@ export const quizRouter = Router();
 
 const answerQuestionSchema = z.object({
   questionId: z.string(),
-  selectedAnswers: z.array(z.number().int().min(0).max(4)).min(1) // Array of answer indices (0-4)
+  selectedAnswers: z.array(z.number().int().min(0).max(4)).min(0) // Array of answer indices (0-4), can be empty if all answers are false
 });
 
 // ============================================
@@ -142,7 +142,7 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
         userId,
         questionId,
         attemptNumber,
-        selectedAnswer: selectedAnswers[0], // Pour compatibilité avec le schéma existant
+        selectedAnswer: selectedAnswers.length > 0 ? selectedAnswers[0] : -1, // -1 if no answer selected (all false)
         isCorrect,
         xpEarned
       }
