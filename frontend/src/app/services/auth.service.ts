@@ -118,23 +118,63 @@ export class AuthService {
   }
 
   private setupSessionPersistence() {
-    // Set up periodic session refresh
+    // Set up periodic session refresh every 6 days (before 7 day expiry)
     setInterval(() => {
       if (this.isAuthenticated()) {
         this.refreshSession();
       }
-    }, 5 * 60 * 1000); // Every 5 minutes
+    }, 6 * 24 * 60 * 60 * 1000); // Every 6 days
+
+    // Also refresh on window focus after being away
+    window.addEventListener('focus', () => {
+      if (this.isAuthenticated()) {
+        this.verifyToken().subscribe({
+          next: () => {
+            console.log('[AuthService] Session verified on window focus');
+          },
+          error: () => {
+            console.log('[AuthService] Session invalid, attempting refresh');
+            this.refreshSession();
+          }
+        });
+      }
+    });
+
+    // Refresh on activity after long idle periods
+    let lastActivity = Date.now();
+    const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+
+    activityEvents.forEach(event => {
+      window.addEventListener(event, () => {
+        const now = Date.now();
+        const timeSinceLastActivity = now - lastActivity;
+
+        // If more than 1 hour since last activity, verify token
+        if (timeSinceLastActivity > 60 * 60 * 1000 && this.isAuthenticated()) {
+          this.verifyToken().subscribe({
+            error: () => {
+              console.log('[AuthService] Session expired after inactivity, refreshing');
+              this.refreshSession();
+            }
+          });
+        }
+        lastActivity = now;
+      }, { passive: true });
+    });
   }
 
   private refreshSession() {
     this.http.post(`${this.API_URL}/auth/refresh`, {}).subscribe({
-      next: () => {
+      next: (response: any) => {
         // Session refreshed successfully
-        console.log('Session refreshed');
+        console.log('[AuthService] Session refreshed successfully');
+        if (response.user) {
+          this.updateUser(response.user);
+        }
       },
-      error: () => {
-        // Refresh failed, user needs to login again
-        this.logout();
+      error: (err) => {
+        console.error('[AuthService] Session refresh failed:', err);
+        // Don't logout immediately, the error interceptor will handle it
       }
     });
   }
