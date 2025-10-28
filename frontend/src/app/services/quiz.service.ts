@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { QuestionOption, BaseQuestion } from '../models/question.model';
@@ -79,7 +79,11 @@ export class QuizService {
    * @param replay Si true, recommence le chapitre depuis le début
    */
   getNextQuestion(chapterId: string, replay: boolean = false): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
-    const params = replay ? { replay: 'true' } : {};
+    let params = new HttpParams();
+    if (replay) {
+      params = params.set('replay', 'true');
+    }
+
     return this.http.get<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }>(
       `${this.baseUrl}/chapter/${chapterId}/next`,
       { params }
