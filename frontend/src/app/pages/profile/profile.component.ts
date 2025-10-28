@@ -8,7 +8,6 @@ import {
   Activity,
   DetailedStats
 } from '../../services/profile.service';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +18,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProfileComponent implements OnInit {
   private profileService = inject(ProfileService);
-  private authService = inject(AuthService);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
@@ -70,8 +68,7 @@ export class ProfileComponent implements OnInit {
           level: res.profile.gamification.level.current,
           consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
           legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
-          createdAt: res.profile.createdAt,
-          subscription: res.profile.subscription || undefined
+          createdAt: res.profile.createdAt
         };
         this.loadBadges();
         this.loadActivity();
@@ -165,11 +162,5 @@ export class ProfileComponent implements OnInit {
 
   getBadgesByCategory(category: 'LEVEL' | 'ACHIEVEMENT' | 'SPECIAL') {
     return this.badges.filter(b => b.category === category);
-  }
-
-  logout() {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      this.authService.logout();
-    }
   }
 }

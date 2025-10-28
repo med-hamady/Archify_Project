@@ -123,36 +123,7 @@
 .semester {
   color: #888;
   font-size: 1rem;
-  margin: 0 0 0.75rem 0;
-}
-
-/* Subscription Badge */
-.subscription-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-  margin-bottom: 1.5rem;
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-.subscription-badge .badge-icon {
-  font-size: 1.2rem;
-}
-
-@keyframes shimmer {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-  }
-  50% {
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
-  }
+  margin: 0 0 1.5rem 0;
 }
 
 /* Quick Stats */
@@ -589,7 +560,6 @@
   margin-top: 2rem;
   display: flex;
   justify-content: center;
-  gap: 1rem;
 }
 
 .btn {
@@ -621,16 +591,6 @@
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-.btn-danger {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-}
-
-.btn-danger:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 
 /* Responsive Design */

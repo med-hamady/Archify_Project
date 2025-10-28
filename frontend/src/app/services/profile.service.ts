@@ -14,11 +14,6 @@ export interface UserProfile {
   legendQuestionsCompleted: number;
   createdAt: string;
   profilePicture?: string;
-  subscription?: {
-    type: 'PREMIUM';
-    isActive: boolean;
-    expiresAt?: Date | null;
-  };
 }
 
 export interface Badge {
