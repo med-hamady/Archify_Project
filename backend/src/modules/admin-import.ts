@@ -147,6 +147,51 @@ adminImportRouter.get('/db-status', requireAuth, async (req: any, res) => {
 });
 
 /**
+ * POST /api/admin/import-qcm-anatomie
+ * Importe les chapitres 1-12 QCM d'Anatomie PCEM2 (admin uniquement)
+ */
+adminImportRouter.post('/import-qcm-anatomie', requireAuth, async (req: any, res) => {
+  try {
+    // Vérifier que l'utilisateur est admin
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId }
+    });
+
+    if (!user || user.role !== 'ADMIN') {
+      return res.status(403).json({
+        error: { code: 'FORBIDDEN', message: 'Admin access required' }
+      });
+    }
+
+    // Exécuter le script d'importation QCM
+    console.log('🚀 Starting QCM chapters import (1-12)...');
+    const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2-qcm-manual.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      console.error('Import stderr:', stderr);
+    }
+
+    console.log('Import stdout:', stdout);
+
+    return res.json({
+      success: true,
+      message: 'QCM chapters import completed',
+      output: stdout
+    });
+
+  } catch (error: any) {
+    console.error('Error importing QCM chapters:', error);
+    return res.status(500).json({
+      error: {
+        code: 'IMPORT_ERROR',
+        message: 'Failed to import QCM chapters',
+        details: error.message
+      }
+    });
+  }
+});
+
+/**
  * POST /api/admin/fix-users-semester
  * Corrige les utilisateurs sans semester PCEM1/PCEM2 (admin uniquement)
  */
