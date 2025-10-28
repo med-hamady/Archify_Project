@@ -808,6 +808,17 @@ async function autoImportAnatomieQCM() {
             return;
         }
         const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        // Diagnostic détaillé TOUJOURS (pour debug)
+        logger.info('🔍 Diagnostic Anatomie PCEM2...');
+        logger.info({
+            totalChapters: anatomieSubject.chapters.length,
+            totalQuestions: totalQuestions,
+            totalQCM: anatomieSubject.totalQCM
+        }, '📊 État actuel Anatomie PCEM2');
+        // Lister TOUS les chapitres avec leurs questions
+        anatomieSubject.chapters.forEach((ch, index) => {
+            logger.info(`  ${index + 1}. [${ch._count.questions}Q] ${ch.title}`);
+        });
         // Si on a déjà plus de 200 questions, c'est que les QCM sont déjà importés
         if (totalQuestions >= 370) {
             logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has QCM chapters imported');
@@ -847,34 +858,6 @@ async function autoImportAnatomieQCM() {
                 data: { totalQCM: finalCount }
             });
             logger.info(`✅ totalQCM Anatomie PCEM2 corrigé automatiquement: ${anatomieSubject.totalQCM} → ${finalCount}`);
-        }
-        // Diagnostic détaillé automatique
-        logger.info('🔍 Diagnostic Anatomie PCEM2...');
-        const updatedSubject = await prisma.subject.findFirst({
-            where: {
-                title: { contains: 'Anatomie', mode: 'insensitive' },
-                semester: 'PCEM2'
-            },
-            include: {
-                chapters: {
-                    orderBy: { title: 'asc' },
-                    include: {
-                        _count: { select: { questions: true } }
-                    }
-                }
-            }
-        });
-        if (updatedSubject) {
-            const totalQ = updatedSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
-            logger.info({
-                totalChapters: updatedSubject.chapters.length,
-                totalQuestions: totalQ,
-                totalQCM: updatedSubject.totalQCM
-            }, '📊 État final Anatomie PCEM2');
-            // Lister les chapitres avec leurs questions
-            updatedSubject.chapters.forEach((ch, index) => {
-                logger.info(`  ${index + 1}. [${ch._count.questions}Q] ${ch.title.substring(0, 50)}`);
-            });
         }
         await prisma.$disconnect();
     }
