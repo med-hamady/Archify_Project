@@ -246,6 +246,13 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
+.podium-level-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
 .podium-name {
   font-size: 1.2rem;
   font-weight: bold;
@@ -358,7 +365,10 @@
 }
 
 .level-icon {
-  font-size: 1.3rem;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .level-label {

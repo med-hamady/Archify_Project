@@ -43,7 +43,7 @@
 
         <!-- Level Badge -->
         <div class="level-badge" [style.background]="getLevelInfo()?.color">
-          <span class="level-icon">{{ getLevelInfo()?.icon }}</span>
+          <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-icon">
           <span class="level-name">{{ getLevelInfo()?.label }}</span>
         </div>
 

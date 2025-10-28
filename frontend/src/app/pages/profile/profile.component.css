@@ -102,6 +102,13 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.level-badge-image {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
 .profile-info {
   flex: 1;
 }

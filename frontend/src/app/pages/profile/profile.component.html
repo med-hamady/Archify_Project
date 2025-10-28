@@ -21,7 +21,7 @@
           <span class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
         </div>
         <div class="level-badge-overlay" [style.background]="getLevelInfo()?.color">
-          {{ getLevelInfo()?.icon }}
+          <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-badge-image">
         </div>
       </div>
 

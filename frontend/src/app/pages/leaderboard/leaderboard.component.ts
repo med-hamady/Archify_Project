@@ -24,13 +24,13 @@ export class LeaderboardComponent implements OnInit {
 
   // Level config for display
   levelConfig = {
-    BOIS: { color: '#8B4513', icon: '🪵', label: 'Bois' },
-    BRONZE: { color: '#CD7F32', icon: '🥉', label: 'Bronze' },
-    ARGENT: { color: '#C0C0C0', icon: '🥈', label: 'Argent' },
-    OR: { color: '#FFD700', icon: '🥇', label: 'Or' },
-    PLATINUM: { color: '#E5E4E2', icon: '💎', label: 'Platinum' },
-    LEGENDAIRE: { color: '#9C27B0', icon: '👑', label: 'Légendaire' },
-    MONDIAL: { color: '#FF6B6B', icon: '🌍', label: 'Mondial' }
+    BOIS: { color: '#8B4513', image: '/assets/images/badges/bois.jpg', label: 'Bois' },
+    BRONZE: { color: '#CD7F32', image: '/assets/images/badges/bronze.jpg', label: 'Bronze' },
+    ARGENT: { color: '#C0C0C0', image: '/assets/images/badges/argent.jpg', label: 'Argent' },
+    OR: { color: '#FFD700', image: '/assets/images/badges/or.jpg', label: 'Or' },
+    PLATINUM: { color: '#E5E4E2', image: '/assets/images/badges/platine.jpg', label: 'Platinum' },
+    LEGENDAIRE: { color: '#9C27B0', image: '/assets/images/badges/legendaire.jpg', label: 'Légendaire' },
+    MONDIAL: { color: '#FF6B6B', image: '/assets/images/badges/mondial.jpg', label: 'Mondial' }
   };
 
   ngOnInit() {
