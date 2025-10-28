@@ -98,13 +98,13 @@ async function fixAnatomiePCEM2QCM() {
         const anatomieDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem2', 'anatomie');
         const qcmFiles = [
             'CHAPITRE 1 — OSTÉOLOGIE DU CRÂNE.txt',
-            "CHAPITRE 2 — L'APPAREIL MANDUCATEUR.txt",
+            "CHAPITRE 2 — APPAREIL MANDUCATEUR.txt",
             'CHAPITRE 3 — LES MUSCLES DE LA TÊTE.txt',
             'CHAPITRE 4 — LES VAISSEAUX DE LA TÊ.txt',
             'CHAPITRE 5 — LES LYMPHATIQUES DE LA.txt',
-            "CHAPITRE 6 — L'APPAREIL DE VISION.txt",
+            "CHAPITRE 6 — APPAREIL DE VISION.txt",
             'CHAPITRE 7 — LES FOSSES NASALES.txt',
-            "CHAPITRE 8 — L'OREILLE.txt",
+            "CHAPITRE 8 — OREILLE.txt",
             'CHAPITRE 9 — PHARYNX ET LARYNX.txt',
             'CHAPITRE 10 — THYROÏDE ET LARYNX SU.txt',
             'CHAPITRE 11 — LES VOIES NERVEUSES.txt',
