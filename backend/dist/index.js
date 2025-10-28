@@ -850,9 +850,34 @@ async function autoImportAnatomieQCM() {
         anatomieSubject.chapters.forEach((ch, index) => {
             logger.info(`  ${index + 1}. [${ch._count.questions}Q] ${ch.title}`);
         });
-        // Si on a déjà plus de 200 questions, c'est que les QCM sont déjà importés
-        if (totalQuestions >= 370) {
-            logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has QCM chapters imported');
+        // VÉRIFICATION CRITIQUE: Si on n'a pas exactement 22 chapitres, réimport complet nécessaire
+        if (anatomieSubject.chapters.length !== 22) {
+            logger.info({
+                currentChapters: anatomieSubject.chapters.length,
+                expectedChapters: 22
+            }, '⚠️ Anatomie PCEM2 a un nombre incorrect de chapitres, réimportation complète...');
+            const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
+            const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
+            const execAsync = promisify(exec);
+            try {
+                const { stdout, stderr } = await execAsync('node dist/fix-anatomie-complete-final.js');
+                if (stderr && !stderr.includes('warning')) {
+                    logger.error({ stderr }, 'Erreur lors de la réimportation complète');
+                }
+                else {
+                    logger.info('✅ Anatomie PCEM2 réimporté complètement avec succès');
+                    logger.info({ output: stdout }, 'Résultat de la réimportation complète');
+                }
+            }
+            catch (error) {
+                logger.error({ error: error.message }, '❌ Erreur lors de la réimportation complète');
+            }
+            await prisma.$disconnect();
+            return;
+        }
+        // Si on a déjà 22 chapitres et 370 questions, tout est bon
+        if (totalQuestions === 370 && anatomieSubject.chapters.length === 22) {
+            logger.info({ totalQuestions, totalChapters: anatomieSubject.chapters.length }, '✅ Anatomie PCEM2 already complete (22 chapters, 370 questions)');
             await prisma.$disconnect();
             return;
         }
