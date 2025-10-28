@@ -1,6 +1,6 @@
 .challenge-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   padding: 2rem;
 }
 
@@ -479,7 +479,7 @@
 .percentage {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #667eea;
+  color: #3b82f6;
 }
 
 /* XP Earned Section */
@@ -515,7 +515,7 @@
 
 .xp-item.multiplier {
   background: linear-gradient(135deg, #e8f0fe, #d3e3fd);
-  border: 2px solid #667eea;
+  border: 2px solid #3b82f6;
 }
 
 .xp-label {
@@ -646,7 +646,7 @@
 
 .explanation-label {
   font-weight: 600;
-  color: #667eea;
+  color: #3b82f6;
   display: block;
   margin-bottom: 0.5rem;
 }
@@ -679,7 +679,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
 }
 
@@ -690,12 +690,12 @@
 
 .btn-secondary {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
 }
 
 .btn-secondary:hover {
-  background: #667eea;
+  background: #3b82f6;
   color: white;
 }
 
@@ -784,11 +784,11 @@
 }
 
 .arrow {
-  color: #667eea;
+  color: #3b82f6;
 }
 
 .new-level {
-  color: #667eea;
+  color: #3b82f6;
 }
 
 .badges-list {

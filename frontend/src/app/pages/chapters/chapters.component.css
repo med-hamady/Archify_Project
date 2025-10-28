@@ -1,6 +1,6 @@
 .chapters-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   padding: 2rem;
 }
 
@@ -18,7 +18,7 @@
 .back-btn {
   padding: 0.75rem 1.5rem;
   background: white;
-  color: #667eea;
+  color: #3b82f6;
   border: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -50,7 +50,7 @@
   display: inline-block;
   padding: 0.5rem 1.25rem;
   background: white;
-  color: #667eea;
+  color: #3b82f6;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 700;
@@ -72,7 +72,7 @@
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border-top: 4px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
@@ -131,7 +131,7 @@
 .progress-percent {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #667eea;
+  color: #3b82f6;
 }
 
 .progress-bar-large {
@@ -144,7 +144,7 @@
 
 .progress-fill-large {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #3b82f6, #1e40af);
   border-radius: 7px;
   transition: width 0.8s ease;
 }
@@ -208,7 +208,7 @@
   left: 0;
   width: 6px;
   height: 100%;
-  background: linear-gradient(180deg, #667eea, #764ba2);
+  background: linear-gradient(180deg, #3b82f6, #1e40af);
 }
 
 .chapter-card:hover {
@@ -243,7 +243,7 @@
 .chapter-position {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -314,7 +314,7 @@
 }
 
 .progress-value {
-  color: #667eea;
+  color: #3b82f6;
 }
 
 .progress-bar {
@@ -326,7 +326,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #3b82f6, #1e40af);
   border-radius: 4px;
   transition: width 0.8s ease;
 }
@@ -377,7 +377,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
 }
 
@@ -441,7 +441,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
 }
 
