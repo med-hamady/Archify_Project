@@ -30,6 +30,12 @@
         <p class="email">{{ profile.email }}</p>
         <p class="semester">{{ profile.semester }}</p>
 
+        <!-- Subscription Badge -->
+        <div class="subscription-badge" *ngIf="profile.subscription?.isActive">
+          <span class="badge-icon">💎</span>
+          <span class="badge-text">Premium</span>
+        </div>
+
         <div class="quick-stats">
           <div class="stat-item">
             <span class="stat-value">{{ profile.xpTotal }}</span>
@@ -279,6 +285,9 @@
     <div class="actions">
       <button class="btn btn-secondary" routerLink="/dashboard">
         ← Retour au tableau de bord
+      </button>
+      <button class="btn btn-danger" (click)="logout()">
+        🚪 Se déconnecter
       </button>
     </div>
 
