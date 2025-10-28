@@ -784,6 +784,25 @@ async function autoImportAnatomieQCM() {
                 logger.info({ output: stdout }, 'Résultat de l\'importation QCM');
             }
         }
+        // Toujours vérifier et corriger le totalQCM après l'import
+        const finalCount = await prisma.question.count({
+            where: {
+                chapter: {
+                    subjectId: anatomieSubject.id
+                }
+            }
+        });
+        if (finalCount !== anatomieSubject.totalQCM) {
+            logger.info({
+                currentTotalQCM: anatomieSubject.totalQCM,
+                actualQuestions: finalCount
+            }, '🔧 Correction automatique du totalQCM Anatomie PCEM2...');
+            await prisma.subject.update({
+                where: { id: anatomieSubject.id },
+                data: { totalQCM: finalCount }
+            });
+            logger.info(`✅ totalQCM Anatomie PCEM2 corrigé automatiquement: ${anatomieSubject.totalQCM} → ${finalCount}`);
+        }
         await prisma.$disconnect();
     }
     catch (error) {
