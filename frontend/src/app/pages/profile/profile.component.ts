@@ -70,7 +70,8 @@ export class ProfileComponent implements OnInit {
           level: res.profile.gamification.level.current,
           consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
           legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
-          createdAt: res.profile.createdAt
+          createdAt: res.profile.createdAt,
+          subscription: res.profile.subscription || undefined
         };
         this.loadBadges();
         this.loadActivity();
