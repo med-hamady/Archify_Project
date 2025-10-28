@@ -287,6 +287,42 @@ app.get('/api/admin/diagnose-anatomie', async (_req, res) => {
   }
 });
 
+// Fix anatomie complete endpoint (public for emergency fix)
+app.post('/api/admin/fix-anatomie-complete', async (_req, res) => {
+  try {
+    logger.info('🔧 Complete anatomie reimport triggered');
+
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    // Exécuter le script de réimportation complète
+    const { stdout, stderr} = await execAsync('node dist/fix-anatomie-complete-final.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      logger.error({ stderr }, 'Erreur lors de la réimportation complète');
+      return res.status(500).json({
+        status: 'error',
+        message: stderr
+      });
+    }
+
+    logger.info('✅ Anatomie PCEM2 réimporté complètement');
+
+    return res.json({
+      status: 'success',
+      message: 'Anatomie PCEM2 completely reimported',
+      output: stdout
+    });
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors de la réimportation complète');
+    return res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // Fix anatomie count endpoint (public for emergency fix)
 app.post('/api/admin/fix-anatomie-count', async (_req, res) => {
   try {
