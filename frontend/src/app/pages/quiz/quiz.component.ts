@@ -92,7 +92,8 @@ export class QuizComponent implements OnInit {
   }
 
   submitAnswer() {
-    if (this.selectedAnswers.length === 0 || !this.currentQuestion) return;
+    // Allow submission even with 0 answers selected (all answers may be false)
+    if (!this.currentQuestion) return;
 
     this.answered = true;
 

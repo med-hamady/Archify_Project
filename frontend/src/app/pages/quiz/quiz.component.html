@@ -88,9 +88,8 @@
       <button
         *ngIf="!answered"
         (click)="submitAnswer()"
-        [disabled]="selectedAnswers.length === 0"
         class="btn btn-primary btn-large">
-        Valider {{ selectedAnswers.length > 0 ? '(' + selectedAnswers.length + ' réponse' + (selectedAnswers.length > 1 ? 's' : '') + ')' : 'la réponse' }}
+        Valider {{ selectedAnswers.length > 0 ? '(' + selectedAnswers.length + ' réponse' + (selectedAnswers.length > 1 ? 's' : '') + ')' : '(aucune réponse)' }}
       </button>
 
       <button
