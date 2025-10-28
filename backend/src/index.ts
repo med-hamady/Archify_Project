@@ -952,9 +952,34 @@ async function autoImportAnatomieQCM() {
       return;
     }
 
-    // Si on a déjà 22 chapitres et 370 questions, tout est bon
+    // Si on a déjà 22 chapitres et 370 questions, vérifier les titres vides
     if (totalQuestions === 370 && anatomieSubject.chapters.length === 22) {
       logger.info({ totalQuestions, totalChapters: anatomieSubject.chapters.length }, '✅ Anatomie PCEM2 already complete (22 chapters, 370 questions)');
+
+      // Vérifier si certains chapitres ont des titres vides
+      const emptyTitleChapters = anatomieSubject.chapters.filter(ch => !ch.title || ch.title.trim().length < 3);
+
+      if (emptyTitleChapters.length > 0) {
+        logger.info({ emptyTitles: emptyTitleChapters.length }, '⚠️ Certains chapitres ont des titres vides, correction...');
+
+        const { exec } = await import('child_process');
+        const { promisify } = await import('util');
+        const execAsync = promisify(exec);
+
+        try {
+          const { stdout, stderr } = await execAsync('node dist/fix-chapter-titles-from-files.js');
+
+          if (stderr && !stderr.includes('warning')) {
+            logger.error({ stderr }, 'Erreur lors de la correction des titres');
+          } else {
+            logger.info('✅ Titres des chapitres corrigés');
+            logger.info({ output: stdout }, 'Résultat de la correction des titres');
+          }
+        } catch (error: any) {
+          logger.error({ error: error.message }, '❌ Erreur lors de la correction des titres');
+        }
+      }
+
       await prisma.$disconnect();
       return;
     }
