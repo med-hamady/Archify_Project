@@ -256,41 +256,6 @@ app.post('/api/admin/fix-anatomie', async (_req, res) => {
   }
 });
 
-// Fix anatomie count endpoint (public for emergency fix)
-app.post('/api/admin/fix-anatomie-count', async (_req, res) => {
-  try {
-    logger.info('🔧 Manual anatomie count fix triggered');
-
-    const { exec } = await import('child_process');
-    const { promisify } = await import('util');
-    const execAsync = promisify(exec);
-
-    const { stdout, stderr } = await execAsync('node dist/check-anatomie-count.js');
-
-    if (stderr && !stderr.includes('warning')) {
-      logger.error({ stderr }, 'Erreur lors de la correction du count');
-      return res.status(500).json({
-        status: 'error',
-        message: stderr
-      });
-    }
-
-    logger.info('✅ Anatomie PCEM2 count corrigé avec succès');
-
-    return res.json({
-      status: 'success',
-      message: 'Anatomie PCEM2 count has been fixed',
-      output: stdout
-    });
-  } catch (error: any) {
-    logger.error({ error: error.message }, '❌ Erreur lors du fix count');
-    return res.status(500).json({
-      status: 'error',
-      message: error.message
-    });
-  }
-});
-
 // Clean empty chapters endpoint (public for emergency cleanup)
 app.post('/api/admin/clean-empty-chapters', async (_req, res) => {
   try {
@@ -500,27 +465,6 @@ async function autoFixAnatomie() {
     const { promisify } = await import('util');
     const execAsync = promisify(exec);
 
-    // IMPORTANT: Si on a plus de 200 questions, c'est que les chapitres QCM sont importés
-    // Dans ce cas, on ne doit PAS exécuter le fix-anatomie-pcem2.js qui supprimerait les QCM
-    if (totalQuestions > 200) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM2 has QCM chapters, skipping emoji-only fix');
-
-      // Juste nettoyer les chapitres vides si nécessaire
-      if (emptyChapters.length > 0) {
-        logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
-        try {
-          const cleanResult = await execAsync('node dist/clean-empty-chapters.js');
-          logger.info('✅ Chapitres vides nettoyés automatiquement');
-          logger.info({ output: cleanResult.stdout }, 'Résultat du nettoyage');
-        } catch (cleanError: any) {
-          logger.error({ error: cleanError.message }, '❌ Erreur lors du nettoyage automatique');
-        }
-      }
-
-      await prisma.$disconnect();
-      return;
-    }
-
     // Toujours nettoyer les chapitres vides, même si le nombre de questions est correct
     if (emptyChapters.length > 0) {
       logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
@@ -543,22 +487,14 @@ async function autoFixAnatomie() {
       logger.info('✅ totalQCM corrigé de ' + anatomieSubject.totalQCM + ' → 200');
     }
 
-    // Vérifier si les titres contiennent des annotations à nettoyer
-    const hasAnnotations = anatomieSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
-
-    // Si on a déjà 200 questions ET pas d'annotations, pas besoin de corriger
-    if (totalQuestions === 200 && !hasAnnotations) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions and clean titles');
+    // Si on a déjà 200 questions, pas besoin de corriger
+    if (totalQuestions === 200) {
+      logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions');
       await prisma.$disconnect();
       return;
     }
 
-    // Si on a 200 questions mais des annotations, on doit nettoyer
-    if (totalQuestions === 200 && hasAnnotations) {
-      logger.info('🔧 Anatomie PCEM2 has correct question count but titles need cleaning...');
-    } else {
-      logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing (expected 200), running fix script...');
-    }
+    logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing, running fix script...');
 
     const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
 
@@ -629,21 +565,11 @@ async function autoFixPhysiologie() {
       logger.info('✅ totalQCM Physiologie corrigé de ' + physioSubject.totalQCM + ' → 150');
     }
 
-    // Vérifier si les titres contiennent des annotations à nettoyer
-    const hasAnnotations = physioSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
-
-    // Si on a déjà 150 questions ET pas d'annotations, pas besoin de corriger
-    if (totalQuestions === 150 && !hasAnnotations) {
-      logger.info({ totalQuestions }, '✅ Physiologie PCEM1 already has correct number of questions and clean titles');
+    // Si on a déjà 150 questions, pas besoin de corriger
+    if (totalQuestions === 150) {
+      logger.info({ totalQuestions }, '✅ Physiologie PCEM1 already has correct number of questions');
       await prisma.$disconnect();
       return;
-    }
-
-    // Si on a 150 questions mais des annotations, on doit nettoyer
-    if (totalQuestions === 150 && hasAnnotations) {
-      logger.info('🔧 Physiologie PCEM1 has correct question count but titles need cleaning...');
-    } else {
-      logger.info({ totalQuestions }, '🔄 Physiologie PCEM1 needs fixing (expected 150), running fix script...');
     }
 
     logger.info({ totalQuestions }, '🔄 Physiologie PCEM1 needs fixing (expected 150), running fix script...');
@@ -707,22 +633,14 @@ async function autoFixAnatomiePCEM1() {
       logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 200');
     }
 
-    // Vérifier si les titres contiennent des annotations à nettoyer
-    const hasAnnotations = anatomieSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
-
-    // Si on a déjà 200 questions ET pas d'annotations, pas besoin de corriger
-    if (totalQuestions === 200 && !hasAnnotations) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions and clean titles');
+    // Si on a déjà 200 questions, pas besoin de corriger
+    if (totalQuestions === 200) {
+      logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions');
       await prisma.$disconnect();
       return;
     }
 
-    // Si on a 200 questions mais des annotations, on doit nettoyer
-    if (totalQuestions === 200 && hasAnnotations) {
-      logger.info('🔧 Anatomie PCEM1 has correct question count but titles need cleaning...');
-    } else {
-      logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
-    }
+    logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
 
     const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem1.js');
 
@@ -783,22 +701,14 @@ async function autoFixPhysioPCEM2() {
       logger.info('✅ totalQCM Physiologie PCEM2 corrigé de ' + physioSubject.totalQCM + ' → 40');
     }
 
-    // Vérifier si les titres contiennent des annotations à nettoyer
-    const hasAnnotations = physioSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
-
-    // Si on a déjà 40 questions ET pas d'annotations, pas besoin de corriger
-    if (totalQuestions === 40 && !hasAnnotations) {
-      logger.info({ totalQuestions }, '✅ Physiologie PCEM2 already has correct number of questions and clean titles');
+    // Si on a déjà 40 questions, pas besoin de corriger
+    if (totalQuestions === 40) {
+      logger.info({ totalQuestions }, '✅ Physiologie PCEM2 already has correct number of questions');
       await prisma.$disconnect();
       return;
     }
 
-    // Si on a 40 questions mais des annotations, on doit nettoyer
-    if (totalQuestions === 40 && hasAnnotations) {
-      logger.info('🔧 Physiologie PCEM2 has correct question count but titles need cleaning...');
-    } else {
-      logger.info({ totalQuestions }, '🔄 Physiologie PCEM2 needs fixing (expected 40), running fix script...');
-    }
+    logger.info({ totalQuestions }, '🔄 Physiologie PCEM2 needs fixing (expected 40), running fix script...');
 
     const { stdout, stderr } = await execAsync('node dist/fix-physiologie-pcem2.js');
 
@@ -812,89 +722,6 @@ async function autoFixPhysioPCEM2() {
     await prisma.$disconnect();
   } catch (error: any) {
     logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-fix physiologie PCEM2');
-  }
-}
-
-// Auto-import QCM anatomie PCEM2 (chapitres 1-12) si nécessaire
-async function autoImportAnatomieQCM() {
-  try {
-    const { PrismaClient } = await import('@prisma/client');
-    const prisma = new PrismaClient();
-
-    // Vérifier si anatomie PCEM2 existe
-    const anatomieSubject = await prisma.subject.findFirst({
-      where: {
-        title: { contains: 'Anatomie', mode: 'insensitive' },
-        semester: 'PCEM2'
-      },
-      include: {
-        chapters: {
-          include: {
-            _count: { select: { questions: true } }
-          }
-        }
-      }
-    });
-
-    if (!anatomieSubject) {
-      logger.info('✅ Anatomie PCEM2 not found, skipping QCM import');
-      await prisma.$disconnect();
-      return;
-    }
-
-    const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
-
-    // Si on a déjà plus de 200 questions, c'est que les QCM sont déjà importés
-    if (totalQuestions >= 370) {
-      logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has QCM chapters imported');
-      await prisma.$disconnect();
-      return;
-    }
-
-    // Si on a environ 200 questions, il faut importer les chapitres QCM (1-12)
-    if (totalQuestions >= 180 && totalQuestions < 370) {
-      logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs QCM chapters (1-12), running import script...');
-
-      const { exec } = await import('child_process');
-      const { promisify } = await import('util');
-      const execAsync = promisify(exec);
-
-      const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2-qcm-manual.js');
-
-      if (stderr && !stderr.includes('warning')) {
-        logger.error({ stderr }, 'Erreur lors de l\'importation QCM');
-      } else {
-        logger.info('✅ Chapitres QCM Anatomie PCEM2 importés avec succès');
-        logger.info({ output: stdout }, 'Résultat de l\'importation QCM');
-      }
-    }
-
-    // Toujours vérifier et corriger le totalQCM après l'import
-    const finalCount = await prisma.question.count({
-      where: {
-        chapter: {
-          subjectId: anatomieSubject.id
-        }
-      }
-    });
-
-    if (finalCount !== anatomieSubject.totalQCM) {
-      logger.info({
-        currentTotalQCM: anatomieSubject.totalQCM,
-        actualQuestions: finalCount
-      }, '🔧 Correction automatique du totalQCM Anatomie PCEM2...');
-
-      await prisma.subject.update({
-        where: { id: anatomieSubject.id },
-        data: { totalQCM: finalCount }
-      });
-
-      logger.info(`✅ totalQCM Anatomie PCEM2 corrigé automatiquement: ${anatomieSubject.totalQCM} → ${finalCount}`);
-    }
-
-    await prisma.$disconnect();
-  } catch (error: any) {
-    logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-import QCM');
   }
 }
 
@@ -924,10 +751,5 @@ app.listen(port, async () => {
   // Lancer l'auto-fix physiologie PCEM2 en arrière-plan
   autoFixPhysioPCEM2().catch(err => {
     logger.error({ error: err.message }, 'Auto-fix physiologie PCEM2 failed');
-  });
-
-  // Lancer l'auto-import des chapitres QCM anatomie PCEM2 en arrière-plan
-  autoImportAnatomieQCM().catch(err => {
-    logger.error({ error: err.message }, 'Auto-import QCM anatomie failed');
   });
 });

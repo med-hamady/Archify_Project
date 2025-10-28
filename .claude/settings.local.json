@@ -34,7 +34,22 @@
       "Read(//c/Users/pc/Desktop/FAC GAME/pcem1/S inetrnational/quiz pcem1/anatomie/**)",
       "Bash(npm run fix:anatomie:pcem1:*)",
       "Read(//c/Users/pc/Desktop/FAC GAME/pcem2/S INETR/quiz pcem2/physio/**)",
-      "Bash(npm run fix:physio:pcem2:*)"
+      "Bash(npm run fix:physio:pcem2:*)",
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Read(//c/Users/pc/Desktop/FAC GAME/pcem2/S INETR/quiz pcem2/anatomie/**)",
+      "Bash(npm run fix:anatomie:pcem2:*)",
+      "Bash(printf '%s\\n' '40c' '    const qcmMatch = line.match(/^QCM\\\\s+(\\\\d+)\\\\s+[—–-]\\\\s+(.+)/i);' '.')",
+      "Bash(ed -s:*)",
+      "Bash(do echo -n \"$f: \")",
+      "Bash(sed:*)",
+      "Bash(npm run fix:anatomie:pcem2:qcm:*)",
+      "Bash(while read f)",
+      "Bash(do echo \"$f\")",
+      "Bash(do [ -f \"$f\" ])",
+      "Bash(echo:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

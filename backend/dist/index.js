@@ -476,6 +476,25 @@ async function autoFixAnatomie() {
         const { exec } = await Promise.resolve().then(() => __importStar(require('child_process')));
         const { promisify } = await Promise.resolve().then(() => __importStar(require('util')));
         const execAsync = promisify(exec);
+        // IMPORTANT: Si on a plus de 200 questions, c'est que les chapitres QCM sont importés
+        // Dans ce cas, on ne doit PAS exécuter le fix-anatomie-pcem2.js qui supprimerait les QCM
+        if (totalQuestions > 200) {
+            logger.info({ totalQuestions }, '✅ Anatomie PCEM2 has QCM chapters, skipping emoji-only fix');
+            // Juste nettoyer les chapitres vides si nécessaire
+            if (emptyChapters.length > 0) {
+                logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
+                try {
+                    const cleanResult = await execAsync('node dist/clean-empty-chapters.js');
+                    logger.info('✅ Chapitres vides nettoyés automatiquement');
+                    logger.info({ output: cleanResult.stdout }, 'Résultat du nettoyage');
+                }
+                catch (cleanError) {
+                    logger.error({ error: cleanError.message }, '❌ Erreur lors du nettoyage automatique');
+                }
+            }
+            await prisma.$disconnect();
+            return;
+        }
         // Toujours nettoyer les chapitres vides, même si le nombre de questions est correct
         if (emptyChapters.length > 0) {
             logger.info({ emptyChapters: emptyChapters.length }, '🧹 Chapitres vides détectés, nettoyage en cours...');
