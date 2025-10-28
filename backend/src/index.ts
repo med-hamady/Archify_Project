@@ -759,6 +759,66 @@ async function autoFixPhysioPCEM2() {
   }
 }
 
+// Auto-import QCM anatomie PCEM2 (chapitres 1-12) si nécessaire
+async function autoImportAnatomieQCM() {
+  try {
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
+    // Vérifier si anatomie PCEM2 existe
+    const anatomieSubject = await prisma.subject.findFirst({
+      where: {
+        title: { contains: 'Anatomie', mode: 'insensitive' },
+        semester: 'PCEM2'
+      },
+      include: {
+        chapters: {
+          include: {
+            _count: { select: { questions: true } }
+          }
+        }
+      }
+    });
+
+    if (!anatomieSubject) {
+      logger.info('✅ Anatomie PCEM2 not found, skipping QCM import');
+      await prisma.$disconnect();
+      return;
+    }
+
+    const totalQuestions = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+
+    // Si on a déjà plus de 200 questions, c'est que les QCM sont déjà importés
+    if (totalQuestions >= 370) {
+      logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has QCM chapters imported');
+      await prisma.$disconnect();
+      return;
+    }
+
+    // Si on a environ 200 questions, il faut importer les chapitres QCM (1-12)
+    if (totalQuestions >= 180 && totalQuestions < 370) {
+      logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs QCM chapters (1-12), running import script...');
+
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+
+      const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2-qcm-manual.js');
+
+      if (stderr && !stderr.includes('warning')) {
+        logger.error({ stderr }, 'Erreur lors de l\'importation QCM');
+      } else {
+        logger.info('✅ Chapitres QCM Anatomie PCEM2 importés avec succès');
+        logger.info({ output: stdout }, 'Résultat de l\'importation QCM');
+      }
+    }
+
+    await prisma.$disconnect();
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors de l\'auto-import QCM');
+  }
+}
+
 app.listen(port, async () => {
   logger.info({ port }, 'Backend listening');
 
@@ -785,5 +845,10 @@ app.listen(port, async () => {
   // Lancer l'auto-fix physiologie PCEM2 en arrière-plan
   autoFixPhysioPCEM2().catch(err => {
     logger.error({ error: err.message }, 'Auto-fix physiologie PCEM2 failed');
+  });
+
+  // Lancer l'auto-import des chapitres QCM anatomie PCEM2 en arrière-plan
+  autoImportAnatomieQCM().catch(err => {
+    logger.error({ error: err.message }, 'Auto-import QCM anatomie failed');
   });
 });
