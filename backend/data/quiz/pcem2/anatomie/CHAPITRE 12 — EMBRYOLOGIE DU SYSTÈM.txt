@@ -1,0 +1,46 @@
+CHAPITRE 12 — EMBRYOLOGIE DU SYSTÈME NERVEUX
+
+QCM 1 — Formation du tube neural
+
+A. Le système nerveux dérive du mésoderme. (❌) → Il provient de l’ectoderme.
+B. Le tube neural se forme à la 3ᵉ semaine de développement. (✔️)
+C. Le neuroectoderme s’invagine pour former la plaque neurale. (✔️)
+D. La fermeture du tube neural commence au niveau céphalique. (❌) → Elle débute au centre et progresse aux deux extrémités.
+E. Les crêtes neurales se détachent du tube neural pour former des structures périphériques. (✔️)
+🧠 Conclusion : Le tube neural, dérivé de l’ectoderme, donne naissance au SNC, tandis que les crêtes neurales forment le SNP et les ganglions.
+
+QCM 2 — Différenciation du tube neural
+
+A. La plaque basale donne les neurones sensitifs. (❌) → Motoneurones.
+B. La plaque alaire donne les neurones sensitifs. (✔️)
+C. Les neurones végétatifs dérivent de la zone intermédiaire. (✔️)
+D. Le canal neural devient le canal rachidien. (❌) → Devient le canal épendymaire.
+E. La moelle se différencie à partir de la partie caudale du tube neural. (✔️)
+🧠 Conclusion : La polarité dorsoventrale du tube neural détermine les zones motrices (basse) et sensitives (haute) de la moelle épinière embryonnaire.
+
+QCM 3 — Développement des vésicules cérébrales 
+
+A. Le cerveau dérive de la partie céphalique du tube neural. (✔️)
+B. Le stade à 3 vésicules comprend prosencéphale, mésencéphale, rhombencéphale. (✔️)
+C. Le stade à 5 vésicules comprend télencéphale, diencéphale, mésencéphale, métencéphale, myélencéphale. (✔️)
+D. Le télencéphale donne les hémisphères cérébraux. (✔️)
+E. Le rhombencéphale donne le cervelet et le bulbe. (✔️)
+🧠 Conclusion : Le cerveau se forme par expansion céphalique du tube neural, divisée en 5 vésicules primitives à l’origine des différentes régions cérébrales.
+
+QCM 4 — Développement vasculaire 
+
+A. Le développement du système nerveux précède celui du système cardiovasculaire. (❌) → C’est l’inverse.
+B. Les capillaires du plexus initial persistent entièrement. (❌) → La plupart régressent.
+C. La vascularisation n’influence pas le développement neural. (❌) → Elle le stimule.
+D. Le système nerveux embryonnaire est peu vascularisé. (❌) → Très richement vascularisé.
+E. La circulation sanguine s’établit dès la 8ᵉ semaine. (❌) → Dès la 4ᵉ semaine.
+🧠 Conclusion : QCM piège total : le développement vasculaire précoce est essentiel à la croissance du SNC embryonnaire, dont la vascularisation est précoce et dense.
+
+QCM 5 — Anomalies de fermeture du tube neural
+
+A. La non-fermeture du neuropore antérieur donne une anencéphalie. (✔️)
+B. La non-fermeture du neuropore postérieur donne un spina bifida. (✔️)
+C. Le spina bifida correspond à une fermeture excessive du tube neural. (❌) → C’est une absence de fermeture.
+D. L’encéphalocèle résulte d’une hernie du tissu cérébral. (✔️)
+E. Ces anomalies sont souvent d’origine embryonnaire précoce. (✔️)
+🧠 Conclusion : Les malformations du tube neural (spina bifida, anencéphalie, encéphalocèle) traduisent une fermeture incomplète du tube, détectable précocement.

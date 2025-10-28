@@ -21,7 +21,8 @@
     "fix:anatomie:pcem1": "node dist/fix-anatomie-pcem1.js",
     "fix:physio:pcem1": "node dist/fix-physiologie-pcem1.js",
     "fix:physio:pcem2": "node dist/fix-physiologie-pcem2.js",
-    "clean:empty-chapters": "node dist/clean-empty-chapters.js"
+    "clean:empty-chapters": "node dist/clean-empty-chapters.js",
+    "fix:anatomie:pcem2:qcm": "node dist/fix-anatomie-pcem2-qcm.js"
   },
   "keywords": [],
   "author": "",

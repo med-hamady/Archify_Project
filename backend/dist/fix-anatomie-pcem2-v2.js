@@ -38,10 +38,10 @@ const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const prisma = new client_1.PrismaClient();
 /**
- * Parse un fichier de quiz Physiologie PCEM2
+ * Parse un fichier de quiz Anatomie PCEM1
  * Format: emoji numéroté (1️⃣, 2️⃣, ..., 🔟, 11️⃣, ...) + "Question : [texte]"
  */
-function parsePhysioFile(filePath) {
+function parseAnatomieFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n').map(l => l.trim());
     // Extraire le titre du chapitre (première ligne)
@@ -114,16 +114,16 @@ function parsePhysioFile(filePath) {
     return { title: chapterTitle, questions };
 }
 /**
- * Script principal pour corriger l'import de Physiologie PCEM2
+ * Script principal pour corriger l'import de Anatomie PCEM1
  */
-async function fixPhysioPCEM2() {
+async function fixAnatomiePCEM1() {
     try {
-        console.log('🚀 Démarrage de la correction de Physiologie PCEM2...\n');
-        // Trouver le sujet Physiologie PCEM2
-        const physioSubject = await prisma.subject.findFirst({
+        console.log('🚀 Démarrage de la correction de Anatomie PCEM1...\n');
+        // Trouver le sujet Anatomie PCEM1
+        const anatomieSubject = await prisma.subject.findFirst({
             where: {
-                title: { contains: 'Physiologie', mode: 'insensitive' },
-                semester: 'PCEM2'
+                title: { contains: 'Anatomie', mode: 'insensitive' },
+                semester: 'PCEM1'
             },
             include: {
                 chapters: {
@@ -133,18 +133,18 @@ async function fixPhysioPCEM2() {
                 }
             }
         });
-        if (!physioSubject) {
-            console.log('❌ Sujet Physiologie PCEM2 non trouvé');
+        if (!anatomieSubject) {
+            console.log('❌ Sujet Anatomie PCEM1 non trouvé');
             await prisma.$disconnect();
             return;
         }
-        console.log(`📚 Sujet trouvé: ${physioSubject.title}`);
-        console.log(`📖 Chapitres actuels: ${physioSubject.chapters.length}`);
-        const totalQuestionsBefore = physioSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        console.log(`📚 Sujet trouvé: ${anatomieSubject.title}`);
+        console.log(`📖 Chapitres actuels: ${anatomieSubject.chapters.length}`);
+        const totalQuestionsBefore = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
         console.log(`📊 Questions actuelles: ${totalQuestionsBefore}\n`);
         // Supprimer toutes les anciennes questions
         console.log('🗑️  Suppression des anciennes questions...');
-        for (const chapter of physioSubject.chapters) {
+        for (const chapter of anatomieSubject.chapters) {
             await prisma.question.deleteMany({
                 where: { chapterId: chapter.id }
             });
@@ -153,32 +153,32 @@ async function fixPhysioPCEM2() {
         // Supprimer tous les anciens chapitres
         console.log('🗑️  Suppression des anciens chapitres...');
         await prisma.chapter.deleteMany({
-            where: { subjectId: physioSubject.id }
+            where: { subjectId: anatomieSubject.id }
         });
-        console.log(`✅ ${physioSubject.chapters.length} anciens chapitres supprimés\n`);
+        console.log(`✅ ${anatomieSubject.chapters.length} anciens chapitres supprimés\n`);
         // Réimporter depuis les fichiers sources
-        const physioDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem2', 'physio');
-        if (!fs.existsSync(physioDir)) {
-            console.log(`❌ Dossier non trouvé: ${physioDir}`);
+        const anatomieDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem1', 'anatomie');
+        if (!fs.existsSync(anatomieDir)) {
+            console.log(`❌ Dossier non trouvé: ${anatomieDir}`);
             await prisma.$disconnect();
             return;
         }
-        const files = fs.readdirSync(physioDir)
+        const files = fs.readdirSync(anatomieDir)
             .filter(f => f.endsWith('.txt'))
             .sort();
         console.log(`📂 ${files.length} fichiers trouvés\n`);
         let totalImported = 0;
         let chapterIndex = 0;
         for (const file of files) {
-            const filePath = path.join(physioDir, file);
+            const filePath = path.join(anatomieDir, file);
             console.log(`📄 Traitement: ${file}`);
             try {
-                const { title, questions } = parsePhysioFile(filePath);
+                const { title, questions } = parseAnatomieFile(filePath);
                 // Créer le chapitre
                 const chapter = await prisma.chapter.create({
                     data: {
                         title,
-                        subjectId: physioSubject.id,
+                        subjectId: anatomieSubject.id,
                         orderIndex: chapterIndex++
                     }
                 });
@@ -207,13 +207,13 @@ async function fixPhysioPCEM2() {
         console.log(`📊 Total: ${totalImported} questions importées dans ${chapterIndex} chapitres\n`);
         // Mettre à jour le totalQCM du sujet
         await prisma.subject.update({
-            where: { id: physioSubject.id },
+            where: { id: anatomieSubject.id },
             data: { totalQCM: totalImported }
         });
         console.log(`✅ totalQCM mis à jour: ${totalImported}\n`);
         // Vérification finale
         const updatedSubject = await prisma.subject.findFirst({
-            where: { id: physioSubject.id },
+            where: { id: anatomieSubject.id },
             include: {
                 chapters: {
                     include: {
@@ -235,5 +235,5 @@ async function fixPhysioPCEM2() {
     }
 }
 // Exécuter le script
-fixPhysioPCEM2();
-//# sourceMappingURL=fix-physiologie-pcem2.js.map
+fixAnatomiePCEM1();
+//# sourceMappingURL=fix-anatomie-pcem2-v2.js.map

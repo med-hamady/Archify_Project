@@ -1,0 +1,137 @@
+CHAPITRE 3 — LES MUSCLES DE LA TÊTE ET DU COU
+
+
+QCM 1 — Généralités
+
+A. Les muscles de la tête et du cou sont tous volontaires. (❌) → Certains sont involontaires, comme les muscles laryngés internes.
+B. Ils se regroupent en muscles de la face, mastication, langue, pharynx et cou. (✔️)
+C. Tous dérivent du mésoderme para-axial. (✔️)
+D. Leur innervation principale provient du tronc cérébral. (✔️)
+E. Leurs insertions osseuses sont toujours doubles. (❌) → Certains s’insèrent sur la peau (muscles peauciers).
+🧠 Conclusion : Les muscles céphaliques assurent des fonctions expressives et vitales, combinant motricité volontaire et réflexes automatiques.
+
+QCM 2 — Muscles peauciers
+
+A. Ils s’insèrent uniquement sur les os du crâne. (❌) → Un point sur l’os, l’autre sur la peau.
+B. Ils sont innervés par le nerf facial. (✔️)
+C. Ils contrôlent la mimique faciale. (✔️)
+D. Ils participent à la mastication. (❌) → Mouvements faciaux, pas masticateurs.
+E. Ils sont pairs et superficiels. (✔️)
+🧠 Conclusion : Les muscles peauciers, innervés par le facial, traduisent les émotions et participent à la communication non verbale.
+
+QCM 3 — Muscle orbiculaire de l’œil
+
+A. Il ferme la paupière supérieure seulement. (❌) → Ferme les deux paupières.
+B. Il est innervé par le trijumeau. (❌) → Par le facial (VII).
+C. Il assure la fermeture volontaire et réflexe des paupières. (✔️)
+D. Il contribue à la protection cornéenne. (✔️)
+E. Il participe à la dilatation de la pupille. (❌) → Fonction oculomotrice, pas faciale.
+🧠 Conclusion : L’orbiculaire de l’œil protège la cornée et humidifie l’œil, rôle essentiel dans le clignement et la mimique.
+
+QCM 4 — Muscle orbiculaire de la bouche
+
+A. Entoure la fente orale et contrôle la parole. (✔️)
+B. Est innervé par le nerf trijumeau. (❌) → Par le facial.
+C. Permet la protrusion des lèvres. (✔️)
+D. Est un muscle de la mastication. (❌) → De la mimique.
+E. Est impair et médian. (✔️)
+🧠 Conclusion : L’orbiculaire des lèvres module la parole, le baiser et la mastication ; c’est le centre expressif de la bouche.
+
+QCM 5 — Muscle buccinateur
+
+A. Est un muscle de la joue. (✔️)
+B. Sert à gonfler la joue. (❌) → Il l’aplatit.
+C. Est innervé par le nerf facial. (✔️)
+D. Aide à la mastication en maintenant les aliments sur les molaires. (✔️)
+E. Est un muscle élévateur. (❌) → Il est transversal.
+🧠 Conclusion : Le buccinateur, muscle profond de la joue, coordonne souffle, mastication et parole.
+
+QCM 6 — Muscle platysma
+
+A. Muscle profond du cou. (❌) → Superficiel, sous-cutané.
+B. Il tend la peau du cou. (✔️)
+C. Il relève la commissure labiale. (✔️)
+D. Il s’insère sur la mandibule. (✔️)
+E. Il est innervé par le trijumeau. (❌) → Par le facial.
+🧠 Conclusion : Le platysma relie visage et cou, exprimant la peur et la tension, muscle clé du cou superficiel.
+
+QCM 7 — Muscles masticateurs (rappel)
+
+A. Innervés par le facial. (❌) → Par le trijumeau (V3).
+B. Incluent masséter, temporal, ptérygoïdien médial et latéral. (✔️)
+C. Agissent sur la mandibule. (✔️)
+D. Se trouvent tous dans la fosse ptérygo-palatine. (❌) → Surtout dans la fosse infra-temporale.
+E. Le temporal est un muscle rétropulseur. (✔️)
+🧠 Conclusion : Les muscles masticateurs réalisent les mouvements mandibulaires fins et puissants, sous contrôle du nerf V3.
+
+QCM 8 — Muscles du cou : généralités
+
+A. Le cou contient exclusivement des muscles respiratoires. (❌) → Aussi moteurs, posturaux, et digestifs.
+B. Les muscles du cou sont disposés en plans superficiel, moyen et profond. (✔️)
+C. Le muscle sternocléidomastoïdien est médian. (❌) → Latéral.
+D. Le cou renferme aussi des muscles suprahyoïdiens et infrahyoïdiens. (✔️)
+E. Tous sont innervés par le plexus brachial. (❌) → Certains par le facial, d’autres par le spinal.
+🧠 Conclusion : La région cervicale abrite des muscles respiratoires, posturaux et phonatoires, organisés en plans superposés.
+
+QCM 9 — Sterno-cléido-mastoïdien (SCM)
+
+A. Muscle médian. (❌) → Latéral du cou.
+B. Innervé par le nerf spinal (XI). (✔️)
+C. Fléchit la tête en avant et la tourne du côté opposé. (✔️)
+D. S’insère sur le sternum et la clavicule. (✔️)
+E. Sa contraction bilatérale provoque une extension du cou. (✔️)
+🧠 Conclusion : Le SCM est le repère majeur du cou, impliqué dans la rotation, la flexion et la statique céphalique.
+
+QCM 10 — Muscles infra-hyoïdiens
+
+A. Abaisseurs de l’os hyoïde. (✔️)
+B. Innervés par le nerf facial. (❌) → Par l’anse cervicale (C1–C3).
+C. Comprennent sterno-hyoïdien, sterno-thyroïdien, omo-hyoïdien, thyro-hyoïdien. (✔️)
+D. Sont situés au-dessus de l’os hyoïde. (❌) → En dessous.
+E. Interviennent dans la déglutition. (✔️)
+🧠 Conclusion : Les infra-hyoïdiens stabilisent l’hyoïde pendant la déglutition et la phonation, essentiels aux mouvements laryngés.
+
+QCM 11 — Muscles supra-hyoïdiens
+
+A. Abaisseurs de la mandibule. (✔️)
+B. Élèvent l’os hyoïde. (✔️)
+C. Participent à la déglutition. (✔️)
+D. Sont innervés par le nerf hypoglosse uniquement. (❌) → Innervations mixtes (V3, VII, XII).
+E. Incluent digastrique, mylo-hyoïdien et génio-hyoïdien. (✔️)
+🧠 Conclusion : Les supra-hyoïdiens forment un pont entre mandibule et hyoïde, permettant mastication et déglutition coordonnées.
+
+QCM 12 — Muscles prévertébraux
+
+A. Fléchissent la tête et le cou. (✔️)
+B. Comprennent long du cou et long de la tête. (✔️)
+C. Sont innervés par le nerf spinal accessoire. (❌) → Plexus cervical profond.
+D. Se trouvent derrière la trachée. (✔️)
+E. Permettent l’extension cervicale. (❌) → Flexion.
+🧠 Conclusion : Les prévertébraux assurent la flexion cervicale et la stabilité antérieure de la colonne du cou.
+
+QCM 13 — Muscles scalènes
+
+A. S’insèrent sur les vertèbres cervicales et la 1re côte. (✔️)
+B. Participent à l’inspiration. (✔️)
+C. Délimitent le défilé interscalénique. (✔️)
+D. La compression du plexus brachial peut y survenir. (✔️)
+E. Ils sont innervés par le nerf accessoire. (❌) → Plexus cervical et brachial.
+🧠 Conclusion : Les scalènes sont essentiels à la respiration et à la posture, mais peuvent causer un syndrome du défilé thoracique.
+
+QCM 14 — Muscles postérieurs du cou
+
+A. Le trapèze est innervé par le nerf accessoire. (✔️)
+B. Les splénius étendent la tête. (✔️)
+C. Les petits droits postérieurs fléchissent la tête. (❌) → Ils l’étendent.
+D. Les obliques de la tête participent à la rotation. (✔️)
+E. Tous ces muscles sont profonds. (❌) → Trapèze est superficiel.
+🧠 Conclusion : Les muscles postérieurs maintiennent la tête droite et orientent le regard, essentiels à l’équilibre statique.
+
+QCM 15 — Synthèse générale
+
+A. Le nerf trijumeau innerve les muscles de la mimique. (❌) → Facial.
+B. Le facial innerve les muscles peauciers. (✔️)
+C. Le nerf spinal (XI) commande SCM et trapèze. (✔️)
+D. Les muscles supra-hyoïdiens élèvent la langue. (✔️)
+E. Les infra-hyoïdiens élèvent le larynx. (❌) → Ils l’abaissent.
+🧠 Conclusion : Les muscles du cou et du visage forment une synergie anatomique entre expression, respiration, déglutition et posture, toutes coordonnées par des nerfs crâniens majeurs.

@@ -47,6 +47,8 @@ function parsePhysioFile(filePath) {
     // Extraire le titre du chapitre (première ligne)
     let chapterTitle = lines[0] || 'Chapitre sans titre';
     chapterTitle = chapterTitle.replace(/^[^\wÀ-ÿ\s]+\s*/, '').trim();
+    // Enlever les annotations de type (1->40), (1->20), (20 QCM), etc.
+    chapterTitle = chapterTitle.replace(/\s*\([^)]*\)\s*$/, '').trim();
     const questions = [];
     let currentQuestion = null;
     for (let i = 0; i < lines.length; i++) {

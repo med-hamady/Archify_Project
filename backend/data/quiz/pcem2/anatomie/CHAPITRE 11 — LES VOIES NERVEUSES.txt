@@ -1,0 +1,136 @@
+CHAPITRE 11 — LES VOIES NERVEUSES
+
+QCM 1 — Généralités
+
+A. Les voies nerveuses sont exclusivement motrices. (❌) → Aussi sensitives, sensorielles et végétatives.
+B. Elles sont organisées en trois neurones pour la motricité volontaire. (❌) → Deux neurones.
+C. Les voies descendantes sont motrices. (✔️)
+D. Les voies ascendantes sont sensitives. (✔️)
+E. Les voies sensorielles visuelles font partie des voies ascendantes. (✔️)
+🧠 Conclusion : Le système nerveux comprend des voies descendantes (motrices) et ascendantes (sensitives), reliant cortex et effecteurs.
+
+QCM 2 — Voie cortico-spinale
+
+A. C’est la voie motrice principale. (✔️)
+B. Elle comprend 3 neurones. (❌) → 2 (central et périphérique).
+C. Les fibres croisent à 90 % dans la moelle cervicale. (❌) → Au bulbe (décussation pyramidale).
+D. Les fibres croisées forment le faisceau cortico-spinal latéral. (✔️)
+E. Le faisceau direct ne croise jamais. (❌) → Croise partiellement dans la moelle.
+🧠 Conclusion : La voie pyramidale permet la motricité volontaire fine, avec décussation bulbaire des fibres.
+
+QCM 3 — Voie cortico-nucléaire
+
+A. Dirige la motricité des membres. (❌) → De la face et du cou.
+B. Passe par le genou de la capsule interne. (✔️)
+C. Croise partiellement au niveau des noyaux moteurs bulbaires. (✔️)
+D. Innerve les noyaux moteurs des nerfs crâniens. (✔️)
+E. Toutes les fibres croisent. (❌) → Certaines (VII inférieur, XII) croisent complètement.
+🧠 Conclusion : La voie cortico-nucléaire contrôle la motricité faciale et bulbaire, avec croisement partiel, expliquant certaines paralysies asymétriques.
+
+QCM 4 — Voie spino-thalamique
+
+A. Transmet la sensibilité proprioceptive consciente. (❌) → C’est la voie lemniscale.
+B. Transmet la douleur et la température. (✔️)
+C. Les fibres croisent immédiatement après l’entrée médullaire. (✔️)
+D. Se termine au thalamus VPL. (✔️)
+E. Impliquée dans le réflexe myotatique. (❌) → C’est une voie réflexe segmentaire.
+🧠 Conclusion : La voie spino-thalamique transmet les stimuli thermo-algiques, avec un croisement médullaire rapide.
+
+QCM 5 — Voie lemniscale (Goll et Burdach)
+
+A. Transporte les sensations tactiles fines et proprioceptives. (✔️)
+B. Les fibres croisent au niveau du tronc cérébral. (✔️)
+C. Se terminent au noyau VPM du thalamus. (❌) → VPL.
+D. Comprend les faisceaux gracile et cunéiforme. (✔️)
+E. Fait relais dans les noyaux de Goll et Burdach. (✔️)
+🧠 Conclusion : La voie lemniscale est la voie de la sensibilité consciente fine, décussant au bulbe (Reil médian).
+
+QCM 6 — Concernant l’organisation générale des voies nerveuses sensitives et motrices, quelle(s) proposition(s) est/sont correcte(s) ?
+
+A. Les voies sensitives croisent toujours dans la moelle épinière. (❌) → Certaines croisent au bulbe.
+B. Le thalamus est un centre moteur. (❌) → Sensitif intégrateur.
+C. Les voies motrices sont ascendantes. (❌) → Descendantes.
+D. Le faisceau spino-thalamique transmet la proprioception. (❌) → Douleur/température.
+E. Le faisceau cortico-spinal est une voie sensitive. (❌) → Motrice.
+🧠 Conclusion : QCM de piège intégral : attention aux niveaux de décussation et aux fonctions sensitivo-motrices inversées.
+
+QCM 7 — Voie de la motricité volontaire 
+
+A. Débute dans l’aire motrice frontale (4). (✔️)
+B. Traverse la capsule interne. (✔️)
+C. Croise au bulbe rachidien. (✔️)
+D. Finit sur les motoneurones de la corne antérieure. (✔️)
+E. Contrôle la motricité volontaire consciente. (✔️)
+🧠 Conclusion : La voie pyramidale illustre la somatotopie corticale et la précision motrice consciente.
+
+QCM 8 — Voies extra-pyramidales
+
+A. Contrôlent les mouvements automatiques et posturaux. (✔️)
+B. Comprennent les voies réticulo-, rubro- et vestibulo-spinales. (✔️)
+C. Leur atteinte provoque une paralysie flasque. (❌) → Hypertonie, rigidité.
+D. Agissent indépendamment du cortex. (❌) → Régulées par les noyaux gris centraux.
+E. Interviennent dans le tonus musculaire. (✔️)
+🧠 Conclusion : Les voies extra-pyramidales régulent les mouvements automatiques et le tonus, leur atteinte cause syndrome extrapyramidal.
+
+QCM 9 — Voie visuelle
+
+A. Commence dans les photorécepteurs rétiniens. (✔️)
+B. Les fibres temporales croisent au chiasma optique. (❌) → Nasales croisent.
+C. Le corps genouillé latéral est le relais thalamique. (✔️)
+D. Les radiations optiques se projettent sur la scissure calcarine. (✔️)
+E. Les lésions du chiasma donnent une hémianopsie bitemporale. (✔️)
+🧠 Conclusion : La voie optique suit la chaîne rétine → chiasma → CGL → cortex occipital, essentielle à la vision binoculaire.
+
+QCM 10 — Voie du nerf trijumeau
+
+A. La sensibilité de la face emprunte la voie spino-thalamique. (❌) → Par la voie trigémino-thalamique.
+B. Le noyau principal reçoit le tact fin. (✔️)
+C. Le noyau spinal de Rolando reçoit douleur/température. (✔️)
+D. Les fibres croisent pour gagner le VPM du thalamus. (✔️)
+E. La sensibilité proprioceptive est véhiculée par le noyau mésencéphalique. (✔️)
+🧠 Conclusion : Le nerf trijumeau est l’équivalent facial des voies lemniscales et spino-thalamiques, véhiculant tact, douleur et proprioception.
+
+QCM 11 — Voie de la sensibilité thermo-algique
+
+A. Fait relais dans le noyau de Burdach. (❌) → Substance gélatineuse de Rolando.
+B. Traverse le bulbe rachidien. (✔️)
+C. Croise du côté opposé dans la moelle. (✔️)
+D. Monte dans le faisceau spino-thalamique latéral. (✔️)
+E. Se termine au thalamus VPL. (✔️)
+🧠 Conclusion : La voie spino-thalamique latérale assure la douleur et la température, avec un croisement médullaire et un relais thalamique précis.
+
+QCM 12 — Voie de la sensibilité proprioceptive consciente
+
+A. Fait relais dans les noyaux de Goll et Burdach. (✔️)
+B. Croise dans la moelle. (❌) → Au bulbe.
+C. Monte dans les cordons postérieurs. (✔️)
+D. Se termine au noyau VPL. (✔️)
+E. Transmet la position des membres. (✔️)
+🧠 Conclusion : La voie lemniscale postérieure transmet la proprioception et le tact fin, avec décussation bulbaire.
+
+QCM 13 — Voie motrice cortico-spinale directe 
+
+A. Ne croise jamais. (❌) → Croise partiellement.
+B. Se termine dans la corne postérieure. (❌) → Antérieure.
+C. Contrôle la motricité involontaire. (❌) → Volontaire.
+D. Fait relais dans le noyau rouge. (❌) → Non.
+E. Se trouve dans le cordon postérieur. (❌) → Antérieur.
+🧠 Conclusion : La voie directe descend sans décussation bulbaire complète, contrôlant la motricité axiale.
+
+QCM 14 — Voie visuelle 
+
+A. Commence dans les cônes et bâtonnets. (✔️)
+B. Les neurones de la rétine forment le nerf optique. (✔️)
+C. Les fibres croisées au chiasma viennent du côté nasal. (✔️)
+D. Le corps genouillé latéral est un relais obligatoire. (✔️)
+E. Les radiations optiques aboutissent à la scissure calcarine. (✔️)
+🧠 Conclusion : La voie optique complète illustre une organisation rétinotopique précise, reliant perception et localisation spatiale.
+
+QCM 15 — Synthèse générale
+
+A. Les voies motrices décussent toujours au niveau médullaire. (❌) → Principalement bulbaire.
+B. Les voies sensitives croisent toujours du côté opposé. (✔️)
+C. La voie pyramidale assure la motricité volontaire. (✔️)
+D. La voie spino-thalamique transmet la douleur. (✔️)
+E. La voie lemniscale transporte la proprioception. (✔️)
+🧠 Conclusion : Les voies nerveuses constituent un système croisé, garantissant la latéralisation motrice et sensitive du corps humain.

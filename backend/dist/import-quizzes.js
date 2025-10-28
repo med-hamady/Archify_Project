@@ -62,6 +62,8 @@ function parseQuizFile(filePath) {
                 // Si pas de séparateur, prendre toute la ligne après les caractères spéciaux
                 chapterTitle = line.replace(/^[^\w\sÀ-ÿ]+\s*/, '').trim();
             }
+            // Enlever les annotations de type (1->40), (1->20), (20 QCM), etc.
+            chapterTitle = chapterTitle.replace(/\s*\([^)]*\)\s*$/, '').trim();
             continue;
         }
         // Détecter une nouvelle question (ligne commençant par un numéro + emoji)

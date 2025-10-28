@@ -467,13 +467,21 @@ async function autoFixAnatomie() {
             });
             logger.info('✅ totalQCM corrigé de ' + anatomieSubject.totalQCM + ' → 200');
         }
-        // Si on a déjà 200 questions, pas besoin de corriger
-        if (totalQuestions === 200) {
-            logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions');
+        // Vérifier si les titres contiennent des annotations à nettoyer
+        const hasAnnotations = anatomieSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
+        // Si on a déjà 200 questions ET pas d'annotations, pas besoin de corriger
+        if (totalQuestions === 200 && !hasAnnotations) {
+            logger.info({ totalQuestions }, '✅ Anatomie PCEM2 already has correct number of questions and clean titles');
             await prisma.$disconnect();
             return;
         }
-        logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing, running fix script...');
+        // Si on a 200 questions mais des annotations, on doit nettoyer
+        if (totalQuestions === 200 && hasAnnotations) {
+            logger.info('🔧 Anatomie PCEM2 has correct question count but titles need cleaning...');
+        }
+        else {
+            logger.info({ totalQuestions }, '🔄 Anatomie PCEM2 needs fixing (expected 200), running fix script...');
+        }
         const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem2.js');
         if (stderr && !stderr.includes('warning')) {
             logger.error({ stderr }, 'Erreur lors de la correction anatomie');
@@ -536,11 +544,20 @@ async function autoFixPhysiologie() {
             });
             logger.info('✅ totalQCM Physiologie corrigé de ' + physioSubject.totalQCM + ' → 150');
         }
-        // Si on a déjà 150 questions, pas besoin de corriger
-        if (totalQuestions === 150) {
-            logger.info({ totalQuestions }, '✅ Physiologie PCEM1 already has correct number of questions');
+        // Vérifier si les titres contiennent des annotations à nettoyer
+        const hasAnnotations = physioSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
+        // Si on a déjà 150 questions ET pas d'annotations, pas besoin de corriger
+        if (totalQuestions === 150 && !hasAnnotations) {
+            logger.info({ totalQuestions }, '✅ Physiologie PCEM1 already has correct number of questions and clean titles');
             await prisma.$disconnect();
             return;
+        }
+        // Si on a 150 questions mais des annotations, on doit nettoyer
+        if (totalQuestions === 150 && hasAnnotations) {
+            logger.info('🔧 Physiologie PCEM1 has correct question count but titles need cleaning...');
+        }
+        else {
+            logger.info({ totalQuestions }, '🔄 Physiologie PCEM1 needs fixing (expected 150), running fix script...');
         }
         logger.info({ totalQuestions }, '🔄 Physiologie PCEM1 needs fixing (expected 150), running fix script...');
         const { stdout, stderr } = await execAsync('node dist/fix-physiologie-pcem1.js');
@@ -595,13 +612,21 @@ async function autoFixAnatomiePCEM1() {
             });
             logger.info('✅ totalQCM Anatomie PCEM1 corrigé de ' + anatomieSubject.totalQCM + ' → 200');
         }
-        // Si on a déjà 200 questions, pas besoin de corriger
-        if (totalQuestions === 200) {
-            logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions');
+        // Vérifier si les titres contiennent des annotations à nettoyer
+        const hasAnnotations = anatomieSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
+        // Si on a déjà 200 questions ET pas d'annotations, pas besoin de corriger
+        if (totalQuestions === 200 && !hasAnnotations) {
+            logger.info({ totalQuestions }, '✅ Anatomie PCEM1 already has correct number of questions and clean titles');
             await prisma.$disconnect();
             return;
         }
-        logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
+        // Si on a 200 questions mais des annotations, on doit nettoyer
+        if (totalQuestions === 200 && hasAnnotations) {
+            logger.info('🔧 Anatomie PCEM1 has correct question count but titles need cleaning...');
+        }
+        else {
+            logger.info({ totalQuestions }, '🔄 Anatomie PCEM1 needs fixing (expected 200), running fix script...');
+        }
         const { stdout, stderr } = await execAsync('node dist/fix-anatomie-pcem1.js');
         if (stderr && !stderr.includes('warning')) {
             logger.error({ stderr }, 'Erreur lors de la correction anatomie PCEM1');
@@ -654,13 +679,21 @@ async function autoFixPhysioPCEM2() {
             });
             logger.info('✅ totalQCM Physiologie PCEM2 corrigé de ' + physioSubject.totalQCM + ' → 40');
         }
-        // Si on a déjà 40 questions, pas besoin de corriger
-        if (totalQuestions === 40) {
-            logger.info({ totalQuestions }, '✅ Physiologie PCEM2 already has correct number of questions');
+        // Vérifier si les titres contiennent des annotations à nettoyer
+        const hasAnnotations = physioSubject.chapters.some(ch => ch.title.includes('(') || ch.title.includes(')'));
+        // Si on a déjà 40 questions ET pas d'annotations, pas besoin de corriger
+        if (totalQuestions === 40 && !hasAnnotations) {
+            logger.info({ totalQuestions }, '✅ Physiologie PCEM2 already has correct number of questions and clean titles');
             await prisma.$disconnect();
             return;
         }
-        logger.info({ totalQuestions }, '🔄 Physiologie PCEM2 needs fixing (expected 40), running fix script...');
+        // Si on a 40 questions mais des annotations, on doit nettoyer
+        if (totalQuestions === 40 && hasAnnotations) {
+            logger.info('🔧 Physiologie PCEM2 has correct question count but titles need cleaning...');
+        }
+        else {
+            logger.info({ totalQuestions }, '🔄 Physiologie PCEM2 needs fixing (expected 40), running fix script...');
+        }
         const { stdout, stderr } = await execAsync('node dist/fix-physiologie-pcem2.js');
         if (stderr && !stderr.includes('warning')) {
             logger.error({ stderr }, 'Erreur lors de la correction physiologie PCEM2');

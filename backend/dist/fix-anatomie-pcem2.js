@@ -47,20 +47,28 @@ function parseAnatomieFile(filePath) {
     let chapterTitle = lines[0] || 'Chapitre sans titre';
     // Nettoyer le titre (enlever emojis au début)
     chapterTitle = chapterTitle.replace(/^[^\wÀ-ÿ\s]+\s*/, '').trim();
+    // Enlever les annotations de type (1->40), (1->20), (20 QCM), etc.
+    chapterTitle = chapterTitle.replace(/s*([^)]*)s*$/, '').trim();
     const questions = [];
     let currentQuestion = null;
     let currentQuestionTitle = '';
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+        const qcmMatch = line.match(/^QCMs+(d+)s+[—–-]s+(.+)/i);
         // Détecter une nouvelle section de QCM (1️⃣, 2️⃣, ..., 🔟, 11️⃣, ...)
         const sectionMatch = line.match(/^([0-9]️⃣|🔟|1[0-9]️⃣|20️⃣)\s+(.+)/);
-        if (sectionMatch) {
+        if (qcmMatch || sectionMatch) {
             // Sauvegarder la question précédente
             if (currentQuestion && currentQuestion.options.length > 0) {
                 questions.push(currentQuestion);
             }
             // Démarrer une nouvelle question
-            currentQuestionTitle = sectionMatch[2].trim();
+            if (qcmMatch) {
+                currentQuestionTitle = qcmMatch[2].trim();
+            }
+            else if (sectionMatch) {
+                currentQuestionTitle = sectionMatch[2].trim();
+            }
             currentQuestion = {
                 questionText: currentQuestionTitle,
                 options: [],
@@ -109,6 +117,12 @@ function parseAnatomieFile(filePath) {
             continue;
         }
         // Détecter la justification générale
+        // Détecter la conclusion (🧠 Conclusion)
+        const conclusionMatch = line.match(/^🧠s*Conclusions*:s*(.+)/);
+        if (conclusionMatch && currentQuestion) {
+            currentQuestion.explanation = conclusionMatch[1].trim();
+            continue;
+        }
         const justificationMatch = line.match(/^Justification générale\s*:\s*(.+)/);
         if (justificationMatch && currentQuestion) {
             currentQuestion.explanation = justificationMatch[1].trim();

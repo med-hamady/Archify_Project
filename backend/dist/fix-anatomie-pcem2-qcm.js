@@ -38,10 +38,10 @@ const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const prisma = new client_1.PrismaClient();
 /**
- * Parse un fichier de quiz Physiologie PCEM2
+ * Parse un fichier de quiz Anatomie PCEM2
  * Format: emoji numéroté (1️⃣, 2️⃣, ..., 🔟, 11️⃣, ...) + "Question : [texte]"
  */
-function parsePhysioFile(filePath) {
+function parseQCMFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n').map(l => l.trim());
     // Extraire le titre du chapitre (première ligne)
@@ -54,15 +54,15 @@ function parsePhysioFile(filePath) {
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         // Détecter une nouvelle question
-        // Accepte: 1️⃣, 2️⃣, ..., 9️⃣, 🔟, 11️⃣, ..., 20️⃣, 30️⃣, 40️⃣
-        const questionMatch = line.match(/^((?:\d+)️⃣|🔟)\s*Question\s*:\s*(.+)/);
-        if (questionMatch) {
+        // Format QCM: QCM 1 — Titre
+        const qcmMatch = line.match(/^QCMs+(d+)s+[—–-]s+(.+)/i);
+        if (qcmMatch) {
             // Sauvegarder la question précédente
             if (currentQuestion && currentQuestion.options.length > 0) {
                 questions.push(currentQuestion);
             }
             // Créer une nouvelle question
-            const questionText = questionMatch[2].trim();
+            const questionText = qcmMatch[2].trim();
             currentQuestion = {
                 questionText,
                 options: [],
@@ -114,16 +114,16 @@ function parsePhysioFile(filePath) {
     return { title: chapterTitle, questions };
 }
 /**
- * Script principal pour corriger l'import de Physiologie PCEM2
+ * Script principal pour corriger l'import de Anatomie PCEM1
  */
-async function fixPhysioPCEM2() {
+async function fixAnatomiePCEM2QCM() {
     try {
-        console.log('🚀 Démarrage de la correction de Physiologie PCEM2...\n');
-        // Trouver le sujet Physiologie PCEM2
-        const physioSubject = await prisma.subject.findFirst({
+        console.log('🚀 Import des chapitres 1-12 (format QCM) d\'Anatomie PCEM2...\n');
+        // Trouver le sujet Anatomie PCEM1
+        const anatomieSubject = await prisma.subject.findFirst({
             where: {
-                title: { contains: 'Physiologie', mode: 'insensitive' },
-                semester: 'PCEM2'
+                title: { contains: 'Anatomie', mode: 'insensitive' },
+                semester: 'PCEM1'
             },
             include: {
                 chapters: {
@@ -133,18 +133,18 @@ async function fixPhysioPCEM2() {
                 }
             }
         });
-        if (!physioSubject) {
-            console.log('❌ Sujet Physiologie PCEM2 non trouvé');
+        if (!anatomieSubject) {
+            console.log('❌ Sujet Anatomie PCEM1 non trouvé');
             await prisma.$disconnect();
             return;
         }
-        console.log(`📚 Sujet trouvé: ${physioSubject.title}`);
-        console.log(`📖 Chapitres actuels: ${physioSubject.chapters.length}`);
-        const totalQuestionsBefore = physioSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+        console.log(`📚 Sujet trouvé: ${anatomieSubject.title}`);
+        console.log(`📖 Chapitres actuels: ${anatomieSubject.chapters.length}`);
+        const totalQuestionsBefore = anatomieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
         console.log(`📊 Questions actuelles: ${totalQuestionsBefore}\n`);
         // Supprimer toutes les anciennes questions
         console.log('🗑️  Suppression des anciennes questions...');
-        for (const chapter of physioSubject.chapters) {
+        for (const chapter of anatomieSubject.chapters) {
             await prisma.question.deleteMany({
                 where: { chapterId: chapter.id }
             });
@@ -153,32 +153,43 @@ async function fixPhysioPCEM2() {
         // Supprimer tous les anciens chapitres
         console.log('🗑️  Suppression des anciens chapitres...');
         await prisma.chapter.deleteMany({
-            where: { subjectId: physioSubject.id }
+            where: { subjectId: anatomieSubject.id }
         });
-        console.log(`✅ ${physioSubject.chapters.length} anciens chapitres supprimés\n`);
+        console.log(`✅ ${anatomieSubject.chapters.length} anciens chapitres supprimés\n`);
         // Réimporter depuis les fichiers sources
-        const physioDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem2', 'physio');
-        if (!fs.existsSync(physioDir)) {
-            console.log(`❌ Dossier non trouvé: ${physioDir}`);
+        const anatomieDir = path.join(__dirname, '..', 'data', 'quiz', 'pcem2', 'anatomie');
+        if (!fs.existsSync(anatomieDir)) {
+            console.log(`❌ Dossier non trouvé: ${anatomieDir}`);
             await prisma.$disconnect();
             return;
         }
-        const files = fs.readdirSync(physioDir)
-            .filter(f => f.endsWith('.txt'))
-            .sort();
-        console.log(`📂 ${files.length} fichiers trouvés\n`);
+        const qcmFiles = [
+            'CHAPITRE 1 — OSTÉOLOGIE DU CRÂNE.txt',
+            'CHAPITRE 2 — L\'APPAREIL MANDUCATEUR.txt',
+            'CHAPITRE 3 — LES MUSCLES DE LA TÊTE.txt',
+            'CHAPITRE 4 — LES VAISSEAUX DE LA TÊ.txt',
+            'CHAPITRE 5 — LES LYMPHATIQUES DE LA.txt',
+            'CHAPITRE 6 — L\'APPAREIL DE VISION.txt',
+            'CHAPITRE 7 — LES FOSSES NASALES.txt',
+            'CHAPITRE 8 — L\'OREILLE.txt',
+            'CHAPITRE 9 — PHARYNX ET LARYNX.txt',
+            'CHAPITRE 10 — THYROÏDE ET LARYNX SU.txt',
+            'CHAPITRE 11 — LES VOIES NERVEUSES.txt',
+            'CHAPITRE 12 — EMBRYOLOGIE DU SYSTÈM.txt'
+        ];
+        console.log(`📂 ${qcmFiles.length} fichiers trouvés\n`);
         let totalImported = 0;
         let chapterIndex = 0;
-        for (const file of files) {
-            const filePath = path.join(physioDir, file);
+        for (const file of qcmFiles) {
+            const filePath = path.join(anatomieDir, file);
             console.log(`📄 Traitement: ${file}`);
             try {
-                const { title, questions } = parsePhysioFile(filePath);
+                const { title, questions } = parseQCMFile(filePath);
                 // Créer le chapitre
                 const chapter = await prisma.chapter.create({
                     data: {
                         title,
-                        subjectId: physioSubject.id,
+                        subjectId: anatomieSubject.id,
                         orderIndex: chapterIndex++
                     }
                 });
@@ -207,13 +218,13 @@ async function fixPhysioPCEM2() {
         console.log(`📊 Total: ${totalImported} questions importées dans ${chapterIndex} chapitres\n`);
         // Mettre à jour le totalQCM du sujet
         await prisma.subject.update({
-            where: { id: physioSubject.id },
+            where: { id: anatomieSubject.id },
             data: { totalQCM: totalImported }
         });
         console.log(`✅ totalQCM mis à jour: ${totalImported}\n`);
         // Vérification finale
         const updatedSubject = await prisma.subject.findFirst({
-            where: { id: physioSubject.id },
+            where: { id: anatomieSubject.id },
             include: {
                 chapters: {
                     include: {
@@ -235,5 +246,5 @@ async function fixPhysioPCEM2() {
     }
 }
 // Exécuter le script
-fixPhysioPCEM2();
-//# sourceMappingURL=fix-physiologie-pcem2.js.map
+fixAnatomiePCEM2QCM();
+//# sourceMappingURL=fix-anatomie-pcem2-qcm.js.map

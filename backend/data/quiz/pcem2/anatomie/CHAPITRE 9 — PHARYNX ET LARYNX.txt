@@ -1,0 +1,136 @@
+CHAPITRE 9 — PHARYNX ET LARYNX
+
+QCM 1 — Généralités du pharynx
+
+A. Le pharynx est un conduit respiratoire uniquement. (❌) → Aussi digestif.
+B. Il s’étend de la base du crâne à C6. (✔️)
+C. Il se continue par l’œsophage. (✔️)
+D. Il comprend trois étages : naso-, oro- et laryngopharynx. (✔️)
+E. Il est situé en avant du larynx. (❌) → En arrière.
+🧠 Conclusion : Le pharynx est un carrefour aérien et digestif, jouant un rôle clé dans la respiration et la déglutition.
+
+QCM 2 — Naso-pharynx
+
+A. Situé en arrière des fosses nasales. (✔️)
+B. Contient l’orifice de la trompe auditive. (✔️)
+C. Contient la tonsille pharyngienne (végétations). (✔️)
+D. En communication directe avec la cavité buccale. (❌) → Avec les fosses nasales.
+E. Tapissé d’un épithélium kératinisé. (❌) → Épithélium respiratoire cilié.
+🧠 Conclusion : Le naso-pharynx est la zone de connexion nasale et auditive, souvent le siège d’adénoïdite chez l’enfant.
+
+QCM 3 — Oro-pharynx
+
+A. Situé derrière la cavité buccale. (✔️)
+B. En rapport avec la base de la langue. (✔️)
+C. Contient les amygdales palatines. (✔️)
+D. Tapissé d’un épithélium respiratoire. (❌) → Malpighien non kératinisé.
+E. S’ouvre en bas dans le larynx. (❌) → Dans le laryngopharynx.
+🧠 Conclusion : L’oro-pharynx est la zone de croisement oro-respiratoire, impliquée dans les infections amygdaliennes.
+
+QCM 4 — Laryngo-pharynx
+
+A. Situé en avant du larynx. (❌) → En arrière.
+B. Se prolonge par le pharynx nasal. (❌) → Par l’œsophage.
+C. Reçoit l’épiglotte sur sa paroi antérieure. (✔️)
+D. Tapissé d’un épithélium malpighien. (✔️)
+E. Sa fonction principale est la digestion. (❌) → Aussi respiratoire.
+🧠 Conclusion : Le laryngo-pharynx fait le lien entre respiration et digestion, zone à haut risque d’aspiration.
+
+QCM 5 — Anatomie du larynx
+
+A. Organe creux cartilagineux. (✔️)
+B. Situé entre C3 et C6. (✔️)
+C. Constitué de 4 cartilages principaux. (❌) → 9 (3 pairs, 3 impairs).
+D. Sa paroi postérieure est osseuse. (❌) → Membrano-cartilagineuse.
+E. Sa fonction est exclusivement digestive. (❌) → Respiratoire et phonatoire.
+🧠 Conclusion : Le larynx est un organe respiratoire et phonatoire complexe, formé de cartilages mobiles reliés par des ligaments et muscles.
+
+QCM 6 — Cartilages du larynx
+
+A. Le cartilage thyroïde est impair et médian. (✔️)
+B. L’épiglotte est une lame fibrocartilagineuse élastique. (✔️)
+C. Le cricoïde est en forme de fer à cheval. (❌) → D’anneau complet.
+D. Les aryténoïdes sont pairs et mobiles. (✔️)
+E. Le cartilage cunéiforme est impair. (❌) → Pair.
+🧠 Conclusion : Les cartilages laryngés forment le squelette de la glotte, garantissant la respiration et la phonation.
+
+QCM 7 — Muscles du larynx 
+
+A. Tous les muscles du larynx sont innervés par le nerf facial. (❌)
+B. Le crico-thyroïdien ferme la glotte. (❌) → Il la tend.
+C. Le crico-aryténoïdien postérieur ferme la glotte. (❌) → Il l’ouvre.
+D. L’aryténoïdien transverse abaisse le larynx. (❌) → Il rapproche les aryténoïdes.
+E. Aucun muscle ne participe à la phonation. (❌) → Tous interviennent.
+🧠 Conclusion : Tous les muscles intrinsèques du larynx participent à la phonation et sont innervés par le nerf récurrent, sauf le crico-thyroïdien (nerf laryngé externe).
+
+QCM 8 — Muscles du larynx 
+
+A. Le crico-thyroïdien tend les cordes vocales. (✔️)
+B. Le crico-aryténoïdien postérieur ouvre la glotte. (✔️)
+C. Les aryténoïdiens rapprochent les cordes vocales. (✔️)
+D. Le thyro-aryténoïdien détend les cordes vocales. (✔️)
+E. Tous participent à la modulation du son. (✔️)
+🧠 Conclusion : Les muscles intrinsèques du larynx régulent l’ouverture de la glotte et la tension vocale, permettant la phonation modulée.
+
+QCM 9 — Nerfs laryngés
+
+A. Le nerf laryngé supérieur innerve le crico-thyroïdien. (✔️)
+B. Le nerf laryngé récurrent innerve tous les autres muscles intrinsèques. (✔️)
+C. Les deux nerfs récurrents suivent le même trajet. (❌) → Celui de gauche contourne la crosse aortique, celui de droite l’artère subclavière.
+D. Le nerf récurrent gauche est plus long. (✔️)
+E. Une atteinte du récurrent provoque une paralysie de la corde vocale homolatérale. (✔️)
+🧠 Conclusion : L’innervation laryngée est asymétrique, le nerf récurrent étant crucial pour la mobilité et la voix.
+
+QCM 10 — Muqueuse laryngée
+
+A. Tapissée d’un épithélium malpighien sur toute sa surface. (❌) → Respiratoire sauf cordes vocales.
+B. Les cordes vocales vraies sont recouvertes d’un épithélium pavimenteux. (✔️)
+C. La muqueuse est riche en glandes séreuses. (✔️)
+D. Le ventricule du larynx sépare cordes vraies et fausses. (✔️)
+E. La muqueuse est insensible à la douleur. (❌) → Très sensible.
+🧠 Conclusion : La muqueuse laryngée protège et lubrifie, tandis que la région glottique permet la vibration vocale.
+
+QCM 11 — Vascularisation
+
+A. L’artère laryngée supérieure vient de la thyroïdienne supérieure. (✔️)
+B. L’artère laryngée inférieure vient de la thyroïdienne inférieure. (✔️)
+C. Les veines se jettent dans la jugulaire interne. (✔️)
+D. Le larynx est vascularisé par la carotide interne. (❌) → Par la carotide externe.
+E. Le réseau anastomotique assure une suppléance bilatérale. (✔️)
+🧠 Conclusion : Le larynx est richement vascularisé par les artères thyroïdiennes, garantissant la vitalité des cordes vocales.
+
+QCM 12 — Phonation
+
+A. La phonation dépend uniquement du nerf facial. (❌) → Nerf récurrent (X).
+B. Les cordes vocales vibrent grâce au passage de l’air expiré. (✔️)
+C. Le timbre dépend de la forme du conduit vocal. (✔️)
+D. La tension des cordes vocales est réglée par les muscles laryngés. (✔️)
+E. La résonance dépend uniquement du larynx. (❌) → Aussi des cavités buccales et nasales.
+🧠 Conclusion : La phonation résulte d’une synergie respiratoire, laryngée et bucco-nasale, contrôlée par les muscles intrinsèques du larynx.
+
+QCM 13 — Déglutition
+
+A. Le larynx s’abaisse pendant la déglutition. (❌) → Il s’élève.
+B. L’épiglotte ferme l’orifice supérieur du larynx. (✔️)
+C. Le pharynx propulse le bol alimentaire. (✔️)
+D. Le sphincter supérieur de l’œsophage se relâche. (✔️)
+E. La glotte reste ouverte pour laisser passer l’air. (❌) → Fermée pour éviter l’aspiration.
+🧠 Conclusion : La déglutition est un mécanisme réflexe complexe assurant la fermeture laryngée et la protection des voies aériennes.
+
+QCM 14 — Lymphatiques du pharynx et du larynx
+
+A. Les lymphatiques du pharynx se jettent directement dans le canal thoracique. (❌) → D’abord ganglions cervicaux profonds.
+B. Les lymphatiques du larynx rejoignent les jugulo-carotidiens. (✔️)
+C. La région sus-glottique est riche en ganglions. (✔️)
+D. La région sous-glottique est pauvre en lymphatiques. (✔️)
+E. Les infections laryngées ne diffusent jamais. (❌) → Elles peuvent diffuser aux ganglions cervicaux.
+🧠 Conclusion : Le réseau lymphatique pharyngo-laryngé joue un rôle capital dans la propagation des infections et des métastases.
+
+QCM 15 — Synthèse finale
+
+A. Le pharynx est purement digestif. (❌) → Respiratoire et digestif.
+B. Le larynx est purement respiratoire. (❌) → Aussi phonatoire.
+C. Le nerf récurrent contrôle les muscles vocaux. (✔️)
+D. Les cartilages aryténoïdes règlent l’ouverture glottique. (✔️)
+E. L’épiglotte empêche les fausses routes. (✔️)
+🧠 Conclusion : Le pharyngo-larynx est un croisement vital où se mêlent respiration, phonation et déglutition, zone-clé en chirurgie et anesthésie.
