@@ -848,6 +848,34 @@ async function autoImportAnatomieQCM() {
             });
             logger.info(`✅ totalQCM Anatomie PCEM2 corrigé automatiquement: ${anatomieSubject.totalQCM} → ${finalCount}`);
         }
+        // Diagnostic détaillé automatique
+        logger.info('🔍 Diagnostic Anatomie PCEM2...');
+        const updatedSubject = await prisma.subject.findFirst({
+            where: {
+                title: { contains: 'Anatomie', mode: 'insensitive' },
+                semester: 'PCEM2'
+            },
+            include: {
+                chapters: {
+                    orderBy: { title: 'asc' },
+                    include: {
+                        _count: { select: { questions: true } }
+                    }
+                }
+            }
+        });
+        if (updatedSubject) {
+            const totalQ = updatedSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+            logger.info({
+                totalChapters: updatedSubject.chapters.length,
+                totalQuestions: totalQ,
+                totalQCM: updatedSubject.totalQCM
+            }, '📊 État final Anatomie PCEM2');
+            // Lister les chapitres avec leurs questions
+            updatedSubject.chapters.forEach((ch, index) => {
+                logger.info(`  ${index + 1}. [${ch._count.questions}Q] ${ch.title.substring(0, 50)}`);
+            });
+        }
         await prisma.$disconnect();
     }
     catch (error) {
