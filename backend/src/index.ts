@@ -256,6 +256,37 @@ app.post('/api/admin/fix-anatomie', async (_req, res) => {
   }
 });
 
+// Diagnose anatomie endpoint (public for debugging)
+app.get('/api/admin/diagnose-anatomie', async (_req, res) => {
+  try {
+    logger.info('🔍 Anatomie diagnosis triggered');
+
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+
+    const { stdout, stderr } = await execAsync('node dist/diagnose-anatomie.js');
+
+    if (stderr && !stderr.includes('warning')) {
+      logger.error({ stderr }, 'Erreur lors du diagnostic');
+    }
+
+    logger.info('✅ Diagnostic anatomie terminé');
+
+    return res.json({
+      status: 'success',
+      message: 'Anatomie PCEM2 diagnosis completed',
+      output: stdout
+    });
+  } catch (error: any) {
+    logger.error({ error: error.message }, '❌ Erreur lors du diagnostic');
+    return res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // Fix anatomie count endpoint (public for emergency fix)
 app.post('/api/admin/fix-anatomie-count', async (_req, res) => {
   try {
