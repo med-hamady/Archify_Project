@@ -17,6 +17,7 @@ export interface QuizQuestion {
   position?: number;
   totalQuestions?: number;
   orderIndex?: number;
+  isReplay?: boolean;  // Indique si c'est un rejeu (question déjà réussie)
 }
 
 export interface QuizAnswerResponse {
@@ -74,10 +75,14 @@ export class QuizService {
 
   /**
    * Obtenir la prochaine question d'un chapitre
+   * @param chapterId ID du chapitre
+   * @param replay Si true, recommence le chapitre depuis le début
    */
-  getNextQuestion(chapterId: string): Observable<{ success: boolean; question: QuizQuestion }> {
-    return this.http.get<{ success: boolean; question: QuizQuestion }>(
-      `${this.baseUrl}/chapter/${chapterId}/next`
+  getNextQuestion(chapterId: string, replay: boolean = false): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
+    const params = replay ? { replay: 'true' } : {};
+    return this.http.get<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }>(
+      `${this.baseUrl}/chapter/${chapterId}/next`,
+      { params }
     );
   }
 

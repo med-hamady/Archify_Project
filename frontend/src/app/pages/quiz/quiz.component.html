@@ -31,8 +31,29 @@
     </button>
   </div>
 
+  <!-- Chapter Completed -->
+  <div *ngIf="chapterCompleted && !loading" class="completion-card">
+    <div class="completion-icon">🎉</div>
+    <h2>Chapitre terminé!</h2>
+    <p class="completion-message">{{ completionMessage }}</p>
+    <div class="completion-actions">
+      <button (click)="replayChapter()" class="btn btn-primary btn-large">
+        🔄 Rejouer le chapitre
+      </button>
+      <button (click)="goBack()" class="btn btn-secondary btn-large">
+        ← Retour au Dashboard
+      </button>
+    </div>
+    <p class="replay-note">💡 En mode rejeu, vous ne gagnerez pas d'XP supplémentaire</p>
+  </div>
+
   <!-- Question Card -->
   <div *ngIf="currentQuestion && !loading" class="question-card">
+    <!-- Replay Mode Badge -->
+    <div *ngIf="currentQuestion.isReplay" class="replay-badge">
+      🔄 Mode Révision - Pas d'XP
+    </div>
+
     <!-- Difficulty Badge -->
     <div
       class="difficulty-badge"

@@ -24,6 +24,8 @@ export class QuizComponent implements OnInit {
 
   loading = true;
   error: string | null = null;
+  chapterCompleted = false;
+  completionMessage: string | null = null;
 
   // Animations
   showXPAnimation = false;
@@ -47,7 +49,7 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  loadNextQuestion() {
+  loadNextQuestion(replay: boolean = false) {
     if (!this.chapterId) return;
 
     this.loading = true;
@@ -56,10 +58,17 @@ export class QuizComponent implements OnInit {
     this.answered = false;
     this.showResult = false;
     this.result = null;
+    this.chapterCompleted = false;
+    this.completionMessage = null;
 
-    this.quizService.getNextQuestion(this.chapterId).subscribe({
+    this.quizService.getNextQuestion(this.chapterId, replay).subscribe({
       next: (res) => {
-        if (res.question) {
+        if (res.completed) {
+          // Chapitre terminé
+          this.chapterCompleted = true;
+          this.completionMessage = res.message || 'Chapitre terminé! Toutes les questions ont été répondues correctement.';
+          this.loading = false;
+        } else if (res.question) {
           this.currentQuestion = res.question;
           this.loading = false;
         } else {
@@ -73,6 +82,10 @@ export class QuizComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  replayChapter() {
+    this.loadNextQuestion(true);
   }
 
   selectAnswer(index: number) {
