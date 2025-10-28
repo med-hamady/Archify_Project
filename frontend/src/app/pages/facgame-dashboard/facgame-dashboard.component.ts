@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProfileService, UserProfile, SubjectProgress } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-facgame-dashboard',
@@ -15,6 +16,7 @@ export class FacgameDashboardComponent implements OnInit {
 
   private profileService = inject(ProfileService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   profile: UserProfile | null = null;
   progress: SubjectProgress[] = [];
@@ -136,6 +138,12 @@ export class FacgameDashboardComponent implements OnInit {
 
   navigateToLeaderboard() {
     this.router.navigate(['/leaderboard']);
+  }
+
+  logout() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      this.authService.logout();
+    }
   }
 
   triggerFileInput() {
