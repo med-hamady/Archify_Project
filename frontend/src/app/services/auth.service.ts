@@ -241,8 +241,8 @@ export class AuthService {
     // Clear signal
     this.user.set(null);
 
-    // Redirect to home
-    this.router.navigate(['/']);
+    // Redirect to login
+    this.router.navigate(['/login']);
   }
 
   refreshToken(): Observable<AuthResponse> {
