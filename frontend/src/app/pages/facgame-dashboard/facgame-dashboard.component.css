@@ -185,12 +185,22 @@
   width: 180px;
   height: 180px;
   object-fit: contain;
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
-  transition: transform 0.3s ease;
+  /* Remove black background by making it transparent */
+  mix-blend-mode: multiply;
+  /* Cinematic shadow for depth */
+  filter:
+    drop-shadow(0 10px 25px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 20px 50px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
 }
 
 .level-badge-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) translateY(-5px);
+  filter:
+    drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 25px 60px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
 }
 
 /* XP Section */
