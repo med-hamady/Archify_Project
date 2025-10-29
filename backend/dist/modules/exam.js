@@ -165,10 +165,7 @@ exports.examRouter.post('/:subjectId/start', auth_1.requireAuth, async (req, res
                 chapterId: chapter.id,
                 chapterTitle: chapter.title,
                 questionText: q.questionText,
-                options: options.map((opt) => ({
-                    text: opt.text
-                    // Ne pas inclure isCorrect ni justification avant la soumission
-                })),
+                options: options.map((opt) => opt.text), // Envoyer seulement le texte
                 difficulty: q.difficulty
             };
         }));
