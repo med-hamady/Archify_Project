@@ -48,7 +48,7 @@
           class="stat exam-badge"
           [class.unlocked]="subject.examUnlocked"
           [class.clickable]="subject.examUnlocked"
-          (click)="subject.examUnlocked ? navigateToExam(subject.subjectId) : null">
+          (click)="subject.examUnlocked ? navigateToExam(subjectId) : null">
           <span class="stat-icon">{{ subject.examUnlocked ? '✅' : '🔒' }}</span>
           <span class="stat-text">Mode Examen</span>
         </div>
