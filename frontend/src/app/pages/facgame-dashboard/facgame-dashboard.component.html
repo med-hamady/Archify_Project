@@ -42,9 +42,9 @@
         </div>
 
         <!-- Level Badge -->
-        <div class="level-badge" [style.background]="getLevelInfo()?.color">
-          <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-icon">
-          <span class="level-name">{{ getLevelInfo()?.label }}</span>
+        <div class="level-badge-container">
+          <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-badge-image">
+          <div class="level-badge-label">{{ getLevelInfo()?.label?.toUpperCase() }}</div>
         </div>
 
         <!-- XP Progress -->

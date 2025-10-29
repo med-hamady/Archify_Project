@@ -173,27 +173,34 @@
   font-size: 1rem;
 }
 
-.level-badge {
-  display: inline-flex;
+.level-badge-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
-  border-radius: 28px;
-  color: white;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
 }
 
-.level-icon {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 12px;
-  background: white;
-  padding: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.level-badge-image {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
+  transition: transform 0.3s ease;
+}
+
+.level-badge-image:hover {
+  transform: scale(1.05);
+}
+
+.level-badge-label {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #666;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 /* XP Section */
