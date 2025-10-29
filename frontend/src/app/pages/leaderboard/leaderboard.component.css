@@ -235,22 +235,24 @@
 }
 
 .podium-level {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
 }
 
 .podium-level-img {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
   border-radius: 50%;
+  background: white;
+  padding: 3px;
 }
 
 .podium-name {
@@ -365,10 +367,12 @@
 }
 
 .level-icon {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: white;
+  padding: 3px;
 }
 
 .level-label {

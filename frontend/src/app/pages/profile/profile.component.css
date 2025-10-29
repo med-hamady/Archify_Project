@@ -103,10 +103,12 @@
 }
 
 .level-badge-image {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
   border-radius: 50%;
+  background: white;
+  padding: 3px;
 }
 
 .profile-info {
