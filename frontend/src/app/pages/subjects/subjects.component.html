@@ -22,8 +22,7 @@
     <div
       *ngFor="let subject of subjects"
       class="subject-card"
-      [class]="getProgressClass(subject.progressPercent)"
-      (click)="navigateToChapters(subject.id)">
+      [class]="getProgressClass(subject.progressPercent)">
 
       <!-- Subject Header -->
       <div class="subject-header">
@@ -64,7 +63,7 @@
       </div>
 
       <!-- Unlock Badges -->
-      <div class="unlock-badges" (click)="$event.stopPropagation()">
+      <div class="unlock-badges">
         <div
           *ngIf="subject.examUnlocked"
           class="unlock-badge exam unlocked clickable"
@@ -82,7 +81,7 @@
 
       <!-- Action Button -->
       <div class="subject-action">
-        <button class="btn-start">
+        <button class="btn-start" (click)="navigateToChapters(subject.id)">
           {{ subject.progressPercent > 0 ? 'Continuer' : 'Commencer' }}
           <span class="arrow">→</span>
         </button>
