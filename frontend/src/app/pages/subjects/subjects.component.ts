@@ -44,9 +44,11 @@ export class SubjectsComponent implements OnInit {
   }
 
   navigateToExam(subjectId: string, event: Event) {
+    console.log('🎯 navigateToExam called with subjectId:', subjectId);
     // Empêcher la propagation pour ne pas déclencher le clic sur la carte
     event.stopPropagation();
     // Navigation vers le mode examen
+    console.log('🚀 Navigating to exam...');
     this.router.navigate(['/exam', subjectId]);
   }
 
