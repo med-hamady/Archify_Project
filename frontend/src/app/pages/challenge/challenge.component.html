@@ -90,11 +90,21 @@
         <div
           *ngFor="let option of getCurrentQuestion()!.options; let i = index"
           class="option"
-          [class.selected]="getCurrentAnswer().selectedAnswer === i"
-          (click)="selectAnswer(i)">
-          <div class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</div>
+          [class.selected]="isAnswerSelected(i)"
+          (click)="toggleAnswer(i)">
+          <div class="option-checkbox">
+            <input
+              type="checkbox"
+              [checked]="isAnswerSelected(i)"
+              (click)="$event.stopPropagation()">
+            <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E'][i] }}</span>
+          </div>
           <div class="option-text">{{ option.text }}</div>
         </div>
+      </div>
+
+      <div class="hint-text">
+        💡 Cochez une ou plusieurs réponses, ou aucune si toutes sont fausses
       </div>
     </div>
 

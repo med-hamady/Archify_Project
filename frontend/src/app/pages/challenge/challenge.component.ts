@@ -25,7 +25,7 @@ export class ChallengeComponent implements OnInit {
 
   // Playing state
   currentQuestionIndex = 0;
-  answers: Array<{ questionId: string; selectedAnswer: number | null }> = [];
+  answers: Array<{ questionId: string; selectedAnswers: number[] }> = [];
 
   // Results state
   result: ChallengeResult | null = null;
@@ -66,7 +66,7 @@ export class ChallengeComponent implements OnInit {
     if (!this.challenge) return;
     this.answers = this.challenge.questions.map(q => ({
       questionId: q.id,
-      selectedAnswer: null
+      selectedAnswers: []
     }));
   }
 
@@ -75,9 +75,22 @@ export class ChallengeComponent implements OnInit {
     this.currentQuestionIndex = 0;
   }
 
-  selectAnswer(answerIndex: number) {
+  toggleAnswer(answerIndex: number) {
     if (!this.challenge) return;
-    this.answers[this.currentQuestionIndex].selectedAnswer = answerIndex;
+    const currentAnswers = this.answers[this.currentQuestionIndex].selectedAnswers;
+    const index = currentAnswers.indexOf(answerIndex);
+
+    if (index > -1) {
+      // Décocher - retirer de la liste
+      currentAnswers.splice(index, 1);
+    } else {
+      // Cocher - ajouter à la liste
+      currentAnswers.push(answerIndex);
+    }
+  }
+
+  isAnswerSelected(answerIndex: number): boolean {
+    return this.answers[this.currentQuestionIndex].selectedAnswers.includes(answerIndex);
   }
 
   nextQuestion() {
@@ -98,7 +111,8 @@ export class ChallengeComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.answers.every(a => a.selectedAnswer !== null);
+    // On peut soumettre même sans réponses (si toutes les options sont fausses)
+    return true;
   }
 
   submitChallenge() {
@@ -107,7 +121,7 @@ export class ChallengeComponent implements OnInit {
     this.loading = true;
     const formattedAnswers = this.answers.map(a => ({
       questionId: a.questionId,
-      selectedAnswer: a.selectedAnswer as number
+      selectedAnswers: a.selectedAnswers
     }));
 
     this.challengeService.submitChallenge(this.chapterId, formattedAnswers).subscribe({
@@ -139,7 +153,7 @@ export class ChallengeComponent implements OnInit {
   }
 
   getAnsweredCount(): number {
-    return this.answers.filter(a => a.selectedAnswer !== null).length;
+    return this.answers.filter(a => a.selectedAnswers.length > 0).length;
   }
 
   getCurrentQuestion() {

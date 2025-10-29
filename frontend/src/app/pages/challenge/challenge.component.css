@@ -312,6 +312,20 @@
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 }
 
+.option-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.option-checkbox input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: #ffc107;
+}
+
 .option-letter {
   width: 40px;
   height: 40px;
@@ -339,6 +353,16 @@
   font-size: 1.05rem;
   color: #333;
   flex: 1;
+}
+
+.hint-text {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  color: #1565c0;
+  font-size: 0.95rem;
+  border-radius: 4px;
 }
 
 /* Navigation */

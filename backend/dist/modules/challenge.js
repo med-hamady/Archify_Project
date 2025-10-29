@@ -105,7 +105,7 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
 const submitChallengeSchema = zod_1.z.object({
     answers: zod_1.z.array(zod_1.z.object({
         questionId: zod_1.z.string(),
-        selectedAnswer: zod_1.z.number().int().min(0).max(4) // 0-4 pour les options A-E
+        selectedAnswers: zod_1.z.array(zod_1.z.number().int().min(0).max(4)) // Tableau de 0-4 pour les options A-E
     })),
     timeSpentSec: zod_1.z.number().int().min(0).optional()
 });
@@ -153,7 +153,18 @@ exports.challengeRouter.post('/:chapterId/submit', auth_1.requireAuth, async (re
                 continue;
             // Vérifier la réponse avec le nouveau format JSON
             const options = question.options;
-            if (!Array.isArray(options) || answer.selectedAnswer >= options.length) {
+            if (!Array.isArray(options)) {
+                detailedResults.push({
+                    questionId: question.id,
+                    correct: false,
+                    xpEarned: 0,
+                    error: 'Invalid options format'
+                });
+                continue;
+            }
+            // Vérifier si les index sont valides
+            const invalidIndexes = answer.selectedAnswers.some(idx => idx >= options.length);
+            if (invalidIndexes) {
                 detailedResults.push({
                     questionId: question.id,
                     correct: false,
@@ -162,13 +173,22 @@ exports.challengeRouter.post('/:chapterId/submit', auth_1.requireAuth, async (re
                 });
                 continue;
             }
-            const isCorrect = options[answer.selectedAnswer]?.isCorrect === true;
+            // Trouver les indices des bonnes réponses
+            const correctIndexes = options
+                .map((opt, idx) => opt.isCorrect ? idx : -1)
+                .filter((idx) => idx !== -1)
+                .sort();
+            // Trier les réponses sélectionnées pour la comparaison
+            const selectedSorted = [...answer.selectedAnswers].sort();
+            // Vérifier si les tableaux sont identiques
+            const isCorrect = correctIndexes.length === selectedSorted.length &&
+                correctIndexes.every((val, idx) => val === selectedSorted[idx]);
             // Préparer les options avec feedback pour les résultats détaillés
             const optionsWithFeedback = options.map((opt, index) => ({
                 text: opt.text,
                 isCorrect: opt.isCorrect,
                 justification: !opt.isCorrect ? opt.justification : undefined,
-                wasSelected: index === answer.selectedAnswer
+                wasSelected: answer.selectedAnswers.includes(index)
             }));
             if (isCorrect) {
                 questionsCorrect++;

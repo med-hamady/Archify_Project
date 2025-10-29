@@ -115,7 +115,7 @@ challengeRouter.post('/:chapterId/start', requireAuth, async (req: any, res) => 
 const submitChallengeSchema = z.object({
   answers: z.array(z.object({
     questionId: z.string(),
-    selectedAnswer: z.number().int().min(0).max(4) // 0-4 pour les options A-E
+    selectedAnswers: z.array(z.number().int().min(0).max(4)) // Tableau de 0-4 pour les options A-E
   })),
   timeSpentSec: z.number().int().min(0).optional()
 });
@@ -173,7 +173,19 @@ challengeRouter.post('/:chapterId/submit', requireAuth, async (req: any, res) =>
 
       // Vérifier la réponse avec le nouveau format JSON
       const options = question.options as any[];
-      if (!Array.isArray(options) || answer.selectedAnswer >= options.length) {
+      if (!Array.isArray(options)) {
+        detailedResults.push({
+          questionId: question.id,
+          correct: false,
+          xpEarned: 0,
+          error: 'Invalid options format'
+        });
+        continue;
+      }
+
+      // Vérifier si les index sont valides
+      const invalidIndexes = answer.selectedAnswers.some(idx => idx >= options.length);
+      if (invalidIndexes) {
         detailedResults.push({
           questionId: question.id,
           correct: false,
@@ -183,14 +195,25 @@ challengeRouter.post('/:chapterId/submit', requireAuth, async (req: any, res) =>
         continue;
       }
 
-      const isCorrect = options[answer.selectedAnswer]?.isCorrect === true;
+      // Trouver les indices des bonnes réponses
+      const correctIndexes = options
+        .map((opt: any, idx: number) => opt.isCorrect ? idx : -1)
+        .filter((idx: number) => idx !== -1)
+        .sort();
+
+      // Trier les réponses sélectionnées pour la comparaison
+      const selectedSorted = [...answer.selectedAnswers].sort();
+
+      // Vérifier si les tableaux sont identiques
+      const isCorrect = correctIndexes.length === selectedSorted.length &&
+        correctIndexes.every((val: number, idx: number) => val === selectedSorted[idx]);
 
       // Préparer les options avec feedback pour les résultats détaillés
       const optionsWithFeedback = options.map((opt: any, index: number) => ({
         text: opt.text,
         isCorrect: opt.isCorrect,
         justification: !opt.isCorrect ? opt.justification : undefined,
-        wasSelected: index === answer.selectedAnswer
+        wasSelected: answer.selectedAnswers.includes(index)
       }));
 
       if (isCorrect) {

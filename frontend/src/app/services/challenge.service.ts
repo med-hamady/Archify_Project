@@ -81,7 +81,7 @@ export class ChallengeService {
    */
   submitChallenge(
     chapterId: string,
-    answers: Array<{ questionId: string; selectedAnswer: number }>
+    answers: Array<{ questionId: string; selectedAnswers: number[] }>
   ): Observable<{ success: boolean; result: ChallengeResult }> {
     return this.http.post<{ success: boolean; result: ChallengeResult }>(
       `${this.baseUrl}/${chapterId}/submit`,
