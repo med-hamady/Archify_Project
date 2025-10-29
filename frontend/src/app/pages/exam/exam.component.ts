@@ -197,16 +197,29 @@ export class ExamComponent implements OnInit {
     if (!this.exam) return;
     this.loading = true;
 
+    console.log('📖 Loading correction for exam:', this.exam.examId);
+
     this.examService.getExamCorrection(this.exam.examId).subscribe({
       next: (res) => {
+        console.log('✅ Correction received:', res);
+        console.log('Correction data:', {
+          scoreOutOf20: res.correction.scoreOutOf20,
+          score: res.correction.score,
+          totalQuestions: res.correction.totalQuestions,
+          chapterBreakdown: res.correction.chapterBreakdown
+        });
         this.correction = res.correction;
         this.currentState = 'correction';
         this.selectedChapterIndex = 0;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading correction:', err);
-        this.error = 'Erreur lors du chargement de la correction';
+        console.error('❌ Error loading correction:', err);
+        console.error('Error details:', {
+          status: err.status,
+          message: err.error?.error?.message || err.message
+        });
+        this.error = err.error?.error?.message || 'Erreur lors du chargement de la correction';
         this.loading = false;
       }
     });

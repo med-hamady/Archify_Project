@@ -463,11 +463,13 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
         }
         // Vérifier si l'examen a des résultats détaillés stockés
         if (!exam.detailedResults) {
+            console.log('⚠️ No detailedResults for exam:', examId);
             return res.status(404).json({
                 error: { code: 'NO_DETAILS', message: 'Aucune correction disponible pour cet examen' }
             });
         }
         const detailedResults = exam.detailedResults;
+        console.log('📊 Found detailedResults:', detailedResults.length, 'questions');
         // Organiser par chapitre
         const chapterMap = new Map();
         for (const result of detailedResults) {
@@ -513,21 +515,28 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
                 totalQuestions: chapter.questions.length
             };
         });
+        const correctionData = {
+            examId: exam.id,
+            subjectName: exam.subject.name,
+            score: exam.questionsCorrect, // Nombre de bonnes réponses
+            scoreOutOf20: exam.score, // Score sur 20
+            totalQuestions: exam.questionsTotal,
+            passed: exam.passed,
+            grade: getGrade(exam.score),
+            questionsCorrect: exam.questionsCorrect,
+            questionsTotal: exam.questionsTotal,
+            completedAt: exam.completedAt,
+            chapterBreakdown: correctionByChapter // Renommé de chapters à chapterBreakdown
+        };
+        console.log('✅ Sending correction:', {
+            scoreOutOf20: correctionData.scoreOutOf20,
+            score: correctionData.score,
+            totalQuestions: correctionData.totalQuestions,
+            chaptersCount: correctionData.chapterBreakdown.length
+        });
         res.json({
             success: true,
-            correction: {
-                examId: exam.id,
-                subjectName: exam.subject.name,
-                score: exam.questionsCorrect, // Nombre de bonnes réponses
-                scoreOutOf20: exam.score, // Score sur 20
-                totalQuestions: exam.questionsTotal,
-                passed: exam.passed,
-                grade: getGrade(exam.score),
-                questionsCorrect: exam.questionsCorrect,
-                questionsTotal: exam.questionsTotal,
-                completedAt: exam.completedAt,
-                chapterBreakdown: correctionByChapter // Renommé de chapters à chapterBreakdown
-            }
+            correction: correctionData
         });
     }
     catch (err) {
