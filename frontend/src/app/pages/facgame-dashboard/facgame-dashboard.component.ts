@@ -26,13 +26,13 @@ export class FacgameDashboardComponent implements OnInit {
 
   // Niveau config
   levelConfig = {
-    BOIS: { color: '#8B4513', image: '/images/badges/bois.jpg', label: 'Bois' },
-    BRONZE: { color: '#CD7F32', image: '/images/badges/bronze.jpg', label: 'Bronze' },
-    ARGENT: { color: '#C0C0C0', image: '/images/badges/argent.jpg', label: 'Argent' },
-    OR: { color: '#FFD700', image: '/images/badges/or.jpg', label: 'Or' },
-    PLATINUM: { color: '#E5E4E2', image: '/images/badges/platine.jpg', label: 'Platinum' },
-    DIAMANT: { color: '#9C27B0', image: '/images/badges/diamant.jpg', label: 'Diamant' },
-    MONDIAL: { color: '#FF6B6B', image: '/images/badges/mondial.jpg', label: 'Mondial' }
+    BOIS: { color: '#8B4513', image: '/images/badges/bois.png', label: 'Bois' },
+    BRONZE: { color: '#CD7F32', image: '/images/badges/bronze.png', label: 'Bronze' },
+    ARGENT: { color: '#C0C0C0', image: '/images/badges/argent.png', label: 'Argent' },
+    OR: { color: '#FFD700', image: '/images/badges/or.png', label: 'Or' },
+    PLATINUM: { color: '#E5E4E2', image: '/images/badges/platine.png', label: 'Platinum' },
+    DIAMANT: { color: '#9C27B0', image: '/images/badges/diamant.png', label: 'Diamant' },
+    MONDIAL: { color: '#FF6B6B', image: '/images/badges/mondial.png', label: 'Mondial' }
   };
 
   // Seuils XP

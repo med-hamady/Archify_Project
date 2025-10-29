@@ -109,8 +109,6 @@
   border-radius: 50%;
   background: white;
   padding: 3px;
-  /* Remove black background by making it transparent */
-  mix-blend-mode: multiply;
   /* Cinematic shadow */
   filter:
     drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3))

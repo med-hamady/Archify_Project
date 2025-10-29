@@ -185,8 +185,6 @@
   width: 180px;
   height: 180px;
   object-fit: contain;
-  /* Remove black background by making it transparent */
-  mix-blend-mode: multiply;
   /* Cinematic shadow for depth */
   filter:
     drop-shadow(0 10px 25px rgba(0, 0, 0, 0.4))
