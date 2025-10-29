@@ -148,6 +148,68 @@
   line-height: 1.5;
 }
 
+/* Timer Selection */
+.timer-selection {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 2px solid #2196f3;
+  text-align: center;
+}
+
+.timer-selection h3 {
+  margin: 0 0 0.5rem 0;
+  color: #1565c0;
+  font-size: 1.3rem;
+}
+
+.timer-description {
+  color: #1976d2;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.time-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.time-option {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #2196f3;
+  background: white;
+  color: #1976d2;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-option:hover {
+  background: #e3f2fd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.time-option.selected {
+  background: #2196f3;
+  color: white;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+  transform: scale(1.05);
+}
+
+.timer-hint {
+  color: #1565c0;
+  font-size: 0.85rem;
+  margin: 0;
+  font-style: italic;
+}
+
 .btn-start {
   width: 100%;
   margin-bottom: 1rem;
@@ -203,6 +265,54 @@
 .answered-counter {
   font-size: 1rem;
   color: #ffc107;
+}
+
+/* Timer Display */
+.timer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.timer-icon {
+  font-size: 1.5rem;
+}
+
+.timer-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+.timer-display.warning {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+  animation: pulse-warning 1s ease-in-out infinite;
+}
+
+.timer-display.critical {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.5);
+  animation: pulse-critical 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes pulse-critical {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(244, 67, 54, 0.5); }
+  50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(244, 67, 54, 0.7); }
 }
 
 .mini-progress {

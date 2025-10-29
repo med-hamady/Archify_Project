@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ChallengeService, ChallengeStart, ChallengeResult } from '../../services/challenge.service';
@@ -10,7 +10,7 @@ import { ChallengeService, ChallengeStart, ChallengeResult } from '../../service
   templateUrl: './challenge.component.html',
   styleUrls: ['./challenge.component.css']
 })
-export class ChallengeComponent implements OnInit {
+export class ChallengeComponent implements OnInit, OnDestroy {
   private challengeService = inject(ChallengeService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -26,6 +26,13 @@ export class ChallengeComponent implements OnInit {
   // Playing state
   currentQuestionIndex = 0;
   answers: Array<{ questionId: string; selectedAnswers: number[] }> = [];
+
+  // Timer state
+  selectedMinutes: number = 10; // Default 10 minutes
+  timeOptions: number[] = [5, 10, 15, 20, 30, 45, 60]; // Available time options
+  timeRemainingSeconds: number = 0;
+  timerInterval: any = null;
+  timerDisplay: string = '';
 
   // Results state
   result: ChallengeResult | null = null;
@@ -73,6 +80,54 @@ export class ChallengeComponent implements OnInit {
   startPlaying() {
     this.currentState = 'playing';
     this.currentQuestionIndex = 0;
+    this.startTimer();
+  }
+
+  startTimer() {
+    // Initialize timer with selected minutes
+    this.timeRemainingSeconds = this.selectedMinutes * 60;
+    this.updateTimerDisplay();
+
+    // Clear any existing interval
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
+    // Start countdown
+    this.timerInterval = setInterval(() => {
+      this.timeRemainingSeconds--;
+      this.updateTimerDisplay();
+
+      if (this.timeRemainingSeconds <= 0) {
+        this.stopTimer();
+        this.autoSubmitChallenge();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  updateTimerDisplay() {
+    const minutes = Math.floor(this.timeRemainingSeconds / 60);
+    const seconds = this.timeRemainingSeconds % 60;
+    this.timerDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  autoSubmitChallenge() {
+    // Auto-submit when timer reaches zero
+    if (this.currentState === 'playing') {
+      this.submitChallenge();
+    }
+  }
+
+  ngOnDestroy() {
+    // Clean up timer when component is destroyed
+    this.stopTimer();
   }
 
   toggleAnswer(answerIndex: number) {
@@ -117,6 +172,9 @@ export class ChallengeComponent implements OnInit {
 
   submitChallenge() {
     if (!this.challenge || !this.canSubmit()) return;
+
+    // Stop the timer
+    this.stopTimer();
 
     this.loading = true;
     const formattedAnswers = this.answers.map(a => ({

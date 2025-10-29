@@ -51,6 +51,22 @@
         </ul>
       </div>
 
+      <!-- Timer Selection -->
+      <div class="timer-selection">
+        <h3>⏱️ Temps limité</h3>
+        <p class="timer-description">Choisissez votre limite de temps</p>
+        <div class="time-options">
+          <button
+            *ngFor="let time of timeOptions"
+            class="time-option"
+            [class.selected]="selectedMinutes === time"
+            (click)="selectedMinutes = time">
+            {{ time }} min
+          </button>
+        </div>
+        <p class="timer-hint">Le challenge sera automatiquement soumis quand le temps est écoulé</p>
+      </div>
+
       <button class="btn btn-start" (click)="startPlaying()">
         Commencer le Challenge
         <span class="arrow">→</span>
@@ -67,6 +83,10 @@
       <div class="progress-info">
         <span class="question-counter">Question {{ currentQuestionIndex + 1 }} / {{ challenge.totalQuestions }}</span>
         <span class="answered-counter">Répondu: {{ getAnsweredCount() }} / {{ challenge.totalQuestions }}</span>
+      </div>
+      <div class="timer-display" [class.warning]="timeRemainingSeconds <= 60" [class.critical]="timeRemainingSeconds <= 30">
+        <span class="timer-icon">⏱️</span>
+        <span class="timer-text">{{ timerDisplay }}</span>
       </div>
       <div class="mini-progress">
         <div class="mini-progress-fill" [style.width.%]="(getAnsweredCount() / challenge.totalQuestions * 100)"></div>
