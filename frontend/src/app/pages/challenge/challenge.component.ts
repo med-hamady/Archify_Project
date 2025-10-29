@@ -173,7 +173,7 @@ export class ChallengeComponent implements OnInit {
 
   getQuestionResult(questionId: string) {
     if (!this.result) return null;
-    return this.result.results.find(r => r.questionId === questionId);
+    return this.result.detailedResults.find(r => r.questionId === questionId);
   }
 
   restartChallenge() {

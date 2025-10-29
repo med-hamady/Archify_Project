@@ -208,12 +208,22 @@
 
             <div class="result-question">{{ question.questionText }}</div>
 
-            <div class="result-answer" *ngIf="!getQuestionResult(question.id)?.correct">
+            <div class="result-answer" *ngIf="!getQuestionResult(question.id)?.correct && getQuestionResult(question.id)?.options">
               <span class="answer-label">Bonne réponse:</span>
-              <span class="answer-text">
-                {{ ['A', 'B', 'C', 'D'][getQuestionResult(question.id)!.correctAnswer] }} -
-                {{ question.options[getQuestionResult(question.id)!.correctAnswer].text }}
-              </span>
+              <div class="options-feedback">
+                <div *ngFor="let option of getQuestionResult(question.id)?.options; let idx = index"
+                     class="option-feedback"
+                     [class.correct-option]="option.isCorrect"
+                     [class.selected-option]="option.wasSelected">
+                  <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E'][idx] }}</span>
+                  <span class="option-text">{{ option.text }}</span>
+                  <span *ngIf="option.isCorrect" class="correct-indicator">✓</span>
+                  <span *ngIf="option.wasSelected && !option.isCorrect" class="wrong-indicator">✗</span>
+                  <p *ngIf="!option.isCorrect && option.justification" class="justification">
+                    {{ option.justification }}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div class="result-explanation" *ngIf="getQuestionResult(question.id)?.explanation">

@@ -20,27 +20,34 @@ export interface ChallengeStart {
 
 export interface ChallengeResult {
   score: number;
-  totalQuestions: number;
-  correctAnswers: number;
+  questionsTotal: number;
+  questionsCorrect: number;
   xpEarned: number;
+  xpBonus: number;
   totalXP: number;
-  isPerfect: boolean;
-  perfectBonus?: number;
-  results: Array<{
+  levelInfo: any;
+  detailedResults: Array<{
     questionId: string;
+    questionText: string;
     correct: boolean;
-    correctAnswer: number;
+    xpEarned: number;
+    options: Array<{
+      text: string;
+      isCorrect: boolean;
+      justification?: string;
+      wasSelected: boolean;
+    }>;
     explanation?: string;
   }>;
   levelUp?: {
     oldLevel: string;
     newLevel: string;
-  };
+  } | null;
   newBadges?: Array<{
     name: string;
     description: string;
     iconUrl?: string;
-  }>;
+  }> | null;
 }
 
 export interface ChallengeHistoryEntry {
