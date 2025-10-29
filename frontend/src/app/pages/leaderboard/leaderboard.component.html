@@ -84,7 +84,9 @@
           <div class="podium-level" [style.background]="getLevelInfo(entries[1].level).color">
             <img [src]="getLevelInfo(entries[1].level).image" [alt]="getLevelInfo(entries[1].level).label" class="podium-level-img">
           </div>
-          <div class="podium-name">{{ entries[1].name }}</div>
+          <div class="podium-name">
+            <a [routerLink]="['/profile', entries[1].userId]" class="profile-link">{{ entries[1].name }}</a>
+          </div>
           <div class="podium-xp">{{ entries[1].xpTotal }} XP</div>
         </div>
 
@@ -98,7 +100,9 @@
           <div class="podium-level" [style.background]="getLevelInfo(entries[0].level).color">
             <img [src]="getLevelInfo(entries[0].level).image" [alt]="getLevelInfo(entries[0].level).label" class="podium-level-img">
           </div>
-          <div class="podium-name">{{ entries[0].name }}</div>
+          <div class="podium-name">
+            <a [routerLink]="['/profile', entries[0].userId]" class="profile-link">{{ entries[0].name }}</a>
+          </div>
           <div class="podium-xp">{{ entries[0].xpTotal }} XP</div>
         </div>
 
@@ -111,7 +115,9 @@
           <div class="podium-level" [style.background]="getLevelInfo(entries[2].level).color">
             <img [src]="getLevelInfo(entries[2].level).image" [alt]="getLevelInfo(entries[2].level).label" class="podium-level-img">
           </div>
-          <div class="podium-name">{{ entries[2].name }}</div>
+          <div class="podium-name">
+            <a [routerLink]="['/profile', entries[2].userId]" class="profile-link">{{ entries[2].name }}</a>
+          </div>
           <div class="podium-xp">{{ entries[2].xpTotal }} XP</div>
         </div>
 
@@ -136,7 +142,7 @@
 
           <div class="user-info">
             <div class="user-name">
-              {{ entry.name }}
+              <a [routerLink]="['/profile', entry.userId]" class="profile-link">{{ entry.name }}</a>
               <span class="you-badge" *ngIf="isCurrentUser(entry)">Vous</span>
             </div>
             <div class="user-semester">{{ entry.semester }}</div>
@@ -184,7 +190,7 @@
 
           <div class="user-info">
             <div class="user-name">
-              {{ entry.name }}
+              <a [routerLink]="['/profile', entry.userId]" class="profile-link">{{ entry.name }}</a>
               <span class="you-badge" *ngIf="isCurrentUser(entry)">Vous</span>
             </div>
             <div class="user-semester">{{ entry.semester }}</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import {
   ProfileService,
   UserProfile,
@@ -18,6 +18,7 @@ import {
 })
 export class ProfileComponent implements OnInit {
   private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
@@ -27,6 +28,10 @@ export class ProfileComponent implements OnInit {
   loading = true;
   error: string | null = null;
   activeTab: 'badges' | 'activity' | 'stats' = 'badges';
+
+  // Pour savoir si on affiche notre profil ou celui d'un autre
+  isOwnProfile: boolean = true;
+  targetUserId: string | null = null;
 
   levelConfig = {
     BOIS: { color: '#8B4513', image: '/images/badges/bois.png', label: 'Bois' },
@@ -49,20 +54,30 @@ export class ProfileComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.loadProfile();
+    // Vérifier si on a un paramètre userId dans la route
+    this.route.paramMap.subscribe(params => {
+      this.targetUserId = params.get('userId');
+      this.isOwnProfile = !this.targetUserId; // Si pas d'userId, c'est notre profil
+      this.loadProfile();
+    });
   }
 
   loadProfile() {
     this.loading = true;
     this.error = null;
 
-    this.profileService.getProfile().subscribe({
+    // Choisir le bon service selon qu'on affiche notre profil ou celui d'un autre
+    const profileObservable = this.isOwnProfile
+      ? this.profileService.getProfile()
+      : this.profileService.getUserProfile(this.targetUserId!);
+
+    profileObservable.subscribe({
       next: (res: any) => {
         // Adapter la structure backend à l'interface frontend
         this.profile = {
           id: res.profile.id,
           name: res.profile.name,
-          email: res.profile.email,
+          email: res.profile.email || undefined, // email peut ne pas être présent pour les profils publics
           semester: res.profile.semester,
           xpTotal: res.profile.gamification.xpTotal,
           level: res.profile.gamification.level.current,
@@ -76,7 +91,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading profile:', err);
-        this.error = 'Erreur lors du chargement du profil';
+        this.error = err.error?.error?.message || 'Erreur lors du chargement du profil';
         this.loading = false;
       }
     });
