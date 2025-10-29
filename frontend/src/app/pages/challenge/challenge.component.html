@@ -122,7 +122,7 @@
           *ngFor="let q of challenge.questions; let i = index"
           class="question-dot"
           [class.current]="i === currentQuestionIndex"
-          [class.answered]="answers[i].selectedAnswer !== null"
+          [class.answered]="answers[i].selectedAnswers.length > 0"
           (click)="goToQuestion(i)">
           {{ i + 1 }}
         </div>
