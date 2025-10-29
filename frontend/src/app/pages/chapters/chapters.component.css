@@ -299,6 +299,16 @@
   font-weight: 700;
 }
 
+.meta-item.challenge.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.meta-item.challenge.clickable:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
 /* Chapter Progress */
 .chapter-progress {
   margin-bottom: 1.5rem;

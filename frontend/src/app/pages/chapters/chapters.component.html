@@ -68,7 +68,12 @@
                 <span class="meta-icon">❓</span>
                 {{ chapter.questionsCount }} questions
               </span>
-              <span class="meta-item challenge" [class.unlocked]="chapter.challengeUnlocked">
+              <span
+                class="meta-item challenge"
+                [class.unlocked]="chapter.challengeUnlocked"
+                [class.clickable]="chapter.challengeUnlocked"
+                (click)="chapter.challengeUnlocked ? navigateToChallenge(chapter.id) : null"
+                [title]="chapter.challengeUnlocked ? 'Cliquez pour lancer le challenge' : 'Terminez le chapitre pour débloquer'">
                 <span class="meta-icon">{{ chapter.challengeUnlocked ? '🎯' : '🔒' }}</span>
                 Challenge
               </span>
