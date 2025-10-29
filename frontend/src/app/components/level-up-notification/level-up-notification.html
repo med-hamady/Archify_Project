@@ -1,0 +1,39 @@
+<div class="level-up-overlay" *ngIf="show" @fadeInOut (click)="close()">
+  <div class="level-up-card" (click)="$event.stopPropagation()">
+    <!-- Header with decorative elements -->
+    <div class="level-up-header">
+      <div class="decorative-icon left">🏆</div>
+      <h1 class="level-up-title">LEVEL UP!</h1>
+      <div class="decorative-icon right">🏆</div>
+    </div>
+
+    <!-- Badge container with decorative frame -->
+    <div class="badge-container">
+      <div class="badge-frame">
+        <!-- Decorative snakes -->
+        <div class="snake left-snake">🐍</div>
+        <div class="snake right-snake">🐍</div>
+
+        <!-- Badge image -->
+        <div class="badge-wrapper">
+          <img [src]="getBadgeImage()" [alt]="getLevelName()" class="badge-image" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Level name -->
+    <div class="level-name">{{ getLevelName() }}</div>
+
+    <!-- Congratulations message -->
+    <div class="congrats-message">
+      Bien joué {{ userName }},<br>
+      {{ getCongratsMessage() }}
+    </div>
+
+    <!-- Decorative star -->
+    <div class="decorative-star">✨</div>
+
+    <!-- Close button -->
+    <button class="close-btn" (click)="close()">&times;</button>
+  </div>
+</div>

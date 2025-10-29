@@ -2,16 +2,19 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ExamService, ExamStart, ExamResult, ExamCorrection } from '../../services/exam.service';
+import { LevelUpNotification } from '../../components/level-up-notification/level-up-notification';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-exam',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, LevelUpNotification],
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.css']
 })
 export class ExamComponent implements OnInit {
   private examService = inject(ExamService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -33,12 +36,22 @@ export class ExamComponent implements OnInit {
   showLevelUpAnimation = false;
   showBadgeAnimation = false;
 
+  // Level up notification state
+  showLevelUpNotification = false;
+  levelUpNewLevel: string = '';
+  userName: string = '';
+
   // Correction state
   correction: ExamCorrection | null = null;
   selectedChapterIndex = 0;
 
   ngOnInit() {
     this.subjectId = this.route.snapshot.paramMap.get('subjectId') || '';
+
+    // Get user name
+    const user = this.authService.getCurrentUser();
+    this.userName = user?.name || 'Utilisateur';
+
     if (this.subjectId) {
       this.loadExam();
     } else {
@@ -132,6 +145,10 @@ export class ExamComponent implements OnInit {
         if (res.result.levelUp) {
           this.showLevelUpAnimation = true;
           setTimeout(() => this.showLevelUpAnimation = false, 3000);
+
+          // Show beautiful level-up notification
+          this.levelUpNewLevel = res.result.levelUp.newLevel;
+          this.showLevelUpNotification = true;
         }
         if (res.result.newBadges && res.result.newBadges.length > 0) {
           this.showBadgeAnimation = true;

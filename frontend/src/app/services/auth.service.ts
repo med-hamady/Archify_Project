@@ -369,4 +369,9 @@ export class AuthService {
     const user = this.user();
     return user?.role || '';
   }
+
+  // Get current user
+  getCurrentUser(): User | null {
+    return this.user();
+  }
 }
