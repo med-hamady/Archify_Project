@@ -16,6 +16,40 @@ import { getUserSubjectsProgress, getSubjectProgress } from '../services/progres
 const prisma = new PrismaClient();
 export const subjectsRouter = Router();
 
+// Helper function to check if exam is unlocked (update4: 50% completion)
+async function isExamUnlocked(userId: string, subjectId: string): Promise<boolean> {
+  // Count total questions in subject
+  const totalQuestions = await prisma.question.count({
+    where: {
+      chapter: {
+        subjectId
+      }
+    }
+  });
+
+  if (totalQuestions === 0) return false;
+
+  // Count completed questions (answered correctly at least once)
+  const completedQuestions = await prisma.quizAttempt.findMany({
+    where: {
+      userId,
+      question: {
+        chapter: {
+          subjectId
+        }
+      },
+      isCorrect: true
+    },
+    select: {
+      questionId: true
+    },
+    distinct: ['questionId']
+  });
+
+  const progressPercent = Math.round((completedQuestions.length / totalQuestions) * 100);
+  return progressPercent >= 50;
+}
+
 // ============================================
 // VALIDATION SCHEMAS
 // ============================================
@@ -85,9 +119,10 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
     // Récupérer la progression de l'utilisateur
     const progressData = await getUserSubjectsProgress(userId);
 
-    // Mapper les données
-    const subjectsWithProgress = subjects.map(subject => {
+    // Mapper les données avec calcul dynamique de examUnlocked
+    const subjectsWithProgress = await Promise.all(subjects.map(async subject => {
       const progress = progressData.find(p => p.subjectId === subject.id);
+      const examUnlocked = await isExamUnlocked(userId, subject.id);
 
       return {
         id: subject.id,
@@ -98,10 +133,10 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
         totalQuestions: subject.totalQCM,
         totalChapters: subject.chapters.length,
         progressPercent: progress ? progress.progressPercent : 0,
-        examUnlocked: progress ? progress.challengeUnlockedGlobal : false,
+        examUnlocked,
         chapters: subject.chapters
       };
-    });
+    }));
 
     return res.json({ subjects: subjectsWithProgress });
 
@@ -172,6 +207,9 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
       };
     });
 
+    // Calculer dynamiquement si l'examen est débloqué (update4)
+    const examUnlocked = await isExamUnlocked(userId, subject.id);
+
     return res.json({
       success: true,
       subject: {
@@ -183,7 +221,7 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
         totalQuestions: subject.totalQCM,
         totalChapters: subject.chapters.length,
         progressPercent: subjectProgress ? subjectProgress.progressPercent : 0,
-        examUnlocked: subjectProgress ? subjectProgress.challengeUnlockedGlobal : false,
+        examUnlocked,
         chapters: chaptersWithProgress
       }
     });
