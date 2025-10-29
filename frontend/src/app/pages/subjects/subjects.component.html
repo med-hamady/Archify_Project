@@ -64,7 +64,7 @@
       </div>
 
       <!-- Unlock Badges -->
-      <div class="unlock-badges">
+      <div class="unlock-badges" (click)="$event.stopPropagation()">
         <div
           class="unlock-badge exam"
           [class.unlocked]="subject.examUnlocked"
