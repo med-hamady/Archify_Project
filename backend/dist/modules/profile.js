@@ -106,6 +106,7 @@ exports.profileRouter.get('/:userId', auth_1.requireAuth, async (req, res) => {
 exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
     try {
         const userId = req.userId;
+        console.log('🔍 [Profile /me] Fetching profile for userId:', userId);
         const user = await prisma.user.findUnique({
             where: { id: userId },
             select: {
@@ -124,10 +125,12 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
             }
         });
         if (!user) {
+            console.error('❌ [Profile /me] User not found for userId:', userId);
             return res.status(404).json({
                 error: { code: 'USER_NOT_FOUND', message: 'User not found' }
             });
         }
+        console.log('✅ [Profile /me] User found:', user.email);
         // Niveau et progression
         const levelInfo = (0, level_service_1.getLevelInfo)(user.xpTotal);
         // Badges
