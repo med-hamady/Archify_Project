@@ -44,7 +44,11 @@
           <span class="stat-icon">❓</span>
           <span class="stat-text">{{ subject.totalQuestions }} Questions</span>
         </div>
-        <div class="stat" [class.unlocked]="subject.examUnlocked">
+        <div
+          class="stat exam-badge"
+          [class.unlocked]="subject.examUnlocked"
+          [class.clickable]="subject.examUnlocked"
+          (click)="subject.examUnlocked ? navigateToExam(subject.subjectId) : null">
           <span class="stat-icon">{{ subject.examUnlocked ? '✅' : '🔒' }}</span>
           <span class="stat-text">Mode Examen</span>
         </div>

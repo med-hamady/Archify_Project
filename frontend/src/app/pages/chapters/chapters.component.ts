@@ -57,6 +57,11 @@ export class ChaptersComponent implements OnInit {
     this.router.navigate(['/challenge', chapterId]);
   }
 
+  navigateToExam(subjectId: string) {
+    console.log('🎯 Navigating to exam for subject:', subjectId);
+    this.router.navigate(['/exam', subjectId]);
+  }
+
   navigateToSubjects() {
     this.router.navigate(['/subjects']);
   }

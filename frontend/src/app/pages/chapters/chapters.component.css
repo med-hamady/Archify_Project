@@ -163,6 +163,7 @@
   background: #f8f9fa;
   border-radius: 10px;
   border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
 }
 
 .stat.unlocked {
@@ -170,8 +171,84 @@
   border-color: #28a745;
 }
 
+/* Badge Mode Examen - Design premium doré */
+.stat.exam-badge.unlocked {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+  border: 3px solid #FF8C00;
+  padding: 1rem 1.25rem;
+  box-shadow:
+    0 8px 24px rgba(255, 140, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de brillance animé */
+.stat.exam-badge.unlocked::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Badge cliquable */
+.stat.clickable {
+  cursor: pointer;
+}
+
+.stat.exam-badge.clickable:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 12px 32px rgba(255, 140, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.stat.exam-badge.clickable:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Empêcher les enfants d'intercepter les clics */
+.stat.clickable .stat-icon,
+.stat.clickable .stat-text {
+  pointer-events: none;
+}
+
 .stat-icon {
   font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.stat.exam-badge.unlocked .stat-icon {
+  font-size: 1.8rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .stat-text {
@@ -182,6 +259,14 @@
 
 .stat.unlocked .stat-text {
   color: #155724;
+}
+
+.stat.exam-badge.unlocked .stat-text {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 /* Chapters List */
