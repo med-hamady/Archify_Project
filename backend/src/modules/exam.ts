@@ -16,36 +16,64 @@ export const examRouter = express.Router();
 
 /**
  * Vérifie si l'utilisateur peut accéder au mode Examen
- * Conditions: 80% progression dans la matière ET niveau ARGENT minimum
+ * Conditions: 50% des QCM de la matière complétés (update4)
  */
-async function canAccessExamMode(userId: string, subjectId: string): Promise<boolean> {
+async function canAccessExamMode(userId: string, subjectId: string): Promise<{
+  canAccess: boolean;
+  progressPercent: number;
+  totalQuestions: number;
+  completedQuestions: number;
+}> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { level: true }
+    select: { id: true }
   });
 
-  if (!user) return false;
-
-  // Vérifier niveau ARGENT minimum
-  const LEVELS_ORDER: GameLevel[] = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
-  const userLevelIndex = LEVELS_ORDER.indexOf(user.level);
-  const argentIndex = LEVELS_ORDER.indexOf('ARGENT');
-
-  if (userLevelIndex < argentIndex) {
-    return false;
+  if (!user) {
+    return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
   }
 
-  // Vérifier progression 80% dans la matière
-  const progress = await prisma.subjectProgress.findUnique({
+  // Compter le nombre total de questions dans la matière
+  const totalQuestions = await prisma.question.count({
     where: {
-      userId_subjectId: {
-        userId,
+      chapter: {
         subjectId
       }
     }
   });
 
-  return progress ? progress.progressPercent >= 80 : false;
+  if (totalQuestions === 0) {
+    return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
+  }
+
+  // Compter combien de questions ont été répondues correctement au moins une fois en mode révision
+  const correctAttempts = await prisma.quizAttempt.findMany({
+    where: {
+      userId,
+      question: {
+        chapter: {
+          subjectId
+        }
+      },
+      isCorrect: true
+    },
+    select: {
+      questionId: true
+    },
+    distinct: ['questionId']
+  });
+
+  const completedQuestions = correctAttempts.length;
+
+  const progressPercent = Math.round((completedQuestions / totalQuestions) * 100);
+
+  // Nécessite 50% de complétion
+  return {
+    canAccess: progressPercent >= 50,
+    progressPercent,
+    totalQuestions,
+    completedQuestions
+  };
 }
 
 function getGrade(score: number): string {
@@ -64,11 +92,13 @@ function getGrade(score: number): string {
 /**
  * POST /api/exam/:subjectId/start
  * Démarre un examen pour une matière
- * Conditions: 80% progression dans la matière ET niveau ARGENT minimum
+ * Conditions: 50% des QCM complétés (update4)
+ * Body: { questionCount?: number, duration?: number } - nombre de questions (10/20/30/40) et durée en minutes (15-90)
  */
 examRouter.post('/:subjectId/start', requireAuth, async (req: any, res) => {
   try {
     const { subjectId } = req.params;
+    const { questionCount, duration } = req.body; // Options d'examen
     const userId = req.userId;
 
     // Vérifier que la matière existe
@@ -107,63 +137,104 @@ examRouter.post('/:subjectId/start', requireAuth, async (req: any, res) => {
     }
 
     // Vérifier les conditions d'accès à l'Examen
-    const canAccess = await canAccessExamMode(userId, subjectId);
+    const accessCheck = await canAccessExamMode(userId, subjectId);
 
-    if (!canAccess) {
+    if (!accessCheck.canAccess) {
       return res.status(403).json({
         error: {
           code: 'ACCESS_DENIED',
-          message: 'Examen non débloqué. Requis: 80% de progression dans la matière ET niveau ARGENT minimum'
+          message: `Examen non accessible. Vous devez compléter 50% des QCM de la matière en mode Révision (actuellement ${accessCheck.progressPercent}% - ${accessCheck.completedQuestions}/${accessCheck.totalQuestions} QCM complétés).`
         }
       });
     }
 
-    // Vérifier s'il y a déjà un examen récent (moins de 24h)
-    const recentExam = await prisma.examResult.findFirst({
+    // Pas de cooldown selon update4 (liberté totale d'essai)
+
+    // Récupérer les questions déjà vues en mode Révision (update4)
+    const seenQuestionIds = await prisma.quizAttempt.findMany({
       where: {
         userId,
-        subjectId,
-        completedAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
+        question: {
+          chapter: {
+            subjectId
+          }
+        },
+        isCorrect: true // Questions vues et répondues correctement
+      },
+      select: {
+        questionId: true
+      },
+      distinct: ['questionId']
     });
 
-    if (recentExam) {
+    const seenIds = seenQuestionIds.map((sq: any) => sq.questionId);
+
+    if (seenIds.length === 0) {
       return res.status(400).json({
         error: {
-          code: 'EXAM_COOLDOWN',
-          message: 'Veuillez attendre 24h avant de refaire cet examen'
+          code: 'NO_SEEN_QUESTIONS',
+          message: 'Vous devez d\'abord répondre correctement à des questions en mode Révision avant de passer l\'examen.'
         }
       });
     }
 
-    // Préparer toutes les questions avec options sanitisées
-    const allQuestions = subject.chapters.flatMap((chapter: any) =>
-      chapter.questions.map((q: any) => {
-        const options = q.options as any[];
-        return {
-          id: q.id,
-          chapterId: chapter.id,
-          chapterTitle: chapter.title,
-          questionText: q.questionText,
-          options: options.map((opt: any) => ({
-            text: opt.text
-            // Ne pas inclure isCorrect ni justification avant la soumission
-          })),
-          difficulty: q.difficulty
-        };
-      })
+    // Filtrer pour ne garder que les questions déjà vues
+    const seenQuestions = subject.chapters.flatMap((chapter: any) =>
+      chapter.questions
+        .filter((q: any) => seenIds.includes(q.id))
+        .map((q: any) => {
+          const options = q.options as any[];
+          return {
+            id: q.id,
+            chapterId: chapter.id,
+            chapterTitle: chapter.title,
+            questionText: q.questionText,
+            options: options.map((opt: any) => ({
+              text: opt.text
+              // Ne pas inclure isCorrect ni justification avant la soumission
+            })),
+            difficulty: q.difficulty
+          };
+        })
     );
+
+    // Déterminer le nombre de questions pour l'examen
+    const validQuestionCounts = [10, 20, 30, 40];
+    let examQuestionCount = seenQuestions.length; // Par défaut, toutes les questions vues
+
+    if (questionCount && validQuestionCounts.includes(questionCount)) {
+      examQuestionCount = Math.min(questionCount, seenQuestions.length);
+    }
+
+    // Sélection aléatoire des questions
+    const shuffled = [...seenQuestions].sort(() => Math.random() - 0.5);
+    const selectedQuestions = shuffled.slice(0, examQuestionCount);
+
+    // Créer un enregistrement d'examen (sera mis à jour lors de la soumission)
+    const exam = await prisma.examResult.create({
+      data: {
+        userId,
+        subjectId,
+        score: 0, // Sera mis à jour lors de la soumission
+        passed: false,
+        questionsCorrect: 0,
+        questionsTotal: selectedQuestions.length,
+        timeSpentSec: 0, // Sera mis à jour lors de la soumission
+        completedAt: new Date()
+      }
+    });
 
     res.status(200).json({
       success: true,
       exam: {
+        examId: exam.id,
         subjectId: subject.id,
         subjectName: subject.title,
-        totalQuestions,
+        totalAvailableQuestions: seenQuestions.length,
+        totalQuestions: selectedQuestions.length,
+        duration: duration || 90, // Durée en minutes (par défaut 90 min)
         totalChapters: subject.chapters.length,
-        questions: allQuestions
+        questions: selectedQuestions
       }
     });
 
@@ -272,16 +343,11 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
       if (isCorrect) {
         questionsCorrect++;
 
-        // XP avec bonus Examen (×2)
-        const baseXP = BASE_XP[question.difficulty as QuestionDifficulty];
-        const examXP = baseXP * 2;
-        totalXPEarned += examXP;
-
         detailedResults.push({
           questionId: question.id,
           questionText: question.questionText,
           correct: true,
-          xpEarned: examXP,
+          xpEarned: 4, // 4 XP par bonne réponse (update4)
           difficulty: question.difficulty,
           options: optionsWithFeedback,
           explanation: question.explanation
@@ -299,7 +365,10 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
       }
     }
 
-    const totalQuestions = questionsMap.size;
+    // XP brute = 4 × (nombre de bonnes réponses) (update4)
+    totalXPEarned = questionsCorrect * 4;
+
+    const totalQuestions = answers.length; // Nombre de questions dans cet examen spécifique
     const scorePercent = (questionsCorrect / totalQuestions) * 100;
     const scoreSur20 = (scorePercent / 100) * 20;
     const passed = scoreSur20 >= 10;

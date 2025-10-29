@@ -16,18 +16,56 @@ export const challengeRouter = express.Router();
 
 /**
  * Vérifie si l'utilisateur peut accéder au mode Challenge
- * Conditions: Toujours accessible (0% progression)
+ * Conditions: 100% des QCM du chapitre complétés (update4)
  */
-async function canAccessChallengeMode(userId: string, chapterId: string): Promise<boolean> {
+async function canAccessChallengeMode(userId: string, chapterId: string): Promise<{
+  canAccess: boolean;
+  progressPercent: number;
+  totalQuestions: number;
+  completedQuestions: number;
+}> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { level: true }
+    select: { id: true }
   });
 
-  if (!user) return false;
+  if (!user) {
+    return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
+  }
 
-  // Challenge toujours accessible
-  return true;
+  // Compter le nombre total de questions dans le chapitre
+  const totalQuestions = await prisma.question.count({
+    where: { chapterId }
+  });
+
+  if (totalQuestions === 0) {
+    return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
+  }
+
+  // Compter combien de questions ont été répondues correctement au moins une fois en mode révision
+  const correctAttempts = await prisma.quizAttempt.findMany({
+    where: {
+      userId,
+      question: { chapterId },
+      isCorrect: true
+    },
+    select: {
+      questionId: true
+    },
+    distinct: ['questionId']
+  });
+
+  const completedQuestions = correctAttempts.length;
+
+  const progressPercent = Math.round((completedQuestions / totalQuestions) * 100);
+
+  // Nécessite 100% de complétion
+  return {
+    canAccess: progressPercent >= 100,
+    progressPercent,
+    totalQuestions,
+    completedQuestions
+  };
 }
 
 // ============================================
@@ -37,11 +75,13 @@ async function canAccessChallengeMode(userId: string, chapterId: string): Promis
 /**
  * POST /api/challenge/:chapterId/start
  * Démarre un challenge pour un chapitre
- * Conditions: 50% progression dans le chapitre OU niveau OR minimum
+ * Conditions: 100% des QCM complétés (update4)
+ * Body: { questionCount?: number } - nombre de questions souhaitées (optionnel, par défaut toutes)
  */
 challengeRouter.post('/:chapterId/start', requireAuth, async (req: any, res) => {
   try {
     const { chapterId } = req.params;
+    const { questionCount } = req.body; // Nombre de questions souhaitées
     const userId = req.userId;
 
     // Vérifier que le chapitre existe
@@ -62,21 +102,30 @@ challengeRouter.post('/:chapterId/start', requireAuth, async (req: any, res) => 
     }
 
     // Vérifier les conditions d'accès au Challenge
-    const canAccess = await canAccessChallengeMode(userId, chapterId);
+    const accessCheck = await canAccessChallengeMode(userId, chapterId);
 
-    if (!canAccess) {
+    if (!accessCheck.canAccess) {
       return res.status(403).json({
         error: {
           code: 'ACCESS_DENIED',
-          message: 'Challenge non accessible'
+          message: `Challenge non accessible. Vous devez compléter 100% des QCM du chapitre en mode Révision (actuellement ${accessCheck.progressPercent}% - ${accessCheck.completedQuestions}/${accessCheck.totalQuestions} QCM complétés).`
         }
       });
     }
 
     // Pas de cooldown - on peut refaire le challenge quand on veut
 
+    // Sélectionner les questions (aléatoire si questionCount spécifié)
+    let selectedQuestions = chapter.questions;
+
+    if (questionCount && questionCount > 0 && questionCount < chapter.questions.length) {
+      // Tirage aléatoire sans doublons
+      const shuffled = [...chapter.questions].sort(() => Math.random() - 0.5);
+      selectedQuestions = shuffled.slice(0, questionCount);
+    }
+
     // Préparer les questions avec options sanitisées (sans révéler les réponses)
-    const sanitizedQuestions = chapter.questions.map((q: any) => {
+    const sanitizedQuestions = selectedQuestions.map((q: any) => {
       const options = q.options as any[];
       return {
         id: q.id,
@@ -95,7 +144,8 @@ challengeRouter.post('/:chapterId/start', requireAuth, async (req: any, res) => 
         chapterId: chapter.id,
         chapterTitle: chapter.title,
         subjectName: chapter.subject.title,
-        totalQuestions: chapter.questions.length,
+        totalQuestionsInChapter: chapter.questions.length,
+        totalQuestions: selectedQuestions.length,
         questions: sanitizedQuestions
       }
     });
