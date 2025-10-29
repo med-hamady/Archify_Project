@@ -49,13 +49,9 @@ export class ChallengeComponent implements OnInit {
 
     this.challengeService.startChallenge(this.chapterId).subscribe({
       next: (res) => {
-        if (res.challenge.canStart) {
-          this.challenge = res.challenge;
-          this.initializeAnswers();
-          this.currentState = 'start';
-        } else {
-          this.error = res.challenge.reason || 'Vous ne pouvez pas démarrer ce challenge';
-        }
+        this.challenge = res.challenge;
+        this.initializeAnswers();
+        this.currentState = 'start';
         this.loading = false;
       },
       error: (err) => {
@@ -114,7 +110,7 @@ export class ChallengeComponent implements OnInit {
       selectedAnswer: a.selectedAnswer as number
     }));
 
-    this.challengeService.submitChallenge(this.challenge.challengeId, formattedAnswers).subscribe({
+    this.challengeService.submitChallenge(this.chapterId, formattedAnswers).subscribe({
       next: (res) => {
         this.result = res.result;
         this.currentState = 'results';

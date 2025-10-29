@@ -93,7 +93,7 @@
           [class.selected]="getCurrentAnswer().selectedAnswer === i"
           (click)="selectAnswer(i)">
           <div class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</div>
-          <div class="option-text">{{ option }}</div>
+          <div class="option-text">{{ option.text }}</div>
         </div>
       </div>
     </div>
@@ -212,7 +212,7 @@
               <span class="answer-label">Bonne réponse:</span>
               <span class="answer-text">
                 {{ ['A', 'B', 'C', 'D'][getQuestionResult(question.id)!.correctAnswer] }} -
-                {{ question.options[getQuestionResult(question.id)!.correctAnswer] }}
+                {{ question.options[getQuestionResult(question.id)!.correctAnswer].text }}
               </span>
             </div>
 

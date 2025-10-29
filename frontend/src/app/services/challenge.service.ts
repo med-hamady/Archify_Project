@@ -6,18 +6,16 @@ import { environment } from '../../environments/environment';
 export interface ChallengeQuestion {
   id: string;
   questionText: string;
-  options: string[];
+  options: Array<{ text: string }>;
   difficulty: 'FACILE' | 'MOYEN' | 'DIFFICILE' | 'LEGENDE';
 }
 
 export interface ChallengeStart {
-  challengeId: string;
   chapterId: string;
   chapterTitle: string;
+  subjectName: string;
   questions: ChallengeQuestion[];
   totalQuestions: number;
-  canStart: boolean;
-  reason?: string;
 }
 
 export interface ChallengeResult {
@@ -66,8 +64,8 @@ export class ChallengeService {
    */
   startChallenge(chapterId: string): Observable<{ success: boolean; challenge: ChallengeStart }> {
     return this.http.post<{ success: boolean; challenge: ChallengeStart }>(
-      `${this.baseUrl}/start`,
-      { chapterId }
+      `${this.baseUrl}/${chapterId}/start`,
+      {}
     );
   }
 
@@ -75,12 +73,12 @@ export class ChallengeService {
    * Soumettre les réponses du challenge
    */
   submitChallenge(
-    challengeId: string,
+    chapterId: string,
     answers: Array<{ questionId: string; selectedAnswer: number }>
   ): Observable<{ success: boolean; result: ChallengeResult }> {
     return this.http.post<{ success: boolean; result: ChallengeResult }>(
-      `${this.baseUrl}/submit`,
-      { challengeId, answers }
+      `${this.baseUrl}/${chapterId}/submit`,
+      { answers }
     );
   }
 
