@@ -151,16 +151,16 @@
 
       <!-- Result Header -->
       <div class="result-header">
-        <div class="result-icon" [class.perfect]="result.isPerfect">
-          {{ result.isPerfect ? '🏆' : result.score >= result.totalQuestions * 0.7 ? '⭐' : '📊' }}
+        <div class="result-icon" [class.perfect]="result.score === result.questionsTotal">
+          {{ result.score === result.questionsTotal ? '🏆' : result.score >= result.questionsTotal * 0.7 ? '⭐' : '📊' }}
         </div>
-        <h1>{{ result.isPerfect ? 'Score Parfait!' : 'Challenge Terminé!' }}</h1>
+        <h1>{{ result.score === result.questionsTotal ? 'Score Parfait!' : 'Challenge Terminé!' }}</h1>
         <div class="score-display">
           <span class="score">{{ result.score }}</span>
           <span class="separator">/</span>
-          <span class="total">{{ result.totalQuestions }}</span>
+          <span class="total">{{ result.questionsTotal }}</span>
         </div>
-        <div class="percentage">{{ (result.score / result.totalQuestions * 100).toFixed(0) }}%</div>
+        <div class="percentage">{{ (result.score / result.questionsTotal * 100).toFixed(0) }}%</div>
       </div>
 
       <!-- XP Earned -->
@@ -169,9 +169,9 @@
           <span class="xp-label">XP Gagné</span>
           <span class="xp-value">+{{ result.xpEarned }} XP</span>
         </div>
-        <div class="xp-item bonus" *ngIf="result.isPerfect && result.perfectBonus">
+        <div class="xp-item bonus" *ngIf="result.xpBonus && result.xpBonus > 0">
           <span class="xp-label">Bonus Parfait</span>
-          <span class="xp-value">+{{ result.perfectBonus }} XP</span>
+          <span class="xp-value">+{{ result.xpBonus }} XP</span>
         </div>
         <div class="xp-item multiplier">
           <span class="xp-label">Multiplicateur</span>
