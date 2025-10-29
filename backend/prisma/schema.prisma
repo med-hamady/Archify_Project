@@ -288,6 +288,7 @@ model ExamResult {
   timeSpentSec     Int // Temps passé en secondes
   score            Float // Note sur 20
   passed           Boolean // Seuil 10/20
+  detailedResults  Json? // Résultats détaillés avec questions, réponses, et correction
 
   completedAt DateTime @default(now())
 

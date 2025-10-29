@@ -58,7 +58,10 @@
       "Bash(ng generate:*)",
       "Bash(npx vercel:*)",
       "Bash(git log:*)",
-      "Bash(npx ng build --configuration production)"
+      "Bash(npx ng build --configuration production)",
+      "Bash(npx prisma schema:*)",
+      "Bash(npx prisma db push)",
+      "Bash(npx prisma db push:*)"
     ],
     "deny": [],
     "ask": []

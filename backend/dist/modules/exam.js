@@ -368,7 +368,7 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
         }
         const oldXP = user.xpTotal;
         const newXP = oldXP + totalXPEarned;
-        // Créer le résultat de l'examen
+        // Créer le résultat de l'examen avec les résultats détaillés
         await prisma.examResult.create({
             data: {
                 userId,
@@ -377,7 +377,8 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                 questionsCorrect,
                 timeSpentSec: timeSpentSec || 0,
                 score: scoreSur20,
-                passed
+                passed,
+                detailedResults: detailedResults // Stocker les résultats détaillés pour la correction
             }
         });
         // Mettre à jour l'utilisateur
@@ -460,51 +461,56 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
                 error: { code: 'FORBIDDEN', message: 'Cet examen ne vous appartient pas' }
             });
         }
-        // Récupérer les tentatives de l'utilisateur autour de la date de l'examen
-        const questionIds = exam.subject.chapters.flatMap((chapter) => chapter.questions.map((q) => q.id));
-        const attempts = await prisma.quizAttempt.findMany({
-            where: {
-                userId,
-                questionId: { in: questionIds },
-                createdAt: {
-                    gte: new Date(exam.completedAt.getTime() - 3 * 60 * 60 * 1000), // 3h avant
-                    lte: new Date(exam.completedAt.getTime() + 1 * 60 * 60 * 1000) // 1h après
-                }
-            },
-            include: {
-                question: true
-            }
-        });
-        // Organiser par chapitre
-        const correctionByChapter = exam.subject.chapters.map((chapter) => {
-            const questions = chapter.questions.map((question) => {
-                const attempt = attempts.find(a => a.questionId === question.id);
-                const options = question.options;
-                // Préparer les options avec feedback
-                const optionsWithFeedback = options.map((opt, index) => ({
-                    text: opt.text,
-                    isCorrect: opt.isCorrect,
-                    justification: !opt.isCorrect ? opt.justification : undefined,
-                    wasSelected: attempt ? index === attempt.selectedAnswer : false
-                }));
-                return {
-                    questionId: question.id,
-                    questionText: question.questionText,
-                    options: optionsWithFeedback,
-                    userAnswer: attempt?.selectedAnswer ?? null,
-                    isCorrect: attempt?.isCorrect ?? false,
-                    explanation: question.explanation,
-                    difficulty: question.difficulty
-                };
+        // Vérifier si l'examen a des résultats détaillés stockés
+        if (!exam.detailedResults) {
+            return res.status(404).json({
+                error: { code: 'NO_DETAILS', message: 'Aucune correction disponible pour cet examen' }
             });
-            const correctCount = questions.filter((q) => q.isCorrect).length;
+        }
+        const detailedResults = exam.detailedResults;
+        // Organiser par chapitre
+        const chapterMap = new Map();
+        for (const result of detailedResults) {
+            // Trouver le chapitre de cette question
+            const question = exam.subject.chapters
+                .flatMap((ch) => ch.questions)
+                .find((q) => q.id === result.questionId);
+            if (!question)
+                continue;
+            const chapterId = question.chapterId;
+            const chapter = exam.subject.chapters.find((ch) => ch.id === chapterId);
+            if (!chapterMap.has(chapterId)) {
+                chapterMap.set(chapterId, {
+                    chapterId,
+                    chapterTitle: chapter.title,
+                    questions: []
+                });
+            }
+            // Extraire les indices des bonnes réponses et réponses sélectionnées
+            const correctIndexes = [];
+            const selectedIndexes = [];
+            result.options.forEach((opt, idx) => {
+                if (opt.isCorrect)
+                    correctIndexes.push(idx);
+                if (opt.wasSelected)
+                    selectedIndexes.push(idx);
+            });
+            chapterMap.get(chapterId).questions.push({
+                questionId: result.questionId,
+                questionText: result.questionText,
+                options: result.options.map((opt) => opt.text), // Juste le texte pour le frontend
+                userAnswer: selectedIndexes.length === 1 ? selectedIndexes[0] : null, // Pour compatibilité avec template actuel
+                correctAnswer: correctIndexes.length === 1 ? correctIndexes[0] : null, // Pour compatibilité avec template actuel
+                isCorrect: result.correct,
+                explanation: result.explanation
+            });
+        }
+        const correctionByChapter = Array.from(chapterMap.values()).map((chapter) => {
+            const correctCount = chapter.questions.filter((q) => q.isCorrect).length;
             return {
-                chapterId: chapter.id,
-                chapterTitle: chapter.title,
-                questions,
-                correctCount,
-                totalCount: questions.length,
-                chapterScore: Math.round((correctCount / questions.length) * 20)
+                ...chapter,
+                score: correctCount,
+                totalQuestions: chapter.questions.length
             };
         });
         res.json({
@@ -512,13 +518,15 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
             correction: {
                 examId: exam.id,
                 subjectName: exam.subject.name,
-                score: exam.score,
+                score: exam.questionsCorrect, // Nombre de bonnes réponses
+                scoreOutOf20: exam.score, // Score sur 20
+                totalQuestions: exam.questionsTotal,
                 passed: exam.passed,
                 grade: getGrade(exam.score),
                 questionsCorrect: exam.questionsCorrect,
                 questionsTotal: exam.questionsTotal,
                 completedAt: exam.completedAt,
-                chapters: correctionByChapter
+                chapterBreakdown: correctionByChapter // Renommé de chapters à chapterBreakdown
             }
         });
     }
