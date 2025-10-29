@@ -28,7 +28,7 @@ export class ExamComponent implements OnInit {
 
   // Playing state
   currentQuestionIndex = 0;
-  answers: Array<{ questionId: string; selectedAnswer: number | null }> = [];
+  answers: Array<{ questionId: string; selectedAnswers: number[] }> = [];
 
   // Exam options
   selectedQuestionCount: number = 20; // Par défaut 20 questions
@@ -89,7 +89,7 @@ export class ExamComponent implements OnInit {
     if (!this.exam) return;
     this.answers = this.exam.questions.map(q => ({
       questionId: q.id,
-      selectedAnswer: null
+      selectedAnswers: []
     }));
   }
 
@@ -98,9 +98,22 @@ export class ExamComponent implements OnInit {
     this.currentQuestionIndex = 0;
   }
 
-  selectAnswer(answerIndex: number) {
+  toggleAnswer(answerIndex: number) {
     if (!this.exam) return;
-    this.answers[this.currentQuestionIndex].selectedAnswer = answerIndex;
+    const currentAnswers = this.answers[this.currentQuestionIndex].selectedAnswers;
+    const indexPosition = currentAnswers.indexOf(answerIndex);
+
+    if (indexPosition > -1) {
+      // Déjà sélectionné, on le retire
+      currentAnswers.splice(indexPosition, 1);
+    } else {
+      // Pas encore sélectionné, on l'ajoute
+      currentAnswers.push(answerIndex);
+    }
+  }
+
+  isAnswerSelected(answerIndex: number): boolean {
+    return this.answers[this.currentQuestionIndex]?.selectedAnswers.includes(answerIndex) || false;
   }
 
   nextQuestion() {
@@ -121,16 +134,17 @@ export class ExamComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.answers.every(a => a.selectedAnswer !== null);
+    // Pas besoin de vérifier, on peut soumettre même avec des réponses vides
+    return true;
   }
 
   submitExam() {
-    if (!this.exam || !this.canSubmit()) return;
+    if (!this.exam) return;
 
     this.loading = true;
     const formattedAnswers = this.answers.map(a => ({
       questionId: a.questionId,
-      selectedAnswer: a.selectedAnswer as number
+      selectedAnswers: a.selectedAnswers
     }));
 
     this.examService.submitExam(this.exam.examId, formattedAnswers).subscribe({
@@ -185,7 +199,7 @@ export class ExamComponent implements OnInit {
   }
 
   getAnsweredCount(): number {
-    return this.answers.filter(a => a.selectedAnswer !== null).length;
+    return this.answers.filter(a => a.selectedAnswers.length > 0).length;
   }
 
   getCurrentQuestion() {
