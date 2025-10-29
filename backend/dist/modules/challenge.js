@@ -18,7 +18,7 @@ exports.challengeRouter = express_1.default.Router();
 // ============================================
 /**
  * Vérifie si l'utilisateur peut accéder au mode Challenge
- * Conditions: 50% progression dans le chapitre OU niveau OR minimum
+ * Conditions: Toujours accessible (0% progression)
  */
 async function canAccessChallengeMode(userId, chapterId) {
     const user = await prisma.user.findUnique({
@@ -27,20 +27,8 @@ async function canAccessChallengeMode(userId, chapterId) {
     });
     if (!user)
         return false;
-    // Vérifier niveau OR minimum (déblocage global)
-    if ((0, level_service_1.hasGlobalChallengeUnlock)(user.level)) {
-        return true;
-    }
-    // Vérifier progression 50% dans le chapitre
-    const progress = await prisma.chapterProgress.findUnique({
-        where: {
-            userId_chapterId: {
-                userId,
-                chapterId
-            }
-        }
-    });
-    return progress ? progress.progressPercent >= 50 : false;
+    // Challenge toujours accessible
+    return true;
 }
 // ============================================
 // DÉMARRER UN CHALLENGE
@@ -75,7 +63,7 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
             return res.status(403).json({
                 error: {
                     code: 'ACCESS_DENIED',
-                    message: 'Challenge non débloqué. Requis: 50% de progression dans le chapitre OU niveau OR minimum'
+                    message: 'Challenge non accessible'
                 }
             });
         }

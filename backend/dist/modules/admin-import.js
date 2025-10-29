@@ -173,6 +173,45 @@ exports.adminImportRouter.post('/import-qcm-anatomie', auth_1.requireAuth, async
     }
 });
 /**
+ * POST /api/admin/reimport-anatomie-pcem2-complete
+ * Réimporte TOUS les chapitres Anatomie PCEM2 (22 chapitres, 370 questions)
+ */
+exports.adminImportRouter.post('/reimport-anatomie-pcem2-complete', auth_1.requireAuth, async (req, res) => {
+    try {
+        // Vérifier que l'utilisateur est admin
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+            return res.status(403).json({
+                error: { code: 'FORBIDDEN', message: 'Admin access required' }
+            });
+        }
+        // Exécuter le script de réimportation complète
+        console.log('🚀 Starting complete Anatomie PCEM2 reimport (22 chapters, 370 questions)...');
+        const { stdout, stderr } = await execAsync('node dist/fix-anatomie-complete-final.js');
+        if (stderr && !stderr.includes('warning')) {
+            console.error('Reimport stderr:', stderr);
+        }
+        console.log('Reimport stdout:', stdout);
+        return res.json({
+            success: true,
+            message: 'Complete Anatomie PCEM2 reimport completed',
+            output: stdout
+        });
+    }
+    catch (error) {
+        console.error('Error reimporting Anatomie PCEM2:', error);
+        return res.status(500).json({
+            error: {
+                code: 'REIMPORT_ERROR',
+                message: 'Failed to reimport Anatomie PCEM2',
+                details: error.message
+            }
+        });
+    }
+});
+/**
  * POST /api/admin/fix-users-semester
  * Corrige les utilisateurs sans semester PCEM1/PCEM2 (admin uniquement)
  */

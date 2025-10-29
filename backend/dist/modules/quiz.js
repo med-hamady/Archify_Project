@@ -25,7 +25,7 @@ exports.quizRouter = (0, express_1.Router)();
 // ============================================
 const answerQuestionSchema = zod_1.z.object({
     questionId: zod_1.z.string(),
-    selectedAnswers: zod_1.z.array(zod_1.z.number().int().min(0).max(4)).min(1) // Array of answer indices (0-4)
+    selectedAnswers: zod_1.z.array(zod_1.z.number().int().min(0).max(4)).min(0) // Array of answer indices (0-4), can be empty if all answers are false
 });
 // ============================================
 // ROUTES
@@ -79,13 +79,16 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
         const isCorrect = selectedSet.size === correctSet.size &&
             [...selectedSet].every(index => correctSet.has(index));
         // 3. Compter le nombre de tentatives précédentes
-        const previousAttempts = await prisma.quizAttempt.count({
+        const previousAttempts = await prisma.quizAttempt.findMany({
             where: {
                 userId,
                 questionId
-            }
+            },
+            orderBy: { createdAt: 'asc' }
         });
-        const attemptNumber = previousAttempts + 1;
+        const attemptNumber = previousAttempts.length + 1;
+        // Vérifier si la question a déjà été répondue correctement (mode replay)
+        const alreadyAnsweredCorrectly = previousAttempts.some(a => a.isCorrect);
         // 4. Compter le total de questions dans le chapitre
         const totalQuestions = await prisma.question.count({
             where: { chapterId: question.chapterId }
@@ -103,9 +106,10 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
         }
         // TODO: Implémenter vérification de bonus temporaire actif
         const hasActiveBonus = false;
-        // 7. Calculer l'XP gagnée (seulement si correct)
+        // 7. Calculer l'XP gagnée (seulement si correct ET pas en mode replay)
         let xpEarned = 0;
-        if (isCorrect) {
+        if (isCorrect && !alreadyAnsweredCorrectly) {
+            // Ne donner de l'XP que si la question n'a jamais été réussie avant
             const xpResult = (0, xp_service_1.calculateXP)({
                 difficulty: question.difficulty,
                 attemptNumber,
@@ -121,7 +125,7 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
                 userId,
                 questionId,
                 attemptNumber,
-                selectedAnswer: selectedAnswers[0], // Pour compatibilité avec le schéma existant
+                selectedAnswer: selectedAnswers.length > 0 ? selectedAnswers[0] : -1, // -1 if no answer selected (all false)
                 isCorrect,
                 xpEarned
             }
@@ -131,7 +135,8 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
         let levelUpResult = { leveledUp: false };
         let consecutiveBonusResult = { type: null, xpBonus: 0, message: undefined };
         let newBadges = [];
-        if (isCorrect) {
+        if (isCorrect && !alreadyAnsweredCorrectly) {
+            // Mettre à jour l'utilisateur seulement si ce n'est PAS un rejeu
             const oldXP = user.xpTotal;
             const newXP = oldXP + xpEarned;
             const newConsecutive = user.consecutiveGoodAnswers + 1;
@@ -171,6 +176,15 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
                     }
                 });
             }
+        }
+        else if (isCorrect && alreadyAnsweredCorrectly) {
+            // En mode rejeu, juste mettre à jour lastActivityAt
+            updatedUser = await prisma.user.update({
+                where: { id: userId },
+                data: {
+                    lastActivityAt: new Date()
+                }
+            });
         }
         else {
             // Réponse incorrecte : réinitialiser la série
@@ -244,10 +258,12 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
 /**
  * GET /api/quiz/chapter/:chapterId/next
  * Récupérer la prochaine question à répondre dans un chapitre
+ * Query params: replay=true pour rejouer le chapitre depuis le début
  */
 exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (req, res) => {
     try {
         const { chapterId } = req.params;
+        const { replay } = req.query;
         const userId = req.userId;
         // Récupérer toutes les questions du chapitre
         const allQuestions = await prisma.question.findMany({
@@ -279,21 +295,28 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (re
         });
         // Chercher une question non réussie
         let nextQuestion = null;
-        for (const question of allQuestions) {
-            const questionAttempts = attemptsByQuestion.get(question.id) || [];
-            const hasCorrectAnswer = questionAttempts.some((a) => a.isCorrect);
-            if (!hasCorrectAnswer) {
-                nextQuestion = question;
-                break;
-            }
+        // Si replay=true, recommencer depuis la première question
+        if (replay === 'true') {
+            nextQuestion = allQuestions[0];
         }
-        if (!nextQuestion) {
-            return res.json({
-                success: true,
-                question: null,
-                completed: true,
-                message: 'Chapter completed! All questions answered correctly.'
-            });
+        else {
+            // Mode normal: chercher la première question non réussie
+            for (const question of allQuestions) {
+                const questionAttempts = attemptsByQuestion.get(question.id) || [];
+                const hasCorrectAnswer = questionAttempts.some((a) => a.isCorrect);
+                if (!hasCorrectAnswer) {
+                    nextQuestion = question;
+                    break;
+                }
+            }
+            if (!nextQuestion) {
+                return res.json({
+                    success: true,
+                    question: null,
+                    completed: true,
+                    message: 'Chapter completed! All questions answered correctly.'
+                });
+            }
         }
         // Retourner la question avec les options (sans révéler les réponses correctes ni les justifications)
         const questionOptions = nextQuestion.options;
@@ -301,6 +324,9 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (re
             text: opt.text
             // Ne pas inclure isCorrect ni justification avant la réponse
         }));
+        // Vérifier si cette question a déjà été répondue correctement (pour le mode replay)
+        const questionAttempts = attemptsByQuestion.get(nextQuestion.id) || [];
+        const alreadyAnsweredCorrectly = questionAttempts.some((a) => a.isCorrect);
         return res.json({
             success: true,
             question: {
@@ -310,8 +336,9 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (re
                 difficulty: nextQuestion.difficulty,
                 chapterId: nextQuestion.chapterId,
                 orderIndex: nextQuestion.orderIndex,
-                position: allQuestions.findIndex(q => q.id === nextQuestion.id) + 1,
-                totalQuestions: allQuestions.length
+                position: allQuestions.findIndex(q => q.id === nextQuestion.id),
+                totalQuestions: allQuestions.length,
+                isReplay: alreadyAnsweredCorrectly // Indiquer si c'est un rejeu
             }
         });
     }

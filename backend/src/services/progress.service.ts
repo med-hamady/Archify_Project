@@ -103,8 +103,8 @@ export async function updateChapterProgress(
     });
   }
 
-  // Vérifier déblocage Challenge (50%)
-  if (progress.progressPercent >= 50 && !progress.challengeUnlocked) {
+  // Vérifier déblocage Challenge (0% - toujours débloqué)
+  if (progress.progressPercent >= 0 && !progress.challengeUnlocked) {
     await prisma.chapterProgress.update({
       where: {
         userId_chapterId: {

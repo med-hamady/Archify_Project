@@ -17,8 +17,8 @@ const crypto_1 = __importDefault(require("crypto"));
 const prisma = new client_1.PrismaClient();
 exports.authRouter = (0, express_1.Router)();
 // Helpers
-const ACCESS_TOKEN_TTL_SEC = parseInt(process.env.ACCESS_TOKEN_TTL_SEC || '900'); // 15m
-const REFRESH_TOKEN_TTL_SEC = parseInt(process.env.REFRESH_TOKEN_TTL_SEC || '1209600'); // 14d
+const ACCESS_TOKEN_TTL_SEC = parseInt(process.env.ACCESS_TOKEN_TTL_SEC || '604800'); // 7 days
+const REFRESH_TOKEN_TTL_SEC = parseInt(process.env.REFRESH_TOKEN_TTL_SEC || '2592000'); // 30 days
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'changeme-refresh';
 function signAccessToken(payload) {

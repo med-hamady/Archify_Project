@@ -41,7 +41,9 @@ exports.leaderboardRouter.get('/global', auth_1.requireAuth, async (req, res) =>
                 name: true,
                 xpTotal: true,
                 level: true,
-                semester: true
+                semester: true,
+                consecutiveGoodAnswers: true,
+                legendQuestionsCompleted: true
             }
         });
         // Ajouter le rang
@@ -51,7 +53,10 @@ exports.leaderboardRouter.get('/global', auth_1.requireAuth, async (req, res) =>
             name: user.name,
             xpTotal: user.xpTotal,
             level: user.level,
-            semester: user.semester
+            semester: user.semester,
+            consecutiveGoodAnswers: user.consecutiveGoodAnswers,
+            legendQuestionsCompleted: user.legendQuestionsCompleted,
+            isCurrentUser: user.id === req.userId
         }));
         // Position de l'utilisateur actuel
         const currentUser = await prisma.user.findUnique({
@@ -96,8 +101,80 @@ exports.leaderboardRouter.get('/global', auth_1.requireAuth, async (req, res) =>
     }
 });
 /**
+ * GET /api/leaderboard/semester
+ * Classement de la classe de l'utilisateur actuel (son semestre)
+ */
+exports.leaderboardRouter.get('/semester', auth_1.requireAuth, async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 100;
+        // Récupérer le semestre de l'utilisateur actuel
+        const currentUser = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: { semester: true, xpTotal: true }
+        });
+        if (!currentUser || !currentUser.semester) {
+            return res.status(400).json({
+                error: { code: 'NO_SEMESTER', message: 'User has no semester assigned' }
+            });
+        }
+        const topUsers = await prisma.user.findMany({
+            where: {
+                role: 'STUDENT',
+                semester: currentUser.semester
+            },
+            orderBy: {
+                xpTotal: 'desc'
+            },
+            take: limit,
+            select: {
+                id: true,
+                name: true,
+                xpTotal: true,
+                level: true,
+                semester: true,
+                consecutiveGoodAnswers: true,
+                legendQuestionsCompleted: true
+            }
+        });
+        // Calculer le rang de l'utilisateur actuel dans sa classe
+        let currentUserRank = null;
+        const usersAboveInClass = await prisma.user.count({
+            where: {
+                role: 'STUDENT',
+                semester: currentUser.semester,
+                xpTotal: {
+                    gt: currentUser.xpTotal
+                }
+            }
+        });
+        currentUserRank = usersAboveInClass + 1;
+        const leaderboard = topUsers.map((user, index) => ({
+            rank: index + 1,
+            userId: user.id,
+            name: user.name,
+            xpTotal: user.xpTotal,
+            level: user.level,
+            semester: user.semester,
+            consecutiveGoodAnswers: user.consecutiveGoodAnswers,
+            legendQuestionsCompleted: user.legendQuestionsCompleted,
+            isCurrentUser: user.id === req.userId
+        }));
+        return res.json({
+            leaderboard,
+            semester: currentUser.semester,
+            currentUserRank
+        });
+    }
+    catch (error) {
+        console.error('[leaderboard/semester] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+        });
+    }
+});
+/**
  * GET /api/leaderboard/semester/:semester
- * Classement par semestre
+ * Classement par semestre spécifique (admin)
  */
 exports.leaderboardRouter.get('/semester/:semester', auth_1.requireAuth, async (req, res) => {
     try {
@@ -117,7 +194,9 @@ exports.leaderboardRouter.get('/semester/:semester', auth_1.requireAuth, async (
                 name: true,
                 xpTotal: true,
                 level: true,
-                semester: true
+                semester: true,
+                consecutiveGoodAnswers: true,
+                legendQuestionsCompleted: true
             }
         });
         const leaderboard = topUsers.map((user, index) => ({
@@ -125,12 +204,16 @@ exports.leaderboardRouter.get('/semester/:semester', auth_1.requireAuth, async (
             userId: user.id,
             name: user.name,
             xpTotal: user.xpTotal,
-            level: user.level
+            level: user.level,
+            semester: user.semester,
+            consecutiveGoodAnswers: user.consecutiveGoodAnswers,
+            legendQuestionsCompleted: user.legendQuestionsCompleted,
+            isCurrentUser: user.id === req.userId
         }));
         return res.json({ leaderboard, semester });
     }
     catch (error) {
-        console.error('[leaderboard/semester] Error:', error);
+        console.error('[leaderboard/semester/:semester] Error:', error);
         return res.status(500).json({
             error: { code: 'SERVER_ERROR', message: 'Internal server error' }
         });
