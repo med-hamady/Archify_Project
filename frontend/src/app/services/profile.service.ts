@@ -71,17 +71,10 @@ export class ProfileService {
   private baseUrl = `${environment.apiUrl}/profile`;
 
   /**
-   * Obtenir le profil complet de l'utilisateur connecté
+   * Obtenir le profil complet de l'utilisateur
    */
   getProfile(): Observable<{ success: boolean; profile: UserProfile }> {
     return this.http.get<{ success: boolean; profile: UserProfile }>(`${this.baseUrl}/me`);
-  }
-
-  /**
-   * Obtenir le profil public d'un utilisateur spécifique
-   */
-  getUserProfile(userId: string): Observable<{ success: boolean; profile: UserProfile }> {
-    return this.http.get<{ success: boolean; profile: UserProfile }>(`${this.baseUrl}/${userId}`);
   }
 
   /**
