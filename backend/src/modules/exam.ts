@@ -366,7 +366,19 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
     }
 
     // XP brute = 4 × (nombre de bonnes réponses) (update4)
-    totalXPEarned = questionsCorrect * 4;
+    const baseXP = questionsCorrect * 4;
+
+    // Compter le nombre de fois où cet examen a déjà été complété pour cette matière
+    const previousCompletions = await prisma.examResult.count({
+      where: {
+        userId,
+        subjectId
+      }
+    });
+
+    // Appliquer la pénalité de replay : ×(1/2)^k où k = nombre de runs déjà crédités
+    const replayPenalty = Math.pow(0.5, previousCompletions);
+    totalXPEarned = Math.round(baseXP * replayPenalty);
 
     const totalQuestions = answers.length; // Nombre de questions dans cet examen spécifique
     const scorePercent = (questionsCorrect / totalQuestions) * 100;

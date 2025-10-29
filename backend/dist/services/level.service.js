@@ -30,16 +30,16 @@ exports.hasRevisionModeUnlocked = hasRevisionModeUnlocked;
 // CONSTANTES
 // ============================================
 /**
- * Seuils d'XP pour chaque niveau
+ * Seuils d'XP pour chaque niveau (mise à jour update4)
  */
 exports.LEVEL_THRESHOLDS = {
-    BOIS: { min: 0, max: 800, name: 'Bois' },
-    BRONZE: { min: 801, max: 1600, name: 'Bronze' },
-    ARGENT: { min: 1601, max: 2800, name: 'Argent' },
-    OR: { min: 2801, max: 4000, name: 'Or' },
-    PLATINUM: { min: 4001, max: 5500, name: 'Platinum' },
-    DIAMANT: { min: 5501, max: 9000, name: 'Diamant' },
-    MONDIAL: { min: 9001, max: Infinity, name: 'Mondial' }
+    BOIS: { min: 0, max: 1200, name: 'Bois' },
+    BRONZE: { min: 1201, max: 2600, name: 'Bronze' },
+    ARGENT: { min: 2601, max: 4400, name: 'Argent' },
+    OR: { min: 4401, max: 6500, name: 'Or' },
+    PLATINUM: { min: 6501, max: 8500, name: 'Platinum' },
+    DIAMANT: { min: 8501, max: 15000, name: 'Diamant' },
+    MONDIAL: { min: 15001, max: Infinity, name: 'Mondial' }
 };
 /**
  * Ordre des niveaux pour comparaisons
@@ -114,17 +114,17 @@ exports.LEVEL_XP_BONUSES = {
  * @returns Niveau correspondant
  */
 function getLevelFromXP(xp) {
-    if (xp <= 800)
+    if (xp <= 1200)
         return 'BOIS';
-    if (xp <= 1600)
+    if (xp <= 2600)
         return 'BRONZE';
-    if (xp <= 2800)
+    if (xp <= 4400)
         return 'ARGENT';
-    if (xp <= 4000)
+    if (xp <= 6500)
         return 'OR';
-    if (xp <= 5500)
+    if (xp <= 8500)
         return 'PLATINUM';
-    if (xp <= 9000)
+    if (xp <= 15000)
         return 'DIAMANT';
     return 'MONDIAL';
 }

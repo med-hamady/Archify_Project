@@ -269,16 +269,11 @@ challengeRouter.post('/:chapterId/submit', requireAuth, async (req: any, res) =>
       if (isCorrect) {
         questionsCorrect++;
 
-        // XP avec bonus Challenge (×1.5)
-        const baseXP = BASE_XP[question.difficulty as QuestionDifficulty];
-        const challengeXP = Math.round(baseXP * 1.5);
-        totalXPEarned += challengeXP;
-
         detailedResults.push({
           questionId: question.id,
           questionText: question.questionText,
           correct: true,
-          xpEarned: challengeXP,
+          xpEarned: 4, // 4 XP par bonne réponse
           options: optionsWithFeedback,
           explanation: question.explanation
         });
@@ -294,14 +289,25 @@ challengeRouter.post('/:chapterId/submit', requireAuth, async (req: any, res) =>
       }
     }
 
-    const score = (questionsCorrect / chapter.questions.length) * 100;
+    const score = (questionsCorrect / answers.length) * 100;
 
-    // Bonus XP si score parfait
-    let xpBonus = 0;
-    if (score === 100) {
-      xpBonus = 100;
-      totalXPEarned += xpBonus;
-    }
+    // XP brute = 4 × nombre de bonnes réponses
+    const baseXP = questionsCorrect * 4;
+
+    // Compter le nombre de fois où ce challenge a déjà été complété
+    const previousCompletions = await prisma.challengeResult.count({
+      where: {
+        userId,
+        chapterId
+      }
+    });
+
+    // Appliquer la pénalité de replay : ×(1/2)^k où k = nombre de runs déjà crédités
+    const replayPenalty = Math.pow(0.5, previousCompletions);
+    totalXPEarned = Math.round(baseXP * replayPenalty);
+
+    // Plus de bonus XP pour score parfait (nouvelles règles)
+    const xpBonus = 0;
 
     // Récupérer l'utilisateur
     const user = await prisma.user.findUnique({

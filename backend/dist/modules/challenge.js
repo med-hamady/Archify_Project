@@ -8,7 +8,6 @@ const express_1 = __importDefault(require("express"));
 const zod_1 = require("zod");
 const client_1 = require("@prisma/client");
 const auth_1 = require("./auth");
-const xp_service_1 = require("../services/xp.service");
 const level_service_1 = require("../services/level.service");
 const badge_service_1 = require("../services/badge.service");
 const prisma = new client_1.PrismaClient();
@@ -18,17 +17,44 @@ exports.challengeRouter = express_1.default.Router();
 // ============================================
 /**
  * Vérifie si l'utilisateur peut accéder au mode Challenge
- * Conditions: Toujours accessible (0% progression)
+ * Conditions: 100% des QCM du chapitre complétés (update4)
  */
 async function canAccessChallengeMode(userId, chapterId) {
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { level: true }
+        select: { id: true }
     });
-    if (!user)
-        return false;
-    // Challenge toujours accessible
-    return true;
+    if (!user) {
+        return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
+    }
+    // Compter le nombre total de questions dans le chapitre
+    const totalQuestions = await prisma.question.count({
+        where: { chapterId }
+    });
+    if (totalQuestions === 0) {
+        return { canAccess: false, progressPercent: 0, totalQuestions: 0, completedQuestions: 0 };
+    }
+    // Compter combien de questions ont été répondues correctement au moins une fois en mode révision
+    const correctAttempts = await prisma.quizAttempt.findMany({
+        where: {
+            userId,
+            question: { chapterId },
+            isCorrect: true
+        },
+        select: {
+            questionId: true
+        },
+        distinct: ['questionId']
+    });
+    const completedQuestions = correctAttempts.length;
+    const progressPercent = Math.round((completedQuestions / totalQuestions) * 100);
+    // Nécessite 100% de complétion
+    return {
+        canAccess: progressPercent >= 100,
+        progressPercent,
+        totalQuestions,
+        completedQuestions
+    };
 }
 // ============================================
 // DÉMARRER UN CHALLENGE
@@ -36,11 +62,13 @@ async function canAccessChallengeMode(userId, chapterId) {
 /**
  * POST /api/challenge/:chapterId/start
  * Démarre un challenge pour un chapitre
- * Conditions: 50% progression dans le chapitre OU niveau OR minimum
+ * Conditions: 100% des QCM complétés (update4)
+ * Body: { questionCount?: number } - nombre de questions souhaitées (optionnel, par défaut toutes)
  */
 exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req, res) => {
     try {
         const { chapterId } = req.params;
+        const { questionCount } = req.body; // Nombre de questions souhaitées
         const userId = req.userId;
         // Vérifier que le chapitre existe
         const chapter = await prisma.chapter.findUnique({
@@ -58,18 +86,25 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
             });
         }
         // Vérifier les conditions d'accès au Challenge
-        const canAccess = await canAccessChallengeMode(userId, chapterId);
-        if (!canAccess) {
+        const accessCheck = await canAccessChallengeMode(userId, chapterId);
+        if (!accessCheck.canAccess) {
             return res.status(403).json({
                 error: {
                     code: 'ACCESS_DENIED',
-                    message: 'Challenge non accessible'
+                    message: `Challenge non accessible. Vous devez compléter 100% des QCM du chapitre en mode Révision (actuellement ${accessCheck.progressPercent}% - ${accessCheck.completedQuestions}/${accessCheck.totalQuestions} QCM complétés).`
                 }
             });
         }
         // Pas de cooldown - on peut refaire le challenge quand on veut
+        // Sélectionner les questions (aléatoire si questionCount spécifié)
+        let selectedQuestions = chapter.questions;
+        if (questionCount && questionCount > 0 && questionCount < chapter.questions.length) {
+            // Tirage aléatoire sans doublons
+            const shuffled = [...chapter.questions].sort(() => Math.random() - 0.5);
+            selectedQuestions = shuffled.slice(0, questionCount);
+        }
         // Préparer les questions avec options sanitisées (sans révéler les réponses)
-        const sanitizedQuestions = chapter.questions.map((q) => {
+        const sanitizedQuestions = selectedQuestions.map((q) => {
             const options = q.options;
             return {
                 id: q.id,
@@ -87,7 +122,8 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
                 chapterId: chapter.id,
                 chapterTitle: chapter.title,
                 subjectName: chapter.subject.title,
-                totalQuestions: chapter.questions.length,
+                totalQuestionsInChapter: chapter.questions.length,
+                totalQuestions: selectedQuestions.length,
                 questions: sanitizedQuestions
             }
         });
@@ -192,15 +228,11 @@ exports.challengeRouter.post('/:chapterId/submit', auth_1.requireAuth, async (re
             }));
             if (isCorrect) {
                 questionsCorrect++;
-                // XP avec bonus Challenge (×1.5)
-                const baseXP = xp_service_1.BASE_XP[question.difficulty];
-                const challengeXP = Math.round(baseXP * 1.5);
-                totalXPEarned += challengeXP;
                 detailedResults.push({
                     questionId: question.id,
                     questionText: question.questionText,
                     correct: true,
-                    xpEarned: challengeXP,
+                    xpEarned: 4, // 4 XP par bonne réponse
                     options: optionsWithFeedback,
                     explanation: question.explanation
                 });
@@ -216,13 +248,21 @@ exports.challengeRouter.post('/:chapterId/submit', auth_1.requireAuth, async (re
                 });
             }
         }
-        const score = (questionsCorrect / chapter.questions.length) * 100;
-        // Bonus XP si score parfait
-        let xpBonus = 0;
-        if (score === 100) {
-            xpBonus = 100;
-            totalXPEarned += xpBonus;
-        }
+        const score = (questionsCorrect / answers.length) * 100;
+        // XP brute = 4 × nombre de bonnes réponses
+        const baseXP = questionsCorrect * 4;
+        // Compter le nombre de fois où ce challenge a déjà été complété
+        const previousCompletions = await prisma.challengeResult.count({
+            where: {
+                userId,
+                chapterId
+            }
+        });
+        // Appliquer la pénalité de replay : ×(1/2)^k où k = nombre de runs déjà crédités
+        const replayPenalty = Math.pow(0.5, previousCompletions);
+        totalXPEarned = Math.round(baseXP * replayPenalty);
+        // Plus de bonus XP pour score parfait (nouvelles règles)
+        const xpBonus = 0;
         // Récupérer l'utilisateur
         const user = await prisma.user.findUnique({
             where: { id: userId }

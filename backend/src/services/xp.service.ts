@@ -25,16 +25,15 @@ export const BASE_XP: Record<QuestionDifficulty, number> = {
 };
 
 /**
- * Multiplicateur selon le numéro de tentative
- * 1ère tentative: x3
- * 2ème tentative: x1.5
- * 3ème tentative: x1
- * 4ème+ tentative: 0 XP
+ * XP directe selon le numéro de tentative (nouvelles règles)
+ * 1ère tentative correcte: +10 XP
+ * 2ème tentative correcte: +3 XP
+ * 3ème tentative ou plus: 0 XP
+ * Note: Tous les QCM donnent le même XP, indépendamment de la difficulté
  */
-export const ATTEMPT_MULTIPLIERS: Record<number, number> = {
-  1: 3,
-  2: 1.5,
-  3: 1
+export const ATTEMPT_XP: Record<number, number> = {
+  1: 10,
+  2: 3
 };
 
 /**
@@ -91,9 +90,13 @@ export interface XPResult {
 // ============================================
 
 /**
- * Calcule l'XP gagnée pour une réponse à un QCM
+ * Calcule l'XP gagnée pour une réponse à un QCM (mode Révision/Relax)
  *
- * Formule : XP_final = XP_base × multiplicateur × (1 + 0.5 × position_QCM / total_QCM) × bonus
+ * Nouvelles règles simples :
+ * - 1ère tentative correcte = +10 XP
+ * - 2ème tentative correcte = +3 XP
+ * - 3ème tentative ou plus = 0 XP
+ * - Tous les QCM donnent le même XP (pas de différence selon difficulté)
  *
  * @param params - Paramètres de calcul
  * @returns Détails du calcul XP
@@ -107,44 +110,18 @@ export function calculateXP(params: CalculateXPParams): XPResult {
     hasActiveBonus = false
   } = params;
 
-  // 1. XP de base selon difficulté
-  const baseXP = BASE_XP[difficulty];
+  // 1. XP directe selon le numéro de tentative
+  const xpEarned = ATTEMPT_XP[attemptNumber] || 0;
 
-  // 2. Multiplicateur selon tentative (0 si 4ème tentative ou plus)
-  const multiplier = ATTEMPT_MULTIPLIERS[attemptNumber] || 0;
-
-  // Si 4ème tentative ou plus, pas d'XP
-  if (multiplier === 0) {
-    return {
-      xpEarned: 0,
-      baseXP,
-      multiplier,
-      progressionFactor: 0,
-      bonusApplied: false
-    };
-  }
-
-  // 3. Facteur de progression (augmente avec l'avancement dans le chapitre)
-  // Formule : 1 + (0.5 × position / total)
-  const progressionFactor = 1 + (0.5 * positionInChapter / totalQuestionsInChapter);
-
-  // 4. Calcul de base
-  let finalXP = baseXP * multiplier * progressionFactor;
-
-  // 5. Application du bonus temporaire si actif (+20%)
-  if (hasActiveBonus) {
-    finalXP *= 1.2;
-  }
-
-  // 6. Arrondir au nombre entier
-  const xpEarned = Math.round(finalXP);
+  // Pour compatibilité avec l'ancienne structure
+  const baseXP = BASE_XP[difficulty]; // Garde la référence mais n'est plus utilisée
 
   return {
     xpEarned,
-    baseXP,
-    multiplier,
-    progressionFactor: Math.round(progressionFactor * 100) / 100, // Arrondi à 2 décimales
-    bonusApplied: hasActiveBonus
+    baseXP, // Gardé pour compatibilité
+    multiplier: attemptNumber <= 2 ? 1 : 0, // Simplifié
+    progressionFactor: 1, // Plus utilisé
+    bonusApplied: false // Plus de bonus temporaires dans le nouveau système
   };
 }
 
