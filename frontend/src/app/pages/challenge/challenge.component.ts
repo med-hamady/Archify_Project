@@ -195,7 +195,7 @@ export class ChallengeComponent implements OnInit {
   }
 
   backToChapters() {
-    // Navigate back to chapters page
-    this.router.navigate(['/chapters', this.chapterId]);
+    // Navigate back to chapter detail page (quiz page)
+    this.router.navigate(['/quiz', this.chapterId]);
   }
 }
