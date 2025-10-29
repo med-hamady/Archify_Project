@@ -44,15 +44,15 @@
       <div class="requirements">
         <h3>🔓 Conditions débloquées</h3>
         <ul>
-          <li>✅ Progression ≥ 80% dans la matière</li>
-          <li>✅ Niveau ARGENT ou supérieur</li>
+          <li>✅ Progression ≥ 50% dans la matière</li>
+          <li>✅ Questions déjà vues en mode Révision</li>
         </ul>
       </div>
 
       <div class="rules">
         <h3>📋 Règles</h3>
         <ul>
-          <li>Toutes les questions de la matière en une session</li>
+          <li>Questions sélectionnées parmi celles déjà vues</li>
           <li>Navigation libre entre les questions</li>
           <li>Note calculée sur 20</li>
           <li>Réussite ≥ 10/20</li>
@@ -60,8 +60,38 @@
         </ul>
       </div>
 
+      <!-- Question Count Selection -->
+      <div class="exam-option-selection">
+        <h3>📝 Nombre de questions</h3>
+        <p class="option-description">Choisissez combien de questions vous voulez</p>
+        <div class="option-buttons">
+          <button
+            *ngFor="let count of questionCountOptions"
+            class="option-btn"
+            [class.selected]="selectedQuestionCount === count"
+            (click)="selectedQuestionCount = count; loadExam()">
+            {{ count }} questions
+          </button>
+        </div>
+      </div>
+
+      <!-- Duration Selection -->
+      <div class="exam-option-selection">
+        <h3>⏱️ Durée de l'examen</h3>
+        <p class="option-description">Choisissez votre limite de temps</p>
+        <div class="option-buttons">
+          <button
+            *ngFor="let duration of durationOptions"
+            class="option-btn"
+            [class.selected]="selectedDuration === duration"
+            (click)="selectedDuration = duration; loadExam()">
+            {{ duration }} min
+          </button>
+        </div>
+      </div>
+
       <button class="btn btn-start" (click)="startPlaying()">
-        Commencer l'Examen
+        Commencer l'Examen ({{ exam.totalQuestions }} questions, {{ exam.duration || selectedDuration }} min)
         <span class="arrow">→</span>
       </button>
       <button class="btn btn-secondary" (click)="backToDashboard()">Annuler</button>

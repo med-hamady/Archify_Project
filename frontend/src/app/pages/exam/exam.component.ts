@@ -30,6 +30,12 @@ export class ExamComponent implements OnInit {
   currentQuestionIndex = 0;
   answers: Array<{ questionId: string; selectedAnswer: number | null }> = [];
 
+  // Exam options
+  selectedQuestionCount: number = 20; // Par défaut 20 questions
+  questionCountOptions: number[] = [10, 20, 30, 40];
+  selectedDuration: number = 60; // Par défaut 60 minutes
+  durationOptions: number[] = [15, 30, 45, 60, 90];
+
   // Results state
   result: ExamResult | null = null;
   showXPAnimation = false;
@@ -64,15 +70,11 @@ export class ExamComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.examService.startExam(this.subjectId).subscribe({
+    this.examService.startExam(this.subjectId, this.selectedQuestionCount, this.selectedDuration).subscribe({
       next: (res) => {
-        if (res.exam.canStart) {
-          this.exam = res.exam;
-          this.initializeAnswers();
-          this.currentState = 'start';
-        } else {
-          this.error = res.exam.reason || 'Vous ne pouvez pas démarrer cet examen';
-        }
+        this.exam = res.exam;
+        this.initializeAnswers();
+        this.currentState = 'start';
         this.loading = false;
       },
       error: (err) => {

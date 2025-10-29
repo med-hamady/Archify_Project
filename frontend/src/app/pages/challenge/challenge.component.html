@@ -51,6 +51,27 @@
         </ul>
       </div>
 
+      <!-- Question Count Selection -->
+      <div class="question-count-selection" *ngIf="availableQuestionCounts.length > 1">
+        <h3>📝 Nombre de questions</h3>
+        <p class="selection-description">Choisissez combien de questions vous voulez</p>
+        <div class="count-options">
+          <button
+            *ngFor="let count of availableQuestionCounts"
+            class="count-option"
+            [class.selected]="selectedQuestionCount === count"
+            (click)="selectedQuestionCount = count; loadChallenge()">
+            {{ count }} questions
+          </button>
+          <button
+            class="count-option"
+            [class.selected]="selectedQuestionCount === null"
+            (click)="selectedQuestionCount = null; loadChallenge()">
+            Toutes ({{ challenge.totalQuestionsInChapter || challenge.totalQuestions }})
+          </button>
+        </div>
+      </div>
+
       <!-- Timer Selection -->
       <div class="timer-selection">
         <h3>⏱️ Temps limité</h3>

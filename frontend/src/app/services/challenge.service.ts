@@ -16,6 +16,7 @@ export interface ChallengeStart {
   subjectName: string;
   questions: ChallengeQuestion[];
   totalQuestions: number;
+  totalQuestionsInChapter?: number; // Nouveau champ pour le nombre total dans le chapitre
 }
 
 export interface ChallengeResult {
@@ -68,11 +69,13 @@ export class ChallengeService {
 
   /**
    * Démarrer un challenge
+   * @param chapterId - ID du chapitre
+   * @param questionCount - Nombre de questions souhaitées (optionnel)
    */
-  startChallenge(chapterId: string): Observable<{ success: boolean; challenge: ChallengeStart }> {
+  startChallenge(chapterId: string, questionCount?: number): Observable<{ success: boolean; challenge: ChallengeStart }> {
     return this.http.post<{ success: boolean; challenge: ChallengeStart }>(
       `${this.baseUrl}/${chapterId}/start`,
-      {}
+      { questionCount }
     );
   }
 

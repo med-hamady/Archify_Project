@@ -15,10 +15,12 @@ export interface ExamQuestion {
 export interface ExamStart {
   examId: string;
   subjectId: string;
-  subjectTitle: string;
+  subjectName: string;
   questions: ExamQuestion[];
   totalQuestions: number;
-  canStart: boolean;
+  totalAvailableQuestions?: number; // Nombre total de questions disponibles (vues)
+  duration?: number; // Durée en minutes
+  canStart?: boolean;
   reason?: string;
 }
 
@@ -91,11 +93,14 @@ export class ExamService {
 
   /**
    * Démarrer un examen
+   * @param subjectId - ID de la matière
+   * @param questionCount - Nombre de questions souhaitées (10/20/30/40, optionnel)
+   * @param duration - Durée en minutes (15-90, optionnel)
    */
-  startExam(subjectId: string): Observable<{ success: boolean; exam: ExamStart }> {
+  startExam(subjectId: string, questionCount?: number, duration?: number): Observable<{ success: boolean; exam: ExamStart }> {
     return this.http.post<{ success: boolean; exam: ExamStart }>(
-      `${this.baseUrl}/start`,
-      { subjectId }
+      `${this.baseUrl}/${subjectId}/start`,
+      { questionCount, duration }
     );
   }
 

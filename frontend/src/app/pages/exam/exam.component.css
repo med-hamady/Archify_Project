@@ -173,6 +173,59 @@
   line-height: 1.5;
 }
 
+/* Exam Option Selection */
+.exam-option-selection {
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #ff9800;
+  text-align: center;
+}
+
+.exam-option-selection h3 {
+  margin: 0 0 0.5rem 0;
+  color: #e65100;
+  font-size: 1.3rem;
+}
+
+.option-description {
+  color: #ef6c00;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.option-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.option-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ff9800;
+  background: white;
+  color: #ef6c00;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-btn:hover {
+  background: #fff3e0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+}
+
+.option-btn.selected {
+  background: #ff9800;
+  color: white;
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.3);
+}
+
 .btn-start {
   width: 100%;
   margin-bottom: 1rem;

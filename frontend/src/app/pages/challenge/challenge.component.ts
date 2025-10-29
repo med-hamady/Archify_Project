@@ -37,6 +37,10 @@ export class ChallengeComponent implements OnInit, OnDestroy {
   timerInterval: any = null;
   timerDisplay: string = '';
 
+  // Question count selection
+  selectedQuestionCount: number | null = null; // null = toutes les questions
+  availableQuestionCounts: number[] = [];
+
   // Results state
   result: ChallengeResult | null = null;
   showXPAnimation = false;
@@ -67,9 +71,20 @@ export class ChallengeComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    this.challengeService.startChallenge(this.chapterId).subscribe({
+    this.challengeService.startChallenge(this.chapterId, this.selectedQuestionCount || undefined).subscribe({
       next: (res) => {
         this.challenge = res.challenge;
+
+        // Générer les options de nombre de questions basées sur le total disponible
+        const total = res.challenge.totalQuestionsInChapter || res.challenge.totalQuestions;
+        this.availableQuestionCounts = [];
+        for (let i = 5; i <= total; i += 5) {
+          this.availableQuestionCounts.push(i);
+        }
+        if (!this.availableQuestionCounts.includes(total)) {
+          this.availableQuestionCounts.push(total);
+        }
+
         this.initializeAnswers();
         this.currentState = 'start';
         this.loading = false;
