@@ -67,24 +67,7 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
                 }
             });
         }
-        // Vérifier s'il y a déjà un challenge récent (moins de 1h)
-        const recentChallenge = await prisma.challengeResult.findFirst({
-            where: {
-                userId,
-                chapterId,
-                completedAt: {
-                    gte: new Date(Date.now() - 60 * 60 * 1000) // Dernière heure
-                }
-            }
-        });
-        if (recentChallenge) {
-            return res.status(400).json({
-                error: {
-                    code: 'CHALLENGE_COOLDOWN',
-                    message: 'Veuillez attendre avant de refaire ce challenge'
-                }
-            });
-        }
+        // Pas de cooldown - on peut refaire le challenge quand on veut
         // Préparer les questions avec options sanitisées (sans révéler les réponses)
         const sanitizedQuestions = chapter.questions.map((q) => {
             const options = q.options;
