@@ -147,6 +147,13 @@ export class ExamComponent implements OnInit {
       selectedAnswers: a.selectedAnswers
     }));
 
+    console.log('📤 Submitting exam:', {
+      subjectId: this.subjectId,
+      examId: this.exam.examId,
+      answerCount: formattedAnswers.length,
+      answers: formattedAnswers
+    });
+
     this.examService.submitExam(this.subjectId, this.exam.examId, formattedAnswers).subscribe({
       next: (res) => {
         this.result = res.result;
@@ -172,8 +179,15 @@ export class ExamComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error submitting exam:', err);
-        this.error = err.error?.error?.message || 'Erreur lors de la soumission de l\'examen';
+        console.error('❌ Error submitting exam:', err);
+        console.error('Error details:', {
+          status: err.status,
+          statusText: err.statusText,
+          error: err.error,
+          message: err.message,
+          url: err.url
+        });
+        this.error = err.error?.error?.message || err.error?.message || err.message || 'Erreur lors de la soumission de l\'examen';
         this.loading = false;
       }
     });
