@@ -109,7 +109,7 @@ export class ExamService {
    */
   submitExam(
     examId: string,
-    answers: Array<{ questionId: string; selectedAnswer: number }>
+    answers: Array<{ questionId: string; selectedAnswers: number[] }>
   ): Observable<{ success: boolean; result: ExamResult }> {
     return this.http.post<{ success: boolean; result: ExamResult }>(
       `${this.baseUrl}/submit`,
