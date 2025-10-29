@@ -27,7 +27,7 @@ async function canAccessExamMode(userId: string, subjectId: string): Promise<boo
   if (!user) return false;
 
   // Vérifier niveau ARGENT minimum
-  const LEVELS_ORDER: GameLevel[] = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+  const LEVELS_ORDER: GameLevel[] = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
   const userLevelIndex = LEVELS_ORDER.indexOf(user.level);
   const argentIndex = LEVELS_ORDER.indexOf('ARGENT');
 

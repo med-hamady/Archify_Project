@@ -182,7 +182,7 @@ async function checkLevelBadge(
     ARGENT: 'REACH_ARGENT',
     OR: 'REACH_OR',
     PLATINUM: 'REACH_PLATINUM',
-    LEGENDAIRE: 'REACH_LEGENDAIRE',
+    DIAMANT: 'REACH_DIAMANT',
     MONDIAL: 'REACH_MONDIAL'
   };
 

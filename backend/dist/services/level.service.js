@@ -38,7 +38,7 @@ exports.LEVEL_THRESHOLDS = {
     ARGENT: { min: 1601, max: 2800, name: 'Argent' },
     OR: { min: 2801, max: 4000, name: 'Or' },
     PLATINUM: { min: 4001, max: 5500, name: 'Platinum' },
-    LEGENDAIRE: { min: 5501, max: 9000, name: 'Légendaire' },
+    DIAMANT: { min: 5501, max: 9000, name: 'Diamant' },
     MONDIAL: { min: 9001, max: Infinity, name: 'Mondial' }
 };
 /**
@@ -50,7 +50,7 @@ exports.LEVEL_ORDER = [
     'ARGENT',
     'OR',
     'PLATINUM',
-    'LEGENDAIRE',
+    'DIAMANT',
     'MONDIAL'
 ];
 /**
@@ -79,9 +79,9 @@ exports.LEVEL_REWARDS = {
         'Badge Platinum',
         'Titre "Expert"'
     ],
-    LEGENDAIRE: [
+    DIAMANT: [
         'Mode révision libre débloqué',
-        'Badge Légendaire',
+        'Badge Diamant',
         'Titre "Maître"',
         '+10% XP permanent (cumulatif)'
     ],
@@ -101,7 +101,7 @@ exports.LEVEL_XP_BONUSES = {
     ARGENT: 5, // +3% (cumulatif = 2+3)
     OR: 8, // +3% (cumulatif = 2+3+3)
     PLATINUM: 13, // +5% (cumulatif = 2+3+3+5)
-    LEGENDAIRE: 23, // +10% (cumulatif = 2+3+3+5+10)
+    DIAMANT: 23, // +10% (cumulatif = 2+3+3+5+10)
     MONDIAL: 23 // Pas de bonus supplémentaire
 };
 // ============================================
@@ -125,7 +125,7 @@ function getLevelFromXP(xp) {
     if (xp <= 5500)
         return 'PLATINUM';
     if (xp <= 9000)
-        return 'LEGENDAIRE';
+        return 'DIAMANT';
     return 'MONDIAL';
 }
 /**
@@ -310,6 +310,6 @@ function canAccessCompetitiveLeaderboard(userLevel) {
  * Vérifie si le mode révision libre est débloqué
  */
 function hasRevisionModeUnlocked(userLevel) {
-    return hasRequiredLevel(userLevel, 'LEGENDAIRE');
+    return hasRequiredLevel(userLevel, 'DIAMANT');
 }
 //# sourceMappingURL=level.service.js.map

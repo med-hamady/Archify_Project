@@ -375,7 +375,7 @@ leaderboardRouter.get('/my-rank', requireAuth, async (req: any, res: any) => {
  */
 leaderboardRouter.get('/top-by-level', requireAuth, async (req: any, res: any) => {
   try {
-    const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+    const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
     const topByLevel: Record<string, any[]> = {};
 
     for (const level of levels) {

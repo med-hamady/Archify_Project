@@ -29,7 +29,7 @@ export class LeaderboardComponent implements OnInit {
     ARGENT: { color: '#C0C0C0', image: '/images/badges/argent.jpg', label: 'Argent' },
     OR: { color: '#FFD700', image: '/images/badges/or.jpg', label: 'Or' },
     PLATINUM: { color: '#E5E4E2', image: '/images/badges/platine.jpg', label: 'Platinum' },
-    LEGENDAIRE: { color: '#9C27B0', image: '/images/badges/legendaire.jpg', label: 'Légendaire' },
+    DIAMANT: { color: '#9C27B0', image: '/images/badges/diamant.jpg', label: 'Diamant' },
     MONDIAL: { color: '#FF6B6B', image: '/images/badges/mondial.jpg', label: 'Mondial' }
   };
 

@@ -23,7 +23,7 @@ export const LEVEL_THRESHOLDS: Record<GameLevel, { min: number; max: number; nam
   ARGENT: { min: 1601, max: 2800, name: 'Argent' },
   OR: { min: 2801, max: 4000, name: 'Or' },
   PLATINUM: { min: 4001, max: 5500, name: 'Platinum' },
-  LEGENDAIRE: { min: 5501, max: 9000, name: 'Légendaire' },
+  DIAMANT: { min: 5501, max: 9000, name: 'Diamant' },
   MONDIAL: { min: 9001, max: Infinity, name: 'Mondial' }
 };
 
@@ -36,7 +36,7 @@ export const LEVEL_ORDER: GameLevel[] = [
   'ARGENT',
   'OR',
   'PLATINUM',
-  'LEGENDAIRE',
+  'DIAMANT',
   'MONDIAL'
 ];
 
@@ -66,9 +66,9 @@ export const LEVEL_REWARDS: Record<GameLevel, string[]> = {
     'Badge Platinum',
     'Titre "Expert"'
   ],
-  LEGENDAIRE: [
+  DIAMANT: [
     'Mode révision libre débloqué',
-    'Badge Légendaire',
+    'Badge Diamant',
     'Titre "Maître"',
     '+10% XP permanent (cumulatif)'
   ],
@@ -89,7 +89,7 @@ export const LEVEL_XP_BONUSES: Record<GameLevel, number> = {
   ARGENT: 5, // +3% (cumulatif = 2+3)
   OR: 8, // +3% (cumulatif = 2+3+3)
   PLATINUM: 13, // +5% (cumulatif = 2+3+3+5)
-  LEGENDAIRE: 23, // +10% (cumulatif = 2+3+3+5+10)
+  DIAMANT: 23, // +10% (cumulatif = 2+3+3+5+10)
   MONDIAL: 23 // Pas de bonus supplémentaire
 };
 
@@ -132,7 +132,7 @@ export function getLevelFromXP(xp: number): GameLevel {
   if (xp <= 2800) return 'ARGENT';
   if (xp <= 4000) return 'OR';
   if (xp <= 5500) return 'PLATINUM';
-  if (xp <= 9000) return 'LEGENDAIRE';
+  if (xp <= 9000) return 'DIAMANT';
   return 'MONDIAL';
 }
 
@@ -345,5 +345,5 @@ export function canAccessCompetitiveLeaderboard(userLevel: GameLevel): boolean {
  * Vérifie si le mode révision libre est débloqué
  */
 export function hasRevisionModeUnlocked(userLevel: GameLevel): boolean {
-  return hasRequiredLevel(userLevel, 'LEGENDAIRE');
+  return hasRequiredLevel(userLevel, 'DIAMANT');
 }

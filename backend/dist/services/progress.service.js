@@ -375,7 +375,7 @@ async function isExamUnlocked(userId, subjectId) {
     });
     if (!user)
         return false;
-    const levelOrder = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+    const levelOrder = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
     const userLevelIndex = levelOrder.indexOf(user.level);
     if (userLevelIndex < 2) { // Moins que Argent
         return false;

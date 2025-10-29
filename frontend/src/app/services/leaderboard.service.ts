@@ -9,7 +9,7 @@ export interface LeaderboardEntry {
   name: string;
   semester: string;
   xpTotal: number;
-  level: 'BOIS' | 'BRONZE' | 'ARGENT' | 'OR' | 'PLATINUM' | 'LEGENDAIRE' | 'MONDIAL';
+  level: 'BOIS' | 'BRONZE' | 'ARGENT' | 'OR' | 'PLATINUM' | 'DIAMANT' | 'MONDIAL';
   consecutiveGoodAnswers: number;
   legendQuestionsCompleted: number;
   isCurrentUser?: boolean;

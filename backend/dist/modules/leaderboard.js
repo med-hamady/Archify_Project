@@ -343,7 +343,7 @@ exports.leaderboardRouter.get('/my-rank', auth_1.requireAuth, async (req, res) =
  */
 exports.leaderboardRouter.get('/top-by-level', auth_1.requireAuth, async (req, res) => {
     try {
-        const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+        const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
         const topByLevel = {};
         for (const level of levels) {
             const topUsers = await prisma.user.findMany({

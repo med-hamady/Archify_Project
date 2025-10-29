@@ -31,7 +31,7 @@ export class FacgameDashboardComponent implements OnInit {
     ARGENT: { color: '#C0C0C0', image: '/images/badges/argent.jpg', label: 'Argent' },
     OR: { color: '#FFD700', image: '/images/badges/or.jpg', label: 'Or' },
     PLATINUM: { color: '#E5E4E2', image: '/images/badges/platine.jpg', label: 'Platinum' },
-    LEGENDAIRE: { color: '#9C27B0', image: '/images/badges/legendaire.jpg', label: 'Légendaire' },
+    DIAMANT: { color: '#9C27B0', image: '/images/badges/diamant.jpg', label: 'Diamant' },
     MONDIAL: { color: '#FF6B6B', image: '/images/badges/mondial.jpg', label: 'Mondial' }
   };
 
@@ -42,7 +42,7 @@ export class FacgameDashboardComponent implements OnInit {
     ARGENT: { min: 1601, max: 2800 },
     OR: { min: 2801, max: 4000 },
     PLATINUM: { min: 4001, max: 5500 },
-    LEGENDAIRE: { min: 5501, max: 9000 },
+    DIAMANT: { min: 5501, max: 9000 },
     MONDIAL: { min: 9001, max: 999999 }
   };
 
@@ -123,7 +123,7 @@ export class FacgameDashboardComponent implements OnInit {
   }
 
   getNextLevel(current: string): string {
-    const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+    const levels = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
     const index = levels.indexOf(current);
     return index < levels.length - 1 ? levels[index + 1] : 'MAX';
   }

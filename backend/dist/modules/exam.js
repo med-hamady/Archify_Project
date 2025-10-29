@@ -28,7 +28,7 @@ async function canAccessExamMode(userId, subjectId) {
     if (!user)
         return false;
     // Vérifier niveau ARGENT minimum
-    const LEVELS_ORDER = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'LEGENDAIRE', 'MONDIAL'];
+    const LEVELS_ORDER = ['BOIS', 'BRONZE', 'ARGENT', 'OR', 'PLATINUM', 'DIAMANT', 'MONDIAL'];
     const userLevelIndex = LEVELS_ORDER.indexOf(user.level);
     const argentIndex = LEVELS_ORDER.indexOf('ARGENT');
     if (userLevelIndex < argentIndex) {
