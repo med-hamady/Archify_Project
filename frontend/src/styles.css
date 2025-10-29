@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Background gradient matching login page */
+/* Background gradient matching login page - Updated */
 body {
   background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
   margin: 0;
