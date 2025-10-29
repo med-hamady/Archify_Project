@@ -108,11 +108,12 @@ export class ExamService {
    * Soumettre les réponses de l'examen
    */
   submitExam(
+    subjectId: string,
     examId: string,
     answers: Array<{ questionId: string; selectedAnswers: number[] }>
   ): Observable<{ success: boolean; result: ExamResult }> {
     return this.http.post<{ success: boolean; result: ExamResult }>(
-      `${this.baseUrl}/submit`,
+      `${this.baseUrl}/${subjectId}/submit`,
       { examId, answers }
     );
   }

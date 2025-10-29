@@ -53,7 +53,12 @@
       "Bash(git revert:*)",
       "Read(//c/Users/pc/Desktop/Logos des niveaux/**)",
       "Read(//c/Users/pc/Desktop/FAC GAME/**)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git restore:*)",
+      "Bash(ng generate:*)",
+      "Bash(npx vercel:*)",
+      "Bash(git log:*)",
+      "Bash(npx ng build --configuration production)"
     ],
     "deny": [],
     "ask": []

@@ -147,7 +147,7 @@ export class ExamComponent implements OnInit {
       selectedAnswers: a.selectedAnswers
     }));
 
-    this.examService.submitExam(this.exam.examId, formattedAnswers).subscribe({
+    this.examService.submitExam(this.subjectId, this.exam.examId, formattedAnswers).subscribe({
       next: (res) => {
         this.result = res.result;
         this.currentState = 'results';

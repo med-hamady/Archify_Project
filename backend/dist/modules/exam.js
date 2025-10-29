@@ -216,6 +216,7 @@ exports.examRouter.post('/:subjectId/start', auth_1.requireAuth, async (req, res
 // SOUMETTRE RÉPONSES EXAMEN
 // ============================================
 const submitExamSchema = zod_1.z.object({
+    examId: zod_1.z.string().optional(),
     answers: zod_1.z.array(zod_1.z.object({
         questionId: zod_1.z.string(),
         selectedAnswers: zod_1.z.array(zod_1.z.number().int().min(0).max(4)) // Tableau de 0-4 pour les options A-E (peut être vide)

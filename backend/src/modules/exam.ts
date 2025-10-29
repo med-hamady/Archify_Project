@@ -248,6 +248,7 @@ examRouter.post('/:subjectId/start', requireAuth, async (req: any, res) => {
 // ============================================
 
 const submitExamSchema = z.object({
+  examId: z.string().optional(),
   answers: z.array(z.object({
     questionId: z.string(),
     selectedAnswers: z.array(z.number().int().min(0).max(4)) // Tableau de 0-4 pour les options A-E (peut être vide)
