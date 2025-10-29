@@ -65,7 +65,11 @@
 
       <!-- Unlock Badges -->
       <div class="unlock-badges">
-        <div class="unlock-badge exam" [class.unlocked]="subject.examUnlocked">
+        <div
+          class="unlock-badge exam"
+          [class.unlocked]="subject.examUnlocked"
+          [class.clickable]="subject.examUnlocked"
+          (click)="subject.examUnlocked ? navigateToExam(subject.id, $event) : null">
           <span class="badge-icon">{{ subject.examUnlocked ? '✅' : '🔒' }}</span>
           <span class="badge-label">Mode Examen</span>
         </div>

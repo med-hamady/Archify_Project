@@ -43,6 +43,12 @@ export class SubjectsComponent implements OnInit {
     this.router.navigate(['/chapters', subjectId]);
   }
 
+  navigateToExam(subjectId: string, event: Event) {
+    // Empêcher la propagation pour ne pas déclencher le clic sur la carte
+    event.stopPropagation();
+    this.router.navigate(['/exam', subjectId]);
+  }
+
   getProgressClass(percent: number): string {
     if (percent === 100) return 'complete';
     if (percent >= 80) return 'high';
