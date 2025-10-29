@@ -257,45 +257,113 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
   background: #f8f9fa;
   border: 2px solid #e9ecef;
-  border-radius: 10px;
-  font-size: 0.85rem;
+  border-radius: 16px;
+  font-size: 0.95rem;
   color: #999;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.unlock-badge.unlocked {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  border-color: #28a745;
-  color: #155724;
-  font-weight: 600;
+/* Badge verrouillé */
+.unlock-badge:not(.unlocked) {
+  opacity: 0.7;
 }
 
+/* Badge Mode Examen débloqué - Design premium */
+.unlock-badge.exam.unlocked {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+  border: 3px solid #FF8C00;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 1.2rem 1.5rem;
+  box-shadow:
+    0 8px 24px rgba(255, 140, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+/* Effet de brillance animé */
+.unlock-badge.exam.unlocked::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Badge cliquable */
 .unlock-badge.clickable {
   cursor: pointer;
 }
 
 .unlock-badge.clickable:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 12px 32px rgba(255, 140, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
+/* Animation au clic */
+.unlock-badge.clickable:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Empêcher les enfants d'intercepter les clics */
 .unlock-badge.clickable .badge-icon,
 .unlock-badge.clickable .badge-label {
   pointer-events: none;
 }
 
+/* Icône du badge */
 .badge-icon {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: pulse 2s infinite;
 }
 
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Label du badge */
 .badge-label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
 }
 
 /* Subject Action */
