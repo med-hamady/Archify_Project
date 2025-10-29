@@ -109,10 +109,13 @@
   border-radius: 50%;
   background: white;
   padding: 3px;
-  /* Remove black background by making it transparent */
-  mix-blend-mode: multiply;
+  /* Remove black background using screen blend mode - black becomes transparent */
+  mix-blend-mode: screen;
   /* Cinematic shadow */
   filter:
+    brightness(0.85)
+    contrast(1.3)
+    saturate(1.2)
     drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3))
     drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2));
 }
