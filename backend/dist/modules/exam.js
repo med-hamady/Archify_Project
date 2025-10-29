@@ -400,6 +400,7 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
             success: true,
             result: {
                 score: scoreSur20,
+                scoreOutOf20: scoreSur20, // Alias pour compatibilité frontend
                 scorePercent,
                 passed,
                 grade: getGrade(scoreSur20),

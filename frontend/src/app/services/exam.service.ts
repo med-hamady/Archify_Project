@@ -128,7 +128,7 @@ export class ExamService {
     return this.http.get<{
       success: boolean;
       correction: ExamCorrection;
-    }>(`${this.baseUrl}/correction/${examId}`);
+    }>(`${this.baseUrl}/${examId}/correction`);
   }
 
   /**

@@ -458,6 +458,7 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
       success: true,
       result: {
         score: scoreSur20,
+        scoreOutOf20: scoreSur20, // Alias pour compatibilité frontend
         scorePercent,
         passed,
         grade: getGrade(scoreSur20),
