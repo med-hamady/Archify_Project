@@ -28,7 +28,8 @@
 .header-logo {
   width: 150px;
   height: 150px;
-  object-fit: contain;
+  color: #1e40af;
+  flex-shrink: 0;
 }
 
 .subtitle {
