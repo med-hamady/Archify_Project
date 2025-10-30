@@ -34,7 +34,8 @@
 
 .progress-info {
   flex: 1;
-  color: white;
+  color: #1e40af;
+  font-weight: 600;
 }
 
 .question-counter {
@@ -46,14 +47,14 @@
 
 .progress-bar-mini {
   height: 6px;
-  background: rgba(255,255,255,0.3);
+  background: rgba(30, 64, 175, 0.2);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill-mini {
   height: 100%;
-  background: white;
+  background: linear-gradient(90deg, #3b82f6, #1e40af);
   border-radius: 3px;
   transition: width 0.3s ease;
 }
