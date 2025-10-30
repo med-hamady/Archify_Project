@@ -1,8 +1,8 @@
 <main>
   <router-outlet />
 </main>
-<!-- Hide "Prêt à commencer" section for admin users -->
-<section *ngIf="!authService.isAdmin()" class="bg-primary text-white mt-16">
+<!-- Hide "Prêt à commencer" section for admin users and subscribed users -->
+<section *ngIf="!authService.isAdmin() && !authService.isPremium()" class="bg-primary text-white mt-16">
   <div class="container py-10 flex flex-col md:flex-row items-center justify-between gap-4">
     <div>
       <h3 class="text-xl font-semibold">Prêt à commencer ?</h3>
