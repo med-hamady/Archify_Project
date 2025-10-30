@@ -193,26 +193,25 @@ adminSubscriptionRouter.get('/users-subscriptions', requireAuth, requireAdmin, a
         id: user.id,
         email: user.email,
         name: user.name,
+        role: 'STUDENT',
         semester: user.semester,
         xpTotal: user.xpTotal,
         level: user.level,
         createdAt: user.createdAt,
-        subscription: {
-          status: subscriptionStatus,
-          canAccessQuiz,
-          canAccessDocuments,
-          expiresAt,
-          planName,
-          planType,
-          subscriptionId: subscription?.id || null
-        }
+        canAccessQuiz,
+        canAccessDocuments,
+        subscription: subscription ? {
+          id: subscription.id,
+          status: subscriptionStatus.toUpperCase(),
+          type: planType,
+          startAt: subscription.startAt,
+          endAt: expiresAt,
+          planName
+        } : null
       };
     });
 
-    return res.json({
-      users: usersWithStatus,
-      count: usersWithStatus.length
-    });
+    return res.json(usersWithStatus);
 
   } catch (error) {
     console.error('[admin/users-subscriptions] Error:', error);
@@ -256,26 +255,41 @@ adminSubscriptionRouter.get('/payments', requireAuth, requireAdmin, async (req: 
       take: limit ? parseInt(limit as string) : undefined
     });
 
-    return res.json({
-      payments: payments.map(payment => ({
-        id: payment.id,
-        user: payment.user,
-        planId: payment.planId,
-        provider: payment.provider,
-        providerRef: payment.providerRef,
-        phoneNumber: payment.phoneNumber,
-        amount: payment.amountCents / 100,
-        currency: payment.currency,
-        status: payment.status,
-        screenshotUrl: payment.screenshotUrl,
-        adminNotes: payment.adminNotes,
-        validatedBy: payment.validatedBy,
-        validatedAt: payment.validatedAt,
-        createdAt: payment.createdAt,
-        updatedAt: payment.updatedAt
-      })),
-      count: payments.length
-    });
+    // Récupérer les informations des plans pour chaque paiement
+    const paymentsWithPlans = await Promise.all(
+      payments.map(async (payment) => {
+        const plan = await prisma.subscriptionPlan.findUnique({
+          where: { id: payment.planId },
+          select: {
+            id: true,
+            name: true,
+            type: true
+          }
+        });
+
+        return {
+          id: payment.id,
+          userId: payment.userId,
+          planId: payment.planId,
+          user: payment.user,
+          plan: plan || { id: payment.planId, name: 'Plan inconnu', type: 'UNKNOWN' },
+          provider: payment.provider,
+          providerRef: payment.providerRef,
+          phoneNumber: payment.phoneNumber,
+          amountCents: payment.amountCents,
+          currency: payment.currency,
+          status: payment.status,
+          receiptScreenshot: payment.screenshotUrl,
+          adminNotes: payment.adminNotes,
+          validatedBy: payment.validatedBy,
+          validatedAt: payment.validatedAt,
+          createdAt: payment.createdAt,
+          updatedAt: payment.updatedAt
+        };
+      })
+    );
+
+    return res.json(paymentsWithPlans);
 
   } catch (error) {
     console.error('[admin/payments] Error:', error);
