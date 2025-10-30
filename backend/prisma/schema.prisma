@@ -18,7 +18,9 @@ model User {
   semester        String
   role            UserRole @default(STUDENT)
   profilePicture  String?  // URL de la photo de profil
-  deviceId        String?  // ID de l'appareil autorisé (défini lors de l'inscription)
+  authorizedDevices String[] @default([]) // Liste des appareils autorisés (max 2: PC et téléphone)
+  activeDeviceId    String?  // ID de l'appareil actuellement connecté
+  activeToken       String?  // Token de session actif
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

@@ -78,8 +78,8 @@ function getUserPublic(user: any) {
   };
 }
 
-// Auth middleware - vérifie uniquement le JWT token
-export function requireAuth(req: any, res: any, next: any) {
+// Auth middleware - vérifie le JWT token ET la session active
+export async function requireAuth(req: any, res: any, next: any) {
   const cookieToken = req.cookies?.access_token;
   const authHeader = req.headers.authorization;
   const headerToken = authHeader?.split(' ')[1];
@@ -99,9 +99,34 @@ export function requireAuth(req: any, res: any, next: any) {
   }
   try {
     const decoded: any = jwt.verify(token, JWT_SECRET);
+
+    // Vérifier que ce token est toujours le token actif (session unique)
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      select: { id: true, role: true, activeToken: true, activeDeviceId: true }
+    });
+
+    if (!user) {
+      console.log('[requireAuth] User not found');
+      return res.status(401).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
+    }
+
+    if (user.activeToken !== token) {
+      console.log('[requireAuth] Session expired - logged in from another device:', {
+        userId: user.id,
+        activeDevice: user.activeDeviceId
+      });
+      return res.status(401).json({
+        error: {
+          code: 'SESSION_EXPIRED',
+          message: 'Votre session a expiré. Vous vous êtes connecté depuis un autre appareil.'
+        }
+      });
+    }
+
     req.userId = decoded.sub;
     req.userRole = decoded.role;
-    console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
+    console.log('[requireAuth] Token verified and session active:', { userId: decoded.sub, role: decoded.role });
     return next();
   } catch (_e: any) {
     console.log('[requireAuth] Token verification failed:', _e.message);
@@ -171,7 +196,8 @@ authRouter.post('/register', async (req, res) => {
         passwordHash,
         name: body.name,
         semester: body.semester,
-        deviceId: body.deviceId, // Stocker l'ID de l'appareil lors de l'inscription
+        authorizedDevices: [body.deviceId], // Premier appareil autorisé
+        activeDeviceId: body.deviceId,
       },
     });
 
@@ -188,7 +214,24 @@ authRouter.post('/register', async (req, res) => {
 
     const accessToken = signAccessToken({ sub: user.id, role: user.role });
     const refreshToken = signRefreshToken({ sub: user.id });
+
+    // Stocker le token actif pour la session unique
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        activeToken: accessToken,
+        activeDeviceId: body.deviceId
+      }
+    });
+
     setAuthCookies(res, accessToken, refreshToken);
+
+    console.log('[Auth] Registration successful:', {
+      userId: user.id,
+      email: user.email,
+      deviceId: body.deviceId,
+      authorizedDevices: [body.deviceId]
+    });
 
     return res.status(201).json({
       user: getUserPublic(user),
@@ -220,19 +263,50 @@ authRouter.post('/login', async (req, res) => {
     const ok = await bcrypt.compare(body.password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' } });
 
-    // Vérifier que l'appareil correspond à celui enregistré lors de l'inscription
-    if (user.deviceId && user.deviceId !== body.deviceId) {
-      console.log('[Auth] Login denied - Device mismatch:', {
-        userId: user.id,
-        email: user.email,
-        registeredDevice: user.deviceId,
-        attemptedDevice: body.deviceId
-      });
-      return res.status(403).json({
-        error: {
-          code: 'DEVICE_NOT_AUTHORIZED',
-          message: 'Ce compte ne peut être utilisé que sur l\'appareil où il a été créé.'
+    // Vérifier si l'appareil est dans la liste des appareils autorisés
+    const authorizedDevices = user.authorizedDevices || [];
+    const isAuthorizedDevice = authorizedDevices.includes(body.deviceId);
+
+    if (!isAuthorizedDevice) {
+      // L'appareil n'est pas autorisé
+      if (authorizedDevices.length >= 2) {
+        // Maximum 2 appareils déjà enregistrés
+        console.log('[Auth] Login denied - Max devices reached:', {
+          userId: user.id,
+          email: user.email,
+          authorizedDevices,
+          attemptedDevice: body.deviceId
+        });
+        return res.status(403).json({
+          error: {
+            code: 'MAX_DEVICES_REACHED',
+            message: 'Nombre maximum d\'appareils atteint (2 max: PC et téléphone). Contactez le support pour changer d\'appareil.'
+          }
+        });
+      }
+
+      // Ajouter ce nouvel appareil (2e appareil)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          authorizedDevices: {
+            push: body.deviceId
+          }
         }
+      });
+      console.log('[Auth] New device authorized:', {
+        userId: user.id,
+        deviceId: body.deviceId,
+        totalDevices: authorizedDevices.length + 1
+      });
+    }
+
+    // Vérifier si une session est déjà active
+    if (user.activeToken) {
+      console.log('[Auth] Active session detected - will be invalidated:', {
+        userId: user.id,
+        activeDevice: user.activeDeviceId,
+        newDevice: body.deviceId
       });
     }
 
@@ -240,15 +314,23 @@ authRouter.post('/login', async (req, res) => {
     const accessToken = signAccessToken({ sub: user.id, role: user.role });
     const refreshToken = signRefreshToken({ sub: user.id });
 
+    // Mettre à jour la session active (invalide l'ancienne session)
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        activeToken: accessToken,
+        activeDeviceId: body.deviceId
+      }
+    });
+
     setAuthCookies(res, accessToken, refreshToken);
 
-    console.log('[Auth] Login successful - Device authorized:', {
+    console.log('[Auth] Login successful:', {
       userId: user.id,
       email: user.email,
       role: user.role,
       deviceId: body.deviceId,
-      hasAccessToken: !!accessToken,
-      hasRefreshToken: !!refreshToken
+      authorizedDevices: isAuthorizedDevice ? authorizedDevices : [...authorizedDevices, body.deviceId]
     });
 
     return res.json({
@@ -283,6 +365,12 @@ authRouter.post('/refresh', async (req, res) => {
 
     const newAccess = signAccessToken({ sub: user.id, role: user.role });
     const newRefresh = signRefreshToken({ sub: user.id });
+
+    // Mettre à jour le token actif
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { activeToken: newAccess }
+    });
 
     setAuthCookies(res, newAccess, newRefresh);
     return res.json({ user: getUserPublic(user) });
@@ -339,9 +427,36 @@ authRouter.get('/verify', async (req, res) => {
 });
 
 // POST /logout
-authRouter.post('/logout', async (_req, res) => {
-  clearAuthCookies(res);
-  return res.status(204).send();
+authRouter.post('/logout', async (req: any, res) => {
+  try {
+    const cookieToken = req.cookies?.access_token;
+    const authHeader = req.headers.authorization;
+    const headerToken = authHeader?.split(' ')[1];
+    const token = cookieToken || headerToken;
+
+    if (token) {
+      try {
+        const decoded: any = jwt.verify(token, JWT_SECRET);
+        // Effacer la session active
+        await prisma.user.update({
+          where: { id: decoded.sub },
+          data: {
+            activeToken: null,
+            activeDeviceId: null
+          }
+        });
+        console.log('[Auth] Logout - session cleared for user:', decoded.sub);
+      } catch (e) {
+        console.log('[Auth] Logout - Token invalid, clearing cookies only');
+      }
+    }
+
+    clearAuthCookies(res);
+    return res.status(204).send();
+  } catch (e) {
+    clearAuthCookies(res);
+    return res.status(204).send();
+  }
 });
 
 // PUT /profile
