@@ -223,11 +223,20 @@ exports.authRouter.post('/login', async (req, res) => {
         // Vérifier si l'appareil est dans la liste des appareils autorisés
         const authorizedDevices = user.authorizedDevices || [];
         const isAuthorizedDevice = authorizedDevices.includes(body.deviceId);
+        console.log('[Auth] Device authorization check:', {
+            userId: user.id,
+            email: user.email,
+            currentDeviceId: body.deviceId,
+            authorizedDevices: authorizedDevices,
+            authorizedDevicesCount: authorizedDevices.length,
+            isAuthorizedDevice: isAuthorizedDevice,
+            deviceIdType: typeof body.deviceId
+        });
         if (!isAuthorizedDevice) {
             // L'appareil n'est pas autorisé
             if (authorizedDevices.length >= 2) {
                 // Maximum 2 appareils déjà enregistrés
-                console.log('[Auth] Login denied - Max devices reached:', {
+                console.log('[Auth] ❌ Login denied - Max devices reached:', {
                     userId: user.id,
                     email: user.email,
                     authorizedDevices,
@@ -241,6 +250,7 @@ exports.authRouter.post('/login', async (req, res) => {
                 });
             }
             // Ajouter ce nouvel appareil (2e appareil)
+            console.log('[Auth] ➕ Adding new device to authorized list...');
             await prisma.user.update({
                 where: { id: user.id },
                 data: {
@@ -249,11 +259,14 @@ exports.authRouter.post('/login', async (req, res) => {
                     }
                 }
             });
-            console.log('[Auth] New device authorized:', {
+            console.log('[Auth] ✅ New device authorized:', {
                 userId: user.id,
                 deviceId: body.deviceId,
                 totalDevices: authorizedDevices.length + 1
             });
+        }
+        else {
+            console.log('[Auth] ✅ Device already authorized - allowing login');
         }
         // Generate new tokens
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
@@ -357,6 +370,36 @@ exports.authRouter.get('/verify', async (req, res) => {
 exports.authRouter.post('/logout', async (_req, res) => {
     clearAuthCookies(res);
     return res.status(204).send();
+});
+// GET /debug/devices - Endpoint de diagnostic pour voir les appareils autorisés
+exports.authRouter.get('/debug/devices', requireAuth, async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: {
+                id: true,
+                email: true,
+                authorizedDevices: true,
+                activeDeviceId: true,
+                activeToken: true
+            }
+        });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        return res.json({
+            userId: user.id,
+            email: user.email,
+            authorizedDevices: user.authorizedDevices || [],
+            authorizedDevicesCount: (user.authorizedDevices || []).length,
+            activeDeviceId: user.activeDeviceId,
+            hasActiveToken: !!user.activeToken
+        });
+    }
+    catch (err) {
+        console.error('[Auth] Debug devices error:', err);
+        return res.status(500).json({ error: 'Internal error' });
+    }
 });
 // PUT /profile
 const profileSchema = zod_1.z.object({

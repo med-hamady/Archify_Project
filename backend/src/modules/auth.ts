@@ -233,11 +233,21 @@ authRouter.post('/login', async (req, res) => {
     const authorizedDevices = user.authorizedDevices || [];
     const isAuthorizedDevice = authorizedDevices.includes(body.deviceId);
 
+    console.log('[Auth] Device authorization check:', {
+      userId: user.id,
+      email: user.email,
+      currentDeviceId: body.deviceId,
+      authorizedDevices: authorizedDevices,
+      authorizedDevicesCount: authorizedDevices.length,
+      isAuthorizedDevice: isAuthorizedDevice,
+      deviceIdType: typeof body.deviceId
+    });
+
     if (!isAuthorizedDevice) {
       // L'appareil n'est pas autorisé
       if (authorizedDevices.length >= 2) {
         // Maximum 2 appareils déjà enregistrés
-        console.log('[Auth] Login denied - Max devices reached:', {
+        console.log('[Auth] ❌ Login denied - Max devices reached:', {
           userId: user.id,
           email: user.email,
           authorizedDevices,
@@ -252,6 +262,7 @@ authRouter.post('/login', async (req, res) => {
       }
 
       // Ajouter ce nouvel appareil (2e appareil)
+      console.log('[Auth] ➕ Adding new device to authorized list...');
       await prisma.user.update({
         where: { id: user.id },
         data: {
@@ -260,11 +271,13 @@ authRouter.post('/login', async (req, res) => {
           }
         }
       });
-      console.log('[Auth] New device authorized:', {
+      console.log('[Auth] ✅ New device authorized:', {
         userId: user.id,
         deviceId: body.deviceId,
         totalDevices: authorizedDevices.length + 1
       });
+    } else {
+      console.log('[Auth] ✅ Device already authorized - allowing login');
     }
 
     // Generate new tokens
@@ -372,6 +385,38 @@ authRouter.get('/verify', async (req, res) => {
 authRouter.post('/logout', async (_req, res) => {
   clearAuthCookies(res);
   return res.status(204).send();
+});
+
+// GET /debug/devices - Endpoint de diagnostic pour voir les appareils autorisés
+authRouter.get('/debug/devices', requireAuth, async (req: any, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: {
+        id: true,
+        email: true,
+        authorizedDevices: true,
+        activeDeviceId: true,
+        activeToken: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json({
+      userId: user.id,
+      email: user.email,
+      authorizedDevices: user.authorizedDevices || [],
+      authorizedDevicesCount: (user.authorizedDevices || []).length,
+      activeDeviceId: user.activeDeviceId,
+      hasActiveToken: !!user.activeToken
+    });
+  } catch (err) {
+    console.error('[Auth] Debug devices error:', err);
+    return res.status(500).json({ error: 'Internal error' });
+  }
 });
 
 // PUT /profile
