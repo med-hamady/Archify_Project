@@ -5,6 +5,10 @@ import { map, catchError, of } from 'rxjs';
 
 /**
  * Guard pour protéger les routes nécessitant un abonnement actif avec accès quiz
+ *
+ * NOTE: Ce guard autorise maintenant l'accès même sans abonnement actif
+ * car le backend gère les 3 QCM gratuits. Le backend redirigera automatiquement
+ * vers /subscription après avoir utilisé les 3 QCM gratuits.
  */
 export const subscriptionGuard: CanActivateFn = (route, state) => {
   const subscriptionService = inject(SubscriptionService);
@@ -13,25 +17,18 @@ export const subscriptionGuard: CanActivateFn = (route, state) => {
   // Vérifier le statut d'abonnement
   return subscriptionService.checkSubscription().pipe(
     map(response => {
-      if (response.subscription.canAccessQuiz) {
-        console.log('[SubscriptionGuard] Access granted - user has quiz access');
-        return true;
-      } else {
-        console.log('[SubscriptionGuard] Access denied - no quiz access');
-        // Rediriger vers la page d'abonnement requis
-        router.navigate(['/subscription-required'], {
-          queryParams: { returnUrl: state.url }
-        });
-        return false;
-      }
+      // Autoriser l'accès dans tous les cas
+      // Le backend gérera la limite de 3 QCM gratuits et retournera une erreur
+      // qui sera gérée par le composant quiz pour rediriger vers /subscription
+      console.log('[SubscriptionGuard] Access granted - backend will handle free QCM limits');
+      return true;
     }),
     catchError(error => {
       console.error('[SubscriptionGuard] Error checking subscription:', error);
-      // En cas d'erreur, rediriger vers la page d'abonnement
-      router.navigate(['/subscription-required'], {
-        queryParams: { returnUrl: state.url }
-      });
-      return of(false);
+      // En cas d'erreur de connexion, autoriser quand même l'accès
+      // Le backend refusera si nécessaire
+      console.log('[SubscriptionGuard] Allowing access despite error - backend will validate');
+      return of(true);
     })
   );
 };
