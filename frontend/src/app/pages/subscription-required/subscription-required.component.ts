@@ -42,7 +42,6 @@ export class SubscriptionRequiredComponent implements OnInit {
   }
 
   goToSubscriptions() {
-    // TODO: Naviguer vers la page d'abonnements quand elle sera créée
-    alert('Page d\'abonnements à venir');
+    this.router.navigate(['/subscription']);
   }
 }
