@@ -8,6 +8,7 @@ import {
   Activity,
   DetailedStats
 } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,11 +19,13 @@ import {
 })
 export class ProfileComponent implements OnInit {
   private profileService = inject(ProfileService);
+  private authService = inject(AuthService);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
   activities: Activity[] = [];
   stats: DetailedStats | null = null;
+  devicesInfo: any = null; // Informations de diagnostic sur les appareils
 
   loading = true;
   error: string | null = null;
@@ -50,6 +53,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
+    this.loadDevicesInfo();
   }
 
   loadProfile() {
@@ -162,5 +166,20 @@ export class ProfileComponent implements OnInit {
 
   getBadgesByCategory(category: 'LEVEL' | 'ACHIEVEMENT' | 'SPECIAL') {
     return this.badges.filter(b => b.category === category);
+  }
+
+  loadDevicesInfo() {
+    // Charger les informations de diagnostic sur les appareils
+    this.authService.getDevicesDebugInfo().subscribe({
+      next: (info) => {
+        this.devicesInfo = info;
+        console.log('🔍 [DIAGNOSTIC] Informations sur les appareils:', info);
+        console.log('📱 Appareils autorisés:', info.authorizedDevices);
+        console.log('📊 Nombre d\'appareils:', info.authorizedDevicesCount);
+      },
+      error: (err) => {
+        console.error('❌ Erreur lors du chargement des infos appareils:', err);
+      }
+    });
   }
 }

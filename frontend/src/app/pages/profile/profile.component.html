@@ -14,6 +14,30 @@
   <!-- Profile Content -->
   <div *ngIf="!loading && !error && profile" class="profile-content">
 
+    <!-- Diagnostic Appareils -->
+    <div *ngIf="devicesInfo" class="diagnostic-card">
+      <h3>🔍 Diagnostic - Appareils Autorisés</h3>
+      <div class="diagnostic-content">
+        <p><strong>Email:</strong> {{ devicesInfo.email }}</p>
+        <p><strong>Nombre d'appareils autorisés:</strong> {{ devicesInfo.authorizedDevicesCount }} / 2</p>
+        <p><strong>Appareils:</strong></p>
+        <ul>
+          <li *ngFor="let device of devicesInfo.authorizedDevices; let i = index">
+            Appareil {{ i + 1 }}: <code>{{ device }}</code>
+          </li>
+        </ul>
+        <p *ngIf="devicesInfo.authorizedDevicesCount === 0" class="error-status">
+          ⚠️ Aucun appareil autorisé - Il y a un problème !
+        </p>
+        <p *ngIf="devicesInfo.authorizedDevicesCount > 2" class="error-status">
+          ⚠️ Plus de 2 appareils autorisés - Le blocage ne fonctionne pas !
+        </p>
+        <p *ngIf="devicesInfo.authorizedDevicesCount <= 2 && devicesInfo.authorizedDevicesCount > 0" class="success-status">
+          ✅ Configuration correcte
+        </p>
+      </div>
+    </div>
+
     <!-- Header Section -->
     <div class="profile-header">
       <div class="avatar-section">
