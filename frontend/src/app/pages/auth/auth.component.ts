@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, LoginRequest, RegisterRequest } from '../../services/auth.service';
+import { DeviceService } from '../../services/device.service';
 
 @Component({
   selector: 'app-auth',
@@ -255,7 +256,8 @@ export class AuthComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private deviceService: DeviceService
   ) {
     this.authForm = this.createForm();
   }
@@ -322,6 +324,7 @@ export class AuthComponent implements OnInit {
       const loginData: LoginRequest = {
         email: formValue.email,
         password: formValue.password,
+        deviceId: this.deviceService.getDeviceId(),
         rememberMe: formValue.rememberMe
       };
 
@@ -341,7 +344,8 @@ export class AuthComponent implements OnInit {
         password: formValue.password,
         firstName: formValue.firstName,
         lastName: formValue.lastName,
-        semester: formValue.semester
+        semester: formValue.semester,
+        deviceId: this.deviceService.getDeviceId()
       };
 
       this.authService.register(registerData).subscribe({

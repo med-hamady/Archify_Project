@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { DeviceService } from './device.service';
 
 export interface User {
   id: string;
@@ -49,6 +50,7 @@ export interface BackendUser {
 export interface LoginRequest {
   email: string;
   password: string;
+  deviceId: string;
   rememberMe?: boolean;
 }
 
@@ -58,6 +60,7 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   semester: 'PCEM1' | 'PCEM2';
+  deviceId: string;
 }
 
 export interface AuthResponse {
@@ -83,7 +86,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private deviceService: DeviceService
   ) {
     this.initializeAuth();
     this.setupSessionPersistence();
@@ -210,7 +214,8 @@ export class AuthService {
       email: userData.email,
       password: userData.password,
       name: `${userData.firstName} ${userData.lastName}`.trim(),
-      semester: userData.semester
+      semester: userData.semester,
+      deviceId: userData.deviceId
     };
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, payload)
       .pipe(

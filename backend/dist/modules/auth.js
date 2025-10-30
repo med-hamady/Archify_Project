@@ -78,8 +78,8 @@ function getUserPublic(user) {
         lastName: user.name?.split(' ').slice(1).join(' ') || '',
     };
 }
-// Auth middleware with single session enforcement
-async function requireAuth(req, res, next) {
+// Auth middleware - vérifie uniquement le JWT token
+function requireAuth(req, res, next) {
     const cookieToken = req.cookies?.access_token;
     const authHeader = req.headers.authorization;
     const headerToken = authHeader?.split(' ')[1];
@@ -97,27 +97,9 @@ async function requireAuth(req, res, next) {
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-        // Verify that this token matches the active token in database (single session)
-        const user = await prisma.user.findUnique({
-            where: { id: decoded.sub },
-            select: { id: true, role: true, activeToken: true }
-        });
-        if (!user) {
-            console.log('[requireAuth] User not found');
-            return res.status(401).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
-        }
-        if (user.activeToken !== token) {
-            console.log('[requireAuth] Token mismatch - Session expired (logged in elsewhere)');
-            return res.status(401).json({
-                error: {
-                    code: 'SESSION_EXPIRED',
-                    message: 'Votre session a expiré. Vous avez été connecté sur un autre appareil.'
-                }
-            });
-        }
         req.userId = decoded.sub;
         req.userRole = decoded.role;
-        console.log('[requireAuth] Token verified and active:', { userId: decoded.sub, role: decoded.role });
+        console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
         return next();
     }
     catch (_e) {
@@ -162,10 +144,12 @@ const registerSchema = zod_1.z.object({
     password: zod_1.z.string().min(8),
     name: zod_1.z.string().min(1),
     semester: zod_1.z.enum(['PCEM1', 'PCEM2']),
+    deviceId: zod_1.z.string().min(1), // ID de l'appareil pour lier le compte
 });
 const loginSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(8),
+    deviceId: zod_1.z.string().min(1), // ID de l'appareil pour vérifier l'autorisation
 });
 // POST /register
 exports.authRouter.post('/register', async (req, res) => {
@@ -182,6 +166,7 @@ exports.authRouter.post('/register', async (req, res) => {
                 passwordHash,
                 name: body.name,
                 semester: body.semester,
+                deviceId: body.deviceId, // Stocker l'ID de l'appareil lors de l'inscription
             },
         });
         // Fetch user with subscription data
@@ -228,22 +213,32 @@ exports.authRouter.post('/login', async (req, res) => {
         const ok = await bcryptjs_1.default.compare(body.password, user.passwordHash);
         if (!ok)
             return res.status(401).json({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' } });
+        // Vérifier que l'appareil correspond à celui enregistré lors de l'inscription
+        if (user.deviceId && user.deviceId !== body.deviceId) {
+            console.log('[Auth] Login denied - Device mismatch:', {
+                userId: user.id,
+                email: user.email,
+                registeredDevice: user.deviceId,
+                attemptedDevice: body.deviceId
+            });
+            return res.status(403).json({
+                error: {
+                    code: 'DEVICE_NOT_AUTHORIZED',
+                    message: 'Ce compte ne peut être utilisé que sur l\'appareil où il a été créé.'
+                }
+            });
+        }
         // Generate new tokens
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
         const refreshToken = signRefreshToken({ sub: user.id });
-        // Store active token in database for single session enforcement
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { activeToken: accessToken }
-        });
         setAuthCookies(res, accessToken, refreshToken);
-        console.log('[Auth] Login successful - Session unique activée:', {
+        console.log('[Auth] Login successful - Device authorized:', {
             userId: user.id,
             email: user.email,
             role: user.role,
+            deviceId: body.deviceId,
             hasAccessToken: !!accessToken,
-            hasRefreshToken: !!refreshToken,
-            accessTokenPreview: accessToken.substring(0, 20) + '...'
+            hasRefreshToken: !!refreshToken
         });
         return res.json({
             user: getUserPublic(user),
@@ -278,11 +273,6 @@ exports.authRouter.post('/refresh', async (req, res) => {
             return res.status(401).json({ error: { code: 'INVALID_REFRESH', message: 'Invalid refresh' } });
         const newAccess = signAccessToken({ sub: user.id, role: user.role });
         const newRefresh = signRefreshToken({ sub: user.id });
-        // Update active token for single session enforcement
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { activeToken: newAccess }
-        });
         setAuthCookies(res, newAccess, newRefresh);
         return res.json({ user: getUserPublic(user) });
     }
@@ -338,36 +328,9 @@ exports.authRouter.get('/verify', async (req, res) => {
     }
 });
 // POST /logout
-exports.authRouter.post('/logout', async (req, res) => {
-    try {
-        // Extract token to identify the user
-        const cookieToken = req.cookies?.access_token;
-        const authHeader = req.headers.authorization;
-        const headerToken = authHeader?.split(' ')[1];
-        const token = cookieToken || headerToken;
-        if (token) {
-            // Verify token and clear activeToken in database
-            try {
-                const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-                await prisma.user.update({
-                    where: { id: decoded.sub },
-                    data: { activeToken: null }
-                });
-                console.log('[Auth] Logout - activeToken cleared for user:', decoded.sub);
-            }
-            catch (e) {
-                // Token invalid or expired, just clear cookies
-                console.log('[Auth] Logout - Token invalid, clearing cookies only');
-            }
-        }
-        clearAuthCookies(res);
-        return res.status(204).send();
-    }
-    catch (e) {
-        // Even if database update fails, clear cookies
-        clearAuthCookies(res);
-        return res.status(204).send();
-    }
+exports.authRouter.post('/logout', async (_req, res) => {
+    clearAuthCookies(res);
+    return res.status(204).send();
 });
 // PUT /profile
 const profileSchema = zod_1.z.object({
