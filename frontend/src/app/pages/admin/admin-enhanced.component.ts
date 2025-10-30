@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { SubscriptionService } from '../../services/subscription.service';
 import { environment } from '../../../environments/environment';
 
 
@@ -834,44 +835,257 @@ interface UserStats {
           </div>
         </div>
 
-        <!-- Subscription Plans Grid -->
-        <div *ngIf="subscriptionPlans().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div *ngFor="let plan of subscriptionPlans()" 
-               class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 hover:shadow-2xl transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Sub-tabs for Subscription Management -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-4 mb-6">
+          <div class="flex space-x-2">
+            <button (click)="subscriptionSubTab.set('plans')"
+                    [class]="subscriptionSubTab() === 'plans' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
+              Plans d'Abonnement
+            </button>
+            <button (click)="subscriptionSubTab.set('users')"
+                    [class]="subscriptionSubTab() === 'users' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
+              Utilisateurs
+            </button>
+            <button (click)="subscriptionSubTab.set('payments')"
+                    [class]="subscriptionSubTab() === 'payments' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
+              Paiements
+            </button>
+            <button (click)="subscriptionSubTab.set('stats')"
+                    [class]="subscriptionSubTab() === 'stats' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
+              Statistiques
+            </button>
+          </div>
+        </div>
+
+        <!-- Statistics Sub-tab -->
+        <div *ngIf="subscriptionSubTab() === 'stats' && adminStats()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-medium text-gray-600">Total Utilisateurs</h4>
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              </div>
+              <p class="text-3xl font-bold text-gray-900">{{ adminStats().users.total }}</p>
+              <p class="text-sm text-gray-500 mt-1">{{ adminStats().users.students }} étudiants, {{ adminStats().users.admins }} admins</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-medium text-gray-600">Abonnements Actifs</h4>
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="text-3xl font-bold text-gray-900">{{ adminStats().subscriptions.active }}</p>
+              <p class="text-sm text-gray-500 mt-1">{{ adminStats().subscriptions.expired }} expirés</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-medium text-gray-600">Paiements en Attente</h4>
+                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="text-3xl font-bold text-gray-900">{{ adminStats().payments.pending }}</p>
+              <p class="text-sm text-gray-500 mt-1">{{ adminStats().payments.completed }} complétés</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-medium text-gray-600">Revenu Total</h4>
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
                 </svg>
               </div>
-              <div class="flex space-x-2">
-                <button (click)="editPlanItem(plan)" 
-                        class="text-blue-600 hover:text-blue-900 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              <p class="text-3xl font-bold text-gray-900">{{ (adminStats().revenue.total / 100).toFixed(0) }} MRU</p>
+              <p class="text-sm text-gray-500 mt-1">{{ (adminStats().revenue.monthly / 100).toFixed(0) }} MRU ce mois</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscription Plans Sub-tab -->
+        <div *ngIf="subscriptionSubTab() === 'plans'" class="space-y-6">
+          <div *ngIf="subscriptionPlans().length === 0" class="text-center py-8">
+            <div class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Chargement des plans d'abonnement...
+            </div>
+          </div>
+
+          <div *ngIf="subscriptionPlans().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let plan of subscriptionPlans()"
+                 class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 hover:shadow-2xl transition-all duration-300">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
                   </svg>
-                </button>
-                <button (click)="deletePlan(plan.id)" 
-                        class="text-red-600 hover:text-red-900 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                  </svg>
-                </button>
+                </div>
+                <div class="flex space-x-2">
+                  <button (click)="editPlanItem(plan)"
+                          class="text-blue-600 hover:text-blue-900 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </button>
+                  <button (click)="deletePlan(plan.id)"
+                          class="text-red-600 hover:text-red-900 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plan.name || 'No Name' }}</h3>
+              <div class="text-2xl font-bold text-gray-900 mb-2">{{ plan.priceCents ? (plan.priceCents / 100) : 'No Price' }} {{ plan.currency || 'No Currency' }}</div>
+              <div class="text-sm text-gray-600 mb-4">{{ plan.description || 'No Description' }}</div>
+              <div class="flex justify-between text-sm text-gray-600">
+                <span>yearly</span>
+                <span class="text-green-600">Actif</span>
               </div>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ plan.name || 'No Name' }}</h3>
-            <div class="text-2xl font-bold text-gray-900 mb-2">{{ plan.priceCents ? (plan.priceCents / 100) : 'No Price' }} {{ plan.currency || 'No Currency' }}</div>
-            <div class="text-sm text-gray-600 mb-4">{{ plan.description || 'No Description' }}</div>
-            <div class="flex justify-between text-sm text-gray-600">
-              <span>yearly</span>
-              <span class="text-green-600">Actif</span>
+          </div>
+        </div>
+
+        <!-- Users with Subscriptions Sub-tab -->
+        <div *ngIf="subscriptionSubTab() === 'users'" class="space-y-6">
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Utilisateurs et Leurs Abonnements</h3>
             </div>
-            <!-- Debug Info -->
-            <div class="mt-2 p-2 bg-gray-100 rounded text-xs">
-              <div>ID: {{ plan.id }}</div>
-              <div>Name: {{ plan.name }}</div>
-              <div>Price: {{ plan.priceCents }}</div>
-              <div>Currency: {{ plan.currency }}</div>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiration</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let user of usersWithSubscriptions()" class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span *ngIf="user.subscription"
+                            [class]="user.subscription.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                            class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full">
+                        {{ user.subscription.status }}
+                      </span>
+                      <span *ngIf="!user.subscription" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                        Aucun
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {{ user.subscription?.planName || '-' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {{ user.subscription ? (user.subscription.endAt | date:'dd/MM/yyyy') : '-' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <button *ngIf="!user.subscription && subscriptionPlans().length > 0"
+                              (click)="activateUserSubscription(user.id, subscriptionPlans()[0].id, 12)"
+                              class="text-green-600 hover:text-green-900">
+                        Activer
+                      </button>
+                      <button *ngIf="user.subscription"
+                              (click)="extendUserSubscription(user.subscription.id, 1)"
+                              class="text-blue-600 hover:text-blue-900">
+                        Prolonger
+                      </button>
+                      <button *ngIf="user.subscription"
+                              (click)="deactivateUserSubscription(user.subscription.id)"
+                              class="text-red-600 hover:text-red-900">
+                        Désactiver
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments Sub-tab -->
+        <div *ngIf="subscriptionSubTab() === 'payments'" class="space-y-6">
+          <!-- Payment Filters -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-4">
+            <div class="flex space-x-2">
+              <button (click)="filterPayments('PENDING')"
+                      [class]="selectedPaymentStatus() === 'PENDING' ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all">
+                En Attente
+              </button>
+              <button (click)="filterPayments('COMPLETED')"
+                      [class]="selectedPaymentStatus() === 'COMPLETED' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all">
+                Complétés
+              </button>
+              <button (click)="filterPayments('FAILED')"
+                      [class]="selectedPaymentStatus() === 'FAILED' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all">
+                Échoués
+              </button>
+            </div>
+          </div>
+
+          <!-- Payments Table -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Paiements ({{ selectedPaymentStatus() }})</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reçu</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let payment of payments()" class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ payment.user.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ payment.plan.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ (payment.amountCents / 100).toFixed(0) }} {{ payment.currency }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ payment.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                      <a *ngIf="payment.receiptScreenshot"
+                         [href]="payment.receiptScreenshot"
+                         target="_blank"
+                         class="text-blue-600 hover:text-blue-900">
+                        Voir
+                      </a>
+                      <span *ngIf="!payment.receiptScreenshot" class="text-gray-400">-</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <button *ngIf="payment.status === 'PENDING'"
+                              (click)="validatePaymentAction(payment.id, 'COMPLETED')"
+                              class="text-green-600 hover:text-green-900">
+                        Valider
+                      </button>
+                      <button *ngIf="payment.status === 'PENDING'"
+                              (click)="validatePaymentAction(payment.id, 'FAILED')"
+                              class="text-red-600 hover:text-red-900">
+                        Rejeter
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -1371,6 +1585,13 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     }
   });
 
+  // Admin subscription management data
+  adminStats = signal<any>(null);
+  usersWithSubscriptions = signal<any[]>([]);
+  payments = signal<any[]>([]);
+  selectedPaymentStatus = signal<string>('PENDING');
+  subscriptionSubTab = signal<string>('plans'); // 'plans', 'users', 'payments'
+
   // Modal states
   showAddPlanModal = signal(false);
   showAddCourseModal = signal(false);
@@ -1504,7 +1725,8 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   ngOnInit() {
@@ -2151,12 +2373,129 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   // Handle tab clicks with data refresh for analytics
   onTabClick(tabId: string) {
     this.activeTab.set(tabId);
-    
+
     // Refresh data when analytics tab is activated
     if (tabId === 'analytics') {
       console.log('📊 Analytics tab activated - refreshing data...');
       this.loadData();
     }
+
+    // Load subscription management data when subscriptions tab is activated
+    if (tabId === 'subscriptions') {
+      console.log('💳 Subscriptions tab activated - loading admin data...');
+      this.loadAdminSubscriptionData();
+    }
+  }
+
+  // Load admin subscription management data
+  loadAdminSubscriptionData() {
+    // Load dashboard stats
+    this.subscriptionService.getAdminDashboardStats().subscribe({
+      next: (stats) => {
+        console.log('📊 Admin stats loaded:', stats);
+        this.adminStats.set(stats);
+      },
+      error: (err) => console.error('Error loading admin stats:', err)
+    });
+
+    // Load users with subscriptions
+    this.subscriptionService.getUsersSubscriptions().subscribe({
+      next: (users) => {
+        console.log('👥 Users with subscriptions loaded:', users);
+        this.usersWithSubscriptions.set(users);
+      },
+      error: (err) => console.error('Error loading users:', err)
+    });
+
+    // Load payments
+    this.loadPayments();
+  }
+
+  loadPayments(status?: string) {
+    const paymentStatus = status || this.selectedPaymentStatus();
+    this.subscriptionService.getPayments(paymentStatus).subscribe({
+      next: (payments) => {
+        console.log('💰 Payments loaded:', payments);
+        this.payments.set(payments);
+      },
+      error: (err) => console.error('Error loading payments:', err)
+    });
+  }
+
+  // Change payment filter
+  filterPayments(status: string) {
+    this.selectedPaymentStatus.set(status);
+    this.loadPayments(status);
+  }
+
+  // Admin actions
+  activateUserSubscription(userId: string, planId: string, months: number) {
+    if (!confirm(`Activer un abonnement de ${months} mois pour cet utilisateur?`)) {
+      return;
+    }
+
+    this.subscriptionService.activateSubscription(userId, planId, months).subscribe({
+      next: () => {
+        alert('Abonnement activé avec succès!');
+        this.loadAdminSubscriptionData();
+      },
+      error: (err) => {
+        console.error('Error activating subscription:', err);
+        alert('Erreur lors de l\'activation de l\'abonnement');
+      }
+    });
+  }
+
+  extendUserSubscription(subscriptionId: string, months: number) {
+    if (!confirm(`Prolonger cet abonnement de ${months} mois?`)) {
+      return;
+    }
+
+    this.subscriptionService.extendSubscription(subscriptionId, months).subscribe({
+      next: () => {
+        alert('Abonnement prolongé avec succès!');
+        this.loadAdminSubscriptionData();
+      },
+      error: (err) => {
+        console.error('Error extending subscription:', err);
+        alert('Erreur lors de la prolongation de l\'abonnement');
+      }
+    });
+  }
+
+  deactivateUserSubscription(subscriptionId: string) {
+    if (!confirm('Êtes-vous sûr de vouloir désactiver cet abonnement?')) {
+      return;
+    }
+
+    this.subscriptionService.deactivateSubscription(subscriptionId).subscribe({
+      next: () => {
+        alert('Abonnement désactivé avec succès!');
+        this.loadAdminSubscriptionData();
+      },
+      error: (err) => {
+        console.error('Error deactivating subscription:', err);
+        alert('Erreur lors de la désactivation de l\'abonnement');
+      }
+    });
+  }
+
+  validatePaymentAction(paymentId: string, status: 'COMPLETED' | 'FAILED', notes?: string) {
+    const action = status === 'COMPLETED' ? 'valider' : 'rejeter';
+    if (!confirm(`Êtes-vous sûr de vouloir ${action} ce paiement?`)) {
+      return;
+    }
+
+    this.subscriptionService.validatePayment(paymentId, status, notes).subscribe({
+      next: () => {
+        alert(`Paiement ${status === 'COMPLETED' ? 'validé' : 'rejeté'} avec succès!`);
+        this.loadAdminSubscriptionData();
+      },
+      error: (err) => {
+        console.error('Error validating payment:', err);
+        alert('Erreur lors de la validation du paiement');
+      }
+    });
   }
 
 }

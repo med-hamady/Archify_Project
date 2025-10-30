@@ -12,6 +12,68 @@ export interface SubscriptionStatus {
   message?: string;
 }
 
+export interface AdminDashboardStats {
+  users: {
+    total: number;
+    students: number;
+    admins: number;
+    recent: number;
+  };
+  subscriptions: {
+    active: number;
+    expired: number;
+  };
+  payments: {
+    pending: number;
+    completed: number;
+    failed: number;
+  };
+  revenue: {
+    total: number;
+    monthly: number;
+  };
+}
+
+export interface UserSubscriptionInfo {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  subscription?: {
+    id: string;
+    status: string;
+    type: string;
+    startAt: string;
+    endAt: string;
+    planName: string;
+  };
+  canAccessQuiz: boolean;
+  canAccessDocuments: boolean;
+}
+
+export interface PaymentInfo {
+  id: string;
+  userId: string;
+  planId: string;
+  status: string;
+  amountCents: number;
+  currency: string;
+  receiptScreenshot: string | null;
+  adminNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+  plan: {
+    id: string;
+    name: string;
+    type: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -70,5 +132,73 @@ export class SubscriptionService {
    */
   clearCache(): void {
     this.subscriptionStatus$.next(null);
+  }
+
+  // ==================== ADMIN METHODS ====================
+
+  /**
+   * Récupère les statistiques du dashboard admin
+   */
+  getAdminDashboardStats(): Observable<AdminDashboardStats> {
+    return this.http.get<AdminDashboardStats>(`${this.API_URL}/admin/dashboard-stats`);
+  }
+
+  /**
+   * Récupère la liste des utilisateurs avec leurs abonnements
+   */
+  getUsersSubscriptions(): Observable<UserSubscriptionInfo[]> {
+    return this.http.get<UserSubscriptionInfo[]>(`${this.API_URL}/admin/users-subscriptions`);
+  }
+
+  /**
+   * Récupère la liste des paiements
+   */
+  getPayments(status?: string, limit: number = 50): Observable<PaymentInfo[]> {
+    const params: any = { limit };
+    if (status) {
+      params.status = status;
+    }
+    return this.http.get<PaymentInfo[]>(`${this.API_URL}/admin/payments`, { params });
+  }
+
+  /**
+   * Active un abonnement pour un utilisateur
+   */
+  activateSubscription(userId: string, planId: string, durationMonths: number): Observable<any> {
+    return this.http.post(`${this.API_URL}/admin/subscription/activate`, {
+      userId,
+      planId,
+      durationMonths
+    });
+  }
+
+  /**
+   * Prolonge un abonnement existant
+   */
+  extendSubscription(subscriptionId: string, additionalMonths: number): Observable<any> {
+    return this.http.post(`${this.API_URL}/admin/subscription/extend`, {
+      subscriptionId,
+      additionalMonths
+    });
+  }
+
+  /**
+   * Désactive un abonnement
+   */
+  deactivateSubscription(subscriptionId: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/admin/subscription/deactivate`, {
+      subscriptionId
+    });
+  }
+
+  /**
+   * Valide ou rejette un paiement
+   */
+  validatePayment(paymentId: string, status: 'COMPLETED' | 'FAILED', adminNotes?: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/admin/payment/validate`, {
+      paymentId,
+      status,
+      adminNotes
+    });
   }
 }
