@@ -23,6 +23,7 @@ export class FacgameDashboardComponent implements OnInit {
   loading = true;
   error: string | null = null;
   uploadingPicture = false;
+  devicesInfo: any = null; // Informations de diagnostic sur les appareils
 
   // Niveau config
   levelConfig = {
@@ -48,6 +49,7 @@ export class FacgameDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadDashboard();
+    this.loadDevicesInfo();
   }
 
   loadDashboard() {
@@ -194,6 +196,21 @@ export class FacgameDashboardComponent implements OnInit {
         console.error('Error uploading profile picture:', err);
         alert('Erreur lors de l\'upload de la photo de profil');
         this.uploadingPicture = false;
+      }
+    });
+  }
+
+  loadDevicesInfo() {
+    // Charger les informations de diagnostic sur les appareils
+    this.authService.getDevicesDebugInfo().subscribe({
+      next: (info) => {
+        this.devicesInfo = info;
+        console.log('🔍 [DIAGNOSTIC] Informations sur les appareils:', info);
+        console.log('📱 Appareils autorisés:', info.authorizedDevices);
+        console.log('📊 Nombre d\'appareils:', info.authorizedDevicesCount);
+      },
+      error: (err) => {
+        console.error('❌ Erreur lors du chargement des infos appareils:', err);
       }
     });
   }

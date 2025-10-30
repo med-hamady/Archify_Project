@@ -250,6 +250,16 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  // Obtenir les informations de diagnostic sur les appareils
+  getDevicesDebugInfo(): Observable<any> {
+    return this.http.get(`${this.API_URL}/auth/debug/devices`).pipe(
+      catchError(error => {
+        console.error('[AuthService] Failed to get devices info:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   refreshToken(): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/refresh`, {})
       .pipe(
