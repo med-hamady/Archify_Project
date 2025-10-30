@@ -423,7 +423,12 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
     const newXP = oldXP + totalXPEarned;
 
     // Créer le résultat de l'examen avec les résultats détaillés
-    await prisma.examResult.create({
+    console.log('📝 Creating exam result with detailedResults:', {
+      detailedResultsLength: detailedResults.length,
+      firstResult: detailedResults[0]
+    });
+
+    const examResult = await prisma.examResult.create({
       data: {
         userId,
         subjectId,
@@ -435,6 +440,8 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
         detailedResults: detailedResults // Stocker les résultats détaillés pour la correction
       }
     });
+
+    console.log('✅ Exam result created with ID:', examResult.id);
 
     // Mettre à jour l'utilisateur
     const updatedUser = await prisma.user.update({
