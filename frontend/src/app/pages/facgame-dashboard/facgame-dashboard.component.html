@@ -115,14 +115,14 @@
             <span>👤</span> Mon Profil
           </button>
           <button (click)="navigateToLeaderboard()" class="btn btn-primary">
-            <span>🏆</span> Classement
+            <img width="24" height="24" src="https://img.icons8.com/ios/50/ratings.png" alt="ratings" style="filter: brightness(0) invert(1);"/> Classement
           </button>
         </div>
 
         <!-- Logout Button -->
         <div class="logout-section">
           <button (click)="logout()" class="btn btn-logout">
-            <span>🚪</span> Se déconnecter
+            <img width="24" height="24" src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="logout" style="filter: brightness(0) invert(1);"/> Se déconnecter
           </button>
         </div>
       </div>
@@ -130,7 +130,10 @@
 
     <!-- Subjects Progress Section -->
     <section class="subjects-section">
-      <h2 class="section-title">📚 Mes Matières</h2>
+      <h2 class="section-title">
+        <img width="40" height="40" src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/external-books-literature-flaticons-lineal-color-flat-icons-12.png" alt="books" style="vertical-align: middle; margin-right: 10px;"/>
+        Mes Matières
+      </h2>
 
       <div *ngIf="progress.length === 0" class="empty-state">
         <p>Aucune matière disponible pour le moment</p>
@@ -155,7 +158,7 @@
               </span>
             </div>
             <div class="stat">
-              <span class="stat-icon">📖</span>
+              <img width="20" height="20" src="https://img.icons8.com/external-anggara-outline-color-anggara-putra/32/external-bookmark-file-and-document-anggara-glyph-anggara-putra.png" alt="bookmark" style="vertical-align: middle;"/>
               <span class="stat-text">
                 {{ subject.chaptersCompleted }} / {{ subject.chaptersTotal }} chapitres
               </span>
