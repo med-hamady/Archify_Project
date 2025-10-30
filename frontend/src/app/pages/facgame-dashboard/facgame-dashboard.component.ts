@@ -24,8 +24,9 @@ export class FacgameDashboardComponent implements OnInit {
   error: string | null = null;
   uploadingPicture = false;
   devicesInfo: any = null; // Informations de diagnostic sur les appareils
+  levelInfoFromBackend: any = null; // Informations de niveau venant du backend
 
-  // Niveau config
+  // Niveau config - Seulement pour les couleurs et images (les seuils XP viennent du backend)
   levelConfig = {
     BOIS: { color: '#8B4513', image: '/images/badges/bois.png', label: 'Bois' },
     BRONZE: { color: '#CD7F32', image: '/images/badges/bronze.png', label: 'Bronze' },
@@ -34,17 +35,6 @@ export class FacgameDashboardComponent implements OnInit {
     PLATINUM: { color: '#E5E4E2', image: '/images/badges/platine.png', label: 'Platinum' },
     DIAMANT: { color: '#9C27B0', image: '/images/badges/diamant.png', label: 'Diamant' },
     MONDIAL: { color: '#FF6B6B', image: '/images/badges/mondial.png', label: 'Mondial' }
-  };
-
-  // Seuils XP
-  levelThresholds = {
-    BOIS: { min: 0, max: 800 },
-    BRONZE: { min: 801, max: 1600 },
-    ARGENT: { min: 1601, max: 2800 },
-    OR: { min: 2801, max: 4000 },
-    PLATINUM: { min: 4001, max: 5500 },
-    DIAMANT: { min: 5501, max: 9000 },
-    MONDIAL: { min: 9001, max: 999999 }
   };
 
   ngOnInit() {
@@ -72,6 +62,8 @@ export class FacgameDashboardComponent implements OnInit {
           createdAt: res.profile.createdAt,
           profilePicture: res.profile.profilePicture
         };
+        // Stocker les informations de niveau du backend (avec les vrais seuils XP)
+        this.levelInfoFromBackend = res.profile.gamification.level;
         this.loadProgress();
       },
       error: (err) => {
@@ -105,14 +97,18 @@ export class FacgameDashboardComponent implements OnInit {
   }
 
   getLevelInfo() {
-    if (!this.profile) return null;
-    const level = this.profile.level as keyof typeof this.levelConfig;
-    const thresholds = this.levelThresholds[level];
-    const currentXP = this.profile.xpTotal;
+    if (!this.profile || !this.levelInfoFromBackend) return null;
 
-    const xpInLevel = currentXP - thresholds.min;
-    const xpNeeded = thresholds.max - thresholds.min;
-    const progressPercent = Math.min((xpInLevel / xpNeeded) * 100, 100);
+    const level = this.profile.level as keyof typeof this.levelConfig;
+
+    // Utiliser les données du backend (source de vérité)
+    const xpMin = this.levelInfoFromBackend.xpMin;
+    const xpMax = this.levelInfoFromBackend.xpMax;
+    const currentXP = this.profile.xpTotal;
+    const progressPercent = this.levelInfoFromBackend.progressPercent;
+
+    const xpInLevel = currentXP - xpMin;
+    const xpNeeded = xpMax - xpMin;
 
     return {
       ...this.levelConfig[level],
@@ -120,7 +116,7 @@ export class FacgameDashboardComponent implements OnInit {
       xpInLevel,
       xpNeeded,
       progressPercent,
-      nextLevel: this.getNextLevel(level)
+      nextLevel: this.levelInfoFromBackend.isMaxLevel ? 'MAX' : this.getNextLevel(level)
     };
   }
 
