@@ -25,6 +25,7 @@ import { challengeRouter } from './modules/challenge';
 import { examRouter } from './modules/exam';
 import { questionsRouter } from './modules/questions';
 import { adminImportRouter } from './modules/admin-import';
+import { adminSubscriptionRouter } from './modules/admin-subscription';
 
 dotenv.config();
 
@@ -494,6 +495,7 @@ app.use('/api/challenge', generalLimiter, challengeRouter);
 app.use('/api/exam', generalLimiter, examRouter);
 app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, adminImportRouter); // Admin import/db tools
+app.use('/api/admin', strictLimiter, adminSubscriptionRouter); // Admin subscription management
 
 const port = process.env.PORT || 3000;
 
