@@ -1751,13 +1751,13 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
         console.log('📊 Dashboard stats loaded:', data);
         this.stats.set({
           totalCourses: data.totalCourses || 0,
-          totalUsers: data.totalUsers || 0,
-          totalLessons: 0, // Not needed in new endpoint
-          activeSubscriptions: data.activeSubscriptions || 0,
-          totalRevenue: data.totalRevenueMRU || 0,
-          monthlyRevenue: 0, // Not needed yet
-          userGrowth: 0, // Not needed yet
-          courseViews: 0, // Not needed yet
+          totalUsers: data.users?.total || 0,
+          totalLessons: 0,
+          activeSubscriptions: data.subscriptions?.active || 0,
+          totalRevenue: data.revenue?.total || 0,
+          monthlyRevenue: data.revenue?.monthly || 0,
+          userGrowth: 0,
+          courseViews: 0,
           coursesGrowth: data.growth?.courses || 0,
           usersGrowth: data.growth?.users || 0,
           subscriptionsGrowth: data.growth?.subscriptions || 0,
