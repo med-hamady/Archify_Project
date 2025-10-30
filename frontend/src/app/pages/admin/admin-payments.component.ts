@@ -1106,14 +1106,20 @@ export class AdminPaymentsComponent implements OnInit {
     this.isLoadingScreenshot.set(true);
     const fullUrl = this.getFullScreenshotUrl(url);
 
-    console.log('📸 Loading screenshot as blob:', fullUrl);
+    console.log('📸 Loading screenshot:', fullUrl);
 
-    // Determine if we need credentials (for backend URLs) or not (for Cloudinary)
-    const needsCredentials = !fullUrl.startsWith('https://res.cloudinary.com');
+    // For Cloudinary URLs, use direct URL instead of blob to avoid CORS issues
+    if (fullUrl.startsWith('https://res.cloudinary.com')) {
+      console.log('✅ Using direct Cloudinary URL (no blob conversion)');
+      this.screenshotBlobUrl.set(fullUrl);
+      this.isLoadingScreenshot.set(false);
+      return;
+    }
 
+    // For backend URLs, load as blob
     this.http.get(fullUrl, {
       responseType: 'blob',
-      withCredentials: needsCredentials
+      withCredentials: true
     }).subscribe({
       next: (blob) => {
         console.log('✅ Screenshot blob loaded successfully');
