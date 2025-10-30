@@ -230,6 +230,14 @@
   color: #666;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tab-btn img {
+  transition: filter 0.3s ease;
 }
 
 .tab-btn:hover {
@@ -241,6 +249,10 @@
   background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tab-btn.active img {
+  filter: brightness(0) invert(1);
 }
 
 /* Tab Content */
