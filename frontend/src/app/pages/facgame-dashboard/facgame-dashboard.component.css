@@ -33,8 +33,18 @@
 }
 
 .subtitle {
-  font-size: 1.2rem;
-  opacity: 0.9;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #2563eb;
+  text-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  display: inline-block;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
 }
 
 /* Loading & Error */
