@@ -4,80 +4,71 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DeviceService {
-  private readonly DEVICE_ID_KEY = 'archify_device_id';
-
   constructor() {}
 
   /**
-   * Génère ou récupère l'ID unique de l'appareil
-   * Cet ID est stocké dans le localStorage pour persister entre les sessions
+   * Génère l'ID unique de l'appareil physique
+   * Basé sur les caractéristiques matérielles qui sont identiques
+   * peu importe le navigateur utilisé sur le même appareil
    */
   getDeviceId(): string {
-    let deviceId = localStorage.getItem(this.DEVICE_ID_KEY);
-
-    if (!deviceId) {
-      // Générer un nouveau device ID unique basé sur:
-      // - Timestamp
-      // - Nombre aléatoire
-      // - Informations du navigateur (userAgent)
-      deviceId = this.generateDeviceId();
-      localStorage.setItem(this.DEVICE_ID_KEY, deviceId);
-    }
-
-    return deviceId;
+    return this.generateHardwareFingerprint();
   }
 
   /**
-   * Génère un ID unique pour l'appareil
+   * Génère une empreinte basée sur le matériel de l'appareil
+   * Ces informations sont les mêmes sur tous les navigateurs du même appareil
    */
-  private generateDeviceId(): string {
-    const timestamp = Date.now().toString(36);
-    const randomPart = Math.random().toString(36).substring(2, 15);
-    const navigatorInfo = this.getNavigatorFingerprint();
+  private generateHardwareFingerprint(): string {
+    const components = [
+      // Résolution d'écran (caractéristique matérielle)
+      screen.width.toString(),
+      screen.height.toString(),
+      screen.availWidth.toString(),
+      screen.availHeight.toString(),
 
-    return `${timestamp}-${randomPart}-${navigatorInfo}`;
-  }
+      // Profondeur de couleur (caractéristique GPU)
+      screen.colorDepth.toString(),
+      screen.pixelDepth.toString(),
 
-  /**
-   * Crée une empreinte basée sur les informations du navigateur
-   * Cela aide à identifier de manière unique l'appareil/navigateur
-   */
-  private getNavigatorFingerprint(): string {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+      // Fuseau horaire (spécifique à la localisation/configuration système)
+      new Date().getTimezoneOffset().toString(),
 
-    // Créer une empreinte simple basée sur les capacités du navigateur
-    const fingerprint = [
-      navigator.userAgent,
+      // Nombre de processeurs (caractéristique CPU)
+      (navigator.hardwareConcurrency || 0).toString(),
+
+      // Langue système (configuration OS)
       navigator.language,
-      screen.colorDepth,
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset(),
-      !!window.sessionStorage,
-      !!window.localStorage,
-    ].join('|');
 
-    // Hasher l'empreinte pour la rendre plus courte
-    return this.simpleHash(fingerprint).toString(36);
+      // Informations plateforme
+      navigator.platform,
+
+      // Mémoire de l'appareil (si disponible)
+      (navigator as any).deviceMemory?.toString() || 'unknown'
+    ];
+
+    // Créer une empreinte unique
+    const fingerprint = components.join('|');
+
+    // Hasher pour créer un ID compact et constant
+    return this.createHash(fingerprint);
   }
 
   /**
-   * Hash simple pour créer un identifiant court
+   * Crée un hash stable de l'empreinte matérielle
    */
-  private simpleHash(str: string): number {
+  private createHash(str: string): string {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash; // Convert to 32bit integer
     }
-    return Math.abs(hash);
-  }
 
-  /**
-   * Efface le device ID (pour les tests uniquement)
-   */
-  clearDeviceId(): void {
-    localStorage.removeItem(this.DEVICE_ID_KEY);
+    // Convertir en base36 pour un ID court et lisible
+    const hashStr = Math.abs(hash).toString(36);
+
+    // Ajouter un préfixe pour indiquer que c'est un device ID
+    return `device_${hashStr}`;
   }
 }
