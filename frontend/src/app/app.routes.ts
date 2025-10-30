@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
-import { subscriptionGuard } from './core/guards/subscription.guard';
+import { subscriptionGuard } from './guards/subscription.guard';
 
 export const routes: Routes = [
   // Redirect root to FacGame dashboard
@@ -75,12 +75,12 @@ export const routes: Routes = [
   {
     path: 'quiz/:chapterId',
     loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'challenge/:chapterId',
     loadComponent: () => import('./pages/challenge/challenge.component').then(m => m.ChallengeComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'exam',
@@ -105,6 +105,11 @@ export const routes: Routes = [
   {
     path: 'subscription',
     loadComponent: () => import('./pages/subscription/subscription.component').then(m => m.SubscriptionComponent)
+  },
+  {
+    path: 'subscription-required',
+    loadComponent: () => import('./pages/subscription-required/subscription-required.component').then(m => m.SubscriptionRequiredComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'payment/submit',
