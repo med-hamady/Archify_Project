@@ -657,3 +657,64 @@ authRouter.post('/reset-password', async (req, res) => {
     return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
   }
 });
+
+/**
+ * GET /api/auth/free-qcm-status
+ * Obtenir le statut des QCM gratuits pour l'utilisateur connecté
+ */
+authRouter.get('/free-qcm-status', requireAuth, async (req: any, res: any) => {
+  try {
+    const userId = req.userId;
+
+    // Récupérer l'utilisateur
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        freeQcmUsed: true,
+        subscriptions: {
+          where: {
+            status: 'ACTIVE'
+          },
+          select: {
+            id: true,
+            status: true,
+            plan: {
+              select: {
+                name: true,
+                type: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+      });
+    }
+
+    const hasActiveSubscription = user.subscriptions.length > 0;
+    const freeQcmUsed = user.freeQcmUsed || 0;
+    const freeQcmRemaining = Math.max(0, 3 - freeQcmUsed);
+
+    return res.json({
+      hasActiveSubscription,
+      freeQcm: {
+        used: freeQcmUsed,
+        remaining: freeQcmRemaining,
+        total: 3,
+        limitReached: freeQcmUsed >= 3
+      },
+      canAccessQuiz: hasActiveSubscription || freeQcmUsed < 3,
+      activeSubscription: hasActiveSubscription ? user.subscriptions[0] : null
+    });
+
+  } catch (error) {
+    console.error('[free-qcm-status] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération du statut' }
+    });
+  }
+});

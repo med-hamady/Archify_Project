@@ -155,18 +155,20 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
     });
 
     // 8.5. Si l'utilisateur utilise un QCM gratuit (pas d'abonnement), incrémenter le compteur
-    if (req.hasFreeAccess && !alreadyAnsweredCorrectly) {
-      await prisma.user.update({
+    // Incrémenter seulement si c'est la première tentative (attemptNumber === 1)
+    let updatedFreeQcmUser = user;
+    if (req.hasFreeAccess && attemptNumber === 1) {
+      updatedFreeQcmUser = await prisma.user.update({
         where: { id: userId },
         data: {
           freeQcmUsed: { increment: 1 }
         }
       });
-      console.log(`[Quiz Answer] Incremented free QCM counter for user ${userId} (now ${user.freeQcmUsed + 1}/3)`);
+      console.log(`[Quiz Answer] ✅ Incremented free QCM counter for user ${userId} (now ${updatedFreeQcmUser.freeQcmUsed}/3)`);
     }
 
     // 9. Mettre à jour l'utilisateur
-    let updatedUser = user;
+    let updatedUser = updatedFreeQcmUser;
     let levelUpResult: any = { leveledUp: false };
     let consecutiveBonusResult: any = { type: null, xpBonus: 0, message: undefined };
     let newBadges: any[] = [];
