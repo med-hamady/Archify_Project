@@ -122,22 +122,6 @@ export class AuthService {
   }
 
   private setupSessionPersistence() {
-    // Vérifier régulièrement si la session est toujours valide (toutes les 30 secondes)
-    // Cela détecte rapidement si l'utilisateur s'est connecté depuis un autre appareil
-    setInterval(() => {
-      if (this.isAuthenticated()) {
-        this.verifyToken().subscribe({
-          next: () => {
-            // Session toujours valide
-          },
-          error: (err) => {
-            // Session invalide - l'intercepteur gérera la déconnexion
-            console.log('[AuthService] Session check failed:', err.status);
-          }
-        });
-      }
-    }, 30 * 1000); // Toutes les 30 secondes
-
     // Set up periodic session refresh every 6 days (before 7 day expiry)
     setInterval(() => {
       if (this.isAuthenticated()) {

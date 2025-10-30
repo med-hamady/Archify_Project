@@ -78,8 +78,9 @@ function getUserPublic(user) {
         lastName: user.name?.split(' ').slice(1).join(' ') || '',
     };
 }
-// Auth middleware - vérifie le JWT token ET la session active
-async function requireAuth(req, res, next) {
+// Auth middleware - vérifie uniquement le JWT token (pas de session unique)
+// Les 2 appareils autorisés peuvent se connecter simultanément
+function requireAuth(req, res, next) {
     const cookieToken = req.cookies?.access_token;
     const authHeader = req.headers.authorization;
     const headerToken = authHeader?.split(' ')[1];
@@ -97,30 +98,9 @@ async function requireAuth(req, res, next) {
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-        // Vérifier que ce token est toujours le token actif (session unique)
-        const user = await prisma.user.findUnique({
-            where: { id: decoded.sub },
-            select: { id: true, role: true, activeToken: true, activeDeviceId: true }
-        });
-        if (!user) {
-            console.log('[requireAuth] User not found');
-            return res.status(401).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
-        }
-        if (user.activeToken !== token) {
-            console.log('[requireAuth] Session expired - logged in from another device:', {
-                userId: user.id,
-                activeDevice: user.activeDeviceId
-            });
-            return res.status(401).json({
-                error: {
-                    code: 'SESSION_EXPIRED',
-                    message: 'Votre session a expiré. Vous vous êtes connecté depuis un autre appareil.'
-                }
-            });
-        }
         req.userId = decoded.sub;
         req.userRole = decoded.role;
-        console.log('[requireAuth] Token verified and session active:', { userId: decoded.sub, role: decoded.role });
+        console.log('[requireAuth] Token verified:', { userId: decoded.sub, role: decoded.role });
         return next();
     }
     catch (_e) {
@@ -188,7 +168,6 @@ exports.authRouter.post('/register', async (req, res) => {
                 name: body.name,
                 semester: body.semester,
                 authorizedDevices: [body.deviceId], // Premier appareil autorisé
-                activeDeviceId: body.deviceId,
             },
         });
         // Fetch user with subscription data
@@ -203,14 +182,6 @@ exports.authRouter.post('/register', async (req, res) => {
         });
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
         const refreshToken = signRefreshToken({ sub: user.id });
-        // Stocker le token actif pour la session unique
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                activeToken: accessToken,
-                activeDeviceId: body.deviceId
-            }
-        });
         setAuthCookies(res, accessToken, refreshToken);
         console.log('[Auth] Registration successful:', {
             userId: user.id,
@@ -284,27 +255,11 @@ exports.authRouter.post('/login', async (req, res) => {
                 totalDevices: authorizedDevices.length + 1
             });
         }
-        // Vérifier si une session est déjà active
-        if (user.activeToken) {
-            console.log('[Auth] Active session detected - will be invalidated:', {
-                userId: user.id,
-                activeDevice: user.activeDeviceId,
-                newDevice: body.deviceId
-            });
-        }
         // Generate new tokens
         const accessToken = signAccessToken({ sub: user.id, role: user.role });
         const refreshToken = signRefreshToken({ sub: user.id });
-        // Mettre à jour la session active (invalide l'ancienne session)
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                activeToken: accessToken,
-                activeDeviceId: body.deviceId
-            }
-        });
         setAuthCookies(res, accessToken, refreshToken);
-        console.log('[Auth] Login successful:', {
+        console.log('[Auth] Login successful - concurrent sessions allowed:', {
             userId: user.id,
             email: user.email,
             role: user.role,
@@ -344,11 +299,6 @@ exports.authRouter.post('/refresh', async (req, res) => {
             return res.status(401).json({ error: { code: 'INVALID_REFRESH', message: 'Invalid refresh' } });
         const newAccess = signAccessToken({ sub: user.id, role: user.role });
         const newRefresh = signRefreshToken({ sub: user.id });
-        // Mettre à jour le token actif
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { activeToken: newAccess }
-        });
         setAuthCookies(res, newAccess, newRefresh);
         return res.json({ user: getUserPublic(user) });
     }
@@ -404,36 +354,9 @@ exports.authRouter.get('/verify', async (req, res) => {
     }
 });
 // POST /logout
-exports.authRouter.post('/logout', async (req, res) => {
-    try {
-        const cookieToken = req.cookies?.access_token;
-        const authHeader = req.headers.authorization;
-        const headerToken = authHeader?.split(' ')[1];
-        const token = cookieToken || headerToken;
-        if (token) {
-            try {
-                const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-                // Effacer la session active
-                await prisma.user.update({
-                    where: { id: decoded.sub },
-                    data: {
-                        activeToken: null,
-                        activeDeviceId: null
-                    }
-                });
-                console.log('[Auth] Logout - session cleared for user:', decoded.sub);
-            }
-            catch (e) {
-                console.log('[Auth] Logout - Token invalid, clearing cookies only');
-            }
-        }
-        clearAuthCookies(res);
-        return res.status(204).send();
-    }
-    catch (e) {
-        clearAuthCookies(res);
-        return res.status(204).send();
-    }
+exports.authRouter.post('/logout', async (_req, res) => {
+    clearAuthCookies(res);
+    return res.status(204).send();
 });
 // PUT /profile
 const profileSchema = zod_1.z.object({
