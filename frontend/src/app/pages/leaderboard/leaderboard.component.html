@@ -31,7 +31,7 @@
             class="filter-btn"
             [class.active]="activeScope === 'global'"
             (click)="setScope('global')">
-            🌍 Global
+            <img width="24" height="24" src="https://img.icons8.com/pastel-glyph/64/globe.png" alt="globe"/> Global
           </button>
           <button
             class="filter-btn"
@@ -50,19 +50,19 @@
             class="filter-btn"
             [class.active]="activeTimeframe === 'all-time'"
             (click)="setTimeframe('all-time')">
-            ⏳ Tout temps
+            <img width="24" height="24" src="https://img.icons8.com/carbon-copy/100/all.png" alt="all"/> Tout temps
           </button>
           <button
             class="filter-btn"
             [class.active]="activeTimeframe === 'monthly'"
             (click)="setTimeframe('monthly')">
-            📅 Ce mois
+            <img width="24" height="24" src="https://img.icons8.com/external-photo3ideastudio-solid-photo3ideastudio/64/external-calendars-winter-photo3ideastudio-solid-photo3ideastudio.png" alt="calendar"/> Ce mois
           </button>
           <button
             class="filter-btn"
             [class.active]="activeTimeframe === 'weekly'"
             (click)="setTimeframe('weekly')">
-            📆 Cette semaine
+            <img width="24" height="24" src="https://img.icons8.com/external-photo3ideastudio-solid-photo3ideastudio/64/external-calendars-winter-photo3ideastudio-solid-photo3ideastudio.png" alt="calendar"/> Cette semaine
           </button>
         </div>
       </div>

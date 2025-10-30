@@ -128,6 +128,14 @@
   transition: all 0.3s ease;
   flex: 1;
   min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.filter-btn img {
+  transition: filter 0.3s ease;
 }
 
 .filter-btn:hover {
@@ -141,6 +149,10 @@
   border-color: #3b82f6;
   color: white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.filter-btn.active img {
+  filter: brightness(0) invert(1);
 }
 
 /* Leaderboard Table */
