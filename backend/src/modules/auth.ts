@@ -110,6 +110,66 @@ export function requireAuth(req: any, res: any, next: any) {
   }
 }
 
+// Subscription check middleware - must be used after requireAuth
+export async function requireActiveSubscription(req: any, res: any, next: any) {
+  try {
+    const { checkUserSubscription } = await import('../services/subscription.service');
+    const subscriptionResult = await checkUserSubscription(req.userId);
+
+    if (!subscriptionResult.hasActiveSubscription) {
+      console.log('[requireActiveSubscription] No active subscription for user:', req.userId);
+      return res.status(403).json({
+        error: {
+          code: 'NO_SUBSCRIPTION',
+          message: subscriptionResult.message || 'Abonnement requis pour accéder à ce contenu'
+        }
+      });
+    }
+
+    // Stocker les infos d'abonnement dans la requête pour utilisation ultérieure
+    req.subscription = subscriptionResult;
+    console.log('[requireActiveSubscription] Active subscription found:', {
+      userId: req.userId,
+      type: subscriptionResult.subscriptionType,
+      expiresAt: subscriptionResult.expiresAt
+    });
+
+    return next();
+  } catch (error) {
+    console.error('[requireActiveSubscription] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la vérification de l\'abonnement' }
+    });
+  }
+}
+
+// Quiz access check middleware - must be used after requireAuth
+export async function requireQuizAccess(req: any, res: any, next: any) {
+  try {
+    const { checkUserSubscription } = await import('../services/subscription.service');
+    const subscriptionResult = await checkUserSubscription(req.userId);
+
+    if (!subscriptionResult.canAccessQuiz) {
+      console.log('[requireQuizAccess] No quiz access for user:', req.userId);
+      return res.status(403).json({
+        error: {
+          code: 'NO_QUIZ_ACCESS',
+          message: 'Votre abonnement ne permet pas l\'accès aux quiz. Veuillez souscrire à un plan QUIZ_ONLY ou FULL_ACCESS.'
+        }
+      });
+    }
+
+    req.subscription = subscriptionResult;
+    console.log('[requireQuizAccess] Quiz access granted for user:', req.userId);
+    return next();
+  } catch (error) {
+    console.error('[requireQuizAccess] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Erreur lors de la vérification de l\'accès quiz' }
+    });
+  }
+}
+
 // Admin check middleware - must be used after requireAuth
 export function requireAdmin(req: any, res: any, next: any) {
   if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {

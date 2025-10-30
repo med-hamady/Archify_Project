@@ -315,3 +315,35 @@ profileRouter.get('/stats/detailed', requireAuth, async (req: any, res: any) => 
     });
   }
 });
+
+/**
+ * GET /api/profile/subscription
+ * Vérifier le statut de l'abonnement de l'utilisateur
+ */
+profileRouter.get('/subscription', requireAuth, async (req: any, res: any) => {
+  try {
+    const userId = req.userId;
+
+    // Importer dynamiquement le service de subscription
+    const { checkUserSubscription } = await import('../services/subscription.service');
+    const subscriptionResult = await checkUserSubscription(userId);
+
+    return res.json({
+      success: true,
+      subscription: {
+        hasActive: subscriptionResult.hasActiveSubscription,
+        type: subscriptionResult.subscriptionType,
+        canAccessQuiz: subscriptionResult.canAccessQuiz,
+        canAccessDocuments: subscriptionResult.canAccessDocuments,
+        expiresAt: subscriptionResult.expiresAt,
+        message: subscriptionResult.message
+      }
+    });
+
+  } catch (error) {
+    console.error('[profile/subscription] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+    });
+  }
+});

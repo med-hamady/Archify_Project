@@ -11,7 +11,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-import { requireAuth } from './auth';
+import { requireAuth, requireQuizAccess } from './auth';
 import { calculateXP, checkConsecutiveBonus } from '../services/xp.service';
 import { checkLevelUp, getLevelInfo } from '../services/level.service';
 import { checkAndAwardBadges } from '../services/badge.service';
@@ -36,8 +36,9 @@ const answerQuestionSchema = z.object({
 /**
  * POST /api/quiz/answer
  * Répondre à une question et calculer l'XP
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
+quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res: any) => {
   try {
     const { questionId, selectedAnswers } = answerQuestionSchema.parse(req.body);
     const userId = req.userId;
@@ -292,8 +293,9 @@ quizRouter.post('/answer', requireAuth, async (req: any, res: any) => {
  * GET /api/quiz/chapter/:chapterId/next
  * Récupérer la prochaine question à répondre dans un chapitre
  * Query params: replay=true pour rejouer le chapitre depuis le début
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-quizRouter.get('/chapter/:chapterId/next', requireAuth, async (req: any, res: any) => {
+quizRouter.get('/chapter/:chapterId/next', requireAuth, requireQuizAccess, async (req: any, res: any) => {
   try {
     const { chapterId } = req.params;
     const { replay } = req.query;
@@ -396,8 +398,9 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, async (req: any, res: an
 /**
  * GET /api/quiz/chapter/:chapterId/questions
  * Récupérer toutes les questions d'un chapitre (admin ou preview)
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-quizRouter.get('/chapter/:chapterId/questions', requireAuth, async (req: any, res: any) => {
+quizRouter.get('/chapter/:chapterId/questions', requireAuth, requireQuizAccess, async (req: any, res: any) => {
   try {
     const { chapterId } = req.params;
     const userId = req.userId;
@@ -452,8 +455,9 @@ quizRouter.get('/chapter/:chapterId/questions', requireAuth, async (req: any, re
 /**
  * GET /api/quiz/history/:questionId
  * Récupérer l'historique des tentatives pour une question
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-quizRouter.get('/history/:questionId', requireAuth, async (req: any, res: any) => {
+quizRouter.get('/history/:questionId', requireAuth, requireQuizAccess, async (req: any, res: any) => {
   try {
     const { questionId } = req.params;
     const userId = req.userId;
