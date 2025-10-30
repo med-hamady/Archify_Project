@@ -18,6 +18,7 @@ model User {
   semester        String
   role            UserRole @default(STUDENT)
   profilePicture  String?  // URL de la photo de profil
+  activeToken     String?  // Token JWT actif pour session unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
