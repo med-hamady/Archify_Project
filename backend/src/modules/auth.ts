@@ -149,18 +149,47 @@ export async function requireQuizAccess(req: any, res: any, next: any) {
     const { checkUserSubscription } = await import('../services/subscription.service');
     const subscriptionResult = await checkUserSubscription(req.userId);
 
-    if (!subscriptionResult.canAccessQuiz) {
-      console.log('[requireQuizAccess] No quiz access for user:', req.userId);
+    // Si l'utilisateur a un abonnement actif, autoriser l'accès
+    if (subscriptionResult.canAccessQuiz) {
+      req.subscription = subscriptionResult;
+      req.hasFreeAccess = false;
+      console.log('[requireQuizAccess] Quiz access granted (subscription) for user:', req.userId);
+      return next();
+    }
+
+    // Si pas d'abonnement, vérifier les QCM gratuits
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { freeQcmUsed: true }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+      });
+    }
+
+    // Si l'utilisateur a déjà utilisé ses 3 QCM gratuits, rediriger vers l'abonnement
+    if (user.freeQcmUsed >= 3) {
+      console.log('[requireQuizAccess] Free QCM limit reached for user:', req.userId);
       return res.status(403).json({
         error: {
-          code: 'NO_QUIZ_ACCESS',
-          message: 'Votre abonnement ne permet pas l\'accès aux quiz. Veuillez souscrire à un plan QUIZ_ONLY ou FULL_ACCESS.'
+          code: 'FREE_LIMIT_REACHED',
+          message: 'Vous avez utilisé vos 3 QCM gratuits. Veuillez souscrire à un abonnement pour continuer.',
+          freeQcmUsed: user.freeQcmUsed,
+          needsSubscription: true
         }
       });
     }
 
+    // Autoriser l'accès avec un QCM gratuit
     req.subscription = subscriptionResult;
-    console.log('[requireQuizAccess] Quiz access granted for user:', req.userId);
+    req.hasFreeAccess = true;
+    req.freeQcmUsed = user.freeQcmUsed;
+    console.log(`[requireQuizAccess] Free QCM access granted for user: ${req.userId} (${user.freeQcmUsed}/3 used)`);
     return next();
   } catch (error) {
     console.error('[requireQuizAccess] Error:', error);

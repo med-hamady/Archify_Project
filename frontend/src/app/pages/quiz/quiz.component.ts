@@ -78,6 +78,14 @@ export class QuizComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading question:', err);
+
+        // Vérifier si l'utilisateur a atteint la limite de QCM gratuits
+        if (err.error?.error?.code === 'FREE_LIMIT_REACHED') {
+          alert('Vous avez utilisé vos 3 QCM gratuits. Vous allez être redirigé vers la page d\'abonnement.');
+          this.router.navigate(['/subscription']);
+          return;
+        }
+
         this.error = err.error?.error?.message || 'Erreur lors du chargement de la question';
         this.loading = false;
       }
@@ -133,6 +141,14 @@ export class QuizComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error submitting answer:', err);
+
+        // Vérifier si l'utilisateur a atteint la limite de QCM gratuits
+        if (err.error?.error?.code === 'FREE_LIMIT_REACHED') {
+          alert('Vous avez utilisé vos 3 QCM gratuits. Vous allez être redirigé vers la page d\'abonnement.');
+          this.router.navigate(['/subscription']);
+          return;
+        }
+
         this.error = 'Erreur lors de la soumission de la réponse';
         this.answered = false;
       }
