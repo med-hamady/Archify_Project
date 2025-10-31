@@ -218,10 +218,12 @@ export class SubscriptionComponent implements OnInit {
           currency: plan.currency,
           period: plan.interval,
           features: plan.features || [
-            `Accès ${plan.name.toLowerCase()}`,
-            'Contenu premium',
-            'Support par email',
-            'Accès pour 1 an complet'
+            'Accès illimité à tous les cours vidéo',
+            'Téléchargement de tous les documents PDF',
+            'Accès à tous les supports de cours',
+            'Mises à jour gratuites du contenu',
+            'Support prioritaire par email',
+            'Valable pour 1 an complet'
           ],
           isPopular: true, // Premium is always popular
           isCurrent: false, // Will be set based on user subscription
