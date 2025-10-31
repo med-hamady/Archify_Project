@@ -11,7 +11,6 @@ export interface QuizQuestion {
   id: string;
   questionText: string;
   options: QuizOption[];  // Nouveau format JSON
-  difficulty: 'FACILE' | 'MOYEN' | 'DIFFICILE' | 'LEGENDE';
   chapterId?: string;
   chapterTitle?: string;
   position?: number;
@@ -117,7 +116,6 @@ export class QuizService {
     questions: Array<{
       id: string;
       questionText: string;
-      difficulty: string;
       answered: boolean;
       correct: boolean;
     }>;

@@ -152,11 +152,6 @@ export class QuizComponent implements OnInit {
     this.loadNextQuestion();
   }
 
-  getDifficultyConfig() {
-    if (!this.currentQuestion) return null;
-    return this.difficultyConfig[this.currentQuestion.difficulty];
-  }
-
   goBack() {
     this.router.navigate(['/dashboard']);
   }
