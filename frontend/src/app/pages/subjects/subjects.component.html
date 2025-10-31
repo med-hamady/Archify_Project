@@ -68,7 +68,12 @@
           *ngIf="subject.examUnlocked"
           class="unlock-badge exam unlocked clickable"
           (click)="navigateToExam(subject.id, $event)">
-          <span class="badge-icon">✅</span>
+          <span class="badge-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="24" height="24">
+              <circle cx="32" cy="32" r="30" fill="#4CAF50"/>
+              <path d="M20 32l8 8 16-16" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
           <span class="badge-label">Mode Examen</span>
         </div>
         <div
