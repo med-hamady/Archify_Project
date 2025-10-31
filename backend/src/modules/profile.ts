@@ -272,10 +272,22 @@ profileRouter.get('/stats/detailed', requireAuth, async (req: any, res: any) => 
     });
     const perfectScores = Array.from(firstAttempts.values()).filter(v => v).length;
 
-    // Compter les challenges et examens (pour l'instant 0, à implémenter plus tard)
-    const challengesCompleted = 0;
-    const examsCompleted = 0;
-    const examsPassed = 0;
+    // Compter les challenges complétés
+    const challengesCompleted = await prisma.challengeResult.count({
+      where: { userId }
+    });
+
+    // Compter les examens complétés et réussis
+    const examsCompleted = await prisma.examResult.count({
+      where: { userId }
+    });
+
+    const examsPassed = await prisma.examResult.count({
+      where: {
+        userId,
+        passed: true
+      }
+    });
 
     return res.json({
       success: true,
