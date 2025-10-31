@@ -41,7 +41,7 @@ interface SubscriptionPlanUI {
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"> tout le contenu</span>
             </h1>
           <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            Un seul abonnement pour accéder à tous les cours, documents et ressources de la plateforme Archify
+            Un seul abonnement pour accéder à tous les cours, documents et ressources de la plateforme FacGame
           </p>
         </div>
 
@@ -115,7 +115,7 @@ interface SubscriptionPlanUI {
         <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 mb-16 border border-gray-200/50">
           <div class="text-center mb-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Méthodes de paiement sécurisées</h2>
-            <p class="text-gray-600 text-lg">Paiement 100% sécurisé avec les meilleures solutions de paiement du Maroc</p>
+            <p class="text-gray-600 text-lg">Paiement 100% sécurisé avec les meilleures solutions de paiement </p>
             </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="group text-center p-8 border-2 border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
@@ -152,7 +152,7 @@ interface SubscriptionPlanUI {
             <div class="space-y-6">
               <div class="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50/50 rounded-r-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-3">Quelle est la durée de l'abonnement ?</h3>
-                <p class="text-gray-600">L'abonnement Premium est valable pour une durée d'un an à partir de la date d'activation.</p>
+                <p class="text-gray-600">L'abonnement Premium est valable pour une durée d'un semestre à partir de la date d'activation.</p>
             </div>
               <div class="border-l-4 border-green-500 pl-6 py-4 bg-green-50/50 rounded-r-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-3">Comment effectuer le paiement ?</h3>
@@ -162,11 +162,11 @@ interface SubscriptionPlanUI {
             <div class="space-y-6">
               <div class="border-l-4 border-purple-500 pl-6 py-4 bg-purple-50/50 rounded-r-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-3">Que comprend l'abonnement Premium ?</h3>
-                <p class="text-gray-600">Accès illimité à tous les cours vidéo, documents PDF, supports de cours et nouveaux contenus pour 1 an complet.</p>
+                <p class="text-gray-600">Accès illimité à tous les quiz interactifs, documents PDF, supports de cours et nouveaux contenus pour semestre complet.</p>
         </div>
               <div class="border-l-4 border-orange-500 pl-6 py-4 bg-orange-50/50 rounded-r-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-3">Comment contacter le support ?</h3>
-                <p class="text-gray-600">Vous pouvez nous contacter via email à support@archify.ma ou via le chat en ligne 24/7.</p>
+                <p class="text-gray-600">Vous pouvez nous contacter via +222 33077855 ou via le chat en ligne 24/7.</p>
               </div>
             </div>
           </div>
@@ -218,12 +218,12 @@ export class SubscriptionComponent implements OnInit {
           currency: plan.currency,
           period: plan.interval,
           features: plan.features || [
-            'Accès illimité à tous les cours vidéo',
+            'Accès illimité à tous les quiz interactifs',
             'Téléchargement de tous les documents PDF',
             'Accès à tous les supports de cours',
             'Mises à jour gratuites du contenu',
             'Support prioritaire par email',
-            'Valable pour 1 an complet'
+            'Valable pour un semestre complet'
           ],
           isPopular: true, // Premium is always popular
           isCurrent: false, // Will be set based on user subscription
