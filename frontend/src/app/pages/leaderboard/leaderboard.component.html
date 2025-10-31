@@ -81,7 +81,7 @@
           <div class="podium-avatar">
             <span>{{ entries[1].name.charAt(0).toUpperCase() }}</span>
           </div>
-          <div class="podium-level" [style.background]="getLevelInfo(entries[1].level).color">
+          <div class="podium-level">
             <img [src]="getLevelInfo(entries[1].level).image" [alt]="getLevelInfo(entries[1].level).label" class="podium-level-img">
           </div>
           <div class="podium-name">{{ entries[1].name }}</div>
@@ -95,7 +95,7 @@
           <div class="podium-avatar">
             <span>{{ entries[0].name.charAt(0).toUpperCase() }}</span>
           </div>
-          <div class="podium-level" [style.background]="getLevelInfo(entries[0].level).color">
+          <div class="podium-level">
             <img [src]="getLevelInfo(entries[0].level).image" [alt]="getLevelInfo(entries[0].level).label" class="podium-level-img">
           </div>
           <div class="podium-name">{{ entries[0].name }}</div>
@@ -108,7 +108,7 @@
           <div class="podium-avatar">
             <span>{{ entries[2].name.charAt(0).toUpperCase() }}</span>
           </div>
-          <div class="podium-level" [style.background]="getLevelInfo(entries[2].level).color">
+          <div class="podium-level">
             <img [src]="getLevelInfo(entries[2].level).image" [alt]="getLevelInfo(entries[2].level).label" class="podium-level-img">
           </div>
           <div class="podium-name">{{ entries[2].name }}</div>
@@ -142,9 +142,9 @@
             <div class="user-semester">{{ entry.semester }}</div>
           </div>
 
-          <div class="level-badge" [style.background]="getLevelInfo(entry.level).color">
+          <div class="level-badge">
             <img [src]="getLevelInfo(entry.level).image" [alt]="getLevelInfo(entry.level).label" class="level-icon">
-            <span class="level-label">{{ getLevelInfo(entry.level).label }}</span>
+            <span class="level-label" [style.background]="getLevelInfo(entry.level).color">{{ getLevelInfo(entry.level).label }}</span>
           </div>
 
           <div class="stats">
@@ -190,9 +190,9 @@
             <div class="user-semester">{{ entry.semester }}</div>
           </div>
 
-          <div class="level-badge" [style.background]="getLevelInfo(entry.level).color">
+          <div class="level-badge">
             <img [src]="getLevelInfo(entry.level).image" [alt]="getLevelInfo(entry.level).label" class="level-icon">
-            <span class="level-label">{{ getLevelInfo(entry.level).label }}</span>
+            <span class="level-label" [style.background]="getLevelInfo(entry.level).color">{{ getLevelInfo(entry.level).label }}</span>
           </div>
 
           <div class="stats">
