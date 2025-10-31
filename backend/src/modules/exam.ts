@@ -474,6 +474,7 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
     res.json({
       success: true,
       result: {
+        examResultId: examResult.id, // ID du résultat d'examen pour récupérer la correction
         score: scoreSur20,
         scoreOutOf20: scoreSur20, // Alias pour compatibilité frontend
         scorePercent,

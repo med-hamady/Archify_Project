@@ -38,6 +38,7 @@ export class ExamComponent implements OnInit {
 
   // Results state
   result: ExamResult | null = null;
+  examResultId: string | null = null; // ID du résultat d'examen pour la correction
   showXPAnimation = false;
   showLevelUpAnimation = false;
   showBadgeAnimation = false;
@@ -157,8 +158,11 @@ export class ExamComponent implements OnInit {
     this.examService.submitExam(this.subjectId, this.exam.examId, formattedAnswers).subscribe({
       next: (res) => {
         this.result = res.result;
+        this.examResultId = res.result.examResultId; // Sauvegarder l'ID du résultat pour la correction
         this.currentState = 'results';
         this.loading = false;
+
+        console.log('✅ Exam submitted successfully. Result ID:', this.examResultId);
 
         // Trigger animations
         if (res.result.xpEarned > 0) {
@@ -194,12 +198,16 @@ export class ExamComponent implements OnInit {
   }
 
   viewCorrection() {
-    if (!this.exam) return;
+    if (!this.examResultId) {
+      console.error('❌ No exam result ID available for correction');
+      this.error = 'ID du résultat d\'examen introuvable';
+      return;
+    }
     this.loading = true;
 
-    console.log('📖 Loading correction for exam:', this.exam.examId);
+    console.log('📖 Loading correction for exam result:', this.examResultId);
 
-    this.examService.getExamCorrection(this.exam.examId).subscribe({
+    this.examService.getExamCorrection(this.examResultId).subscribe({
       next: (res) => {
         console.log('✅ Correction received:', res);
         console.log('Correction data:', {

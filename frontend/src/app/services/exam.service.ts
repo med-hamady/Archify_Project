@@ -25,6 +25,7 @@ export interface ExamStart {
 }
 
 export interface ExamResult {
+  examResultId: string; // ID du résultat d'examen pour récupérer la correction
   score: number;
   totalQuestions: number;
   correctAnswers: number;
