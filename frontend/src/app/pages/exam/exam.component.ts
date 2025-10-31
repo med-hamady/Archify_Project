@@ -32,7 +32,7 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   // Exam options
   selectedQuestionCount: number = 20; // Par défaut 20 questions
-  questionCountOptions: number[] = [10, 20, 30, 40];
+  questionCountOptions: number[] = [];
   selectedDuration: number = 60; // Par défaut 60 minutes
   durationOptions: number[] = [15, 30, 45, 60, 90];
 
@@ -79,6 +79,7 @@ export class ExamComponent implements OnInit, OnDestroy {
     this.examService.startExam(this.subjectId, this.selectedQuestionCount, this.selectedDuration).subscribe({
       next: (res) => {
         this.exam = res.exam;
+        this.calculateQuestionCountOptions();
         this.initializeAnswers();
         this.currentState = 'start';
         this.loading = false;
@@ -89,6 +90,20 @@ export class ExamComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
     });
+  }
+
+  calculateQuestionCountOptions() {
+    if (!this.exam) return;
+
+    const totalQuestions = this.exam.totalQuestions;
+
+    // Si >= 100 questions disponibles, offrir des choix de 20 à 100
+    if (totalQuestions >= 100) {
+      this.questionCountOptions = [20, 40, 60, 80, 100];
+    } else {
+      // Si < 100, garder les choix de 10 à 40
+      this.questionCountOptions = [10, 20, 30, 40].filter(count => count <= totalQuestions);
+    }
   }
 
   initializeAnswers() {
