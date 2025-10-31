@@ -518,7 +518,11 @@ export class MyPaymentsComponent implements OnInit {
   }
 
   getFullScreenshotUrl(url: string): string {
-    // Remove /api prefix if present and prepend base URL
+    // If URL is already a full URL (starts with http/https), return it directly
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    // Otherwise, construct full URL with API base
     const cleanUrl = url.startsWith('/api') ? url.substring(4) : url;
     return `${this.API_URL.replace('/api', '')}${cleanUrl}`;
   }
