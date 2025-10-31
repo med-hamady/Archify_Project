@@ -4,11 +4,14 @@ import { roleGuard } from './core/guards/role.guard';
 import { subscriptionGuard } from './guards/subscription.guard';
 
 export const routes: Routes = [
-  // Redirect root to FacGame dashboard
+  // Landing page
   {
     path: '',
-    redirectTo: 'facgame-dashboard',
-    pathMatch: 'full'
+    loadComponent: () => import('./pages/landing/landing').then(m => m.Landing)
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./pages/landing/landing').then(m => m.Landing)
   },
   // Auth routes
   {
