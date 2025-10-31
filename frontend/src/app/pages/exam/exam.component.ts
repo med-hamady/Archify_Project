@@ -96,13 +96,16 @@ export class ExamComponent implements OnInit, OnDestroy {
     if (!this.exam) return;
 
     const totalQuestions = this.exam.totalQuestions;
+    console.log('🔢 [Exam] Total questions disponibles:', totalQuestions);
 
     // Si >= 100 questions disponibles, offrir des choix de 20 à 100
     if (totalQuestions >= 100) {
       this.questionCountOptions = [20, 40, 60, 80, 100];
+      console.log('✅ [Exam] Options pour >= 100:', this.questionCountOptions);
     } else {
       // Si < 100, garder les choix de 10 à 40
       this.questionCountOptions = [10, 20, 30, 40].filter(count => count <= totalQuestions);
+      console.log('✅ [Exam] Options pour < 100:', this.questionCountOptions);
     }
   }
 
