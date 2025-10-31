@@ -66,8 +66,10 @@ export interface ExamCorrection {
       questionId: string;
       questionText: string;
       options: string[];
-      userAnswer: number;
-      correctAnswer: number;
+      userAnswer: number | null; // Index de la réponse (choix unique) ou null (choix multiples)
+      correctAnswer: number | null; // Index de la bonne réponse (choix unique) ou null (choix multiples)
+      userAnswers?: number[]; // Tableau d'indices pour choix multiples
+      correctAnswers?: number[]; // Tableau d'indices corrects pour choix multiples
       isCorrect: boolean;
       explanation?: string;
     }>;
