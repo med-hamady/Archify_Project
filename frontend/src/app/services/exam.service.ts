@@ -7,7 +7,6 @@ export interface ExamQuestion {
   id: string;
   questionText: string;
   options: string[];
-  difficulty: 'FACILE' | 'MOYEN' | 'DIFFICILE' | 'LEGENDE';
   chapterId: string;
   chapterTitle: string;
 }

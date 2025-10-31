@@ -1,6 +1,6 @@
 import express from 'express';
 import { z } from 'zod';
-import { PrismaClient, QuestionDifficulty, GameLevel } from '@prisma/client';
+import { PrismaClient, GameLevel } from '@prisma/client';
 import { requireAuth } from './auth';
 import { BASE_XP } from '../services/xp.service';
 import { getLevelInfo, checkLevelUp } from '../services/level.service';
@@ -189,8 +189,7 @@ examRouter.post('/:subjectId/start', requireAuth, async (req: any, res) => {
             chapterId: chapter.id,
             chapterTitle: chapter.title,
             questionText: q.questionText,
-            options: options.map((opt: any) => opt.text), // Envoyer seulement le texte
-            difficulty: q.difficulty
+            options: options.map((opt: any) => opt.text) // Envoyer seulement le texte
           };
         })
     );
@@ -322,7 +321,6 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
           questionText: question.questionText,
           correct: false,
           xpEarned: 0,
-          difficulty: question.difficulty,
           error: 'Invalid options format'
         });
         continue;
@@ -336,7 +334,6 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
           questionText: question.questionText,
           correct: false,
           xpEarned: 0,
-          difficulty: question.difficulty,
           error: 'Invalid answer index'
         });
         continue;
@@ -371,7 +368,6 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
           questionText: question.questionText,
           correct: true,
           xpEarned: 4, // 4 XP par bonne réponse (update4)
-          difficulty: question.difficulty,
           options: optionsWithFeedback,
           explanation: question.explanation
         });
@@ -381,7 +377,6 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
           questionText: question.questionText,
           correct: false,
           xpEarned: 0,
-          difficulty: question.difficulty,
           options: optionsWithFeedback,
           explanation: question.explanation
         });

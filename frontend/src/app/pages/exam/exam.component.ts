@@ -290,26 +290,6 @@ export class ExamComponent implements OnInit, OnDestroy {
     return this.answers[this.currentQuestionIndex];
   }
 
-  getDifficultyClass(difficulty: string): string {
-    const map: any = {
-      'FACILE': 'easy',
-      'MOYEN': 'medium',
-      'DIFFICILE': 'hard',
-      'LEGENDE': 'legend'
-    };
-    return map[difficulty] || 'medium';
-  }
-
-  getDifficultyLabel(difficulty: string): string {
-    const map: any = {
-      'FACILE': 'Facile',
-      'MOYEN': 'Moyen',
-      'DIFFICILE': 'Difficile',
-      'LEGENDE': 'Légende'
-    };
-    return map[difficulty] || difficulty;
-  }
-
   getGradeClass(grade: string): string {
     if (grade.startsWith('A')) return 'grade-a';
     if (grade.startsWith('B')) return 'grade-b';

@@ -122,9 +122,6 @@
     <div class="question-card" *ngIf="getCurrentQuestion()">
       <div class="question-header">
         <span class="question-number">#{{ currentQuestionIndex + 1 }}</span>
-        <span class="difficulty-badge" [class]="getDifficultyClass(getCurrentQuestion()!.difficulty)">
-          {{ getDifficultyLabel(getCurrentQuestion()!.difficulty) }}
-        </span>
       </div>
 
       <div class="question-text">

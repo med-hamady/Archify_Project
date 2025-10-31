@@ -101,8 +101,7 @@ model Question {
 
   explanation String? @db.Text // Commentaire général de la question
 
-  difficulty QuestionDifficulty @default(FACILE)
-  orderIndex Int                @default(0)
+  orderIndex Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,7 +110,6 @@ model Question {
   attempts QuizAttempt[]
 
   @@index([chapterId, orderIndex], map: "questions_chapter_order_idx")
-  @@index([difficulty], map: "questions_difficulty_idx")
 }
 
 // FacGame: Commentaires sur les chapitres
@@ -344,14 +342,6 @@ enum GameLevel {
   PLATINUM // 4001-5500 XP
   DIAMANT // 5501-9000 XP
   MONDIAL // 9001+ XP
-}
-
-// FacGame: Difficultés des questions
-enum QuestionDifficulty {
-  FACILE // +5 XP base
-  MOYEN // +10 XP base
-  DIFFICILE // +20 XP base
-  LEGENDE // +30 XP base (questions spéciales)
 }
 
 // FacGame: Exigences pour badges
