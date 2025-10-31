@@ -71,6 +71,7 @@ export class ProfileComponent implements OnInit {
           xpTotal: res.profile.gamification.xpTotal,
           level: res.profile.gamification.level.current,
           consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
+          bestStreak: res.profile.gamification.bestStreak || 0,
           legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
           createdAt: res.profile.createdAt
         };

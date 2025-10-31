@@ -71,6 +71,7 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
                 xpTotal: true,
                 level: true,
                 consecutiveGoodAnswers: true,
+                bestStreak: true,
                 legendQuestionsCompleted: true,
                 lastActivityAt: true,
                 createdAt: true,
@@ -110,6 +111,7 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
                         isMaxLevel: levelInfo.isMaxLevel
                     },
                     consecutiveStreak: user.consecutiveGoodAnswers,
+                    bestStreak: user.bestStreak,
                     legendQuestionsCompleted: user.legendQuestionsCompleted,
                     badges: {
                         total: badgeStats.total,

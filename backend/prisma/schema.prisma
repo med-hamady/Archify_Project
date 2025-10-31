@@ -28,6 +28,7 @@ model User {
   xpTotal                  Int       @default(0)
   level                    GameLevel @default(BOIS)
   consecutiveGoodAnswers   Int       @default(0)
+  bestStreak               Int       @default(0) // Meilleure série de bonnes réponses
   legendQuestionsCompleted Int       @default(0)
   lastActivityAt           DateTime?
   freeQcmUsed              Int       @default(0) // Nombre de QCM gratuits utilisés (max 3)

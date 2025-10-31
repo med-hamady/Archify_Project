@@ -11,6 +11,7 @@ export interface UserProfile {
   xpTotal: number;
   level: 'BOIS' | 'BRONZE' | 'ARGENT' | 'OR' | 'PLATINUM' | 'DIAMANT' | 'MONDIAL';
   consecutiveGoodAnswers: number;
+  bestStreak: number;
   legendQuestionsCompleted: number;
   createdAt: string;
   profilePicture?: string;
