@@ -32,13 +32,6 @@ export class QuizComponent implements OnInit {
   showLevelUpAnimation = false;
   showBadgeAnimation = false;
 
-  difficultyConfig = {
-    FACILE: { color: '#4CAF50', label: 'Facile', baseXP: 5 },
-    MOYEN: { color: '#FF9800', label: 'Moyen', baseXP: 10 },
-    DIFFICILE: { color: '#F44336', label: 'Difficile', baseXP: 20 },
-    LEGENDE: { color: '#9C27B0', label: 'Légende', baseXP: 30 }
-  };
-
   ngOnInit() {
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
     if (this.chapterId) {

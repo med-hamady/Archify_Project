@@ -228,49 +228,6 @@
             </div>
           </div>
 
-          <!-- Difficulty Distribution -->
-          <div class="stat-card difficulty-card">
-            <h3>⚡ Difficultés résolues</h3>
-            <div class="difficulty-bars">
-              <div class="difficulty-bar">
-                <div class="difficulty-label">
-                  <span>Facile</span>
-                  <span class="count">{{ stats.difficultyCounts.FACILE }}</span>
-                </div>
-                <div class="bar-track">
-                  <div class="bar-fill facile" [style.width.%]="(stats.difficultyCounts.FACILE / stats.totalQuestions * 100)"></div>
-                </div>
-              </div>
-              <div class="difficulty-bar">
-                <div class="difficulty-label">
-                  <span>Moyen</span>
-                  <span class="count">{{ stats.difficultyCounts.MOYEN }}</span>
-                </div>
-                <div class="bar-track">
-                  <div class="bar-fill moyen" [style.width.%]="(stats.difficultyCounts.MOYEN / stats.totalQuestions * 100)"></div>
-                </div>
-              </div>
-              <div class="difficulty-bar">
-                <div class="difficulty-label">
-                  <span>Difficile</span>
-                  <span class="count">{{ stats.difficultyCounts.DIFFICILE }}</span>
-                </div>
-                <div class="bar-track">
-                  <div class="bar-fill difficile" [style.width.%]="(stats.difficultyCounts.DIFFICILE / stats.totalQuestions * 100)"></div>
-                </div>
-              </div>
-              <div class="difficulty-bar">
-                <div class="difficulty-label">
-                  <span>Légende</span>
-                  <span class="count">{{ stats.difficultyCounts.LEGENDE }}</span>
-                </div>
-                <div class="bar-track">
-                  <div class="bar-fill legende" [style.width.%]="(stats.difficultyCounts.LEGENDE / stats.totalQuestions * 100)"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Challenge & Exam Stats -->
           <div class="stat-card modes-card">
             <h3>🎮 Modes de jeu</h3>
