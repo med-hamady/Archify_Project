@@ -211,6 +211,20 @@
     drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
 }
 
+.level-badge-label {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  border-radius: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 /* XP Section */
 .xp-section {
   margin: 1.5rem 0;
