@@ -20,7 +20,8 @@
 .logo {
   width: 150px;
   height: auto;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem auto;
+  display: block;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
   animation: float 3s ease-in-out infinite;
 }
@@ -285,8 +286,8 @@
 /* Motivation Section */
 .motivation-section {
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: linear-gradient(to bottom right, #dbeafe, #e0e7ff);
+  color: #1e293b;
   text-align: center;
 }
 
@@ -295,6 +296,7 @@
   max-width: 800px;
   margin: 0 auto;
   line-height: 1.8;
+  color: #475569;
 }
 
 /* Final CTA */
