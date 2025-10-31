@@ -286,6 +286,7 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
         const { chapterId } = req.params;
         const { replay, currentQuestionId } = req.query;
         const userId = req.userId;
+        console.log('🔍 [Quiz Next] ChapterId:', chapterId, 'CurrentQuestion:', currentQuestionId, 'Replay:', replay);
         // Récupérer toutes les questions du chapitre
         const allQuestions = await prisma.question.findMany({
             where: { chapterId },
@@ -363,6 +364,7 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
                 });
             }
         }
+        console.log('✅ [Quiz Next] Selected question:', nextQuestion.id, 'OrderIndex:', nextQuestion.orderIndex);
         // Retourner la question avec les options (sans révéler les réponses correctes ni les justifications)
         const questionOptions = nextQuestion.options;
         const sanitizedOptions = questionOptions.map((opt) => ({

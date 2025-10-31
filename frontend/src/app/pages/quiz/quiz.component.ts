@@ -47,6 +47,7 @@ export class QuizComponent implements OnInit {
 
     // Sauvegarder l'ID de la question actuelle avant de la réinitialiser
     const currentQuestionId = this.currentQuestion?.id;
+    console.log('🔍 [Quiz] Loading next question - Current:', currentQuestionId, 'Replay:', replay);
 
     this.loading = true;
     this.error = null;
@@ -65,6 +66,7 @@ export class QuizComponent implements OnInit {
           this.completionMessage = res.message || 'Chapitre terminé! Toutes les questions ont été répondues correctement.';
           this.loading = false;
         } else if (res.question) {
+          console.log('✅ [Quiz] Received question:', res.question.id, 'Position:', res.question.position);
           this.currentQuestion = res.question;
           this.loading = false;
         } else {
