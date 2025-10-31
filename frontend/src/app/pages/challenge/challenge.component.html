@@ -192,16 +192,16 @@
 
       <!-- Result Header -->
       <div class="result-header">
-        <div class="result-icon" [class.perfect]="result.score === result.questionsTotal">
-          {{ result.score === result.questionsTotal ? '🏆' : result.score >= result.questionsTotal * 0.7 ? '⭐' : '📊' }}
+        <div class="result-icon" [class.perfect]="result.questionsCorrect === result.questionsTotal">
+          {{ result.questionsCorrect === result.questionsTotal ? '🏆' : result.questionsCorrect >= result.questionsTotal * 0.7 ? '⭐' : '📊' }}
         </div>
-        <h1>{{ result.score === result.questionsTotal ? 'Score Parfait!' : 'Challenge Terminé!' }}</h1>
+        <h1>{{ result.questionsCorrect === result.questionsTotal ? 'Score Parfait!' : 'Challenge Terminé!' }}</h1>
         <div class="score-display">
-          <span class="score">{{ result.score }}</span>
+          <span class="score">{{ result.questionsCorrect }}</span>
           <span class="separator">/</span>
           <span class="total">{{ result.questionsTotal }}</span>
         </div>
-        <div class="percentage">{{ (result.score / result.questionsTotal * 100).toFixed(0) }}%</div>
+        <div class="percentage">{{ result.score.toFixed(0) }}%</div>
       </div>
 
       <!-- XP Earned -->
