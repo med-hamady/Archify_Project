@@ -45,6 +45,9 @@ export class QuizComponent implements OnInit {
   loadNextQuestion(replay: boolean = false) {
     if (!this.chapterId) return;
 
+    // Sauvegarder l'ID de la question actuelle avant de la réinitialiser
+    const currentQuestionId = this.currentQuestion?.id;
+
     this.loading = true;
     this.error = null;
     this.selectedAnswers = [];
@@ -54,7 +57,7 @@ export class QuizComponent implements OnInit {
     this.chapterCompleted = false;
     this.completionMessage = null;
 
-    this.quizService.getNextQuestion(this.chapterId, replay).subscribe({
+    this.quizService.getNextQuestion(this.chapterId, replay, currentQuestionId).subscribe({
       next: (res) => {
         if (res.completed) {
           // Chapitre terminé

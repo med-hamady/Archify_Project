@@ -276,13 +276,15 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, auth_1.requireQuizAccess,
 /**
  * GET /api/quiz/chapter/:chapterId/next
  * Récupérer la prochaine question à répondre dans un chapitre
- * Query params: replay=true pour rejouer le chapitre depuis le début
+ * Query params:
+ *   - replay=true pour rejouer le chapitre depuis le début
+ *   - currentQuestionId=<id> pour obtenir la question suivante après celle-ci
  * Nécessite un abonnement actif avec accès aux quiz
  */
 exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.requireQuizAccess, async (req, res) => {
     try {
         const { chapterId } = req.params;
-        const { replay } = req.query;
+        const { replay, currentQuestionId } = req.query;
         const userId = req.userId;
         // Récupérer toutes les questions du chapitre
         const allQuestions = await prisma.question.findMany({
@@ -319,8 +321,18 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
             nextQuestion = allQuestions[0];
         }
         else {
-            // Mode normal: chercher la première question non réussie
-            for (const question of allQuestions) {
+            // Mode normal: chercher la première/prochaine question non réussie
+            let startIndex = 0;
+            // Si currentQuestionId est fourni, commencer la recherche après cette question
+            if (currentQuestionId) {
+                const currentIndex = allQuestions.findIndex(q => q.id === currentQuestionId);
+                if (currentIndex !== -1) {
+                    startIndex = currentIndex + 1;
+                }
+            }
+            // Chercher la prochaine question non réussie à partir de startIndex
+            for (let i = startIndex; i < allQuestions.length; i++) {
+                const question = allQuestions[i];
                 const questionAttempts = attemptsByQuestion.get(question.id) || [];
                 const hasCorrectAnswer = questionAttempts.some((a) => a.isCorrect);
                 if (!hasCorrectAnswer) {
@@ -328,6 +340,20 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
                     break;
                 }
             }
+            // Si aucune question non réussie n'est trouvée après startIndex,
+            // chercher depuis le début (mode révision en boucle)
+            if (!nextQuestion && startIndex > 0) {
+                for (let i = 0; i < startIndex; i++) {
+                    const question = allQuestions[i];
+                    const questionAttempts = attemptsByQuestion.get(question.id) || [];
+                    const hasCorrectAnswer = questionAttempts.some((a) => a.isCorrect);
+                    if (!hasCorrectAnswer) {
+                        nextQuestion = question;
+                        break;
+                    }
+                }
+            }
+            // Si toujours aucune question, le chapitre est terminé
             if (!nextQuestion) {
                 return res.json({
                     success: true,

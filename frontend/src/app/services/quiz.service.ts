@@ -76,11 +76,15 @@ export class QuizService {
    * Obtenir la prochaine question d'un chapitre
    * @param chapterId ID du chapitre
    * @param replay Si true, recommence le chapitre depuis le début
+   * @param currentQuestionId ID de la question actuelle (pour obtenir la suivante)
    */
-  getNextQuestion(chapterId: string, replay: boolean = false): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
+  getNextQuestion(chapterId: string, replay: boolean = false, currentQuestionId?: string): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
     let params = new HttpParams();
     if (replay) {
       params = params.set('replay', 'true');
+    }
+    if (currentQuestionId) {
+      params = params.set('currentQuestionId', currentQuestionId);
     }
 
     return this.http.get<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }>(
