@@ -595,8 +595,10 @@ examRouter.get('/:examId/correction', requireAuth, async (req: any, res) => {
         questionId: result.questionId,
         questionText: result.questionText,
         options: result.options.map((opt: any) => opt.text), // Juste le texte pour le frontend
-        userAnswer: selectedIndexes.length === 1 ? selectedIndexes[0] : null, // Pour compatibilité avec template actuel
-        correctAnswer: correctIndexes.length === 1 ? correctIndexes[0] : null, // Pour compatibilité avec template actuel
+        userAnswers: selectedIndexes, // Tableau d'indices sélectionnés (pour QCM multiples)
+        correctAnswers: correctIndexes, // Tableau d'indices corrects (pour QCM multiples)
+        userAnswer: selectedIndexes.length === 1 ? selectedIndexes[0] : null, // Pour compatibilité avec template actuel (choix unique)
+        correctAnswer: correctIndexes.length === 1 ? correctIndexes[0] : null, // Pour compatibilité avec template actuel (choix unique)
         isCorrect: result.correct,
         explanation: result.explanation
       });

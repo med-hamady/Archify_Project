@@ -322,17 +322,41 @@
             <div class="correction-question">{{ question.questionText }}</div>
 
             <div class="correction-answers">
+              <!-- Réponse incorrecte de l'utilisateur -->
               <div class="answer-row user-answer" *ngIf="!question.isCorrect">
                 <span class="answer-label">Votre réponse:</span>
                 <span class="answer-text incorrect">
-                  {{ ['A', 'B', 'C', 'D'][question.userAnswer] }} - {{ question.options[question.userAnswer] }}
+                  <!-- Choix unique -->
+                  <ng-container *ngIf="question.userAnswer !== null && question.userAnswer !== undefined">
+                    {{ ['A', 'B', 'C', 'D', 'E'][question.userAnswer] }} - {{ question.options[question.userAnswer] }}
+                  </ng-container>
+                  <!-- Choix multiples -->
+                  <ng-container *ngIf="question.userAnswers && question.userAnswers.length > 0">
+                    <span *ngFor="let idx of question.userAnswers; let i = index">
+                      {{ ['A', 'B', 'C', 'D', 'E'][idx] }} - {{ question.options[idx] }}<span *ngIf="i < question.userAnswers.length - 1"> ; </span>
+                    </span>
+                  </ng-container>
+                  <!-- Aucune réponse -->
+                  <ng-container *ngIf="(!question.userAnswer && question.userAnswer !== 0) && (!question.userAnswers || question.userAnswers.length === 0)">
+                    Aucune réponse
+                  </ng-container>
                 </span>
               </div>
 
+              <!-- Bonne réponse -->
               <div class="answer-row correct-answer">
                 <span class="answer-label">{{ question.isCorrect ? 'Votre réponse:' : 'Bonne réponse:' }}</span>
                 <span class="answer-text correct">
-                  {{ ['A', 'B', 'C', 'D'][question.correctAnswer] }} - {{ question.options[question.correctAnswer] }}
+                  <!-- Choix unique -->
+                  <ng-container *ngIf="question.correctAnswer !== null && question.correctAnswer !== undefined">
+                    {{ ['A', 'B', 'C', 'D', 'E'][question.correctAnswer] }} - {{ question.options[question.correctAnswer] }}
+                  </ng-container>
+                  <!-- Choix multiples -->
+                  <ng-container *ngIf="question.correctAnswers && question.correctAnswers.length > 0">
+                    <span *ngFor="let idx of question.correctAnswers; let i = index">
+                      {{ ['A', 'B', 'C', 'D', 'E'][idx] }} - {{ question.options[idx] }}<span *ngIf="i < question.correctAnswers.length - 1"> ; </span>
+                    </span>
+                  </ng-container>
                 </span>
               </div>
             </div>
