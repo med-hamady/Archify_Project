@@ -100,17 +100,33 @@ export class AuthService {
     console.log('[AuthService] Initializing auth:', { hasUser: !!user, hasToken: !!token });
 
     if (user && token) {
+      // Set user immediately from localStorage
       this.user.set(user);
-      console.log('[AuthService] Verifying token...');
+      console.log('[AuthService] User restored from localStorage');
+
+      // Verify token in background (non-blocking)
+      console.log('[AuthService] Verifying token in background...');
       this.verifyToken().subscribe({
         next: (response) => {
           console.log('[AuthService] Token verified successfully');
           this.updateUser(response.user);
         },
         error: (err) => {
-          console.error('[AuthService] Token verification failed:', err.status, err.message);
-          console.log('[AuthService] Clearing invalid session');
-          this.logout();
+          console.error('[AuthService] Token verification failed:', {
+            status: err.status,
+            message: err.message,
+            error: err.error
+          });
+
+          // Only logout if it's a 401 Unauthorized (invalid token)
+          // Don't logout for network errors (status undefined or 0)
+          if (err.status === 401) {
+            console.log('[AuthService] Token is invalid (401), clearing session');
+            this.logout();
+          } else {
+            console.log('[AuthService] Network/server error, keeping user logged in');
+            // User stays logged in, token will be verified on next request
+          }
         },
       });
     } else if (user && !token) {
