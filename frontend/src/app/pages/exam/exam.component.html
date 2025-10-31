@@ -106,6 +106,9 @@
       <div class="progress-info">
         <span class="question-counter">Question {{ currentQuestionIndex + 1 }} / {{ exam.totalQuestions }}</span>
         <span class="answered-counter">Répondu: {{ getAnsweredCount() }} / {{ exam.totalQuestions }}</span>
+        <span class="timer" [class.timer-warning]="timerWarning">
+          ⏱️ {{ getTimerDisplay() }}
+        </span>
       </div>
       <div class="mini-progress">
         <div class="mini-progress-fill" [style.width.%]="(getAnsweredCount() / exam.totalQuestions * 100)"></div>

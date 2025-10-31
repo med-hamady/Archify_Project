@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ExamService, ExamStart, ExamResult, ExamCorrection } from '../../services/exam.service';
@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.css']
 })
-export class ExamComponent implements OnInit {
+export class ExamComponent implements OnInit, OnDestroy {
   private examService = inject(ExamService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -35,6 +35,11 @@ export class ExamComponent implements OnInit {
   questionCountOptions: number[] = [10, 20, 30, 40];
   selectedDuration: number = 60; // Par défaut 60 minutes
   durationOptions: number[] = [15, 30, 45, 60, 90];
+
+  // Timer state
+  timeRemaining: number = 0; // En secondes
+  timerInterval: any = null;
+  timerWarning: boolean = false; // Afficher en rouge si < 5 minutes
 
   // Results state
   result: ExamResult | null = null;
@@ -97,6 +102,42 @@ export class ExamComponent implements OnInit {
   startPlaying() {
     this.currentState = 'playing';
     this.currentQuestionIndex = 0;
+
+    // Démarrer le minuteur
+    this.timeRemaining = this.selectedDuration * 60; // Convertir minutes en secondes
+    this.startTimer();
+  }
+
+  startTimer() {
+    this.timerInterval = setInterval(() => {
+      this.timeRemaining--;
+
+      // Warning si moins de 5 minutes
+      this.timerWarning = this.timeRemaining <= 300; // 5 minutes = 300 secondes
+
+      // Auto-submit si le temps est écoulé
+      if (this.timeRemaining <= 0) {
+        this.stopTimer();
+        this.submitExam();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  getTimerDisplay(): string {
+    const minutes = Math.floor(this.timeRemaining / 60);
+    const seconds = this.timeRemaining % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  ngOnDestroy() {
+    this.stopTimer();
   }
 
   toggleAnswer(answerIndex: number) {
@@ -141,6 +182,9 @@ export class ExamComponent implements OnInit {
 
   submitExam() {
     if (!this.exam) return;
+
+    // Arrêter le timer
+    this.stopTimer();
 
     this.loading = true;
     const formattedAnswers = this.answers.map(a => ({
