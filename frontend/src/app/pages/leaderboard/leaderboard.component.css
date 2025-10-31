@@ -248,24 +248,15 @@
 }
 
 .podium-level {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  border: 3px solid white;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
 }
 
 .podium-level-img {
-  width: 42px;
-  height: 42px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
-  border-radius: 50%;
-  background: white;
-  padding: 3px;
   /* Cinematic shadow */
   filter:
     drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3))
@@ -376,20 +367,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .level-icon {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
-  border-radius: 8px;
-  background: white;
-  padding: 3px;
   /* Cinematic shadow */
   filter:
     drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3))
@@ -398,6 +381,8 @@
 
 .level-label {
   font-size: 0.95rem;
+  font-weight: bold;
+  color: #333;
 }
 
 .stats {
