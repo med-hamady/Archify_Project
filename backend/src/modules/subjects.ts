@@ -165,8 +165,7 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
           include: {
             questions: {
               select: {
-                id: true,
-                difficulty: true
+                id: true
               }
             },
             chapterProgresses: {

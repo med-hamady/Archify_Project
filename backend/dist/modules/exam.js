@@ -165,8 +165,7 @@ exports.examRouter.post('/:subjectId/start', auth_1.requireAuth, async (req, res
                 chapterId: chapter.id,
                 chapterTitle: chapter.title,
                 questionText: q.questionText,
-                options: options.map((opt) => opt.text), // Envoyer seulement le texte
-                difficulty: q.difficulty
+                options: options.map((opt) => opt.text) // Envoyer seulement le texte
             };
         }));
         // Déterminer le nombre de questions pour l'examen
@@ -282,7 +281,6 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                     questionText: question.questionText,
                     correct: false,
                     xpEarned: 0,
-                    difficulty: question.difficulty,
                     error: 'Invalid options format'
                 });
                 continue;
@@ -295,7 +293,6 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                     questionText: question.questionText,
                     correct: false,
                     xpEarned: 0,
-                    difficulty: question.difficulty,
                     error: 'Invalid answer index'
                 });
                 continue;
@@ -324,7 +321,6 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                     questionText: question.questionText,
                     correct: true,
                     xpEarned: 4, // 4 XP par bonne réponse (update4)
-                    difficulty: question.difficulty,
                     options: optionsWithFeedback,
                     explanation: question.explanation
                 });
@@ -335,7 +331,6 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                     questionText: question.questionText,
                     correct: false,
                     xpEarned: 0,
-                    difficulty: question.difficulty,
                     options: optionsWithFeedback,
                     explanation: question.explanation
                 });
@@ -369,7 +364,15 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
         const oldXP = user.xpTotal;
         const newXP = oldXP + totalXPEarned;
         // Créer le résultat de l'examen avec les résultats détaillés
-        await prisma.examResult.create({
+        console.log('📝 Creating exam result with detailedResults:', {
+            detailedResultsLength: detailedResults.length,
+            firstResult: detailedResults[0],
+            detailedResultsType: typeof detailedResults,
+            isArray: Array.isArray(detailedResults)
+        });
+        // S'assurer que detailedResults est bien un objet JSON valide
+        const detailedResultsJson = JSON.parse(JSON.stringify(detailedResults));
+        const examResult = await prisma.examResult.create({
             data: {
                 userId,
                 subjectId,
@@ -378,8 +381,13 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
                 timeSpentSec: timeSpentSec || 0,
                 score: scoreSur20,
                 passed,
-                detailedResults: detailedResults // Stocker les résultats détaillés pour la correction
+                detailedResults: detailedResultsJson // Stocker les résultats détaillés pour la correction
             }
+        });
+        console.log('✅ Exam result created with ID:', examResult.id);
+        console.log('✅ Exam result detailedResults saved:', {
+            hasDetailedResults: !!examResult.detailedResults,
+            detailedResultsLength: examResult.detailedResults ? examResult.detailedResults.length : 0
         });
         // Mettre à jour l'utilisateur
         const updatedUser = await prisma.user.update({
@@ -400,6 +408,7 @@ exports.examRouter.post('/:subjectId/submit', auth_1.requireAuth, async (req, re
         res.json({
             success: true,
             result: {
+                examResultId: examResult.id, // ID du résultat d'examen pour récupérer la correction
                 score: scoreSur20,
                 scoreOutOf20: scoreSur20, // Alias pour compatibilité frontend
                 scorePercent,
@@ -462,6 +471,12 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
             });
         }
         // Vérifier si l'examen a des résultats détaillés stockés
+        console.log('🔍 Exam correction request:', {
+            examId,
+            hasDetailedResults: !!exam.detailedResults,
+            detailedResultsType: typeof exam.detailedResults,
+            detailedResultsValue: exam.detailedResults
+        });
         if (!exam.detailedResults) {
             console.log('⚠️ No detailedResults for exam:', examId);
             return res.status(404).json({
@@ -501,8 +516,10 @@ exports.examRouter.get('/:examId/correction', auth_1.requireAuth, async (req, re
                 questionId: result.questionId,
                 questionText: result.questionText,
                 options: result.options.map((opt) => opt.text), // Juste le texte pour le frontend
-                userAnswer: selectedIndexes.length === 1 ? selectedIndexes[0] : null, // Pour compatibilité avec template actuel
-                correctAnswer: correctIndexes.length === 1 ? correctIndexes[0] : null, // Pour compatibilité avec template actuel
+                userAnswers: selectedIndexes, // Tableau d'indices sélectionnés (pour QCM multiples)
+                correctAnswers: correctIndexes, // Tableau d'indices corrects (pour QCM multiples)
+                userAnswer: selectedIndexes.length === 1 ? selectedIndexes[0] : null, // Pour compatibilité avec template actuel (choix unique)
+                correctAnswer: correctIndexes.length === 1 ? correctIndexes[0] : null, // Pour compatibilité avec template actuel (choix unique)
                 isCorrect: result.correct,
                 explanation: result.explanation
             });

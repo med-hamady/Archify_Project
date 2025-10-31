@@ -24,14 +24,12 @@ const createQuestionSchema = zod_1.z.object({
     questionText: zod_1.z.string().min(10, 'La question doit contenir au moins 10 caractères'),
     options: zod_1.z.array(optionSchema).min(2).max(5, 'La question doit avoir entre 2 et 5 options'),
     explanation: zod_1.z.string().optional(),
-    difficulty: zod_1.z.enum(['FACILE', 'MOYEN', 'DIFFICILE', 'LEGENDE']),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 const updateQuestionSchema = zod_1.z.object({
     questionText: zod_1.z.string().min(10).optional(),
     options: zod_1.z.array(optionSchema).min(2).max(5).optional(),
     explanation: zod_1.z.string().optional(),
-    difficulty: zod_1.z.enum(['FACILE', 'MOYEN', 'DIFFICILE', 'LEGENDE']).optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 // ============================================
@@ -70,7 +68,6 @@ exports.questionsRouter.get('/chapter/:chapterId', auth_1.requireAuth, auth_1.re
                 questionText: true,
                 options: true,
                 explanation: true,
-                difficulty: true,
                 orderIndex: true,
                 createdAt: true
             }
@@ -131,7 +128,6 @@ exports.questionsRouter.get('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: question.questionText,
                 options: question.options,
                 explanation: question.explanation,
-                difficulty: question.difficulty,
                 orderIndex: question.orderIndex,
                 chapterId: question.chapterId,
                 chapterTitle: question.chapter.title,
@@ -194,7 +190,6 @@ exports.questionsRouter.post('/', auth_1.requireAuth, auth_1.requireAdmin, async
                 questionText: data.questionText,
                 options: data.options,
                 explanation: data.explanation,
-                difficulty: data.difficulty,
                 orderIndex
             }
         });
@@ -206,7 +201,6 @@ exports.questionsRouter.post('/', auth_1.requireAuth, auth_1.requireAdmin, async
                 questionText: question.questionText,
                 options: question.options,
                 explanation: question.explanation,
-                difficulty: question.difficulty,
                 orderIndex: question.orderIndex,
                 chapterId: question.chapterId
             }
@@ -257,7 +251,6 @@ exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: data.questionText,
                 options: data.options,
                 explanation: data.explanation,
-                difficulty: data.difficulty,
                 orderIndex: data.orderIndex
             }
         });
@@ -269,7 +262,6 @@ exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: updatedQuestion.questionText,
                 options: updatedQuestion.options,
                 explanation: updatedQuestion.explanation,
-                difficulty: updatedQuestion.difficulty,
                 orderIndex: updatedQuestion.orderIndex,
                 chapterId: updatedQuestion.chapterId
             }
@@ -432,8 +424,7 @@ exports.questionsRouter.get('/:id/stats', auth_1.requireAuth, auth_1.requireAdmi
                 incorrectAttempts: totalAttempts - correctAttempts,
                 successRate,
                 uniqueUsers,
-                answerDistribution,
-                difficulty: question.difficulty
+                answerDistribution
             }
         });
     }

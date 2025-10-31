@@ -1,6 +1,6 @@
 import express from 'express';
 import { z } from 'zod';
-import { PrismaClient, QuestionDifficulty } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { requireAuth } from './auth';
 import { BASE_XP } from '../services/xp.service';
 import { getLevelInfo, checkLevelUp, hasGlobalChallengeUnlock } from '../services/level.service';
@@ -133,8 +133,7 @@ challengeRouter.post('/:chapterId/start', requireAuth, async (req: any, res) => 
         options: options.map((opt: any) => ({
           text: opt.text
           // Ne pas inclure isCorrect ni justification avant la soumission
-        })),
-        difficulty: q.difficulty
+        }))
       };
     });
 

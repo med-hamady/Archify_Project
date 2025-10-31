@@ -23,7 +23,6 @@ const createQuestionSchema = z.object({
   questionText: z.string().min(10, 'La question doit contenir au moins 10 caractères'),
   options: z.array(optionSchema).min(2).max(5, 'La question doit avoir entre 2 et 5 options'),
   explanation: z.string().optional(),
-  difficulty: z.enum(['FACILE', 'MOYEN', 'DIFFICILE', 'LEGENDE']),
   orderIndex: z.number().int().min(0).optional()
 });
 
@@ -31,7 +30,6 @@ const updateQuestionSchema = z.object({
   questionText: z.string().min(10).optional(),
   options: z.array(optionSchema).min(2).max(5).optional(),
   explanation: z.string().optional(),
-  difficulty: z.enum(['FACILE', 'MOYEN', 'DIFFICILE', 'LEGENDE']).optional(),
   orderIndex: z.number().int().min(0).optional()
 });
 
@@ -75,7 +73,6 @@ questionsRouter.get('/chapter/:chapterId', requireAuth, requireAdmin, async (req
         questionText: true,
         options: true,
         explanation: true,
-        difficulty: true,
         orderIndex: true,
         createdAt: true
       }
@@ -142,7 +139,6 @@ questionsRouter.get('/:id', requireAuth, requireAdmin, async (req: any, res) => 
         questionText: question.questionText,
         options: question.options,
         explanation: question.explanation,
-        difficulty: question.difficulty,
         orderIndex: question.orderIndex,
         chapterId: question.chapterId,
         chapterTitle: question.chapter.title,
@@ -212,7 +208,6 @@ questionsRouter.post('/', requireAuth, requireAdmin, async (req: any, res) => {
         questionText: data.questionText,
         options: data.options as any,
         explanation: data.explanation,
-        difficulty: data.difficulty,
         orderIndex
       }
     });
@@ -225,7 +220,6 @@ questionsRouter.post('/', requireAuth, requireAdmin, async (req: any, res) => {
         questionText: question.questionText,
         options: question.options,
         explanation: question.explanation,
-        difficulty: question.difficulty,
         orderIndex: question.orderIndex,
         chapterId: question.chapterId
       }
@@ -283,7 +277,6 @@ questionsRouter.put('/:id', requireAuth, requireAdmin, async (req: any, res) => 
         questionText: data.questionText,
         options: data.options as any,
         explanation: data.explanation,
-        difficulty: data.difficulty,
         orderIndex: data.orderIndex
       }
     });
@@ -296,7 +289,6 @@ questionsRouter.put('/:id', requireAuth, requireAdmin, async (req: any, res) => 
         questionText: updatedQuestion.questionText,
         options: updatedQuestion.options,
         explanation: updatedQuestion.explanation,
-        difficulty: updatedQuestion.difficulty,
         orderIndex: updatedQuestion.orderIndex,
         chapterId: updatedQuestion.chapterId
       }
@@ -488,8 +480,7 @@ questionsRouter.get('/:id/stats', requireAuth, requireAdmin, async (req: any, re
         incorrectAttempts: totalAttempts - correctAttempts,
         successRate,
         uniqueUsers,
-        answerDistribution,
-        difficulty: question.difficulty
+        answerDistribution
       }
     });
 

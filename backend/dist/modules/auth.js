@@ -1,10 +1,45 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRouter = void 0;
 exports.requireAuth = requireAuth;
+exports.requireActiveSubscription = requireActiveSubscription;
+exports.requireQuizAccess = requireQuizAccess;
 exports.requireAdmin = requireAdmin;
 exports.optionalAuth = optionalAuth;
 const express_1 = require("express");
@@ -106,6 +141,86 @@ function requireAuth(req, res, next) {
     catch (_e) {
         console.log('[requireAuth] Token verification failed:', _e.message);
         return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
+    }
+}
+// Subscription check middleware - must be used after requireAuth
+async function requireActiveSubscription(req, res, next) {
+    try {
+        const { checkUserSubscription } = await Promise.resolve().then(() => __importStar(require('../services/subscription.service')));
+        const subscriptionResult = await checkUserSubscription(req.userId);
+        if (!subscriptionResult.hasActiveSubscription) {
+            console.log('[requireActiveSubscription] No active subscription for user:', req.userId);
+            return res.status(403).json({
+                error: {
+                    code: 'NO_SUBSCRIPTION',
+                    message: subscriptionResult.message || 'Abonnement requis pour accéder à ce contenu'
+                }
+            });
+        }
+        // Stocker les infos d'abonnement dans la requête pour utilisation ultérieure
+        req.subscription = subscriptionResult;
+        console.log('[requireActiveSubscription] Active subscription found:', {
+            userId: req.userId,
+            type: subscriptionResult.subscriptionType,
+            expiresAt: subscriptionResult.expiresAt
+        });
+        return next();
+    }
+    catch (error) {
+        console.error('[requireActiveSubscription] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de la vérification de l\'abonnement' }
+        });
+    }
+}
+// Quiz access check middleware - must be used after requireAuth
+async function requireQuizAccess(req, res, next) {
+    try {
+        const { checkUserSubscription } = await Promise.resolve().then(() => __importStar(require('../services/subscription.service')));
+        const subscriptionResult = await checkUserSubscription(req.userId);
+        // Si l'utilisateur a un abonnement actif, autoriser l'accès
+        if (subscriptionResult.canAccessQuiz) {
+            req.subscription = subscriptionResult;
+            req.hasFreeAccess = false;
+            console.log('[requireQuizAccess] Quiz access granted (subscription) for user:', req.userId);
+            return next();
+        }
+        // Si pas d'abonnement, vérifier les QCM gratuits
+        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
+        const prisma = new PrismaClient();
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: { freeQcmUsed: true }
+        });
+        if (!user) {
+            return res.status(404).json({
+                error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+            });
+        }
+        // Si l'utilisateur a déjà utilisé ses 3 QCM gratuits, rediriger vers l'abonnement
+        if (user.freeQcmUsed >= 3) {
+            console.log('[requireQuizAccess] Free QCM limit reached for user:', req.userId);
+            return res.status(403).json({
+                error: {
+                    code: 'FREE_LIMIT_REACHED',
+                    message: 'Vous avez utilisé vos 3 QCM gratuits. Veuillez souscrire à un abonnement pour continuer.',
+                    freeQcmUsed: user.freeQcmUsed,
+                    needsSubscription: true
+                }
+            });
+        }
+        // Autoriser l'accès avec un QCM gratuit
+        req.subscription = subscriptionResult;
+        req.hasFreeAccess = true;
+        req.freeQcmUsed = user.freeQcmUsed;
+        console.log(`[requireQuizAccess] Free QCM access granted for user: ${req.userId} (${user.freeQcmUsed}/3 used)`);
+        return next();
+    }
+    catch (error) {
+        console.error('[requireQuizAccess] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de la vérification de l\'accès quiz' }
+        });
     }
 }
 // Admin check middleware - must be used after requireAuth
@@ -534,6 +649,62 @@ exports.authRouter.post('/reset-password', async (req, res) => {
             return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: err.message } });
         }
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
+    }
+});
+/**
+ * GET /api/auth/free-qcm-status
+ * Obtenir le statut des QCM gratuits pour l'utilisateur connecté
+ */
+exports.authRouter.get('/free-qcm-status', requireAuth, async (req, res) => {
+    try {
+        const userId = req.userId;
+        // Récupérer l'utilisateur
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                freeQcmUsed: true,
+                subscriptions: {
+                    where: {
+                        status: 'ACTIVE'
+                    },
+                    select: {
+                        id: true,
+                        status: true,
+                        plan: {
+                            select: {
+                                name: true,
+                                type: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        if (!user) {
+            return res.status(404).json({
+                error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+            });
+        }
+        const hasActiveSubscription = user.subscriptions.length > 0;
+        const freeQcmUsed = user.freeQcmUsed || 0;
+        const freeQcmRemaining = Math.max(0, 3 - freeQcmUsed);
+        return res.json({
+            hasActiveSubscription,
+            freeQcm: {
+                used: freeQcmUsed,
+                remaining: freeQcmRemaining,
+                total: 3,
+                limitReached: freeQcmUsed >= 3
+            },
+            canAccessQuiz: hasActiveSubscription || freeQcmUsed < 3,
+            activeSubscription: hasActiveSubscription ? user.subscriptions[0] : null
+        });
+    }
+    catch (error) {
+        console.error('[free-qcm-status] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération du statut' }
+        });
     }
 });
 //# sourceMappingURL=auth.js.map

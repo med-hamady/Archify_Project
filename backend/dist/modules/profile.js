@@ -7,6 +7,39 @@
  * - Badges obtenus
  * - Historique de progression
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.profileRouter = void 0;
 const express_1 = require("express");
@@ -220,7 +253,6 @@ exports.profileRouter.get('/stats/detailed', auth_1.requireAuth, async (req, res
             include: {
                 question: {
                     select: {
-                        difficulty: true,
                         id: true
                     }
                 }
@@ -250,17 +282,6 @@ exports.profileRouter.get('/stats/detailed', auth_1.requireAuth, async (req, res
             }
         });
         const perfectScores = Array.from(firstAttempts.values()).filter(v => v).length;
-        // Stats par difficulté
-        const difficultyCounts = {
-            FACILE: 0,
-            MOYEN: 0,
-            DIFFICILE: 0,
-            LEGENDE: 0
-        };
-        allAttempts.forEach(attempt => {
-            const diff = attempt.question.difficulty;
-            difficultyCounts[diff]++;
-        });
         // Compter les challenges et examens (pour l'instant 0, à implémenter plus tard)
         const challengesCompleted = 0;
         const examsCompleted = 0;
@@ -277,13 +298,41 @@ exports.profileRouter.get('/stats/detailed', auth_1.requireAuth, async (req, res
                 challengesCompleted,
                 examsCompleted,
                 examsPassed,
-                perfectScores,
-                difficultyCounts
+                perfectScores
             }
         });
     }
     catch (error) {
         console.error('[profile/stats/detailed] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+        });
+    }
+});
+/**
+ * GET /api/profile/subscription
+ * Vérifier le statut de l'abonnement de l'utilisateur
+ */
+exports.profileRouter.get('/subscription', auth_1.requireAuth, async (req, res) => {
+    try {
+        const userId = req.userId;
+        // Importer dynamiquement le service de subscription
+        const { checkUserSubscription } = await Promise.resolve().then(() => __importStar(require('../services/subscription.service')));
+        const subscriptionResult = await checkUserSubscription(userId);
+        return res.json({
+            success: true,
+            subscription: {
+                hasActive: subscriptionResult.hasActiveSubscription,
+                type: subscriptionResult.subscriptionType,
+                canAccessQuiz: subscriptionResult.canAccessQuiz,
+                canAccessDocuments: subscriptionResult.canAccessDocuments,
+                expiresAt: subscriptionResult.expiresAt,
+                message: subscriptionResult.message
+            }
+        });
+    }
+    catch (error) {
+        console.error('[profile/subscription] Error:', error);
         return res.status(500).json({
             error: { code: 'SERVER_ERROR', message: 'Internal server error' }
         });

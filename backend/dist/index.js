@@ -61,6 +61,7 @@ const challenge_1 = require("./modules/challenge");
 const exam_1 = require("./modules/exam");
 const questions_1 = require("./modules/questions");
 const admin_import_1 = require("./modules/admin-import");
+const admin_subscription_1 = require("./modules/admin-subscription");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -471,6 +472,7 @@ app.use('/api/challenge', generalLimiter, challenge_1.challengeRouter);
 app.use('/api/exam', generalLimiter, exam_1.examRouter);
 app.use('/api/questions', strictLimiter, questions_1.questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, admin_import_1.adminImportRouter); // Admin import/db tools
+app.use('/api/admin', strictLimiter, admin_subscription_1.adminSubscriptionRouter); // Admin subscription management
 const port = process.env.PORT || 3000;
 // Auto-import quizzes si la base de données est vide
 async function autoImportQuizzes() {

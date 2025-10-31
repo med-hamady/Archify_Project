@@ -33,8 +33,9 @@ const answerQuestionSchema = zod_1.z.object({
 /**
  * POST /api/quiz/answer
  * Répondre à une question et calculer l'XP
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
+exports.quizRouter.post('/answer', auth_1.requireAuth, auth_1.requireQuizAccess, async (req, res) => {
     try {
         const { questionId, selectedAnswers } = answerQuestionSchema.parse(req.body);
         const userId = req.userId;
@@ -111,7 +112,7 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
         if (isCorrect && !alreadyAnsweredCorrectly) {
             // Ne donner de l'XP que si la question n'a jamais été réussie avant
             const xpResult = (0, xp_service_1.calculateXP)({
-                difficulty: question.difficulty,
+                difficulty: 'MOYEN', // Valeur par défaut car la difficulté n'est plus stockée
                 attemptNumber,
                 positionInChapter: position,
                 totalQuestionsInChapter: totalQuestions,
@@ -130,8 +131,20 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
                 xpEarned
             }
         });
+        // 8.5. Si l'utilisateur utilise un QCM gratuit (pas d'abonnement), incrémenter le compteur
+        // Incrémenter seulement si c'est la première tentative (attemptNumber === 1)
+        let updatedFreeQcmUser = user;
+        if (req.hasFreeAccess && attemptNumber === 1) {
+            updatedFreeQcmUser = await prisma.user.update({
+                where: { id: userId },
+                data: {
+                    freeQcmUsed: { increment: 1 }
+                }
+            });
+            console.log(`[Quiz Answer] ✅ Incremented free QCM counter for user ${userId} (now ${updatedFreeQcmUser.freeQcmUsed}/3)`);
+        }
         // 9. Mettre à jour l'utilisateur
-        let updatedUser = user;
+        let updatedUser = updatedFreeQcmUser;
         let levelUpResult = { leveledUp: false };
         let consecutiveBonusResult = { type: null, xpBonus: 0, message: undefined };
         let newBadges = [];
@@ -140,9 +153,8 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
             const oldXP = user.xpTotal;
             const newXP = oldXP + xpEarned;
             const newConsecutive = user.consecutiveGoodAnswers + 1;
-            const newLegendCount = question.difficulty === 'LEGENDE'
-                ? user.legendQuestionsCompleted + 1
-                : user.legendQuestionsCompleted;
+            // Le compteur de questions légendaires n'est plus utilisé car la difficulté n'existe plus
+            const newLegendCount = user.legendQuestionsCompleted;
             // Mettre à jour l'utilisateur
             updatedUser = await prisma.user.update({
                 where: { id: userId },
@@ -239,7 +251,13 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
                     id: b.id,
                     name: b.name,
                     description: b.description
-                })) : null
+                })) : null,
+                // Informations sur les QCM gratuits (si applicable)
+                freeQcmInfo: req.hasFreeAccess ? {
+                    used: updatedUser.freeQcmUsed,
+                    remaining: Math.max(0, 3 - updatedUser.freeQcmUsed),
+                    total: 3
+                } : null
             }
         });
     }
@@ -259,8 +277,9 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, async (req, res) => {
  * GET /api/quiz/chapter/:chapterId/next
  * Récupérer la prochaine question à répondre dans un chapitre
  * Query params: replay=true pour rejouer le chapitre depuis le début
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (req, res) => {
+exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.requireQuizAccess, async (req, res) => {
     try {
         const { chapterId } = req.params;
         const { replay } = req.query;
@@ -333,7 +352,6 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (re
                 id: nextQuestion.id,
                 questionText: nextQuestion.questionText,
                 options: sanitizedOptions,
-                difficulty: nextQuestion.difficulty,
                 chapterId: nextQuestion.chapterId,
                 orderIndex: nextQuestion.orderIndex,
                 position: allQuestions.findIndex(q => q.id === nextQuestion.id),
@@ -352,8 +370,9 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, async (re
 /**
  * GET /api/quiz/chapter/:chapterId/questions
  * Récupérer toutes les questions d'un chapitre (admin ou preview)
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-exports.quizRouter.get('/chapter/:chapterId/questions', auth_1.requireAuth, async (req, res) => {
+exports.quizRouter.get('/chapter/:chapterId/questions', auth_1.requireAuth, auth_1.requireQuizAccess, async (req, res) => {
     try {
         const { chapterId } = req.params;
         const userId = req.userId;
@@ -383,7 +402,6 @@ exports.quizRouter.get('/chapter/:chapterId/questions', auth_1.requireAuth, asyn
             return {
                 id: question.id,
                 text: question.questionText,
-                difficulty: question.difficulty,
                 orderIndex: question.orderIndex,
                 status: correctAttempt ? 'completed' : questionAttempts.length > 0 ? 'attempted' : 'not_started',
                 attempts: questionAttempts.length
@@ -401,8 +419,9 @@ exports.quizRouter.get('/chapter/:chapterId/questions', auth_1.requireAuth, asyn
 /**
  * GET /api/quiz/history/:questionId
  * Récupérer l'historique des tentatives pour une question
+ * Nécessite un abonnement actif avec accès aux quiz
  */
-exports.quizRouter.get('/history/:questionId', auth_1.requireAuth, async (req, res) => {
+exports.quizRouter.get('/history/:questionId', auth_1.requireAuth, auth_1.requireQuizAccess, async (req, res) => {
     try {
         const { questionId } = req.params;
         const userId = req.userId;

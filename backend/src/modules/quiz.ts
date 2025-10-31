@@ -132,7 +132,7 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
     if (isCorrect && !alreadyAnsweredCorrectly) {
       // Ne donner de l'XP que si la question n'a jamais été réussie avant
       const xpResult = calculateXP({
-        difficulty: question.difficulty,
+        difficulty: 'MOYEN', // Valeur par défaut car la difficulté n'est plus stockée
         attemptNumber,
         positionInChapter: position,
         totalQuestionsInChapter: totalQuestions,
@@ -178,9 +178,8 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
       const oldXP = user.xpTotal;
       const newXP = oldXP + xpEarned;
       const newConsecutive = user.consecutiveGoodAnswers + 1;
-      const newLegendCount = question.difficulty === 'LEGENDE'
-        ? user.legendQuestionsCompleted + 1
-        : user.legendQuestionsCompleted;
+      // Le compteur de questions légendaires n'est plus utilisé car la difficulté n'existe plus
+      const newLegendCount = user.legendQuestionsCompleted;
 
       // Mettre à jour l'utilisateur
       updatedUser = await prisma.user.update({
@@ -397,7 +396,6 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, requireQuizAccess, async
         id: nextQuestion.id,
         questionText: nextQuestion.questionText,
         options: sanitizedOptions,
-        difficulty: nextQuestion.difficulty,
         chapterId: nextQuestion.chapterId,
         orderIndex: nextQuestion.orderIndex,
         position: allQuestions.findIndex(q => q.id === nextQuestion.id),
@@ -454,7 +452,6 @@ quizRouter.get('/chapter/:chapterId/questions', requireAuth, requireQuizAccess, 
       return {
         id: question.id,
         text: question.questionText,
-        difficulty: question.difficulty,
         orderIndex: question.orderIndex,
         status: correctAttempt ? 'completed' : questionAttempts.length > 0 ? 'attempted' : 'not_started',
         attempts: questionAttempts.length

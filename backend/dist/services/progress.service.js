@@ -36,6 +36,31 @@ async function updateChapterProgress(userId, chapterId, isCorrect) {
     const totalQuestions = await prisma.question.count({
         where: { chapterId }
     });
+    // Compter le nombre de questions UNIQUES répondues par l'utilisateur dans ce chapitre
+    const uniqueQuestionsAnswered = await prisma.quizAttempt.findMany({
+        where: {
+            userId,
+            question: {
+                chapterId
+            }
+        },
+        distinct: ['questionId']
+    });
+    const uniqueCount = uniqueQuestionsAnswered.length;
+    // Compter le nombre de questions correctes (au moins une tentative correcte)
+    const correctQuestions = await prisma.quizAttempt.findMany({
+        where: {
+            userId,
+            isCorrect: true,
+            question: {
+                chapterId
+            }
+        },
+        distinct: ['questionId']
+    });
+    const correctCount = correctQuestions.length;
+    // Calculer le pourcentage basé sur les questions UNIQUES (plafonné à 100%)
+    const progressPercent = Math.min((uniqueCount / totalQuestions) * 100, 100);
     // Récupérer ou créer la progression
     let progress = await prisma.chapterProgress.findUnique({
         where: {
@@ -50,18 +75,14 @@ async function updateChapterProgress(userId, chapterId, isCorrect) {
             data: {
                 userId,
                 chapterId,
-                questionsAnswered: 1,
-                questionsCorrect: isCorrect ? 1 : 0,
-                progressPercent: (1 / totalQuestions) * 100
+                questionsAnswered: uniqueCount,
+                questionsCorrect: correctCount,
+                progressPercent
             }
         });
     }
     else {
-        // Mettre à jour
-        const newQuestionsAnswered = progress.questionsAnswered + 1;
-        const newQuestionsCorrect = isCorrect
-            ? progress.questionsCorrect + 1
-            : progress.questionsCorrect;
+        // Mettre à jour avec les vraies valeurs
         progress = await prisma.chapterProgress.update({
             where: {
                 userId_chapterId: {
@@ -70,9 +91,9 @@ async function updateChapterProgress(userId, chapterId, isCorrect) {
                 }
             },
             data: {
-                questionsAnswered: newQuestionsAnswered,
-                questionsCorrect: newQuestionsCorrect,
-                progressPercent: (newQuestionsAnswered / totalQuestions) * 100
+                questionsAnswered: uniqueCount,
+                questionsCorrect: correctCount,
+                progressPercent
             }
         });
     }

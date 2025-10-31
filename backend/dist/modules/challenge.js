@@ -112,8 +112,7 @@ exports.challengeRouter.post('/:chapterId/start', auth_1.requireAuth, async (req
                 options: options.map((opt) => ({
                     text: opt.text
                     // Ne pas inclure isCorrect ni justification avant la soumission
-                })),
-                difficulty: q.difficulty
+                }))
             };
         });
         res.status(200).json({

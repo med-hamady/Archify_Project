@@ -8,16 +8,15 @@
  * - Bonus temporaires
  */
 
-import { QuestionDifficulty } from '@prisma/client';
-
 // ============================================
 // CONSTANTES
 // ============================================
 
 /**
  * XP de base selon la difficulté de la question
+ * Note: La difficulté n'est plus stockée en base de données
  */
-export const BASE_XP: Record<QuestionDifficulty, number> = {
+export const BASE_XP = {
   FACILE: 5,
   MOYEN: 10,
   DIFFICILE: 20,
@@ -70,7 +69,7 @@ export const SPECIAL_BONUSES = {
 // ============================================
 
 export interface CalculateXPParams {
-  difficulty: QuestionDifficulty;
+  difficulty: 'FACILE' | 'MOYEN' | 'DIFFICILE' | 'LEGENDE';
   attemptNumber: number;
   positionInChapter: number;
   totalQuestionsInChapter: number;

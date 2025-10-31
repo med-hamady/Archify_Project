@@ -22,6 +22,7 @@ exports.getXPExamples = getXPExamples;
 // ============================================
 /**
  * XP de base selon la difficulté de la question
+ * Note: La difficulté n'est plus stockée en base de données
  */
 exports.BASE_XP = {
     FACILE: 5,

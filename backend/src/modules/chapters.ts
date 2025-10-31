@@ -60,7 +60,6 @@ chaptersRouter.get('/:id', requireAuth, async (req: any, res: any) => {
           orderBy: { orderIndex: 'asc' },
           select: {
             id: true,
-            difficulty: true,
             orderIndex: true
           }
         }
@@ -85,12 +84,6 @@ chaptersRouter.get('/:id', requireAuth, async (req: any, res: any) => {
         orderIndex: chapter.orderIndex,
         subject: chapter.subject,
         questionsCount: chapter.questions.length,
-        questionsByDifficulty: {
-          facile: chapter.questions.filter(q => q.difficulty === 'FACILE').length,
-          moyen: chapter.questions.filter(q => q.difficulty === 'MOYEN').length,
-          difficile: chapter.questions.filter(q => q.difficulty === 'DIFFICILE').length,
-          legende: chapter.questions.filter(q => q.difficulty === 'LEGENDE').length
-        },
         progress
       }
     });

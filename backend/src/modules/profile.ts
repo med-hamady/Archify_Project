@@ -239,7 +239,6 @@ profileRouter.get('/stats/detailed', requireAuth, async (req: any, res: any) => 
       include: {
         question: {
           select: {
-            difficulty: true,
             id: true
           }
         }
@@ -273,19 +272,6 @@ profileRouter.get('/stats/detailed', requireAuth, async (req: any, res: any) => 
     });
     const perfectScores = Array.from(firstAttempts.values()).filter(v => v).length;
 
-    // Stats par difficulté
-    const difficultyCounts = {
-      FACILE: 0,
-      MOYEN: 0,
-      DIFFICILE: 0,
-      LEGENDE: 0
-    };
-
-    allAttempts.forEach(attempt => {
-      const diff = attempt.question.difficulty;
-      difficultyCounts[diff]++;
-    });
-
     // Compter les challenges et examens (pour l'instant 0, à implémenter plus tard)
     const challengesCompleted = 0;
     const examsCompleted = 0;
@@ -303,8 +289,7 @@ profileRouter.get('/stats/detailed', requireAuth, async (req: any, res: any) => 
         challengesCompleted,
         examsCompleted,
         examsPassed,
-        perfectScores,
-        difficultyCounts
+        perfectScores
       }
     });
 
