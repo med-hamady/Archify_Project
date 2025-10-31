@@ -228,6 +228,13 @@
 .modes-section {
   padding: 3rem 2rem;
   background: white;
+  text-align: center;
+}
+
+.section-icon {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
 }
 
 .modes-grid {
