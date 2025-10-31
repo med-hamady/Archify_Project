@@ -425,8 +425,13 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
     // Créer le résultat de l'examen avec les résultats détaillés
     console.log('📝 Creating exam result with detailedResults:', {
       detailedResultsLength: detailedResults.length,
-      firstResult: detailedResults[0]
+      firstResult: detailedResults[0],
+      detailedResultsType: typeof detailedResults,
+      isArray: Array.isArray(detailedResults)
     });
+
+    // S'assurer que detailedResults est bien un objet JSON valide
+    const detailedResultsJson = JSON.parse(JSON.stringify(detailedResults));
 
     const examResult = await prisma.examResult.create({
       data: {
@@ -437,11 +442,15 @@ examRouter.post('/:subjectId/submit', requireAuth, async (req: any, res) => {
         timeSpentSec: timeSpentSec || 0,
         score: scoreSur20,
         passed,
-        detailedResults: detailedResults // Stocker les résultats détaillés pour la correction
+        detailedResults: detailedResultsJson // Stocker les résultats détaillés pour la correction
       }
     });
 
     console.log('✅ Exam result created with ID:', examResult.id);
+    console.log('✅ Exam result detailedResults saved:', {
+      hasDetailedResults: !!examResult.detailedResults,
+      detailedResultsLength: examResult.detailedResults ? (examResult.detailedResults as any).length : 0
+    });
 
     // Mettre à jour l'utilisateur
     const updatedUser = await prisma.user.update({
@@ -533,6 +542,13 @@ examRouter.get('/:examId/correction', requireAuth, async (req: any, res) => {
     }
 
     // Vérifier si l'examen a des résultats détaillés stockés
+    console.log('🔍 Exam correction request:', {
+      examId,
+      hasDetailedResults: !!exam.detailedResults,
+      detailedResultsType: typeof exam.detailedResults,
+      detailedResultsValue: exam.detailedResults
+    });
+
     if (!exam.detailedResults) {
       console.log('⚠️ No detailedResults for exam:', examId);
       return res.status(404).json({
