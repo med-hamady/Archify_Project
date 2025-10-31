@@ -324,13 +324,20 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
         else {
             // Mode normal: chercher la première/prochaine question non réussie
             let startIndex = 0;
+            let isRevisionMode = false;
             // Si currentQuestionId est fourni, commencer la recherche après cette question
             if (currentQuestionId) {
                 const currentIndex = allQuestions.findIndex(q => q.id === currentQuestionId);
                 if (currentIndex !== -1) {
                     startIndex = currentIndex + 1;
+                    // Vérifier si la question actuelle était en mode révision (déjà réussie avant)
+                    const currentQuestionAttempts = attemptsByQuestion.get(currentQuestionId) || [];
+                    // Si plus d'une tentative correcte, on est en mode révision
+                    const correctAttempts = currentQuestionAttempts.filter((a) => a.isCorrect);
+                    isRevisionMode = correctAttempts.length > 1;
                 }
             }
+            console.log('📚 [Quiz Next] Mode révision:', isRevisionMode, 'StartIndex:', startIndex);
             // Chercher la prochaine question non réussie à partir de startIndex
             for (let i = startIndex; i < allQuestions.length; i++) {
                 const question = allQuestions[i];
@@ -353,6 +360,14 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
                         break;
                     }
                 }
+            }
+            // Si toujours aucune question et qu'on est en mode révision,
+            // passer à la question suivante dans l'ordre (mode révision continue)
+            if (!nextQuestion && isRevisionMode && allQuestions.length > 0) {
+                // En mode révision, faire un cycle à travers toutes les questions
+                const nextIndex = startIndex % allQuestions.length;
+                nextQuestion = allQuestions[nextIndex];
+                console.log('🔄 [Quiz Next] Mode révision - Cycle à la question index:', nextIndex);
             }
             // Si toujours aucune question, le chapitre est terminé
             if (!nextQuestion) {
