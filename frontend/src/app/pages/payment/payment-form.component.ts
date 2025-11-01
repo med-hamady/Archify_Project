@@ -37,7 +37,7 @@ interface SubscriptionPlan {
           <div class="plan-summary">
             <h3>{{ selectedPlan()!.name }}</h3>
             <p class="price">{{ selectedPlan()!.priceCents / 100 }} {{ selectedPlan()!.currency }}</p>
-            <p class="interval">{{ selectedPlan()!.interval }}</p>
+            <p class="interval">Semestre</p>
           </div>
         }
 
