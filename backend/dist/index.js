@@ -67,7 +67,7 @@ const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app,https://facgame.com,https://www.facgame.com')
     .split(',')
     .map((o) => o.trim());
 app.use((0, helmet_1.default)({

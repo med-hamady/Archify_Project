@@ -34,7 +34,7 @@ dotenv.config();
 const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app,https://facgame.com,https://www.facgame.com')
   .split(',')
   .map((o) => o.trim());
 
