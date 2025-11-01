@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ExamService, ExamStart, ExamResult, ExamCorrection } from '../../services/exam.service';
 import { LevelUpNotification } from '../../components/level-up-notification/level-up-notification';
 import { AuthService } from '../../services/auth.service';
+import { ScreenshotProtectionService } from '../../services/screenshot-protection.service';
 
 @Component({
   selector: 'app-exam',
@@ -17,6 +18,7 @@ export class ExamComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private screenshotProtection = inject(ScreenshotProtectionService);
 
   subjectId: string = '';
   exam: ExamStart | null = null;
@@ -58,11 +60,19 @@ export class ExamComponent implements OnInit, OnDestroy {
   selectedChapterIndex = 0;
 
   ngOnInit() {
-    this.subjectId = this.route.snapshot.paramMap.get('subjectId') || '';
+    // Activer la protection anti-capture d'écran
+    this.screenshotProtection.enableProtection();
 
-    // Get user name
+    // Ajouter le watermark avec l'email de l'utilisateur
     const user = this.authService.getCurrentUser();
     this.userName = user?.name || 'Utilisateur';
+
+    if (user?.email) {
+      const watermark = this.screenshotProtection.createWatermark(user.email);
+      document.body.appendChild(watermark);
+    }
+
+    this.subjectId = this.route.snapshot.paramMap.get('subjectId') || '';
 
     if (this.subjectId) {
       this.loadExam();
@@ -158,6 +168,10 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopTimer();
+
+    // Désactiver la protection quand on quitte la page
+    this.screenshotProtection.disableProtection();
+    this.screenshotProtection.removeWatermark();
   }
 
   toggleAnswer(answerIndex: number) {

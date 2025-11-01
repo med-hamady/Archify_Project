@@ -1,7 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { QuizService, QuizQuestion, QuizAnswerResponse } from '../../services/quiz.service';
+import { ScreenshotProtectionService } from '../../services/screenshot-protection.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-quiz',
@@ -10,10 +12,12 @@ import { QuizService, QuizQuestion, QuizAnswerResponse } from '../../services/qu
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.css']
 })
-export class QuizComponent implements OnInit {
+export class QuizComponent implements OnInit, OnDestroy {
   private quizService = inject(QuizService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private screenshotProtection = inject(ScreenshotProtectionService);
+  private authService = inject(AuthService);
 
   chapterId: string | null = null;
   currentQuestion: QuizQuestion | null = null;
@@ -33,6 +37,16 @@ export class QuizComponent implements OnInit {
   showBadgeAnimation = false;
 
   ngOnInit() {
+    // Activer la protection anti-capture d'écran
+    this.screenshotProtection.enableProtection();
+
+    // Ajouter le watermark avec l'email de l'utilisateur
+    const user = this.authService.user();
+    if (user?.email) {
+      const watermark = this.screenshotProtection.createWatermark(user.email);
+      document.body.appendChild(watermark);
+    }
+
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
     if (this.chapterId) {
       this.loadNextQuestion();
@@ -40,6 +54,12 @@ export class QuizComponent implements OnInit {
       this.error = 'ID de chapitre manquant';
       this.loading = false;
     }
+  }
+
+  ngOnDestroy() {
+    // Désactiver la protection quand on quitte la page
+    this.screenshotProtection.disableProtection();
+    this.screenshotProtection.removeWatermark();
   }
 
   loadNextQuestion(replay: boolean = false) {
