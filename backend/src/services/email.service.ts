@@ -195,9 +195,17 @@ export class EmailService {
     const adminEmail = process.env.ADMIN_EMAIL;
 
     if (!adminEmail) {
-      console.log('⚠️ ADMIN_EMAIL not configured in environment variables');
+      console.error('❌ ADMIN_EMAIL not configured in environment variables');
+      console.error('💡 Please set ADMIN_EMAIL in your .env file or Render environment variables');
+      console.log('📧 Skipping admin notification for new user:', userEmail);
       return;
     }
+
+    console.log('📧 Sending admin notification email...');
+    console.log('👤 New user:', userName);
+    console.log('📨 User email:', userEmail);
+    console.log('📚 Semester:', userSemester);
+    console.log('👨‍💼 Admin email:', adminEmail);
 
     const html = `
       <!DOCTYPE html>
