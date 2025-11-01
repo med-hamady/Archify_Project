@@ -1,9 +1,20 @@
 import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
 
 export async function cleanNonAdminUsers() {
   try {
+    // Vérifier si la migration a déjà été exécutée
+    const migrationFlagPath = path.join(__dirname, '../../.migration-clean-users-done');
+
+    if (fs.existsSync(migrationFlagPath)) {
+      console.log('✅ [Migration] Nettoyage des utilisateurs non-admin déjà effectué (flag trouvé)');
+      await prisma.$disconnect();
+      return;
+    }
+
     console.log('🔍 [Migration] Vérification des utilisateurs non-admin...');
 
     // Récupérer tous les utilisateurs
@@ -115,6 +126,10 @@ export async function cleanNonAdminUsers() {
     remainingUsers.forEach((user) => {
       console.log(`  - ${user.email} (${user.role})`);
     });
+
+    // Créer le fichier flag pour indiquer que la migration a été exécutée
+    fs.writeFileSync(migrationFlagPath, new Date().toISOString());
+    console.log('✅ [Migration] Flag de migration créé - cette opération ne sera plus exécutée');
 
     await prisma.$disconnect();
   } catch (error: any) {

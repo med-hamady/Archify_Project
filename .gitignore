@@ -80,3 +80,6 @@ Cahier_de_Charges_Archify.*
 
 # Local-only docs
 PROGRESS_GUIDE.md
+
+# Migration flags
+.migration-*
