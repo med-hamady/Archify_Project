@@ -147,7 +147,7 @@ export class EmailService {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Bienvenue sur Archify</title>
+          <title>Bienvenue sur FacGame</title>
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -160,24 +160,24 @@ export class EmailService {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎓 Bienvenue sur Archify !</h1>
+              <h1>🎓 Bienvenue sur FacGame !</h1>
             </div>
             <div class="content">
               <h2>Bonjour ${name},</h2>
-              <p>Félicitations ! Votre compte Archify a été créé avec succès.</p>
+              <p>Félicitations ! Votre compte FacGame a été créé avec succès.</p>
               <p>Vous pouvez maintenant :</p>
               <ul>
-                <li>Explorer notre catalogue de cours</li>
-                <li>Visionner des vidéos éducatives</li>
-                <li>Télécharger des supports de cours</li>
-                <li>Accéder aux archives d'examens</li>
+                <li>Accéder à tous les quiz interactifs</li>
+                <li>Suivre votre progression et statistiques</li>
+                <li>Passer des examens et défis</li>
+                <li>Consulter le classement des meilleurs joueurs</li>
               </ul>
-              <a href="${process.env.FRONTEND_URL || 'http://localhost:4200'}/catalog" class="button">Découvrir les cours</a>
+              <a href="${process.env.FRONTEND_URL || 'http://localhost:4200'}/subjects" class="button">Commencer les quiz</a>
               <p>N'hésitez pas à nous contacter si vous avez besoin d'aide.</p>
-              <p>Cordialement,<br>L'équipe Archify</p>
+              <p>Cordialement,<br>L'équipe FacGame</p>
             </div>
             <div class="footer">
-              <p>Archify - Votre plateforme d'apprentissage universitaire</p>
+              <p>FacGame - Réussir vos études de médecine</p>
             </div>
           </div>
         </body>
@@ -186,9 +186,85 @@ export class EmailService {
 
     await this.sendEmail({
       to: email,
-      subject: 'Bienvenue sur Archify !',
+      subject: 'Bienvenue sur FacGame !',
       html
     });
+  }
+
+  async sendAdminNotificationNewUser(userName: string, userEmail: string, userSemester: string): Promise<void> {
+    const adminEmail = process.env.ADMIN_EMAIL;
+
+    if (!adminEmail) {
+      console.log('⚠️ ADMIN_EMAIL not configured in environment variables');
+      return;
+    }
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Nouvel utilisateur inscrit - FacGame</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            .info-item { margin: 10px 0; }
+            .label { font-weight: bold; color: #059669; }
+            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>👤 Nouvel Utilisateur Inscrit</h1>
+            </div>
+            <div class="content">
+              <p>Un nouvel utilisateur vient de s'inscrire sur FacGame.</p>
+
+              <div class="info-box">
+                <div class="info-item">
+                  <span class="label">Nom :</span> ${userName}
+                </div>
+                <div class="info-item">
+                  <span class="label">Email :</span> ${userEmail}
+                </div>
+                <div class="info-item">
+                  <span class="label">Semestre :</span> ${userSemester}
+                </div>
+                <div class="info-item">
+                  <span class="label">Date d'inscription :</span> ${new Date().toLocaleString('fr-FR', {
+                    dateStyle: 'full',
+                    timeStyle: 'short'
+                  })}
+                </div>
+              </div>
+
+              <p>Connectez-vous au panneau d'administration pour voir plus de détails.</p>
+
+              <p>Cordialement,<br>Système de notification FacGame</p>
+            </div>
+            <div class="footer">
+              <p>FacGame - Notification automatique</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    try {
+      await this.sendEmail({
+        to: adminEmail,
+        subject: `🎓 Nouvel utilisateur inscrit : ${userName}`,
+        html
+      });
+      console.log(`✅ Admin notification sent for new user: ${userEmail}`);
+    } catch (error) {
+      console.error('❌ Failed to send admin notification:', error);
+      // Don't throw error - just log it and continue
+    }
   }
 
   private stripHtml(html: string): string {

@@ -304,6 +304,11 @@ exports.authRouter.post('/register', async (req, res) => {
             deviceId: body.deviceId,
             authorizedDevices: [body.deviceId]
         });
+        // Envoyer une notification à l'admin pour le nouvel utilisateur
+        email_service_1.emailService.sendAdminNotificationNewUser(user.name, user.email, user.semester).catch(err => {
+            console.error('Failed to send admin notification:', err);
+            // Don't fail the registration if email fails
+        });
         return res.status(201).json({
             user: getUserPublic(user),
             accessToken,
