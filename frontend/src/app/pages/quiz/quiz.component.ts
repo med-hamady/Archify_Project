@@ -40,13 +40,6 @@ export class QuizComponent implements OnInit, OnDestroy {
     // Activer la protection anti-capture d'écran
     this.screenshotProtection.enableProtection();
 
-    // Ajouter le watermark avec l'email de l'utilisateur
-    const user = this.authService.user();
-    if (user?.email) {
-      const watermark = this.screenshotProtection.createWatermark(user.email);
-      document.body.appendChild(watermark);
-    }
-
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
     if (this.chapterId) {
       this.loadNextQuestion();
@@ -59,7 +52,6 @@ export class QuizComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Désactiver la protection quand on quitte la page
     this.screenshotProtection.disableProtection();
-    this.screenshotProtection.removeWatermark();
   }
 
   loadNextQuestion(replay: boolean = false) {

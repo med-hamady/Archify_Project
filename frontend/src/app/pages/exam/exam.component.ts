@@ -63,14 +63,9 @@ export class ExamComponent implements OnInit, OnDestroy {
     // Activer la protection anti-capture d'écran
     this.screenshotProtection.enableProtection();
 
-    // Ajouter le watermark avec l'email de l'utilisateur
+    // Get user name
     const user = this.authService.getCurrentUser();
     this.userName = user?.name || 'Utilisateur';
-
-    if (user?.email) {
-      const watermark = this.screenshotProtection.createWatermark(user.email);
-      document.body.appendChild(watermark);
-    }
 
     this.subjectId = this.route.snapshot.paramMap.get('subjectId') || '';
 
@@ -171,7 +166,6 @@ export class ExamComponent implements OnInit, OnDestroy {
 
     // Désactiver la protection quand on quitte la page
     this.screenshotProtection.disableProtection();
-    this.screenshotProtection.removeWatermark();
   }
 
   toggleAnswer(answerIndex: number) {
