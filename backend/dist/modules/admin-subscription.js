@@ -10,6 +10,7 @@ const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const auth_1 = require("./auth");
 const zod_1 = require("zod");
+const email_service_1 = require("../services/email.service");
 const prisma = new client_1.PrismaClient();
 exports.adminSubscriptionRouter = (0, express_1.Router)();
 // ============================================
@@ -467,6 +468,11 @@ exports.adminSubscriptionRouter.post('/payment/validate', auth_1.requireAuth, au
                 data: { subscriptionId: subscription.id }
             });
             console.log(`[admin] Payment validated and subscription created: ${subscription.id} for user ${payment.user.email}`);
+            // Envoyer une notification à l'admin pour le nouveau paiement
+            email_service_1.emailService.sendAdminNotificationPayment(payment.user.name, payment.user.email, payment.amountCents / 100, subscription.plan.name, payment.providerRef || undefined).catch(err => {
+                console.error('Failed to send admin payment notification:', err);
+                // Don't fail the payment validation if email fails
+            });
         }
         else {
             console.log(`[admin] Payment rejected: ${paymentId}`);

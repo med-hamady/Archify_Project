@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth, requireAdmin } from './auth';
 import { z } from 'zod';
+import { emailService } from '../services/email.service';
 
 const prisma = new PrismaClient();
 export const adminSubscriptionRouter = Router();
@@ -528,6 +529,18 @@ adminSubscriptionRouter.post('/payment/validate', requireAuth, requireAdmin, asy
       });
 
       console.log(`[admin] Payment validated and subscription created: ${subscription.id} for user ${payment.user.email}`);
+
+      // Envoyer une notification à l'admin pour le nouveau paiement
+      emailService.sendAdminNotificationPayment(
+        payment.user.name,
+        payment.user.email,
+        payment.amountCents / 100,
+        subscription.plan.name,
+        payment.providerRef || undefined
+      ).catch(err => {
+        console.error('Failed to send admin payment notification:', err);
+        // Don't fail the payment validation if email fails
+      });
     } else {
       console.log(`[admin] Payment rejected: ${paymentId}`);
     }

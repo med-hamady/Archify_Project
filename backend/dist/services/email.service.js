@@ -258,6 +258,101 @@ class EmailService {
             // Don't throw error - just log it and continue
         }
     }
+    async sendAdminNotificationPayment(userName, userEmail, amount, planName, transactionId) {
+        const adminEmail = process.env.ADMIN_EMAIL;
+        if (!adminEmail) {
+            console.error('❌ ADMIN_EMAIL not configured in environment variables');
+            console.error('💡 Please set ADMIN_EMAIL in your .env file or Render environment variables');
+            console.log('📧 Skipping admin notification for payment:', userEmail);
+            return;
+        }
+        console.log('💳 Sending admin payment notification email...');
+        console.log('👤 User:', userName);
+        console.log('📨 User email:', userEmail);
+        console.log('💰 Amount:', amount, 'DZD');
+        console.log('📦 Plan:', planName);
+        console.log('🔑 Transaction ID:', transactionId || 'N/A');
+        console.log('👨‍💼 Admin email:', adminEmail);
+        const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Nouveau paiement reçu - FacGame</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            .info-item { margin: 10px 0; }
+            .label { font-weight: bold; color: #dc2626; }
+            .amount { font-size: 24px; font-weight: bold; color: #059669; text-align: center; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>💳 Nouveau Paiement Reçu</h1>
+            </div>
+            <div class="content">
+              <p>Un utilisateur vient d'effectuer un paiement sur FacGame.</p>
+
+              <div class="amount">
+                ${amount.toLocaleString('fr-DZ')} DZD
+              </div>
+
+              <div class="info-box">
+                <div class="info-item">
+                  <span class="label">Utilisateur :</span> ${userName}
+                </div>
+                <div class="info-item">
+                  <span class="label">Email :</span> ${userEmail}
+                </div>
+                <div class="info-item">
+                  <span class="label">Plan :</span> ${planName}
+                </div>
+                <div class="info-item">
+                  <span class="label">Montant :</span> ${amount.toLocaleString('fr-DZ')} DZD
+                </div>
+                ${transactionId ? `
+                <div class="info-item">
+                  <span class="label">ID Transaction :</span> ${transactionId}
+                </div>
+                ` : ''}
+                <div class="info-item">
+                  <span class="label">Date et heure :</span> ${new Date().toLocaleString('fr-FR', {
+            dateStyle: 'full',
+            timeStyle: 'short'
+        })}
+                </div>
+              </div>
+
+              <p>Connectez-vous au panneau d'administration pour voir plus de détails sur ce paiement.</p>
+
+              <p>Cordialement,<br>Système de notification FacGame</p>
+            </div>
+            <div class="footer">
+              <p>FacGame - Notification automatique</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+        try {
+            await this.sendEmail({
+                to: adminEmail,
+                subject: `💰 Nouveau paiement : ${amount.toLocaleString('fr-DZ')} DZD - ${userName}`,
+                html
+            });
+            console.log(`✅ Admin payment notification sent for: ${userEmail}`);
+        }
+        catch (error) {
+            console.error('❌ Failed to send admin payment notification:', error);
+            // Don't throw error - just log it and continue
+        }
+    }
     stripHtml(html) {
         return html.replace(/<[^>]*>?/gm, '');
     }
