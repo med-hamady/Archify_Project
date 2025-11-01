@@ -649,9 +649,16 @@ export class AdminComponent implements OnInit {
   }
 
   loadUsers() {
+    console.log('🔍 Loading users from:', `${this.API_URL}/users`);
     this.http.get<User[]>(`${this.API_URL}/users`).subscribe({
-      next: (data) => this.users.set(data),
-      error: (error) => console.error('Error loading users:', error)
+      next: (data) => {
+        console.log('✅ Users loaded:', data);
+        this.users.set(data);
+      },
+      error: (error) => {
+        console.error('❌ Error loading users:', error);
+        console.error('Error details:', error.error);
+      }
     });
   }
 
