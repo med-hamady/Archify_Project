@@ -64,6 +64,7 @@ const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
+const clean_non_admin_users_1 = require("./migrations/clean-non-admin-users");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -955,6 +956,10 @@ app.listen(port, async () => {
     // Corriger l'ordre des chapitres anatomie PCEM2
     (0, fix_anatomie_chapter_order_1.fixAnatomieChapterOrder)().catch(err => {
         logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
+    });
+    // Nettoyer les utilisateurs non-admin (exécution unique au démarrage)
+    (0, clean_non_admin_users_1.cleanNonAdminUsers)().catch(err => {
+        logger.error({ error: err.message }, 'Clean non-admin users failed');
     });
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
     autoImportQuizzes().catch(err => {

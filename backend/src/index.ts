@@ -28,6 +28,7 @@ import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
+import { cleanNonAdminUsers } from './migrations/clean-non-admin-users';
 
 dotenv.config();
 
@@ -1046,6 +1047,11 @@ app.listen(port, async () => {
   // Corriger l'ordre des chapitres anatomie PCEM2
   fixAnatomieChapterOrder().catch(err => {
     logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
+  });
+
+  // Nettoyer les utilisateurs non-admin (exécution unique au démarrage)
+  cleanNonAdminUsers().catch(err => {
+    logger.error({ error: err.message }, 'Clean non-admin users failed');
   });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
