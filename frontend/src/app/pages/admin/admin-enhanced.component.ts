@@ -1805,9 +1805,16 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     });
 
     // Load users
-    this.http.get<User[]>(`${this.API_URL}/admin/users`).subscribe({
-      next: (data) => this.users.set(data),
-      error: (error) => console.error('Error loading users:', error)
+    console.log('🔍 Loading users from:', `${this.API_URL}/users`);
+    this.http.get<User[]>(`${this.API_URL}/users`).subscribe({
+      next: (data) => {
+        console.log('✅ Users loaded:', data);
+        this.users.set(data);
+      },
+      error: (error) => {
+        console.error('❌ Error loading users:', error);
+        console.error('Error details:', error.error);
+      }
     });
 
     // Load user statistics
