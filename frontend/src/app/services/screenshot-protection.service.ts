@@ -16,6 +16,7 @@ export class ScreenshotProtectionService {
     this.blockRightClick();
     this.detectScreenRecording();
     this.addCSSProtection();
+    this.enableMobileScreenshotProtection();
   }
 
   /**
@@ -265,5 +266,98 @@ export class ScreenshotProtectionService {
     if (watermark) {
       watermark.remove();
     }
+  }
+
+  /**
+   * Active la protection native contre les captures d'écran sur mobile
+   */
+  private enableMobileScreenshotProtection(): void {
+    // Ajouter l'attribut secure pour Android (via meta tag)
+    const secureMeta = document.createElement('meta');
+    secureMeta.name = 'secure-content';
+    secureMeta.content = 'true';
+    document.head.appendChild(secureMeta);
+
+    // Bloquer les captures d'écran via CSS flag-secure (Android)
+    const secureStyle = document.createElement('style');
+    secureStyle.id = 'mobile-screenshot-protection';
+    secureStyle.textContent = `
+      html {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
+      }
+
+      /* Bloquer les captures via FLAG_SECURE Android */
+      body {
+        -webkit-user-select: none !important;
+        pointer-events: auto !important;
+      }
+
+      /* Protection iOS */
+      @media only screen and (max-width: 768px) {
+        * {
+          -webkit-touch-callout: none !important;
+          -webkit-user-select: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(secureStyle);
+
+    // Ajouter un event listener pour détecter les screenshots sur Android
+    if ('onscreenshot' in window) {
+      (window as any).addEventListener('screenshot', () => {
+        console.warn('Screenshot attempt detected!');
+        this.showWarning('Les captures d\'écran sont bloquées sur cette page.');
+      });
+    }
+
+    // Bloquer les longpress sur mobile (iOS/Android)
+    document.addEventListener('touchstart', this.preventLongPress, { passive: false });
+    document.addEventListener('contextmenu', (e) => {
+      if (this.isMobileDevice()) {
+        e.preventDefault();
+        this.showWarning('Cette action n\'est pas autorisée.');
+      }
+    });
+
+    // Ajouter FLAG_SECURE pour Android via cordova/capacitor si disponible
+    if ((window as any).cordova) {
+      try {
+        (window as any).cordova.plugins.SecureScreen?.enable();
+      } catch (e) {
+        console.log('Cordova SecureScreen plugin not available');
+      }
+    }
+
+    // Pour Capacitor
+    if ((window as any).Capacitor) {
+      try {
+        const { ScreenProtection } = (window as any).Capacitor.Plugins;
+        if (ScreenProtection) {
+          ScreenProtection.enable();
+        }
+      } catch (e) {
+        console.log('Capacitor ScreenProtection plugin not available');
+      }
+    }
+  }
+
+  /**
+   * Empêche le long press sur mobile
+   */
+  private preventLongPress = (e: TouchEvent) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  };
+
+  /**
+   * Détecte si l'appareil est un mobile
+   */
+  private isMobileDevice(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 }
