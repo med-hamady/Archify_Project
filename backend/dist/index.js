@@ -62,6 +62,7 @@ const exam_1 = require("./modules/exam");
 const questions_1 = require("./modules/questions");
 const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
+const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -946,6 +947,10 @@ async function autoImportAnatomieQCM() {
 }
 app.listen(port, async () => {
     logger.info({ port }, 'Backend listening');
+    // Configuration du plan d'abonnement Premium (PRIORITAIRE - s'exécute en premier)
+    (0, setup_subscription_plan_1.setupSubscriptionPlan)().catch(err => {
+        logger.error({ error: err.message }, 'Setup subscription plan failed');
+    });
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
     autoImportQuizzes().catch(err => {
         logger.error({ error: err.message }, 'Auto-import failed');

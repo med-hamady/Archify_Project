@@ -26,6 +26,7 @@ import { examRouter } from './modules/exam';
 import { questionsRouter } from './modules/questions';
 import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
+import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 
 dotenv.config();
 
@@ -1035,6 +1036,11 @@ async function autoImportAnatomieQCM() {
 
 app.listen(port, async () => {
   logger.info({ port }, 'Backend listening');
+
+  // Configuration du plan d'abonnement Premium (PRIORITAIRE - s'exécute en premier)
+  setupSubscriptionPlan().catch(err => {
+    logger.error({ error: err.message }, 'Setup subscription plan failed');
+  });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
   autoImportQuizzes().catch(err => {
