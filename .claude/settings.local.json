@@ -65,7 +65,8 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(head:*)",
       "Bash(npm run build:*)",
-      "Bash(npx ng generate:*)"
+      "Bash(npx ng generate:*)",
+      "Bash(npx ts-node:*)"
     ],
     "deny": [],
     "ask": []

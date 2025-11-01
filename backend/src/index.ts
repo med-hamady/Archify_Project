@@ -27,6 +27,7 @@ import { questionsRouter } from './modules/questions';
 import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
+import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
 
 dotenv.config();
 
@@ -1040,6 +1041,11 @@ app.listen(port, async () => {
   // Configuration du plan d'abonnement Premium (PRIORITAIRE - s'exécute en premier)
   setupSubscriptionPlan().catch(err => {
     logger.error({ error: err.message }, 'Setup subscription plan failed');
+  });
+
+  // Corriger l'ordre des chapitres anatomie PCEM2
+  fixAnatomieChapterOrder().catch(err => {
+    logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
   });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
