@@ -272,6 +272,9 @@ export class ScreenshotProtectionService {
    * Active la protection native contre les captures d'écran sur mobile
    */
   private enableMobileScreenshotProtection(): void {
+    // Bloquer les boutons de volume pour empêcher Power + Volume (screenshot)
+    this.blockVolumeButtons();
+
     // Ajouter l'attribut secure pour Android (via meta tag)
     const secureMeta = document.createElement('meta');
     secureMeta.name = 'secure-content';
@@ -359,5 +362,65 @@ export class ScreenshotProtectionService {
    */
   private isMobileDevice(): boolean {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  /**
+   * Bloque les boutons de volume pour empêcher les screenshots (Power + Volume)
+   */
+  private blockVolumeButtons(): void {
+    // Bloquer les événements de volume sur Android/iOS
+    document.addEventListener('volumeupbutton', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.showWarning('Les boutons de volume sont désactivés pendant le quiz.');
+      return false;
+    }, false);
+
+    document.addEventListener('volumedownbutton', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.showWarning('Les boutons de volume sont désactivés pendant le quiz.');
+      return false;
+    }, false);
+
+    // Bloquer via Media Session API (navigateurs modernes)
+    if ('mediaSession' in navigator) {
+      try {
+        (navigator as any).mediaSession.setActionHandler('seekbackward', () => {
+          this.showWarning('Cette action est désactivée pendant le quiz.');
+        });
+        (navigator as any).mediaSession.setActionHandler('seekforward', () => {
+          this.showWarning('Cette action est désactivée pendant le quiz.');
+        });
+      } catch (e) {
+        console.log('Media Session API not fully supported');
+      }
+    }
+
+    // Bloquer les événements clavier liés au volume (certains navigateurs)
+    const volumeKeys = ['VolumeUp', 'VolumeDown', 'VolumeMute', 'AudioVolumeUp', 'AudioVolumeDown', 'AudioVolumeMute'];
+
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (volumeKeys.includes(e.key) || volumeKeys.includes(e.code)) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.showWarning('Les contrôles de volume sont désactivés pendant le quiz.');
+      }
+    }, true);
+
+    // Pour les appareils Android avec Cordova
+    if ((window as any).cordova) {
+      document.addEventListener('volumeupbutton', (e) => {
+        e.preventDefault();
+        this.showWarning('Bouton de volume désactivé.');
+      }, false);
+
+      document.addEventListener('volumedownbutton', (e) => {
+        e.preventDefault();
+        this.showWarning('Bouton de volume désactivé.');
+      }, false);
+    }
+
+    console.log('✅ Boutons de volume bloqués pour la protection anti-screenshot');
   }
 }
