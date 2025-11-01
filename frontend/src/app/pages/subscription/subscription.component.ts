@@ -81,7 +81,6 @@ interface SubscriptionPlanUI {
                 <span class="text-6xl font-black text-gray-900">{{ plan.price }}</span>
                 <span class="text-2xl text-gray-500 ml-2 font-semibold">{{ plan.currency }}</span>
                 </div>
-              <span class="text-gray-500 text-sm font-medium">/{{ plan.period === 'yearly' ? 'an' : 'mois' }}</span>
           </div>
 
             <!-- Features -->
