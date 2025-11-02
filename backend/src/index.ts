@@ -1050,15 +1050,16 @@ app.listen(port, async () => {
     logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
   });
 
-  // Seed DCEM1 (Parasitologie + Sémiologie) - s'exécute une seule fois
-  seedDCEM1().catch(err => {
-    logger.error({ error: err.message }, 'Seed DCEM1 failed');
-  });
-
   // Import DCEM1 depuis SQL (985 questions) - s'exécute une seule fois
-  importDCEM1SQL().catch(err => {
-    logger.error({ error: err.message }, 'Import DCEM1 SQL failed');
-  });
+  // Si l'import SQL échoue, seedDCEM1() créera la structure vide
+  importDCEM1SQL()
+    .catch(err => {
+      logger.error({ error: err.message }, 'Import DCEM1 SQL failed, trying seed...');
+      return seedDCEM1();
+    })
+    .catch(err => {
+      logger.error({ error: err.message }, 'Seed DCEM1 also failed');
+    });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
   autoImportQuizzes().catch(err => {

@@ -54,14 +54,38 @@ export async function importDCEM1SQL() {
       return;
     }
 
+    // Nettoyer d'abord les données DCEM1 existantes (structure vide créée par seed)
+    console.log('🗑️  Nettoyage des données DCEM1 existantes...');
+    await prisma.$executeRaw`
+      DELETE FROM "Question" WHERE "chapterId" IN (
+        SELECT id FROM "Chapter" WHERE "subjectId" IN (
+          SELECT id FROM "Subject" WHERE semester = 'DCEM1'
+        )
+      )
+    `;
+    await prisma.$executeRaw`
+      DELETE FROM "Chapter" WHERE "subjectId" IN (
+        SELECT id FROM "Subject" WHERE semester = 'DCEM1'
+      )
+    `;
+    await prisma.$executeRaw`DELETE FROM "Subject" WHERE semester = 'DCEM1'`;
+    console.log('✓ Nettoyage terminé\n');
+
     console.log('📄 Lecture du fichier SQL...');
     const sqlContent = fs.readFileSync(sqlFile, 'utf-8');
 
-    // Diviser en statements individuels
+    // Diviser en statements individuels et filtrer
     const statements = sqlContent
       .split(';')
       .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
+      .filter(s => {
+        // Ignorer les lignes vides, commentaires, et statements SET/DELETE (déjà fait manuellement)
+        if (s.length === 0) return false;
+        if (s.startsWith('--')) return false;
+        if (s.startsWith('SET ')) return false;
+        if (s.startsWith('DELETE ')) return false;
+        return true;
+      });
 
     console.log(`📊 ${statements.length} statements à exécuter\n`);
 
@@ -81,12 +105,12 @@ export async function importDCEM1SQL() {
           console.log(`   Progression: ${i + 1}/${statements.length} statements`);
         }
       } catch (error: any) {
-        // Ignorer les erreurs de contraintes (données déjà existantes)
-        if (!error.message.includes('duplicate') && !error.message.includes('already exists')) {
-          errorCount++;
-          if (errorCount <= 5) { // Afficher seulement les 5 premières erreurs
-            console.error(`   ⚠️  Erreur statement ${i + 1}:`, error.message.substring(0, 100));
-          }
+        errorCount++;
+        // Afficher les 10 premières erreurs pour diagnostic
+        if (errorCount <= 10) {
+          console.error(`   ⚠️  Erreur statement ${i + 1}:`, error.message.substring(0, 200));
+          // Afficher le statement qui a causé l'erreur (50 premiers caractères)
+          console.error(`       Statement: ${statement.substring(0, 100)}...`);
         }
       }
     }
