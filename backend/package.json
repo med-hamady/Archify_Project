@@ -23,7 +23,8 @@
     "fix:physio:pcem2": "node dist/fix-physiologie-pcem2.js",
     "clean:empty-chapters": "node dist/clean-empty-chapters.js",
     "fix:anatomie:pcem2:qcm": "node dist/fix-anatomie-pcem2-qcm.js",
-    "fix:anatomie:pcem2:qcm:manual": "node dist/fix-anatomie-pcem2-qcm-manual.js"
+    "fix:anatomie:pcem2:qcm:manual": "node dist/fix-anatomie-pcem2-qcm-manual.js",
+    "fix:question-9": "node dist/fix-question-9.js"
   },
   "keywords": [],
   "author": "",
