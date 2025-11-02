@@ -29,7 +29,7 @@ import { adminSubscriptionRouter } from './modules/admin-subscription';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
 import { seedDCEM1 } from './seed-dcem1';
-import { importDCEM1SQL } from './import-dcem1-sql';
+import { importDCEM1Direct } from './import-dcem1-direct';
 
 dotenv.config();
 
@@ -1050,11 +1050,11 @@ app.listen(port, async () => {
     logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
   });
 
-  // Import DCEM1 depuis SQL (985 questions) - s'exécute une seule fois
-  // Si l'import SQL échoue, seedDCEM1() créera la structure vide
-  importDCEM1SQL()
+  // Import DCEM1 direct via Prisma (985 questions) - s'exécute une seule fois
+  // Utilise dcem1-data.json pour éviter les problèmes d'échappement SQL
+  importDCEM1Direct()
     .catch(err => {
-      logger.error({ error: err.message }, 'Import DCEM1 SQL failed, trying seed...');
+      logger.error({ error: err.message }, 'Import DCEM1 failed, trying seed...');
       return seedDCEM1();
     })
     .catch(err => {

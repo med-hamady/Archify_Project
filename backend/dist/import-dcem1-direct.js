@@ -1,0 +1,166 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.importDCEM1Direct = importDCEM1Direct;
+const client_1 = require("@prisma/client");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const prisma = new client_1.PrismaClient();
+/**
+ * Vérifie si DCEM1 a déjà des questions
+ */
+async function hasDCEM1Questions() {
+    const count = await prisma.question.count({
+        where: {
+            chapter: {
+                subject: {
+                    semester: 'DCEM1'
+                }
+            }
+        }
+    });
+    if (count > 0) {
+        console.log(`✓ DCEM1 contient déjà ${count} questions`);
+        return true;
+    }
+    return false;
+}
+/**
+ * Charge les données depuis le fichier JSON exporté
+ */
+function loadDCEM1Data() {
+    const dataFile = path_1.default.join(__dirname, '..', 'dcem1-data.json');
+    if (!fs_1.default.existsSync(dataFile)) {
+        throw new Error(`Fichier ${dataFile} non trouvé`);
+    }
+    const rawData = fs_1.default.readFileSync(dataFile, 'utf-8');
+    return JSON.parse(rawData);
+}
+/**
+ * Importe les données DCEM1 directement via Prisma
+ */
+async function importDCEM1Direct() {
+    try {
+        // Vérifier si déjà importé
+        if (await hasDCEM1Questions()) {
+            return;
+        }
+        console.log('📦 Import DCEM1 direct via Prisma...\n');
+        // Nettoyer d'abord les données DCEM1 existantes (structure vide créée par seed)
+        console.log('🗑️  Nettoyage des données DCEM1 existantes...');
+        await prisma.question.deleteMany({
+            where: {
+                chapter: {
+                    subject: {
+                        semester: 'DCEM1'
+                    }
+                }
+            }
+        });
+        await prisma.chapter.deleteMany({
+            where: {
+                subject: {
+                    semester: 'DCEM1'
+                }
+            }
+        });
+        await prisma.subject.deleteMany({
+            where: {
+                semester: 'DCEM1'
+            }
+        });
+        console.log('✓ Nettoyage terminé\n');
+        // Charger les données
+        console.log('📄 Chargement des données DCEM1...');
+        const subjects = loadDCEM1Data();
+        console.log(`✓ ${subjects.length} sujets chargés\n`);
+        let totalSubjects = 0;
+        let totalChapters = 0;
+        let totalQuestions = 0;
+        // Importer chaque sujet avec ses chapitres et questions
+        for (const subjectData of subjects) {
+            console.log(`📚 Import: ${subjectData.title}`);
+            // Créer le sujet
+            const subject = await prisma.subject.create({
+                data: {
+                    id: subjectData.id,
+                    title: subjectData.title,
+                    description: subjectData.description,
+                    semester: subjectData.semester,
+                    tags: subjectData.tags,
+                    totalQCM: subjectData.totalQCM,
+                    createdAt: new Date(subjectData.createdAt),
+                    views: subjectData.views
+                }
+            });
+            totalSubjects++;
+            // Créer les chapitres
+            for (const chapterData of subjectData.chapters) {
+                const chapter = await prisma.chapter.create({
+                    data: {
+                        id: chapterData.id,
+                        subjectId: subject.id,
+                        title: chapterData.title,
+                        description: chapterData.description,
+                        orderIndex: chapterData.orderIndex,
+                        pdfUrl: chapterData.pdfUrl,
+                        createdAt: new Date(chapterData.createdAt)
+                    }
+                });
+                totalChapters++;
+                // Créer les questions en batch (50 par 50 pour éviter les timeouts)
+                const batchSize = 50;
+                for (let i = 0; i < chapterData.questions.length; i += batchSize) {
+                    const batch = chapterData.questions.slice(i, i + batchSize);
+                    await prisma.question.createMany({
+                        data: batch.map(q => ({
+                            id: q.id,
+                            chapterId: chapter.id,
+                            questionText: q.questionText,
+                            options: q.options, // Prisma gère automatiquement le JSON
+                            explanation: q.explanation,
+                            orderIndex: q.orderIndex,
+                            createdAt: new Date(q.createdAt)
+                        }))
+                    });
+                    totalQuestions += batch.length;
+                }
+            }
+            console.log(`   ✓ ${subjectData.chapters.length} chapitres, ${subjectData.chapters.reduce((sum, c) => sum + c.questions.length, 0)} questions\n`);
+        }
+        console.log('✅ Import DCEM1 terminé!');
+        console.log(`   ${totalSubjects} sujets`);
+        console.log(`   ${totalChapters} chapitres`);
+        console.log(`   ${totalQuestions} questions\n`);
+        // Vérification finale
+        const finalCount = await prisma.question.count({
+            where: {
+                chapter: {
+                    subject: {
+                        semester: 'DCEM1'
+                    }
+                }
+            }
+        });
+        console.log(`📊 Total DCEM1: ${finalCount} questions importées`);
+    }
+    catch (error) {
+        console.error('❌ Erreur lors de l\'import DCEM1:', error);
+        throw error;
+    }
+}
+// Si exécuté directement
+if (require.main === module) {
+    importDCEM1Direct()
+        .then(() => {
+        console.log('✅ Import terminé avec succès');
+        process.exit(0);
+    })
+        .catch((error) => {
+        console.error('❌ Erreur:', error);
+        process.exit(1);
+    });
+}
+//# sourceMappingURL=import-dcem1-direct.js.map

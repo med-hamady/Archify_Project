@@ -65,7 +65,7 @@ const admin_subscription_1 = require("./modules/admin-subscription");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
-const import_dcem1_sql_1 = require("./import-dcem1-sql");
+const import_dcem1_direct_1 = require("./import-dcem1-direct");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -958,11 +958,11 @@ app.listen(port, async () => {
     (0, fix_anatomie_chapter_order_1.fixAnatomieChapterOrder)().catch(err => {
         logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
     });
-    // Import DCEM1 depuis SQL (985 questions) - s'exécute une seule fois
-    // Si l'import SQL échoue, seedDCEM1() créera la structure vide
-    (0, import_dcem1_sql_1.importDCEM1SQL)()
+    // Import DCEM1 direct via Prisma (985 questions) - s'exécute une seule fois
+    // Utilise dcem1-data.json pour éviter les problèmes d'échappement SQL
+    (0, import_dcem1_direct_1.importDCEM1Direct)()
         .catch(err => {
-        logger.error({ error: err.message }, 'Import DCEM1 SQL failed, trying seed...');
+        logger.error({ error: err.message }, 'Import DCEM1 failed, trying seed...');
         return (0, seed_dcem1_1.seedDCEM1)();
     })
         .catch(err => {
