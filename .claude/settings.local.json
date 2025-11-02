@@ -67,7 +67,10 @@
       "Bash(npm run build:*)",
       "Bash(npx ng generate:*)",
       "Bash(npx ts-node:*)",
-      "Bash(npm run fix:question-9:*)"
+      "Bash(npm run fix:question-9:*)",
+      "Bash(ls:*)",
+      "Bash(npm run import:dcem1:parasitologie:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []
