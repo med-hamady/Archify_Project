@@ -1,15 +1,17 @@
 "use strict";
 /**
- * Script pour corriger la question 9 du chapitre 2 d'anatomie PCEM1
+ * Script pour corriger les questions 9 et 14 du chapitre 2 d'anatomie PCEM1
  *
- * Correction: La réponse A doit être fausse avec une justification claire
+ * Corrections:
+ * - Question 9: La réponse A doit être fausse avec une justification claire
+ * - Question 14: La réponse C doit être fausse avec une justification claire
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 async function fixQuestion9() {
     try {
-        console.log('🔧 Correction de la question 9 du chapitre 2 anatomie PCEM1...\n');
+        console.log('🔧 Correction des questions 9 et 14 du chapitre 2 anatomie PCEM1...\n');
         // Trouver le chapitre
         const chapter = await prisma.chapter.findFirst({
             where: {
@@ -67,8 +69,58 @@ async function fixQuestion9() {
                 options: correctedOptions
             }
         });
-        console.log('✅ Question corrigée avec succès!');
+        console.log('✅ Question 9 corrigée avec succès!');
         console.log('   Nouvelles options:', JSON.stringify(correctedOptions, null, 2));
+        // ========================================
+        // Corriger la question 14
+        // ========================================
+        console.log('\n🔧 Correction de la question 14...\n');
+        const question14 = await prisma.question.findFirst({
+            where: {
+                chapterId: chapter.id,
+                questionText: { contains: 'articulations interphalangiennes', mode: 'insensitive' }
+            }
+        });
+        if (!question14) {
+            console.error('❌ Question 14 non trouvée');
+            return;
+        }
+        console.log(`📝 Question 14 trouvée: ${question14.questionText}`);
+        console.log(`   Options actuelles:`, JSON.stringify(question14.options, null, 2));
+        // Corriger les options de la question 14
+        const correctedOptions14 = [
+            {
+                text: "Elles sont de type trochléen",
+                isCorrect: true
+            },
+            {
+                text: "Elles permettent flexion-extension",
+                isCorrect: true
+            },
+            {
+                text: "Elles autorisent rotation",
+                isCorrect: false,
+                justification: "Non, rotation bloquée."
+            },
+            {
+                text: "Chaque doigt (sauf le pouce) en possède deux",
+                isCorrect: true
+            },
+            {
+                text: "Elles unissent les métacarpiens entre eux",
+                isCorrect: false,
+                justification: "Non."
+            }
+        ];
+        // Mettre à jour la question 14
+        await prisma.question.update({
+            where: { id: question14.id },
+            data: {
+                options: correctedOptions14
+            }
+        });
+        console.log('✅ Question 14 corrigée avec succès!');
+        console.log('   Nouvelles options:', JSON.stringify(correctedOptions14, null, 2));
     }
     catch (error) {
         console.error('❌ Erreur:', error);
