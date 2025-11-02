@@ -28,6 +28,7 @@ import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
+import { seedDCEM1 } from './seed-dcem1';
 
 dotenv.config();
 
@@ -1046,6 +1047,11 @@ app.listen(port, async () => {
   // Corriger l'ordre des chapitres anatomie PCEM2
   fixAnatomieChapterOrder().catch(err => {
     logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
+  });
+
+  // Seed DCEM1 (Parasitologie + Sémiologie) - s'exécute une seule fois
+  seedDCEM1().catch(err => {
+    logger.error({ error: err.message }, 'Seed DCEM1 failed');
   });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)

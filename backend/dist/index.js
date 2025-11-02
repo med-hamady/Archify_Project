@@ -64,6 +64,7 @@ const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
+const seed_dcem1_1 = require("./seed-dcem1");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -955,6 +956,10 @@ app.listen(port, async () => {
     // Corriger l'ordre des chapitres anatomie PCEM2
     (0, fix_anatomie_chapter_order_1.fixAnatomieChapterOrder)().catch(err => {
         logger.error({ error: err.message }, 'Fix anatomie chapter order failed');
+    });
+    // Seed DCEM1 (Parasitologie + Sémiologie) - s'exécute une seule fois
+    (0, seed_dcem1_1.seedDCEM1)().catch(err => {
+        logger.error({ error: err.message }, 'Seed DCEM1 failed');
     });
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
     autoImportQuizzes().catch(err => {
