@@ -255,8 +255,8 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, auth_1.requireQuizAccess,
                 // Informations sur les QCM gratuits (si applicable)
                 freeQcmInfo: req.hasFreeAccess ? {
                     used: updatedUser.freeQcmUsed,
-                    remaining: Math.max(0, 3 - updatedUser.freeQcmUsed),
-                    total: 3
+                    remaining: Math.max(0, req.freeQcmLimit - updatedUser.freeQcmUsed),
+                    total: req.freeQcmLimit
                 } : null
             }
         });

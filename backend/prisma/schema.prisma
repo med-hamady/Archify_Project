@@ -31,7 +31,7 @@ model User {
   bestStreak               Int       @default(0) // Meilleure série de bonnes réponses
   legendQuestionsCompleted Int       @default(0)
   lastActivityAt           DateTime?
-  freeQcmUsed              Int       @default(0) // Nombre de QCM gratuits utilisés (max 3)
+  freeQcmUsed              Int       @default(0) // Nombre de QCM gratuits utilisés (max 10 pour PCEM1/PCEM2, max 30 pour DCEM1)
 
   // Relations existantes
   subscriptions       Subscription[]

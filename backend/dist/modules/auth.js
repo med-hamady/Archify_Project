@@ -190,21 +190,24 @@ async function requireQuizAccess(req, res, next) {
         const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: { id: req.userId },
-            select: { freeQcmUsed: true }
+            select: { freeQcmUsed: true, semester: true }
         });
         if (!user) {
             return res.status(404).json({
                 error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
             });
         }
-        // Si l'utilisateur a déjà utilisé ses 3 QCM gratuits, rediriger vers l'abonnement
-        if (user.freeQcmUsed >= 3) {
+        // Déterminer la limite de QCM gratuits selon le niveau
+        const freeQcmLimit = user.semester === 'DCEM1' ? 30 : 10; // DCEM1: 30, PCEM1/PCEM2: 10
+        // Si l'utilisateur a déjà utilisé ses QCM gratuits, rediriger vers l'abonnement
+        if (user.freeQcmUsed >= freeQcmLimit) {
             console.log('[requireQuizAccess] Free QCM limit reached for user:', req.userId);
             return res.status(403).json({
                 error: {
                     code: 'FREE_LIMIT_REACHED',
-                    message: 'Vous avez utilisé vos 3 QCM gratuits. Veuillez souscrire à un abonnement pour continuer.',
+                    message: `Vous avez utilisé vos ${freeQcmLimit} QCM gratuits. Veuillez souscrire à un abonnement pour continuer.`,
                     freeQcmUsed: user.freeQcmUsed,
+                    freeQcmLimit: freeQcmLimit,
                     needsSubscription: true
                 }
             });
@@ -213,7 +216,8 @@ async function requireQuizAccess(req, res, next) {
         req.subscription = subscriptionResult;
         req.hasFreeAccess = true;
         req.freeQcmUsed = user.freeQcmUsed;
-        console.log(`[requireQuizAccess] Free QCM access granted for user: ${req.userId} (${user.freeQcmUsed}/3 used)`);
+        req.freeQcmLimit = freeQcmLimit;
+        console.log(`[requireQuizAccess] Free QCM access granted for user: ${req.userId} (${user.freeQcmUsed}/${freeQcmLimit} used)`);
         return next();
     }
     catch (error) {
@@ -668,6 +672,7 @@ exports.authRouter.get('/free-qcm-status', requireAuth, async (req, res) => {
             where: { id: userId },
             select: {
                 freeQcmUsed: true,
+                semester: true,
                 subscriptions: {
                     where: {
                         status: 'ACTIVE'
@@ -692,16 +697,18 @@ exports.authRouter.get('/free-qcm-status', requireAuth, async (req, res) => {
         }
         const hasActiveSubscription = user.subscriptions.length > 0;
         const freeQcmUsed = user.freeQcmUsed || 0;
-        const freeQcmRemaining = Math.max(0, 3 - freeQcmUsed);
+        // Déterminer la limite selon le niveau
+        const freeQcmLimit = user.semester === 'DCEM1' ? 30 : 10; // DCEM1: 30, PCEM1/PCEM2: 10
+        const freeQcmRemaining = Math.max(0, freeQcmLimit - freeQcmUsed);
         return res.json({
             hasActiveSubscription,
             freeQcm: {
                 used: freeQcmUsed,
                 remaining: freeQcmRemaining,
-                total: 3,
-                limitReached: freeQcmUsed >= 3
+                total: freeQcmLimit,
+                limitReached: freeQcmUsed >= freeQcmLimit
             },
-            canAccessQuiz: hasActiveSubscription || freeQcmUsed < 3,
+            canAccessQuiz: hasActiveSubscription || freeQcmUsed < freeQcmLimit,
             activeSubscription: hasActiveSubscription ? user.subscriptions[0] : null
         });
     }
