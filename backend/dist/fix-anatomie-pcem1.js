@@ -191,7 +191,6 @@ async function fixAnatomiePCEM1() {
                             questionText: q.questionText,
                             options: q.options,
                             explanation: q.explanation,
-                            difficulty: 'MOYEN',
                             orderIndex: i
                         }
                     });
