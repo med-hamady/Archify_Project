@@ -59,7 +59,7 @@ export interface RegisterRequest {
   password: string;
   firstName: string;
   lastName: string;
-  semester: 'PCEM1' | 'PCEM2';
+  semester: 'PCEM1' | 'PCEM2' | 'DCEM1';
   deviceId: string;
 }
 
