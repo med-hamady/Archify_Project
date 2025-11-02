@@ -29,6 +29,7 @@ import { adminSubscriptionRouter } from './modules/admin-subscription';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
 import { seedDCEM1 } from './seed-dcem1';
+import { importDCEM1SQL } from './import-dcem1-sql';
 
 dotenv.config();
 
@@ -1052,6 +1053,11 @@ app.listen(port, async () => {
   // Seed DCEM1 (Parasitologie + Sémiologie) - s'exécute une seule fois
   seedDCEM1().catch(err => {
     logger.error({ error: err.message }, 'Seed DCEM1 failed');
+  });
+
+  // Import DCEM1 depuis SQL (985 questions) - s'exécute une seule fois
+  importDCEM1SQL().catch(err => {
+    logger.error({ error: err.message }, 'Import DCEM1 SQL failed');
   });
 
   // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)

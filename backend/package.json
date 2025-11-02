@@ -26,7 +26,8 @@
     "fix:anatomie:pcem2:qcm:manual": "node dist/fix-anatomie-pcem2-qcm-manual.js",
     "fix:question-9": "node dist/fix-question-9.js",
     "import:dcem1:parasitologie": "node dist/import-dcem1-parasitologie.js",
-    "import:dcem1:semiologie": "node dist/import-dcem1-semiologie.js"
+    "import:dcem1:semiologie": "node dist/import-dcem1-semiologie.js",
+    "export:dcem1": "node dist/export-dcem1-data.js"
   },
   "keywords": [],
   "author": "",

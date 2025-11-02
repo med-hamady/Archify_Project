@@ -65,6 +65,7 @@ const admin_subscription_1 = require("./modules/admin-subscription");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
+const import_dcem1_sql_1 = require("./import-dcem1-sql");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
@@ -960,6 +961,10 @@ app.listen(port, async () => {
     // Seed DCEM1 (Parasitologie + Sémiologie) - s'exécute une seule fois
     (0, seed_dcem1_1.seedDCEM1)().catch(err => {
         logger.error({ error: err.message }, 'Seed DCEM1 failed');
+    });
+    // Import DCEM1 depuis SQL (985 questions) - s'exécute une seule fois
+    (0, import_dcem1_sql_1.importDCEM1SQL)().catch(err => {
+        logger.error({ error: err.message }, 'Import DCEM1 SQL failed');
     });
     // Lancer l'auto-import en arrière-plan (ne bloque pas le démarrage)
     autoImportQuizzes().catch(err => {

@@ -14,10 +14,138 @@ const prisma = new PrismaClient();
  * Vérifie si DCEM1 a déjà été importé
  */
 async function isDCEM1Imported(): Promise<boolean> {
-  const count = await prisma.subject.count({
-    where: { semester: 'DCEM1' }
+  const subjects = await prisma.subject.findMany({
+    where: { semester: 'DCEM1' },
+    include: {
+      chapters: {
+        include: {
+          _count: {
+            select: { questions: true }
+          }
+        }
+      }
+    }
   });
-  return count > 0;
+
+  if (subjects.length === 0) return false;
+
+  // Vérifier si au moins un sujet a des questions
+  const hasQuestions = subjects.some(s =>
+    s.chapters.some(c => c._count.questions > 0)
+  );
+
+  if (hasQuestions) {
+    const totalQuestions = subjects.reduce((sum, s) =>
+      sum + s.chapters.reduce((qSum, c) => qSum + c._count.questions, 0), 0
+    );
+    console.log(`✓ DCEM1 déjà importé avec ${totalQuestions} questions, skip seed`);
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Copie les données DCEM1 depuis une autre base (si disponible)
+ */
+async function copyDCEM1FromSource(): Promise<boolean> {
+  try {
+    // Tenter de se connecter à la base source (locale)
+    const sourceDbUrl = process.env.SOURCE_DATABASE_URL || process.env.DATABASE_URL;
+    if (!sourceDbUrl || sourceDbUrl === process.env.DATABASE_URL) {
+      return false; // Pas de source différente
+    }
+
+    console.log('🔄 Tentative de copie depuis la base source...');
+
+    const { PrismaClient: SourcePrisma } = await import('@prisma/client');
+    const sourcePrisma = new SourcePrisma({
+      datasources: {
+        db: {
+          url: sourceDbUrl
+        }
+      }
+    });
+
+    // Récupérer les données DCEM1 de la source
+    const sourceSubjects = await sourcePrisma.subject.findMany({
+      where: { semester: 'DCEM1' },
+      include: {
+        chapters: {
+          include: {
+            questions: true
+          }
+        }
+      }
+    });
+
+    if (sourceSubjects.length === 0) {
+      await sourcePrisma.$disconnect();
+      return false;
+    }
+
+    console.log(`📦 ${sourceSubjects.length} sujets trouvés dans la source`);
+
+    // Copier les données
+    for (const subject of sourceSubjects) {
+      console.log(`   📚 Copie: ${subject.title}...`);
+
+      const newSubject = await prisma.subject.create({
+        data: {
+          title: subject.title,
+          description: subject.description,
+          semester: subject.semester,
+          tags: subject.tags,
+          totalQCM: subject.totalQCM
+        }
+      });
+
+      for (const chapter of subject.chapters) {
+        const newChapter = await prisma.chapter.create({
+          data: {
+            subjectId: newSubject.id,
+            title: chapter.title,
+            description: chapter.description,
+            orderIndex: chapter.orderIndex,
+            pdfUrl: chapter.pdfUrl
+          }
+        });
+
+        // Copier les questions par batch de 50 pour éviter les timeout
+        const batchSize = 50;
+        for (let i = 0; i < chapter.questions.length; i += batchSize) {
+          const batch = chapter.questions.slice(i, i + batchSize);
+
+          await Promise.all(batch.map(question =>
+            prisma.question.create({
+              data: {
+                chapterId: newChapter.id,
+                questionText: question.questionText,
+                options: question.options as any,
+                explanation: question.explanation,
+                orderIndex: question.orderIndex
+              }
+            })
+          ));
+        }
+
+        console.log(`      ✓ ${chapter.questions.length} questions`);
+      }
+    }
+
+    await sourcePrisma.$disconnect();
+
+    const totalQuestions = sourceSubjects.reduce((sum, s) =>
+      sum + s.chapters.reduce((qSum, c) => qSum + c.questions.length, 0), 0
+    );
+
+    console.log(`✅ Copie réussie: ${totalQuestions} questions importées\n`);
+    return true;
+
+  } catch (error) {
+    console.log('⚠️  Impossible de copier depuis la source:', (error as Error).message);
+    return false;
+  }
 }
 
 /**
@@ -27,29 +155,34 @@ export async function seedDCEM1() {
   try {
     // Vérifier si déjà importé
     if (await isDCEM1Imported()) {
-      console.log('✓ DCEM1 déjà importé, skip seed');
       return;
     }
 
     console.log('🌱 Début du seed DCEM1...\n');
 
-    // Créer Parasitologie DCEM1
-    await seedParasitologie();
+    // Essayer de copier depuis une base source (locale)
+    const copiedFromSource = await copyDCEM1FromSource();
 
-    // Créer les sous-catégories de Sémiologie
-    await seedSemiologieCardiovasculaire();
-    await seedSemiologieDigestive();
-    await seedSemiologieEndocrinienne();
-    await seedSemiologieNeurologique();
-    await seedSemiologiePediatrique();
-    await seedSemiologieRenale();
-    await seedSemiologieRespiratoire();
+    if (!copiedFromSource) {
+      // Si pas de source, créer la structure vide
+      console.log('📝 Création de la structure DCEM1 vide...\n');
 
-    console.log('\n✅ Seed DCEM1 terminé avec succès!\n');
+      await seedParasitologie();
+      await seedSemiologieCardiovasculaire();
+      await seedSemiologieDigestive();
+      await seedSemiologieEndocrinienne();
+      await seedSemiologieNeurologique();
+      await seedSemiologiePediatrique();
+      await seedSemiologieRenale();
+      await seedSemiologieRespiratoire();
+
+      console.log('\n✅ Structure DCEM1 créée (vide)');
+      console.log('💡 Pour ajouter les questions, utilisez l\'interface admin ou le fichier dcem1-export.sql\n');
+    }
 
   } catch (error) {
     console.error('❌ Erreur lors du seed DCEM1:', error);
-    throw error;
+    // Ne pas throw pour ne pas bloquer le démarrage du serveur
   }
 }
 
