@@ -47,20 +47,21 @@ async function exportDCEM1Data() {
 
       let totalQuestions = 0;
 
-      // Créer le sujet (statement sur une seule ligne pour éviter les erreurs de parsing)
-      sqlStatements.push(`INSERT INTO "Subject" (id, title, description, semester, tags, "totalQCM", "createdAt", views) VALUES ('${subject.id}', '${subject.title.replace(/'/g, "''")}', ${subject.description ? `'${subject.description.replace(/'/g, "''")}'` : 'NULL'}, '${subject.semester}', ARRAY[${subject.tags.map(t => `'${t.replace(/'/g, "''")}'`).join(', ')}]::text[], ${subject.totalQCM}, '${subject.createdAt.toISOString()}', ${subject.views})`);
+      // Créer le sujet (utiliser $$ pour les chaînes contenant des apostrophes)
+      sqlStatements.push(`INSERT INTO "Subject" (id, title, description, semester, tags, "totalQCM", "createdAt", views) VALUES ('${subject.id}', $$${subject.title}$$, ${subject.description ? `$$${subject.description}$$` : 'NULL'}, '${subject.semester}', ARRAY[${subject.tags.map(t => `$$${t}$$`).join(', ')}]::text[], ${subject.totalQCM}, '${subject.createdAt.toISOString()}', ${subject.views})`);
 
       // Créer les chapitres
       for (const chapter of subject.chapters) {
         totalQuestions += chapter.questions.length;
 
-        sqlStatements.push(`INSERT INTO "Chapter" (id, "subjectId", title, description, "orderIndex", "pdfUrl", "createdAt") VALUES ('${chapter.id}', '${subject.id}', '${chapter.title.replace(/'/g, "''")}', ${chapter.description ? `'${chapter.description.replace(/'/g, "''")}'` : 'NULL'}, ${chapter.orderIndex}, ${chapter.pdfUrl ? `'${chapter.pdfUrl}'` : 'NULL'}, '${chapter.createdAt.toISOString()}')`);
+        sqlStatements.push(`INSERT INTO "Chapter" (id, "subjectId", title, description, "orderIndex", "pdfUrl", "createdAt") VALUES ('${chapter.id}', '${subject.id}', $$${chapter.title}$$, ${chapter.description ? `$$${chapter.description}$$` : 'NULL'}, ${chapter.orderIndex}, ${chapter.pdfUrl ? `'${chapter.pdfUrl}'` : 'NULL'}, '${chapter.createdAt.toISOString()}')`);
 
         // Créer les questions
         for (const question of chapter.questions) {
-          const optionsJson = JSON.stringify(question.options).replace(/'/g, "''");
+          const optionsJson = JSON.stringify(question.options);
 
-          sqlStatements.push(`INSERT INTO "Question" (id, "chapterId", "questionText", options, explanation, "orderIndex", "createdAt") VALUES ('${question.id}', '${chapter.id}', '${question.questionText.replace(/'/g, "''")}', '${optionsJson}'::jsonb, ${question.explanation ? `'${question.explanation.replace(/'/g, "''")}'` : 'NULL'}, ${question.orderIndex}, '${question.createdAt.toISOString()}')`);
+          // Utiliser $$ pour éviter les problèmes d'échappement des guillemets dans le JSON
+          sqlStatements.push(`INSERT INTO "Question" (id, "chapterId", "questionText", options, explanation, "orderIndex", "createdAt") VALUES ('${question.id}', '${chapter.id}', $$${question.questionText}$$, $$${optionsJson}$$::jsonb, ${question.explanation ? `$$${question.explanation}$$` : 'NULL'}, ${question.orderIndex}, '${question.createdAt.toISOString()}')`);
         }
       }
 
