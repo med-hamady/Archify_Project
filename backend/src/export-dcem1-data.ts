@@ -47,57 +47,20 @@ async function exportDCEM1Data() {
 
       let totalQuestions = 0;
 
-      // Créer le sujet
-      sqlStatements.push(`
--- Subject: ${subject.title}
-INSERT INTO "Subject" (id, title, description, semester, tags, "totalQCM", "createdAt", views)
-VALUES (
-  '${subject.id}',
-  '${subject.title.replace(/'/g, "''")}',
-  ${subject.description ? `'${subject.description.replace(/'/g, "''")}'` : 'NULL'},
-  '${subject.semester}',
-  ARRAY[${subject.tags.map(t => `'${t.replace(/'/g, "''")}'`).join(', ')}]::text[],
-  ${subject.totalQCM},
-  '${subject.createdAt.toISOString()}',
-  ${subject.views}
-);
-`);
+      // Créer le sujet (statement sur une seule ligne pour éviter les erreurs de parsing)
+      sqlStatements.push(`INSERT INTO "Subject" (id, title, description, semester, tags, "totalQCM", "createdAt", views) VALUES ('${subject.id}', '${subject.title.replace(/'/g, "''")}', ${subject.description ? `'${subject.description.replace(/'/g, "''")}'` : 'NULL'}, '${subject.semester}', ARRAY[${subject.tags.map(t => `'${t.replace(/'/g, "''")}'`).join(', ')}]::text[], ${subject.totalQCM}, '${subject.createdAt.toISOString()}', ${subject.views})`);
 
       // Créer les chapitres
       for (const chapter of subject.chapters) {
         totalQuestions += chapter.questions.length;
 
-        sqlStatements.push(`
--- Chapter: ${chapter.title}
-INSERT INTO "Chapter" (id, "subjectId", title, description, "orderIndex", "pdfUrl", "createdAt")
-VALUES (
-  '${chapter.id}',
-  '${subject.id}',
-  '${chapter.title.replace(/'/g, "''")}',
-  ${chapter.description ? `'${chapter.description.replace(/'/g, "''")}'` : 'NULL'},
-  ${chapter.orderIndex},
-  ${chapter.pdfUrl ? `'${chapter.pdfUrl}'` : 'NULL'},
-  '${chapter.createdAt.toISOString()}'
-);
-`);
+        sqlStatements.push(`INSERT INTO "Chapter" (id, "subjectId", title, description, "orderIndex", "pdfUrl", "createdAt") VALUES ('${chapter.id}', '${subject.id}', '${chapter.title.replace(/'/g, "''")}', ${chapter.description ? `'${chapter.description.replace(/'/g, "''")}'` : 'NULL'}, ${chapter.orderIndex}, ${chapter.pdfUrl ? `'${chapter.pdfUrl}'` : 'NULL'}, '${chapter.createdAt.toISOString()}')`);
 
         // Créer les questions
         for (const question of chapter.questions) {
           const optionsJson = JSON.stringify(question.options).replace(/'/g, "''");
 
-          sqlStatements.push(`
--- Question: ${question.questionText.substring(0, 50)}...
-INSERT INTO "Question" (id, "chapterId", "questionText", options, explanation, "orderIndex", "createdAt")
-VALUES (
-  '${question.id}',
-  '${chapter.id}',
-  '${question.questionText.replace(/'/g, "''")}',
-  '${optionsJson}'::jsonb,
-  ${question.explanation ? `'${question.explanation.replace(/'/g, "''")}'` : 'NULL'},
-  ${question.orderIndex},
-  '${question.createdAt.toISOString()}'
-);
-`);
+          sqlStatements.push(`INSERT INTO "Question" (id, "chapterId", "questionText", options, explanation, "orderIndex", "createdAt") VALUES ('${question.id}', '${chapter.id}', '${question.questionText.replace(/'/g, "''")}', '${optionsJson}'::jsonb, ${question.explanation ? `'${question.explanation.replace(/'/g, "''")}'` : 'NULL'}, ${question.orderIndex}, '${question.createdAt.toISOString()}')`);
         }
       }
 
@@ -107,44 +70,28 @@ VALUES (
 
     // Écrire dans un fichier SQL
     const outputFile = 'dcem1-export.sql';
-    const sqlContent = `
--- ============================================
--- Export DCEM1 Data
--- Date: ${new Date().toISOString()}
--- ============================================
 
--- Désactiver les triggers temporairement
-SET session_replication_role = 'replica';
+    // Préparer les statements de nettoyage
+    const cleanupStatements = [
+      'SET session_replication_role = replica',
+      'DELETE FROM "Question" WHERE "chapterId" IN (SELECT id FROM "Chapter" WHERE "subjectId" IN (SELECT id FROM "Subject" WHERE semester = \'DCEM1\'))',
+      'DELETE FROM "Chapter" WHERE "subjectId" IN (SELECT id FROM "Subject" WHERE semester = \'DCEM1\')',
+      'DELETE FROM "Subject" WHERE semester = \'DCEM1\''
+    ];
 
--- Supprimer les données DCEM1 existantes si elles existent
-DELETE FROM "Question" WHERE "chapterId" IN (
-  SELECT id FROM "Chapter" WHERE "subjectId" IN (
-    SELECT id FROM "Subject" WHERE semester = 'DCEM1'
-  )
-);
-DELETE FROM "Chapter" WHERE "subjectId" IN (
-  SELECT id FROM "Subject" WHERE semester = 'DCEM1'
-);
-DELETE FROM "Subject" WHERE semester = 'DCEM1';
+    // Préparer le statement de réactivation
+    const finishStatements = [
+      'SET session_replication_role = origin'
+    ];
 
--- Insérer les nouvelles données
-${sqlStatements.join('\n')}
+    // Combiner tous les statements avec des points-virgules
+    const allStatements = [
+      ...cleanupStatements,
+      ...sqlStatements,
+      ...finishStatements
+    ];
 
--- Réactiver les triggers
-SET session_replication_role = 'origin';
-
--- Vérification
-SELECT
-  s.title as "Sujet",
-  COUNT(DISTINCT c.id) as "Chapitres",
-  COUNT(q.id) as "Questions"
-FROM "Subject" s
-LEFT JOIN "Chapter" c ON c."subjectId" = s.id
-LEFT JOIN "Question" q ON q."chapterId" = c.id
-WHERE s.semester = 'DCEM1'
-GROUP BY s.id, s.title
-ORDER BY s.title;
-`;
+    const sqlContent = allStatements.join(';\n') + ';\n';
 
     fs.writeFileSync(outputFile, sqlContent);
 
