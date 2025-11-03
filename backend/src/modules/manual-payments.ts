@@ -7,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { emailService } from '../services/email.service';
 
 const prisma = new PrismaClient();
 export const manualPaymentsRouter = Router();
@@ -114,6 +115,21 @@ manualPaymentsRouter.post('/', requireAuth, upload.single('screenshot'), async (
     });
 
     console.log('✅ Manual payment created:', payment.id);
+
+    // Envoyer un email de notification à l'admin
+    try {
+      await emailService.sendAdminNotificationPayment(
+        payment.user.name,
+        payment.user.email,
+        payment.amountCents / 100, // Convertir centimes en unité principale
+        plan.name,
+        payment.providerRef
+      );
+      console.log('✅ Admin notification email sent for payment:', payment.id);
+    } catch (emailError) {
+      console.error('❌ Failed to send admin notification email:', emailError);
+      // Don't fail the request if email fails
+    }
 
     return res.status(201).json({
       id: payment.id,
@@ -353,6 +369,20 @@ manualPaymentsRouter.put('/:id/validate', requireAuth, async (req: any, res) => 
     });
 
     console.log('✅ Payment validated:', id, 'Subscription created:', result.subscription.id);
+
+    // Envoyer un email de confirmation à l'utilisateur
+    try {
+      await emailService.sendSubscriptionActivatedEmail(
+        payment.user.email,
+        payment.user.name,
+        plan.name,
+        result.subscription.endAt
+      );
+      console.log('✅ Subscription activation email sent to:', payment.user.email);
+    } catch (emailError) {
+      console.error('❌ Failed to send subscription activation email:', emailError);
+      // Don't fail the request if email fails
+    }
 
     return res.json({
       message: 'Payment validated successfully',
