@@ -91,7 +91,7 @@ export class EmailService {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Réinitialisation de mot de passe - Archify</title>
+          <title>Réinitialisation de mot de passe - FacGame</title>
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -109,17 +109,17 @@ export class EmailService {
             </div>
             <div class="content">
               <h2>Bonjour,</h2>
-              <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte Archify.</p>
+              <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte FacGame.</p>
               <p><strong>Code de réinitialisation :</strong></p>
               <div class="code">${resetToken}</div>
               <p>Entrez ce code dans le formulaire de réinitialisation ou cliquez sur le bouton ci-dessous :</p>
               <a href="${resetUrl}" class="button">Réinitialiser mon mot de passe</a>
               <p><strong>Ce code expirera dans 1 heure.</strong></p>
               <p>Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.</p>
-              <p>Cordialement,<br>L'équipe Archify</p>
+              <p>Cordialement,<br>L'équipe FacGame</p>
             </div>
             <div class="footer">
-              <p>Archify - Votre plateforme d'apprentissage universitaire</p>
+              <p>FacGame - Réussir vos études de médecine</p>
               <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
               <p>${resetUrl}</p>
             </div>
@@ -132,7 +132,7 @@ export class EmailService {
     try {
       await this.sendEmail({
         to: email,
-        subject: 'Réinitialisation de votre mot de passe - Archify',
+        subject: 'Réinitialisation de votre mot de passe - FacGame',
         html
       });
     } catch (error) {
