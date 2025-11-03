@@ -47,7 +47,7 @@ async function fixQuestion6Chapter1() {
     console.log('✅ Question 6 trouvée:', question6.id);
     console.log('📝 Texte actuel:', question6.questionText);
 
-    // CORRECTION: L'option E doit être FAUSSE car les os du carpe SONT irréguliers
+    // Mise à jour de la question 6 avec les bonnes réponses
     const newQuestionText = 'À propos du squelette de la main.';
     const newOptions = [
       {
@@ -72,8 +72,8 @@ async function fixQuestion6Chapter1() {
       },
       {
         text: 'Il n\'a aucun os irrégulier',
-        isCorrect: false,
-        justification: 'Les os du carpe sont irréguliers.'
+        isCorrect: true,
+        justification: null
       }
     ];
     const newExplanation = 'La main est constituée du carpe, du métacarpe et des phalanges.';
