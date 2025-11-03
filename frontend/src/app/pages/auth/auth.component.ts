@@ -85,7 +85,7 @@ import { DeviceService } from '../../services/device.service';
               <!-- First Name -->
               <div>
                 <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Prénom
+                  Nom
                 </label>
                 <input
                   id="firstName"
@@ -97,14 +97,14 @@ import { DeviceService } from '../../services/device.service';
                 />
                 <div *ngIf="authForm.get('firstName')?.invalid && authForm.get('firstName')?.touched" 
                      class="mt-1 text-sm text-red-600">
-                  Le prénom est requis
+                  Le nom est requis
                 </div>
               </div>
 
               <!-- Last Name -->
               <div>
                 <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom
+                  Prénom
                 </label>
                 <input
                   id="lastName"
@@ -116,7 +116,7 @@ import { DeviceService } from '../../services/device.service';
                 />
                 <div *ngIf="authForm.get('lastName')?.invalid && authForm.get('lastName')?.touched" 
                      class="mt-1 text-sm text-red-600">
-                  Le nom est requis
+                  Le prénom est requis
                 </div>
               </div>
 
