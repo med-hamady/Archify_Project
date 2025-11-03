@@ -108,7 +108,8 @@ manualPaymentsRouter.post('/', requireAuth, upload.single('screenshot'), async (
           select: {
             id: true,
             name: true,
-            email: true
+            email: true,
+            semester: true
           }
         }
       }
@@ -123,7 +124,8 @@ manualPaymentsRouter.post('/', requireAuth, upload.single('screenshot'), async (
         payment.user.email,
         payment.amountCents / 100, // Convertir centimes en unité principale
         plan.name,
-        payment.providerRef
+        payment.providerRef,
+        payment.user.semester
       );
       console.log('✅ Admin notification email sent for payment:', payment.id);
     } catch (emailError) {

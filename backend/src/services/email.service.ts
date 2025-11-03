@@ -280,7 +280,8 @@ export class EmailService {
     userEmail: string,
     amount: number,
     planName: string,
-    transactionId?: string
+    transactionId?: string,
+    userSemester?: string
   ): Promise<void> {
     const adminEmail = process.env.ADMIN_EMAIL;
 
@@ -294,6 +295,7 @@ export class EmailService {
     console.log('💳 Sending admin payment notification email...');
     console.log('👤 User:', userName);
     console.log('📨 User email:', userEmail);
+    console.log('📚 Semester:', userSemester || 'N/A');
     console.log('💰 Amount:', amount, 'MRU');
     console.log('📦 Plan:', planName);
     console.log('🔑 Transaction ID:', transactionId || 'N/A');
@@ -336,6 +338,11 @@ export class EmailService {
                 <div class="info-item">
                   <span class="label">Email :</span> ${userEmail}
                 </div>
+                ${userSemester ? `
+                <div class="info-item">
+                  <span class="label">Niveau :</span> ${userSemester}
+                </div>
+                ` : ''}
                 <div class="info-item">
                   <span class="label">Plan :</span> ${planName}
                 </div>
