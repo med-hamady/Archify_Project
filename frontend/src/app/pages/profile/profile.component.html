@@ -50,7 +50,43 @@
       </div>
 
       <div class="profile-info">
-        <h1>{{ profile.name }}</h1>
+        <!-- Name with edit button -->
+        <div class="name-section">
+          <h1 *ngIf="!isEditingName">{{ profile.name }}</h1>
+          <button *ngIf="!isEditingName" class="edit-name-btn" (click)="startEditingName()" title="Modifier le nom">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+            </svg>
+          </button>
+
+          <!-- Edit name form -->
+          <form *ngIf="isEditingName" [formGroup]="editNameForm" (ngSubmit)="submitNameUpdate()" class="edit-name-form">
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Nouveau nom"
+              class="name-input"
+              [class.error]="editNameForm.get('name')?.invalid && editNameForm.get('name')?.touched"
+            />
+            <div class="edit-name-actions">
+              <button type="submit" class="btn-save" [disabled]="editNameForm.invalid || nameUpdateLoading">
+                <span *ngIf="!nameUpdateLoading">✓ Sauvegarder</span>
+                <span *ngIf="nameUpdateLoading">Enregistrement...</span>
+              </button>
+              <button type="button" class="btn-cancel" (click)="cancelEditingName()" [disabled]="nameUpdateLoading">
+                ✕ Annuler
+              </button>
+            </div>
+            <div *ngIf="nameUpdateError" class="update-error">{{ nameUpdateError }}</div>
+            <div *ngIf="nameUpdateSuccess" class="update-success">{{ nameUpdateSuccess }}</div>
+            <div *ngIf="editNameForm.get('name')?.invalid && editNameForm.get('name')?.touched" class="validation-error">
+              <span *ngIf="editNameForm.get('name')?.errors?.['required']">Le nom est requis</span>
+              <span *ngIf="editNameForm.get('name')?.errors?.['minlength']">Le nom doit contenir au moins 2 caractères</span>
+              <span *ngIf="editNameForm.get('name')?.errors?.['maxlength']">Le nom ne peut pas dépasser 100 caractères</span>
+            </div>
+          </form>
+        </div>
+
         <p class="email">{{ profile.email }}</p>
         <p class="semester">{{ profile.semester }}</p>
 

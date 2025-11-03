@@ -119,4 +119,11 @@ export class ProfileService {
   deleteProfilePicture(): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(`${this.baseUrl}/picture`);
   }
+
+  /**
+   * Update user name
+   */
+  updateName(name: string): Observable<{ success: boolean; message: string; user: { id: string; name: string; email: string } }> {
+    return this.http.patch<{ success: boolean; message: string; user: { id: string; name: string; email: string } }>(`${this.baseUrl}/update-name`, { name });
+  }
 }

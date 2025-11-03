@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {
   ProfileService,
   UserProfile,
@@ -13,16 +14,24 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   private profileService = inject(ProfileService);
   private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
+
+  // Edit name form
+  editNameForm: FormGroup;
+  isEditingName = false;
+  nameUpdateLoading = false;
+  nameUpdateError: string | null = null;
+  nameUpdateSuccess: string | null = null;
   activities: Activity[] = [];
   stats: DetailedStats | null = null;
   devicesInfo: any = null; // Informations de diagnostic sur les appareils
@@ -50,6 +59,12 @@ export class ProfileComponent implements OnInit {
     DIAMANT: { min: 5501, max: 9000 },
     MONDIAL: { min: 9001, max: 999999 }
   };
+
+  constructor() {
+    this.editNameForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]]
+    });
+  }
 
   ngOnInit() {
     this.loadProfile();
@@ -180,6 +195,59 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Erreur lors du chargement des infos appareils:', err);
+      }
+    });
+  }
+
+  // Edit name methods
+  startEditingName() {
+    if (this.profile) {
+      this.editNameForm.patchValue({ name: this.profile.name });
+      this.isEditingName = true;
+      this.nameUpdateError = null;
+      this.nameUpdateSuccess = null;
+    }
+  }
+
+  cancelEditingName() {
+    this.isEditingName = false;
+    this.editNameForm.reset();
+    this.nameUpdateError = null;
+    this.nameUpdateSuccess = null;
+  }
+
+  submitNameUpdate() {
+    if (this.editNameForm.invalid) {
+      return;
+    }
+
+    this.nameUpdateLoading = true;
+    this.nameUpdateError = null;
+    this.nameUpdateSuccess = null;
+
+    const newName = this.editNameForm.value.name.trim();
+
+    this.profileService.updateName(newName).subscribe({
+      next: (response) => {
+        console.log('✅ Nom mis à jour:', response);
+        this.nameUpdateSuccess = response.message;
+        this.nameUpdateLoading = false;
+
+        // Mettre à jour le profil local
+        if (this.profile) {
+          this.profile.name = response.user.name;
+        }
+
+        // Fermer le formulaire après 2 secondes
+        setTimeout(() => {
+          this.isEditingName = false;
+          this.nameUpdateSuccess = null;
+        }, 2000);
+      },
+      error: (err) => {
+        console.error('❌ Erreur lors de la mise à jour du nom:', err);
+        this.nameUpdateError = err.error?.error?.message || 'Erreur lors de la mise à jour du nom';
+        this.nameUpdateLoading = false;
       }
     });
   }
