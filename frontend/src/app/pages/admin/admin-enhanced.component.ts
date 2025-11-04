@@ -2715,7 +2715,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   // ============================================
 
   loadQcmSubjects() {
-    this.http.get<any>(`${this.API_URL}/subjects`).subscribe({
+    this.http.get<any>(`${this.API_URL}/subjects/admin/all`).subscribe({
       next: (data) => {
         console.log('📚 All subjects loaded:', data.subjects);
         this.qcmAllSubjects.set(data.subjects || []);

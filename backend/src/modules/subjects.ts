@@ -238,6 +238,49 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
 // ============================================
 
 /**
+ * GET /api/subjects/admin/all
+ * Liste TOUS les sujets sans filtre (admin uniquement)
+ * Pour le dashboard admin de gestion des QCM
+ */
+subjectsRouter.get('/admin/all', requireAuth, async (req: any, res: any) => {
+  try {
+    // Vérifier que l'utilisateur est admin
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId }
+    });
+
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+      return res.status(403).json({
+        error: { code: 'FORBIDDEN', message: 'Admin access required' }
+      });
+    }
+
+    // Récupérer TOUS les sujets (sans filtre par semester)
+    const subjects = await prisma.subject.findMany({
+      orderBy: { semester: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        semester: true,
+        tags: true,
+        totalQCM: true
+      }
+    });
+
+    console.log(`[subjects/admin/all] Found ${subjects.length} subjects for admin`);
+
+    return res.json({ subjects });
+
+  } catch (error) {
+    console.error('[subjects/admin/all] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+    });
+  }
+});
+
+/**
  * POST /api/subjects
  * Créer une nouvelle matière (admin uniquement)
  */
