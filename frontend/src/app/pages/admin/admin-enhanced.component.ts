@@ -734,16 +734,33 @@ interface UserStats {
         </div>
 
         <!-- Selection Interface -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Level/Semester Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau</label>
+            <select [(ngModel)]="selectedQcmSemester"
+                    (change)="onQcmSemesterChange()"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+              <option value="">Sélectionner un niveau</option>
+              <option value="PCEM1">PCEM1</option>
+              <option value="PCEM2">PCEM2</option>
+              <option value="DCEM1">DCEM1</option>
+              <option value="DCEM2">DCEM2</option>
+              <option value="DCEM3">DCEM3</option>
+              <option value="DCEM4">DCEM4</option>
+            </select>
+          </div>
+
           <!-- Subject Selection -->
           <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
             <label class="block text-sm font-semibold text-gray-700 mb-3">Matière</label>
             <select [(ngModel)]="selectedQcmSubject"
                     (change)="onQcmSubjectChange()"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    [disabled]="!selectedQcmSemester"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
               <option value="">Sélectionner une matière</option>
               <option *ngFor="let subject of qcmSubjects()" [value]="subject.id">
-                {{ subject.title }} - {{ subject.semester }}
+                {{ subject.title }}
               </option>
             </select>
           </div>
@@ -884,7 +901,7 @@ interface UserStats {
               </svg>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">Aucune question sélectionnée</h3>
-            <p class="text-gray-600">Sélectionnez une matière, un chapitre et une question pour commencer l'édition.</p>
+            <p class="text-gray-600">Sélectionnez un niveau, une matière, un chapitre et une question pour commencer l'édition.</p>
           </div>
         </div>
       </div>
@@ -1770,9 +1787,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
   // QCM Management
   qcmSubjects = signal<any[]>([]);
+  qcmAllSubjects = signal<any[]>([]); // All subjects before filtering
   qcmChapters = signal<any[]>([]);
   qcmQuestions = signal<any[]>([]);
   selectedQcmQuestionData = signal<any>(null);
+  selectedQcmSemester = '';
   selectedQcmSubject = '';
   selectedQcmChapter = '';
   selectedQcmQuestion = '';
@@ -2698,10 +2717,34 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   loadQcmSubjects() {
     this.http.get<any>(`${this.API_URL}/subjects`).subscribe({
       next: (data) => {
-        this.qcmSubjects.set(data.subjects || []);
+        this.qcmAllSubjects.set(data.subjects || []);
+        // Don't filter yet, wait for semester selection
+        this.qcmSubjects.set([]);
       },
       error: (error) => console.error('Error loading QCM subjects:', error)
     });
+  }
+
+  onQcmSemesterChange() {
+    this.selectedQcmSubject = '';
+    this.selectedQcmChapter = '';
+    this.selectedQcmQuestion = '';
+    this.qcmChapters.set([]);
+    this.qcmQuestions.set([]);
+    this.selectedQcmQuestionData.set(null);
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
+
+    if (!this.selectedQcmSemester) {
+      this.qcmSubjects.set([]);
+      return;
+    }
+
+    // Filter subjects by semester
+    const filteredSubjects = this.qcmAllSubjects().filter(
+      subject => subject.semester === this.selectedQcmSemester
+    );
+    this.qcmSubjects.set(filteredSubjects);
   }
 
   onQcmSubjectChange() {
