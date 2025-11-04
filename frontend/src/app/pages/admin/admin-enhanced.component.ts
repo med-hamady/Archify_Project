@@ -723,6 +723,172 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- QCM Management Section -->
+      <div *ngIf="activeTab() === 'qcm'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Gestion des QCM</h2>
+            <p class="text-gray-600 mt-1">Modifiez les questions, options et justifications</p>
+          </div>
+        </div>
+
+        <!-- Selection Interface -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Subject Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Matière</label>
+            <select [(ngModel)]="selectedQcmSubject"
+                    (change)="onQcmSubjectChange()"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+              <option value="">Sélectionner une matière</option>
+              <option *ngFor="let subject of qcmSubjects()" [value]="subject.id">
+                {{ subject.title }} - {{ subject.semester }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Chapter Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Chapitre</label>
+            <select [(ngModel)]="selectedQcmChapter"
+                    (change)="onQcmChapterChange()"
+                    [disabled]="!selectedQcmSubject"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+              <option value="">Sélectionner un chapitre</option>
+              <option *ngFor="let chapter of qcmChapters()" [value]="chapter.id">
+                {{ chapter.title }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Question Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Question</label>
+            <select [(ngModel)]="selectedQcmQuestion"
+                    (change)="onQcmQuestionChange()"
+                    [disabled]="!selectedQcmChapter"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+              <option value="">Sélectionner une question</option>
+              <option *ngFor="let question of qcmQuestions()" [value]="question.id">
+                Question {{ question.orderIndex + 1 }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Question Edit Form -->
+        <div *ngIf="selectedQcmQuestionData()" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <span class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg mr-3">
+              Question {{ (selectedQcmQuestionData()?.orderIndex || 0) + 1 }}
+            </span>
+            <span class="text-gray-700">Édition</span>
+          </h3>
+
+          <!-- Question Text -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Texte de la question</label>
+            <textarea [(ngModel)]="qcmFormData.questionText"
+                      rows="3"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      placeholder="Entrez le texte de la question"></textarea>
+          </div>
+
+          <!-- Options -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-4">Options</label>
+            <div class="space-y-4">
+              <div *ngFor="let option of qcmFormData.options; let i = index" class="border-2 border-gray-200 rounded-xl p-5 hover:border-blue-300 transition-all bg-gradient-to-r from-white to-gray-50">
+                <div class="flex items-start gap-4">
+                  <!-- Option Letter -->
+                  <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">
+                    {{ String.fromCharCode(65 + i) }}
+                  </div>
+
+                  <div class="flex-1 space-y-3">
+                    <!-- Option Text -->
+                    <input type="text"
+                           [(ngModel)]="option.text"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                           placeholder="Texte de l'option">
+
+                    <!-- Is Correct Checkbox -->
+                    <label class="flex items-center gap-3 cursor-pointer">
+                      <input type="checkbox"
+                             [(ngModel)]="option.isCorrect"
+                             class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+                      <span class="text-sm font-semibold" [class.text-green-600]="option.isCorrect" [class.text-gray-700]="!option.isCorrect">
+                        {{ option.isCorrect ? '✓ Option correcte' : 'Option incorrecte' }}
+                      </span>
+                    </label>
+
+                    <!-- Justification -->
+                    <div>
+                      <label class="block text-xs font-semibold text-gray-600 mb-2">Justification (optionnel)</label>
+                      <input type="text"
+                             [(ngModel)]="option.justification"
+                             class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                             placeholder="Justification pour cette option">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explanation -->
+          <div class="mb-8">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Explication générale (optionnel)</label>
+            <textarea [(ngModel)]="qcmFormData.explanation"
+                      rows="2"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      placeholder="Explication générale de la question"></textarea>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-4">
+            <button (click)="saveQcmQuestion()"
+                    [disabled]="qcmSaving()"
+                    class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ qcmSaving() ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+            </button>
+            <button (click)="cancelQcmEdit()"
+                    [disabled]="qcmSaving()"
+                    class="px-8 py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              Annuler
+            </button>
+          </div>
+
+          <!-- Success/Error Messages -->
+          <div *ngIf="qcmSuccessMessage()" class="mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-3">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <p class="text-sm font-semibold text-green-800">{{ qcmSuccessMessage() }}</p>
+          </div>
+          <div *ngIf="qcmErrorMessage()" class="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-center gap-3">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            <p class="text-sm font-semibold text-red-800">{{ qcmErrorMessage() }}</p>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!selectedQcmQuestionData()" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-16 text-center">
+          <div class="max-w-md mx-auto">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Aucune question sélectionnée</h3>
+            <p class="text-gray-600">Sélectionnez une matière, un chapitre et une question pour commencer l'édition.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Users Management Section -->
       <div *ngIf="activeTab() === 'users'" class="space-y-8">
         <!-- Header -->
@@ -1602,6 +1768,24 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   showEditUserModal = signal(false);
   showEditPlanModal = signal(false);
 
+  // QCM Management
+  qcmSubjects = signal<any[]>([]);
+  qcmChapters = signal<any[]>([]);
+  qcmQuestions = signal<any[]>([]);
+  selectedQcmQuestionData = signal<any>(null);
+  selectedQcmSubject = '';
+  selectedQcmChapter = '';
+  selectedQcmQuestion = '';
+  qcmSaving = signal(false);
+  qcmSuccessMessage = signal('');
+  qcmErrorMessage = signal('');
+  qcmFormData = {
+    questionText: '',
+    options: [] as Array<{text: string, isCorrect: boolean, justification: string | null}>,
+    explanation: ''
+  };
+  String = String; // Make String available in template
+
   // Form data
   newCourse = {
     title: '',
@@ -1690,6 +1874,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
+    { id: 'qcm', name: 'Gestion des QCM' },
     { id: 'users', name: 'Utilisateurs' },
     { id: 'subscriptions', name: 'Abonnements' },
     { id: 'analytics', name: 'Analytiques' }
@@ -1731,7 +1916,8 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadData();
-    
+    this.loadQcmSubjects();
+
     // Check for URL hash to set active tab
     const hash = window.location.hash.substring(1);
     if (hash && this.tabs.some(tab => tab.id === hash)) {
@@ -2503,6 +2689,138 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
         alert('Erreur lors de la validation du paiement');
       }
     });
+  }
+
+  // ============================================
+  // QCM MANAGEMENT METHODS
+  // ============================================
+
+  loadQcmSubjects() {
+    this.http.get<any>(`${this.API_URL}/subjects`).subscribe({
+      next: (data) => {
+        this.qcmSubjects.set(data.subjects || []);
+      },
+      error: (error) => console.error('Error loading QCM subjects:', error)
+    });
+  }
+
+  onQcmSubjectChange() {
+    this.selectedQcmChapter = '';
+    this.selectedQcmQuestion = '';
+    this.qcmChapters.set([]);
+    this.qcmQuestions.set([]);
+    this.selectedQcmQuestionData.set(null);
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
+
+    if (!this.selectedQcmSubject) return;
+
+    // Load chapters for selected subject
+    this.http.get<any>(`${this.API_URL}/chapters/subject/${this.selectedQcmSubject}`).subscribe({
+      next: (data) => {
+        this.qcmChapters.set(data.chapters || []);
+      },
+      error: (error) => console.error('Error loading chapters:', error)
+    });
+  }
+
+  onQcmChapterChange() {
+    this.selectedQcmQuestion = '';
+    this.qcmQuestions.set([]);
+    this.selectedQcmQuestionData.set(null);
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
+
+    if (!this.selectedQcmChapter) return;
+
+    // Load questions for selected chapter
+    this.http.get<any>(`${this.API_URL}/questions/chapter/${this.selectedQcmChapter}`).subscribe({
+      next: (data) => {
+        this.qcmQuestions.set(data.questions || []);
+      },
+      error: (error) => console.error('Error loading questions:', error)
+    });
+  }
+
+  onQcmQuestionChange() {
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
+
+    if (!this.selectedQcmQuestion) {
+      this.selectedQcmQuestionData.set(null);
+      return;
+    }
+
+    // Load selected question details
+    this.http.get<any>(`${this.API_URL}/questions/${this.selectedQcmQuestion}`).subscribe({
+      next: (data) => {
+        this.selectedQcmQuestionData.set(data.question);
+        // Populate form data
+        this.qcmFormData.questionText = data.question.questionText;
+        this.qcmFormData.options = JSON.parse(JSON.stringify(data.question.options)); // Deep copy
+        this.qcmFormData.explanation = data.question.explanation || '';
+      },
+      error: (error) => {
+        console.error('Error loading question details:', error);
+        this.qcmErrorMessage.set('Erreur lors du chargement de la question');
+      }
+    });
+  }
+
+  saveQcmQuestion() {
+    if (!this.selectedQcmQuestion) return;
+
+    this.qcmSaving.set(true);
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
+
+    const updateData = {
+      questionText: this.qcmFormData.questionText,
+      options: this.qcmFormData.options.map(opt => ({
+        text: opt.text,
+        isCorrect: opt.isCorrect,
+        justification: opt.justification || null
+      })),
+      explanation: this.qcmFormData.explanation || null
+    };
+
+    this.http.put<any>(`${this.API_URL}/questions/${this.selectedQcmQuestion}`, updateData).subscribe({
+      next: (data) => {
+        this.qcmSaving.set(false);
+        this.qcmSuccessMessage.set('Question mise à jour avec succès!');
+
+        // Refresh question data
+        this.selectedQcmQuestionData.set(data.question);
+
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          this.qcmSuccessMessage.set('');
+        }, 5000);
+      },
+      error: (error) => {
+        this.qcmSaving.set(false);
+        console.error('Error saving question:', error);
+        this.qcmErrorMessage.set(error.error?.error?.message || 'Erreur lors de la sauvegarde de la question');
+
+        // Clear error message after 8 seconds
+        setTimeout(() => {
+          this.qcmErrorMessage.set('');
+        }, 8000);
+      }
+    });
+  }
+
+  cancelQcmEdit() {
+    if (!this.selectedQcmQuestionData()) return;
+
+    // Reset form to original data
+    const questionData = this.selectedQcmQuestionData();
+    this.qcmFormData.questionText = questionData.questionText;
+    this.qcmFormData.options = JSON.parse(JSON.stringify(questionData.options));
+    this.qcmFormData.explanation = questionData.explanation || '';
+
+    this.qcmSuccessMessage.set('');
+    this.qcmErrorMessage.set('');
   }
 
 }
