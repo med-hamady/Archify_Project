@@ -91,6 +91,45 @@ exports.chaptersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
 // ADMIN ROUTES
 // ============================================
 /**
+ * GET /api/chapters/subject/:subjectId
+ * Liste tous les chapitres d'une matière (admin uniquement)
+ * Pour le dashboard admin de gestion des QCM
+ */
+exports.chaptersRouter.get('/subject/:subjectId', auth_1.requireAuth, async (req, res) => {
+    try {
+        const { subjectId } = req.params;
+        // Vérifier que l'utilisateur est admin
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+            return res.status(403).json({
+                error: { code: 'FORBIDDEN', message: 'Admin access required' }
+            });
+        }
+        // Récupérer tous les chapitres de cette matière
+        const chapters = await prisma.chapter.findMany({
+            where: { subjectId },
+            orderBy: { orderIndex: 'asc' },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                orderIndex: true,
+                pdfUrl: true
+            }
+        });
+        console.log(`[chapters/subject] Found ${chapters.length} chapters for subject ${subjectId}`);
+        return res.json({ chapters });
+    }
+    catch (error) {
+        console.error('[chapters/subject] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+        });
+    }
+});
+/**
  * POST /api/chapters
  * Créer un nouveau chapitre (admin uniquement)
  */
