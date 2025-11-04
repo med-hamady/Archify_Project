@@ -12,6 +12,7 @@ const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const cloudinary_1 = require("cloudinary");
 const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
+const email_service_1 = require("../services/email.service");
 const prisma = new client_1.PrismaClient();
 exports.manualPaymentsRouter = (0, express_1.Router)();
 // Configure Cloudinary
@@ -101,12 +102,23 @@ exports.manualPaymentsRouter.post('/', auth_1.requireAuth, upload.single('screen
                     select: {
                         id: true,
                         name: true,
-                        email: true
+                        email: true,
+                        semester: true
                     }
                 }
             }
         });
         console.log('✅ Manual payment created:', payment.id);
+        // Envoyer un email de notification à l'admin
+        try {
+            await email_service_1.emailService.sendAdminNotificationPayment(payment.user.name, payment.user.email, payment.amountCents / 100, // Convertir centimes en unité principale
+            plan.name, payment.providerRef, payment.user.semester);
+            console.log('✅ Admin notification email sent for payment:', payment.id);
+        }
+        catch (emailError) {
+            console.error('❌ Failed to send admin notification email:', emailError);
+            // Don't fail the request if email fails
+        }
         return res.status(201).json({
             id: payment.id,
             status: payment.status,
@@ -322,6 +334,15 @@ exports.manualPaymentsRouter.put('/:id/validate', auth_1.requireAuth, async (req
             return { subscription, payment: updatedPayment };
         });
         console.log('✅ Payment validated:', id, 'Subscription created:', result.subscription.id);
+        // Envoyer un email de confirmation à l'utilisateur
+        try {
+            await email_service_1.emailService.sendSubscriptionActivatedEmail(payment.user.email, payment.user.name, plan.name, result.subscription.endAt);
+            console.log('✅ Subscription activation email sent to:', payment.user.email);
+        }
+        catch (emailError) {
+            console.error('❌ Failed to send subscription activation email:', emailError);
+            // Don't fail the request if email fails
+        }
         return res.json({
             message: 'Payment validated successfully',
             payment: {

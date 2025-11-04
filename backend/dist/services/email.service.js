@@ -81,7 +81,7 @@ class EmailService {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Réinitialisation de mot de passe - Archify</title>
+          <title>Réinitialisation de mot de passe - FacGame</title>
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -99,17 +99,17 @@ class EmailService {
             </div>
             <div class="content">
               <h2>Bonjour,</h2>
-              <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte Archify.</p>
+              <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte FacGame.</p>
               <p><strong>Code de réinitialisation :</strong></p>
               <div class="code">${resetToken}</div>
               <p>Entrez ce code dans le formulaire de réinitialisation ou cliquez sur le bouton ci-dessous :</p>
               <a href="${resetUrl}" class="button">Réinitialiser mon mot de passe</a>
               <p><strong>Ce code expirera dans 1 heure.</strong></p>
               <p>Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.</p>
-              <p>Cordialement,<br>L'équipe Archify</p>
+              <p>Cordialement,<br>L'équipe FacGame</p>
             </div>
             <div class="footer">
-              <p>Archify - Votre plateforme d'apprentissage universitaire</p>
+              <p>FacGame - Réussir vos études de médecine</p>
               <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
               <p>${resetUrl}</p>
             </div>
@@ -121,7 +121,7 @@ class EmailService {
         try {
             await this.sendEmail({
                 to: email,
-                subject: 'Réinitialisation de votre mot de passe - Archify',
+                subject: 'Réinitialisation de votre mot de passe - FacGame',
                 html
             });
         }
@@ -258,7 +258,7 @@ class EmailService {
             // Don't throw error - just log it and continue
         }
     }
-    async sendAdminNotificationPayment(userName, userEmail, amount, planName, transactionId) {
+    async sendAdminNotificationPayment(userName, userEmail, amount, planName, transactionId, userSemester) {
         const adminEmail = process.env.ADMIN_EMAIL;
         if (!adminEmail) {
             console.error('❌ ADMIN_EMAIL not configured in environment variables');
@@ -269,7 +269,8 @@ class EmailService {
         console.log('💳 Sending admin payment notification email...');
         console.log('👤 User:', userName);
         console.log('📨 User email:', userEmail);
-        console.log('💰 Amount:', amount, 'DZD');
+        console.log('📚 Semester:', userSemester || 'N/A');
+        console.log('💰 Amount:', amount, 'MRU');
         console.log('📦 Plan:', planName);
         console.log('🔑 Transaction ID:', transactionId || 'N/A');
         console.log('👨‍💼 Admin email:', adminEmail);
@@ -300,7 +301,7 @@ class EmailService {
               <p>Un utilisateur vient d'effectuer un paiement sur FacGame.</p>
 
               <div class="amount">
-                ${amount.toLocaleString('fr-DZ')} DZD
+                ${amount.toLocaleString('fr-FR')} MRU
               </div>
 
               <div class="info-box">
@@ -310,11 +311,16 @@ class EmailService {
                 <div class="info-item">
                   <span class="label">Email :</span> ${userEmail}
                 </div>
+                ${userSemester ? `
+                <div class="info-item">
+                  <span class="label">Niveau :</span> ${userSemester}
+                </div>
+                ` : ''}
                 <div class="info-item">
                   <span class="label">Plan :</span> ${planName}
                 </div>
                 <div class="info-item">
-                  <span class="label">Montant :</span> ${amount.toLocaleString('fr-DZ')} DZD
+                  <span class="label">Montant :</span> ${amount.toLocaleString('fr-FR')} MRU
                 </div>
                 ${transactionId ? `
                 <div class="info-item">
@@ -343,7 +349,7 @@ class EmailService {
         try {
             await this.sendEmail({
                 to: adminEmail,
-                subject: `💰 Nouveau paiement : ${amount.toLocaleString('fr-DZ')} DZD - ${userName}`,
+                subject: `💰 Nouveau paiement : ${amount.toLocaleString('fr-FR')} MRU - ${userName}`,
                 html
             });
             console.log(`✅ Admin payment notification sent for: ${userEmail}`);
@@ -352,6 +358,85 @@ class EmailService {
             console.error('❌ Failed to send admin payment notification:', error);
             // Don't throw error - just log it and continue
         }
+    }
+    async sendSubscriptionActivatedEmail(email, name, planName, endDate) {
+        const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Abonnement activé - FacGame</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success-box { background: #d1fae5; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            .info-box { background: white; border: 1px solid #e5e7eb; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            .info-item { margin: 10px 0; }
+            .label { font-weight: bold; color: #059669; }
+            .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .icon { font-size: 48px; text-align: center; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 Abonnement Activé !</h1>
+            </div>
+            <div class="content">
+              <div class="icon">✅</div>
+              <h2>Félicitations ${name} !</h2>
+              <div class="success-box">
+                <p style="margin: 0; font-size: 18px; font-weight: bold; color: #059669;">
+                  Votre inscription sur FacGame a été confirmée.
+                </p>
+              </div>
+              <p>Nous vous souhaitons un excellent apprentissage !</p>
+
+              <div class="info-box">
+                <div class="info-item">
+                  <span class="label">Plan souscrit :</span> ${planName}
+                </div>
+                <div class="info-item">
+                  <span class="label">Date d'expiration :</span> ${endDate.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        })}
+                </div>
+              </div>
+
+              <p>Vous avez maintenant accès à :</p>
+              <ul>
+                <li>✅ Tous les QCM interactifs</li>
+                <li>✅ Mode Challenge et Examen</li>
+                <li>✅ Suivi de progression détaillé</li>
+                <li>✅ Classement et badges</li>
+                <li>✅ Support prioritaire</li>
+              </ul>
+
+              <div style="text-align: center;">
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:4200'}/subjects" class="button">Commencer maintenant</a>
+              </div>
+
+              <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+              <p>Bonne chance dans vos études !</p>
+              <p>Cordialement,<br>L'équipe FacGame</p>
+            </div>
+            <div class="footer">
+              <p>FacGame - Réussir vos études de médecine</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+        await this.sendEmail({
+            to: email,
+            subject: '🎉 Votre abonnement FacGame est activé !',
+            html
+        });
     }
     stripHtml(html) {
         return html.replace(/<[^>]*>?/gm, '');

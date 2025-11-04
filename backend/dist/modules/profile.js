@@ -350,4 +350,56 @@ exports.profileRouter.get('/subscription', auth_1.requireAuth, async (req, res) 
         });
     }
 });
+/**
+ * PATCH /api/profile/update-name
+ * Mettre à jour le nom de l'utilisateur
+ */
+exports.profileRouter.patch('/update-name', auth_1.requireAuth, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { name } = req.body;
+        // Validation
+        if (!name || typeof name !== 'string' || name.trim().length === 0) {
+            return res.status(400).json({
+                error: { code: 'INVALID_NAME', message: 'Le nom est requis et doit être une chaîne non vide' }
+            });
+        }
+        if (name.trim().length < 2) {
+            return res.status(400).json({
+                error: { code: 'NAME_TOO_SHORT', message: 'Le nom doit contenir au moins 2 caractères' }
+            });
+        }
+        if (name.trim().length > 100) {
+            return res.status(400).json({
+                error: { code: 'NAME_TOO_LONG', message: 'Le nom ne peut pas dépasser 100 caractères' }
+            });
+        }
+        // Mettre à jour le nom
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { name: name.trim() },
+            select: {
+                id: true,
+                name: true,
+                email: true
+            }
+        });
+        console.log(`[profile/update-name] User ${userId} updated name to: ${updatedUser.name}`);
+        return res.json({
+            success: true,
+            message: 'Nom mis à jour avec succès',
+            user: {
+                id: updatedUser.id,
+                name: updatedUser.name,
+                email: updatedUser.email
+            }
+        });
+    }
+    catch (error) {
+        console.error('[profile/update-name] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de la mise à jour du nom' }
+        });
+    }
+});
 //# sourceMappingURL=profile.js.map
