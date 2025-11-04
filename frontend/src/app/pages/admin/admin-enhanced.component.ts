@@ -2717,6 +2717,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   loadQcmSubjects() {
     this.http.get<any>(`${this.API_URL}/subjects`).subscribe({
       next: (data) => {
+        console.log('📚 All subjects loaded:', data.subjects);
         this.qcmAllSubjects.set(data.subjects || []);
         // Don't filter yet, wait for semester selection
         this.qcmSubjects.set([]);
@@ -2740,10 +2741,18 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       return;
     }
 
+    console.log('🔍 Selected semester:', this.selectedQcmSemester);
+    console.log('📚 All subjects:', this.qcmAllSubjects());
+
     // Filter subjects by semester
     const filteredSubjects = this.qcmAllSubjects().filter(
-      subject => subject.semester === this.selectedQcmSemester
+      subject => {
+        console.log('Checking subject:', subject.title, 'semester:', subject.semester);
+        return subject.semester === this.selectedQcmSemester;
+      }
     );
+
+    console.log('✅ Filtered subjects:', filteredSubjects);
     this.qcmSubjects.set(filteredSubjects);
   }
 
