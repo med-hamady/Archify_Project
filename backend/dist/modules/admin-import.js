@@ -268,4 +268,120 @@ exports.adminImportRouter.post('/fix-users-semester', auth_1.requireAuth, async 
         });
     }
 });
+/**
+ * POST /api/admin/create-subject-complete
+ * Crée une matière complète avec ses chapitres et questions en une seule fois
+ * Body format:
+ * {
+ *   subject: { title, description, semester, totalQCM },
+ *   chapters: [
+ *     {
+ *       title, description, orderIndex, pdfUrl?,
+ *       questions: [
+ *         { questionText, options: [{text, isCorrect, justification?}], explanation?, orderIndex }
+ *       ]
+ *     }
+ *   ]
+ * }
+ */
+exports.adminImportRouter.post('/create-subject-complete', auth_1.requireAuth, async (req, res) => {
+    try {
+        // Vérifier que l'utilisateur est admin
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+            return res.status(403).json({
+                error: { code: 'FORBIDDEN', message: 'Admin access required' }
+            });
+        }
+        const { subject, chapters } = req.body;
+        // Validation basique
+        if (!subject || !subject.title || !subject.semester) {
+            return res.status(400).json({
+                error: {
+                    code: 'INVALID_DATA',
+                    message: 'Subject title and semester are required'
+                }
+            });
+        }
+        if (!chapters || !Array.isArray(chapters) || chapters.length === 0) {
+            return res.status(400).json({
+                error: {
+                    code: 'INVALID_DATA',
+                    message: 'At least one chapter is required'
+                }
+            });
+        }
+        console.log(`🚀 Creating subject "${subject.title}" with ${chapters.length} chapters...`);
+        // Créer la matière
+        const createdSubject = await prisma.subject.create({
+            data: {
+                title: subject.title,
+                description: subject.description || '',
+                semester: subject.semester,
+                totalQCM: subject.totalQCM || 600
+            }
+        });
+        console.log(`✅ Subject created with ID: ${createdSubject.id}`);
+        let totalQuestionsCreated = 0;
+        // Créer les chapitres et leurs questions
+        for (const chapter of chapters) {
+            if (!chapter.title) {
+                console.warn('⚠️ Skipping chapter without title');
+                continue;
+            }
+            const createdChapter = await prisma.chapter.create({
+                data: {
+                    title: chapter.title,
+                    description: chapter.description || '',
+                    orderIndex: chapter.orderIndex || 0,
+                    pdfUrl: chapter.pdfUrl || null,
+                    subjectId: createdSubject.id
+                }
+            });
+            console.log(`  ✅ Chapter "${chapter.title}" created with ID: ${createdChapter.id}`);
+            // Créer les questions pour ce chapitre
+            if (chapter.questions && Array.isArray(chapter.questions)) {
+                for (const question of chapter.questions) {
+                    if (!question.questionText || !question.options) {
+                        console.warn('    ⚠️ Skipping invalid question');
+                        continue;
+                    }
+                    await prisma.question.create({
+                        data: {
+                            questionText: question.questionText,
+                            options: question.options,
+                            explanation: question.explanation || null,
+                            orderIndex: question.orderIndex || 0,
+                            chapterId: createdChapter.id
+                        }
+                    });
+                    totalQuestionsCreated++;
+                }
+                console.log(`    ✅ Created ${chapter.questions.length} questions for chapter "${chapter.title}"`);
+            }
+        }
+        console.log(`🎉 Import completed! Subject: 1, Chapters: ${chapters.length}, Questions: ${totalQuestionsCreated}`);
+        return res.json({
+            success: true,
+            message: 'Subject, chapters, and questions created successfully',
+            data: {
+                subject: createdSubject,
+                chaptersCount: chapters.length,
+                questionsCount: totalQuestionsCreated
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error creating complete subject:', error);
+        return res.status(500).json({
+            error: {
+                code: 'CREATE_ERROR',
+                message: 'Failed to create subject with chapters and questions',
+                details: error.message
+            }
+        });
+    }
+});
 //# sourceMappingURL=admin-import.js.map

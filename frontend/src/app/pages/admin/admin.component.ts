@@ -445,6 +445,101 @@ interface User {
           </div>
         </div>
 
+        <!-- Import Subject Complete -->
+        <div *ngIf="activeTab() === 'import-subject'" class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900">Importer une Matière Complète</h2>
+
+          <!-- Instructions -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-medium text-blue-900 mb-3">📚 Instructions d'import</h3>
+            <p class="text-sm text-blue-800 mb-3">
+              Utilisez cette interface pour importer une matière complète avec tous ses chapitres et questions en une seule fois.
+            </p>
+            <p class="text-sm text-blue-800 mb-2"><strong>Format JSON requis :</strong></p>
+            <ul class="list-disc list-inside text-sm text-blue-700 space-y-1 ml-4">
+              <li><strong>subject</strong> : Informations sur la matière (title, description, semester, totalQCM)</li>
+              <li><strong>chapters</strong> : Tableau de chapitres avec leurs questions</li>
+              <li><strong>questions</strong> : Chaque chapitre contient un tableau de questions avec options</li>
+            </ul>
+          </div>
+
+          <!-- Example JSON -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Exemple de format JSON</h3>
+              <button (click)="importSubjectJson = getExampleJson()"
+                      class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                Copier l'exemple
+              </button>
+            </div>
+            <pre class="bg-gray-50 p-4 rounded-lg overflow-x-auto text-xs text-gray-800 border border-gray-200">{{ getExampleJson() }}</pre>
+          </div>
+
+          <!-- JSON Input Form -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Entrez vos données JSON</h3>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Données JSON de la matière complète
+              </label>
+              <textarea [(ngModel)]="importSubjectJson"
+                        rows="15"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                        placeholder='{"subject": {...}, "chapters": [...]}'></textarea>
+              <p class="text-xs text-gray-500 mt-2">
+                Assurez-vous que le JSON est valide avant d'importer
+              </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <button (click)="importSubjectComplete()"
+                      [disabled]="importSubjectLoading()"
+                      class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 font-medium">
+                {{ importSubjectLoading() ? 'Importation en cours...' : 'Importer la Matière' }}
+              </button>
+              <button (click)="importSubjectJson = ''"
+                      [disabled]="importSubjectLoading()"
+                      class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:bg-gray-100">
+                Effacer
+              </button>
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="importSubjectSuccess()" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-green-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-sm text-green-800">{{ importSubjectSuccess() }}</p>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="importSubjectError()" class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-red-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-sm text-red-800">{{ importSubjectError() }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips -->
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h3 class="text-lg font-medium text-yellow-900 mb-3">💡 Conseils</h3>
+            <ul class="list-disc list-inside text-sm text-yellow-800 space-y-2 ml-4">
+              <li>Vérifiez que toutes les questions ont au moins une option correcte (isCorrect: true)</li>
+              <li>Les justifications sont optionnelles mais recommandées pour enrichir l'apprentissage</li>
+              <li>Le champ "semester" doit être "PCEM1", "PCEM2" ou "DCEM1"</li>
+              <li>L'orderIndex détermine l'ordre d'affichage des chapitres et questions</li>
+              <li>Le totalQCM est optionnel (valeur par défaut : 600)</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Departments Management -->
         <div *ngIf="activeTab() === 'departments'" class="space-y-6">
           <div class="flex justify-between items-center">
@@ -738,6 +833,12 @@ export class AdminComponent implements OnInit {
   };
   String = String; // Make String available in template
 
+  // Import Subject Complete
+  importSubjectJson = '';
+  importSubjectLoading = signal(false);
+  importSubjectSuccess = signal('');
+  importSubjectError = signal('');
+
   // Form data
   selectedCourseId = '';
   newDepartmentName = '';
@@ -765,6 +866,7 @@ export class AdminComponent implements OnInit {
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'subscriptions', name: 'Abonnements' },
     { id: 'qcm', name: 'Gestion des QCM' },
+    { id: 'import-subject', name: 'Importer Matière' },
     { id: 'departments', name: 'Départements' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
@@ -1178,5 +1280,92 @@ export class AdminComponent implements OnInit {
 
     this.qcmSuccessMessage.set('');
     this.qcmErrorMessage.set('');
+  }
+
+  // ============================================
+  // IMPORT SUBJECT COMPLETE
+  // ============================================
+
+  importSubjectComplete() {
+    if (!this.importSubjectJson.trim()) {
+      this.importSubjectError.set('Veuillez entrer des données JSON valides');
+      return;
+    }
+
+    this.importSubjectLoading.set(true);
+    this.importSubjectSuccess.set('');
+    this.importSubjectError.set('');
+
+    try {
+      const data = JSON.parse(this.importSubjectJson);
+
+      this.http.post(`${this.API_URL}/admin/create-subject-complete`, data).subscribe({
+        next: (response: any) => {
+          this.importSubjectLoading.set(false);
+          this.importSubjectSuccess.set(
+            `Matière créée avec succès ! ${response.data.chaptersCount} chapitres et ${response.data.questionsCount} questions importés.`
+          );
+          this.importSubjectJson = '';
+
+          // Rafraîchir la liste des matières
+          this.loadQcmSubjects();
+
+          // Clear success message after 8 seconds
+          setTimeout(() => {
+            this.importSubjectSuccess.set('');
+          }, 8000);
+        },
+        error: (error) => {
+          this.importSubjectLoading.set(false);
+          console.error('Error importing subject:', error);
+          this.importSubjectError.set(
+            error.error?.error?.message || 'Erreur lors de l\'importation de la matière'
+          );
+
+          // Clear error message after 10 seconds
+          setTimeout(() => {
+            this.importSubjectError.set('');
+          }, 10000);
+        }
+      });
+    } catch (error: any) {
+      this.importSubjectLoading.set(false);
+      this.importSubjectError.set('Format JSON invalide. Veuillez vérifier votre saisie.');
+
+      setTimeout(() => {
+        this.importSubjectError.set('');
+      }, 10000);
+    }
+  }
+
+  getExampleJson(): string {
+    return JSON.stringify({
+      "subject": {
+        "title": "Biochimie",
+        "description": "Cours de biochimie médicale",
+        "semester": "PCEM1",
+        "totalQCM": 100
+      },
+      "chapters": [
+        {
+          "title": "Chapitre 1 : Glucides",
+          "description": "Introduction aux glucides",
+          "orderIndex": 0,
+          "pdfUrl": null,
+          "questions": [
+            {
+              "questionText": "Qu'est-ce qu'un monosaccharide ?",
+              "options": [
+                {"text": "Un sucre simple", "isCorrect": true, "justification": "Les monosaccharides sont les sucres les plus simples"},
+                {"text": "Un sucre complexe", "isCorrect": false, "justification": "Ce sont les polysaccharides qui sont complexes"},
+                {"text": "Un lipide", "isCorrect": false, "justification": "Les lipides sont différents des glucides"}
+              ],
+              "explanation": "Les monosaccharides sont l'unité de base des glucides",
+              "orderIndex": 0
+            }
+          ]
+        }
+      ]
+    }, null, 2);
   }
 }

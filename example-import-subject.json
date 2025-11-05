@@ -1,0 +1,240 @@
+{
+  "subject": {
+    "title": "Biochimie Médicale",
+    "description": "Cours de biochimie médicale couvrant les glucides, lipides, protéines et acides nucléiques",
+    "semester": "PCEM1",
+    "totalQCM": 120
+  },
+  "chapters": [
+    {
+      "title": "Chapitre 1 : Les Glucides",
+      "description": "Introduction aux glucides : structure, classification et métabolisme",
+      "orderIndex": 0,
+      "pdfUrl": null,
+      "questions": [
+        {
+          "questionText": "Qu'est-ce qu'un monosaccharide ?",
+          "options": [
+            {
+              "text": "Un sucre simple non hydrolysable",
+              "isCorrect": true,
+              "justification": "Les monosaccharides (glucose, fructose, galactose) sont les unités de base des glucides et ne peuvent pas être hydrolysés en sucres plus simples"
+            },
+            {
+              "text": "Un sucre complexe formé de plusieurs unités",
+              "isCorrect": false,
+              "justification": "Les sucres complexes sont appelés polysaccharides (amidon, glycogène)"
+            },
+            {
+              "text": "Un disaccharide",
+              "isCorrect": false,
+              "justification": "Les disaccharides sont formés de deux monosaccharides (saccharose, lactose)"
+            },
+            {
+              "text": "Une molécule lipidique",
+              "isCorrect": false,
+              "justification": "Les lipides sont une classe différente de biomolécules"
+            }
+          ],
+          "explanation": "Les monosaccharides sont les glucides les plus simples, avec une formule générale (CH2O)n. Le glucose (C6H12O6) est le monosaccharide le plus important physiologiquement.",
+          "orderIndex": 0
+        },
+        {
+          "questionText": "Quel est le principal monosaccharide présent dans le sang ?",
+          "options": [
+            {
+              "text": "Le glucose",
+              "isCorrect": true,
+              "justification": "Le glucose est le principal carburant des cellules et sa concentration sanguine est régulée autour de 1g/L (glycémie)"
+            },
+            {
+              "text": "Le fructose",
+              "isCorrect": false,
+              "justification": "Le fructose est principalement métabolisé par le foie et n'est présent qu'en faible quantité dans le sang"
+            },
+            {
+              "text": "Le galactose",
+              "isCorrect": false,
+              "justification": "Le galactose est rapidement converti en glucose par le foie"
+            },
+            {
+              "text": "Le ribose",
+              "isCorrect": false,
+              "justification": "Le ribose est un pentose présent dans l'ARN, mais pas en quantité significative dans le sang"
+            }
+          ],
+          "explanation": "Le glucose (C6H12O6) est le principal carburant énergétique de l'organisme. Sa concentration normale dans le sang est de 0.7-1.1 g/L à jeun.",
+          "orderIndex": 1
+        },
+        {
+          "questionText": "Parmi les affirmations suivantes sur le glycogène, laquelle est correcte ?",
+          "options": [
+            {
+              "text": "C'est la forme de stockage des glucides chez l'homme",
+              "isCorrect": true,
+              "justification": "Le glycogène est un polymère de glucose stocké principalement dans le foie et les muscles"
+            },
+            {
+              "text": "C'est un monosaccharide",
+              "isCorrect": false,
+              "justification": "Le glycogène est un polysaccharide composé de nombreuses molécules de glucose"
+            },
+            {
+              "text": "Il est uniquement présent dans les plantes",
+              "isCorrect": false,
+              "justification": "Le glycogène est présent chez les animaux ; l'amidon est la forme de stockage des plantes"
+            },
+            {
+              "text": "Il ne peut pas être dégradé en glucose",
+              "isCorrect": false,
+              "justification": "Le glycogène est constamment dégradé (glycogénolyse) pour libérer du glucose"
+            }
+          ],
+          "explanation": "Le glycogène est le polysaccharide de réserve des animaux, stocké principalement dans le foie (100-120g) et les muscles (300-600g). Il peut être rapidement mobilisé pour fournir du glucose.",
+          "orderIndex": 2
+        }
+      ]
+    },
+    {
+      "title": "Chapitre 2 : Les Lipides",
+      "description": "Structure et fonction des lipides : acides gras, triglycérides, phospholipides",
+      "orderIndex": 1,
+      "pdfUrl": null,
+      "questions": [
+        {
+          "questionText": "Quelle est la structure de base d'un acide gras ?",
+          "options": [
+            {
+              "text": "Une chaîne hydrocarbonée avec un groupe carboxyle (-COOH)",
+              "isCorrect": true,
+              "justification": "Les acides gras ont une chaîne hydrocarbonée hydrophobe et un groupe carboxyle hydrophile"
+            },
+            {
+              "text": "Un cycle benzénique",
+              "isCorrect": false,
+              "justification": "Les cycles benzéniques sont des structures aromatiques, pas des acides gras"
+            },
+            {
+              "text": "Un enchaînement d'acides aminés",
+              "isCorrect": false,
+              "justification": "Les enchaînements d'acides aminés forment des protéines, pas des lipides"
+            },
+            {
+              "text": "Un sucre à 5 carbones",
+              "isCorrect": false,
+              "justification": "Ceci décrit un pentose (glucide), pas un acide gras"
+            }
+          ],
+          "explanation": "Les acides gras sont composés d'une chaîne hydrocarbonée (12-24 carbones) avec un groupe carboxyle terminal. Ils peuvent être saturés (sans double liaison) ou insaturés (avec une ou plusieurs doubles liaisons).",
+          "orderIndex": 0
+        },
+        {
+          "questionText": "Qu'est-ce qu'un triglycéride ?",
+          "options": [
+            {
+              "text": "Un ester de glycérol et de trois acides gras",
+              "isCorrect": true,
+              "justification": "Les triglycérides sont formés par estérification du glycérol avec trois acides gras"
+            },
+            {
+              "text": "Un glucide à trois carbones",
+              "isCorrect": false,
+              "justification": "Un glucide à trois carbones serait un triose (glycéraldéhyde), pas un triglycéride"
+            },
+            {
+              "text": "Une protéine à trois domaines",
+              "isCorrect": false,
+              "justification": "Les protéines sont formées d'acides aminés, pas de glycérol et d'acides gras"
+            }
+          ],
+          "explanation": "Les triglycérides (ou triacylglycérols) sont les principales molécules de stockage d'énergie chez les animaux. Ils sont stockés dans le tissu adipeux et fournissent 9 kcal/g (contre 4 kcal/g pour les glucides).",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "title": "Chapitre 3 : Les Protéines",
+      "description": "Structure et fonction des protéines : acides aminés, liaisons peptidiques, structures",
+      "orderIndex": 2,
+      "pdfUrl": null,
+      "questions": [
+        {
+          "questionText": "Combien d'acides aminés différents sont codés par le code génétique ?",
+          "options": [
+            {
+              "text": "20 acides aminés",
+              "isCorrect": true,
+              "justification": "Le code génétique standard code pour 20 acides aminés protéinogènes"
+            },
+            {
+              "text": "10 acides aminés",
+              "isCorrect": false,
+              "justification": "Il y a beaucoup plus que 10 acides aminés dans les protéines"
+            },
+            {
+              "text": "64 acides aminés",
+              "isCorrect": false,
+              "justification": "64 est le nombre de codons possibles, pas d'acides aminés"
+            },
+            {
+              "text": "4 acides aminés",
+              "isCorrect": false,
+              "justification": "4 est le nombre de bases nucléiques, pas d'acides aminés"
+            }
+          ],
+          "explanation": "Les 20 acides aminés protéinogènes sont : Ala, Arg, Asn, Asp, Cys, Gln, Glu, Gly, His, Ile, Leu, Lys, Met, Phe, Pro, Ser, Thr, Trp, Tyr, Val. Certains organismes utilisent également la sélénocystéine (21ème) et la pyrrolysine (22ème).",
+          "orderIndex": 0
+        },
+        {
+          "questionText": "Quelle liaison chimique unit les acides aminés dans une protéine ?",
+          "options": [
+            {
+              "text": "La liaison peptidique (-CO-NH-)",
+              "isCorrect": true,
+              "justification": "La liaison peptidique se forme entre le groupe carboxyle d'un AA et le groupe amine d'un autre"
+            },
+            {
+              "text": "La liaison hydrogène",
+              "isCorrect": false,
+              "justification": "Les liaisons hydrogène stabilisent les structures secondaires mais ne lient pas les AA entre eux"
+            },
+            {
+              "text": "La liaison glycosidique",
+              "isCorrect": false,
+              "justification": "Les liaisons glycosidiques unissent les monosaccharides dans les glucides"
+            },
+            {
+              "text": "La liaison ester",
+              "isCorrect": false,
+              "justification": "Les liaisons ester sont présentes dans les lipides (triglycérides)"
+            }
+          ],
+          "explanation": "La liaison peptidique est une liaison covalente formée par une réaction de condensation entre deux acides aminés, avec libération d'une molécule d'eau. Elle est très stable et planaire.",
+          "orderIndex": 1
+        },
+        {
+          "questionText": "Quel niveau de structure protéique est stabilisé principalement par des liaisons hydrogène ?",
+          "options": [
+            {
+              "text": "La structure secondaire (hélice α, feuillet β)",
+              "isCorrect": true,
+              "justification": "Les structures secondaires sont maintenues par des liaisons H entre les groupes -CO et -NH de la chaîne peptidique"
+            },
+            {
+              "text": "La structure primaire",
+              "isCorrect": false,
+              "justification": "La structure primaire est la séquence d'acides aminés liés par des liaisons peptidiques"
+            },
+            {
+              "text": "La structure tertiaire uniquement",
+              "isCorrect": false,
+              "justification": "La structure tertiaire implique plusieurs types d'interactions, pas seulement des liaisons H"
+            }
+          ],
+          "explanation": "Les structures secondaires (hélice α et feuillet β plissé) sont des arrangements réguliers de la chaîne polypeptidique stabilisés par des liaisons hydrogène entre les atomes de la chaîne principale.",
+          "orderIndex": 2
+        }
+      ]
+    }
+  ]
+}
