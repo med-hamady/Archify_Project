@@ -304,7 +304,16 @@ interface User {
 
         <!-- QCM Management -->
         <div *ngIf="activeTab() === 'qcm'" class="space-y-6">
-          <h2 class="text-xl font-semibold text-gray-900">Gestion des QCM</h2>
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des QCM</h2>
+            <button (click)="showAddSubjectModal.set(true)"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              Ajouter une matière
+            </button>
+          </div>
 
           <!-- Selection Interface -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -785,6 +794,98 @@ interface User {
           </div>
         </div>
       </div>
+
+      <!-- Add Subject Modal -->
+      <div *ngIf="showAddSubjectModal()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-semibold text-gray-900">Ajouter une Matière</h3>
+              <button (click)="closeAddSubjectModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <form (submit)="addSubject($event)" class="space-y-4">
+              <!-- Title -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Titre de la matière <span class="text-red-500">*</span>
+                </label>
+                <input type="text"
+                       [(ngModel)]="newSubject.title"
+                       name="title"
+                       required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Ex: Biochimie Médicale">
+              </div>
+
+              <!-- Description -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea [(ngModel)]="newSubject.description"
+                          name="description"
+                          rows="3"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Description de la matière"></textarea>
+              </div>
+
+              <!-- Semester -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Niveau <span class="text-red-500">*</span>
+                </label>
+                <select [(ngModel)]="newSubject.semester"
+                        name="semester"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Sélectionner un niveau</option>
+                  <option value="PCEM1">PCEM1</option>
+                  <option value="PCEM2">PCEM2</option>
+                  <option value="DCEM1">DCEM1</option>
+                </select>
+              </div>
+
+              <!-- Total QCM -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Nombre total de QCM (optionnel)
+                </label>
+                <input type="number"
+                       [(ngModel)]="newSubject.totalQCM"
+                       name="totalQCM"
+                       min="1"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="600 (par défaut)">
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex justify-end gap-3 pt-4">
+                <button type="button"
+                        (click)="closeAddSubjectModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                  Annuler
+                </button>
+                <button type="submit"
+                        [disabled]="addSubjectLoading()"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400">
+                  {{ addSubjectLoading() ? 'Création...' : 'Créer la matière' }}
+                </button>
+              </div>
+
+              <!-- Success/Error Messages -->
+              <div *ngIf="addSubjectSuccess()" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p class="text-sm text-green-800">✓ {{ addSubjectSuccess() }}</p>
+              </div>
+              <div *ngIf="addSubjectError()" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p class="text-sm text-red-800">✗ {{ addSubjectError() }}</p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   `
 })
@@ -838,6 +939,18 @@ export class AdminComponent implements OnInit {
   importSubjectLoading = signal(false);
   importSubjectSuccess = signal('');
   importSubjectError = signal('');
+
+  // Add Subject Modal
+  showAddSubjectModal = signal(false);
+  addSubjectLoading = signal(false);
+  addSubjectSuccess = signal('');
+  addSubjectError = signal('');
+  newSubject = {
+    title: '',
+    description: '',
+    semester: '',
+    totalQCM: 600
+  };
 
   // Form data
   selectedCourseId = '';
@@ -1367,5 +1480,61 @@ export class AdminComponent implements OnInit {
         }
       ]
     }, null, 2);
+  }
+
+  // ============================================
+  // ADD SUBJECT MODAL
+  // ============================================
+
+  addSubject(event: Event) {
+    event.preventDefault();
+
+    if (!this.newSubject.title || !this.newSubject.semester) {
+      this.addSubjectError.set('Le titre et le niveau sont obligatoires');
+      return;
+    }
+
+    this.addSubjectLoading.set(true);
+    this.addSubjectSuccess.set('');
+    this.addSubjectError.set('');
+
+    this.http.post(`${this.API_URL}/admin/create-subject`, {
+      title: this.newSubject.title,
+      description: this.newSubject.description || '',
+      semester: this.newSubject.semester,
+      totalQCM: this.newSubject.totalQCM || 600
+    }).subscribe({
+      next: (response: any) => {
+        this.addSubjectLoading.set(false);
+        this.addSubjectSuccess.set('Matière créée avec succès !');
+
+        // Rafraîchir la liste des matières
+        this.loadQcmSubjects();
+
+        // Réinitialiser le formulaire après 2 secondes
+        setTimeout(() => {
+          this.closeAddSubjectModal();
+        }, 2000);
+      },
+      error: (error) => {
+        this.addSubjectLoading.set(false);
+        console.error('Error creating subject:', error);
+        this.addSubjectError.set(
+          error.error?.error?.message || 'Erreur lors de la création de la matière'
+        );
+      }
+    });
+  }
+
+  closeAddSubjectModal() {
+    this.showAddSubjectModal.set(false);
+    this.addSubjectSuccess.set('');
+    this.addSubjectError.set('');
+    this.newSubject = {
+      title: '',
+      description: '',
+      semester: '',
+      totalQCM: 600
+    };
   }
 }

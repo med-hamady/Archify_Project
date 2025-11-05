@@ -302,6 +302,69 @@ adminImportRouter.post('/fix-users-semester', requireAuth, async (req: any, res)
 });
 
 /**
+ * POST /api/admin/create-subject
+ * Crée une matière simple (sans chapitres ni questions)
+ */
+adminImportRouter.post('/create-subject', requireAuth, async (req: any, res) => {
+  try {
+    // Vérifier que l'utilisateur est admin
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId }
+    });
+
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+      return res.status(403).json({
+        error: { code: 'FORBIDDEN', message: 'Admin access required' }
+      });
+    }
+
+    const { title, description, semester, totalQCM } = req.body;
+
+    // Validation
+    if (!title || !semester) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_DATA',
+          message: 'Title and semester are required'
+        }
+      });
+    }
+
+    console.log(`🚀 Creating subject "${title}" for ${semester}...`);
+
+    // Créer la matière
+    const createdSubject = await prisma.subject.create({
+      data: {
+        title,
+        description: description || '',
+        semester,
+        totalQCM: totalQCM || 600
+      }
+    });
+
+    console.log(`✅ Subject created with ID: ${createdSubject.id}`);
+
+    return res.json({
+      success: true,
+      message: 'Subject created successfully',
+      data: {
+        subject: createdSubject
+      }
+    });
+
+  } catch (error: any) {
+    console.error('Error creating subject:', error);
+    return res.status(500).json({
+      error: {
+        code: 'CREATE_ERROR',
+        message: 'Failed to create subject',
+        details: error.message
+      }
+    });
+  }
+});
+
+/**
  * POST /api/admin/create-subject-complete
  * Crée une matière complète avec ses chapitres et questions en une seule fois
  * Body format:
