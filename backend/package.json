@@ -30,8 +30,10 @@
     "export:dcem1:json": "node dist/export-dcem1-json.js",
     "import:dcem1:direct": "node dist/import-dcem1-direct.js",
     "export:dcem1": "node dist/export-dcem1-data.js",
-    "import:histo:pcem2": "node dist/import-histo-nozha-pcem2.js",
-    "clear:histo:pcem2": "node dist/clear-histo-pcem2.js",
+    "import:histo-nozha:pcem2": "node dist/import-histo-nozha-pcem2.js",
+    "import:histologie:pcem2": "node dist/import-histologie-pcem2.js",
+    "clear:histo-nozha:pcem2": "node dist/clear-histo-pcem2.js",
+    "clear:histologie:pcem2": "node dist/clear-histologie-pcem2.js",
     "export:histo:sql": "node dist/export-histo-pcem2-sql.js",
     "restore:histologie": "node dist/restore-histologie-v2.js"
   },
