@@ -152,17 +152,41 @@
               "orderIndex": 3
             },
             {
-              "questionText": "",
-              "options": [],
+              "questionText": "🩵 Conclusion :",
+              "options": [
+                {
+                  "text": "ACTH (hormone corticotrope).",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Produite par les cellules corticotropes de l’adénohypophyse (tissu glandulaire), pas par des neurones."
+                },
+                {
+                  "text": "TSH (thyréostimuline).",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Produite par les cellules thyréotropes de l’adénohypophyse."
+                },
+                {
+                  "text": "GH (hormone de croissance).",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Sécrétée par les cellules somatotropes de l’adénohypophyse."
+                },
+                {
+                  "text": "Corticolibérine (CRH).",
+                  "isCorrect": true,
+                  "isPartial": false
+                },
+                {
+                  "text": "FSH (gonadotrophine).",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Hormone hypophysaire produite par les cellules gonadotropes, non nerveuses."
+                }
+              ],
               "explanation": null,
               "orderIndex": 4
-            }
-          ]
-        },
-        {
-          "title": "ACTH (hormone corticotrope). (❌) → Produite par les cellules corticotropes de l’adénohypophyse (tissu glandulaire), pas par des neurones.",
-          "orderIndex": 1,
-          "questions": [
+            },
             {
               "questionText": "🩵 Conclusion :",
               "options": [
@@ -195,7 +219,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 0
+              "orderIndex": 5
             },
             {
               "questionText": "🩵 Conclusion :",
@@ -227,7 +251,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 1
+              "orderIndex": 6
             },
             {
               "questionText": "🩵 Conclusion :",
@@ -259,7 +283,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 2
+              "orderIndex": 7
             },
             {
               "questionText": "🩵 Conclusion :",
@@ -291,7 +315,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 3
+              "orderIndex": 8
             },
             {
               "questionText": "→D. Les types de cellules glandulaires sont identifiables par immunohistochimie.",
@@ -320,13 +344,13 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 4
+              "orderIndex": 9
             }
           ]
         },
         {
           "title": "THYROIDE",
-          "orderIndex": 2,
+          "orderIndex": 1,
           "questions": [
             {
               "questionText": "🩵 Conclusion :",
@@ -540,7 +564,7 @@
         },
         {
           "title": "SURRENAL",
-          "orderIndex": 3,
+          "orderIndex": 2,
           "questions": [
             {
               "questionText": "Parmi les propositions suivantes, concernant la glande surrénale, indiquer celle(s) qui est (sont) exacte(s) :",
@@ -1945,16 +1969,37 @@
             },
             {
               "questionText": "Plaques de Peyer :",
-              "options": [],
+              "options": [
+                {
+                  "text": "MALT de la partie basse de l’intestin grêle",
+                  "isCorrect": true,
+                  "isPartial": false
+                },
+                {
+                  "text": "Follicules lymphoïdes muqueuse + sous-muqueuse",
+                  "isCorrect": true,
+                  "isPartial": false
+                },
+                {
+                  "text": "Présence de cellules M dendritiques",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Présentes sur l’épithélium mais pas dendritiques."
+                },
+                {
+                  "text": "Zones T dépendantes",
+                  "isCorrect": false,
+                  "isPartial": false
+                },
+                {
+                  "text": "Organisé autour des vaisseaux lymphatiques",
+                  "isCorrect": false,
+                  "isPartial": false
+                }
+              ],
               "explanation": null,
               "orderIndex": 19
-            }
-          ]
-        },
-        {
-          "title": "MALT de la partie basse de l’intestin grêle ✅",
-          "orderIndex": 5,
-          "questions": [
+            },
             {
               "questionText": "Structure 3 :",
               "options": [
@@ -1985,7 +2030,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 0
+              "orderIndex": 20
             },
             {
               "questionText": "Concernant le schéma :",
@@ -2017,7 +2062,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 1
+              "orderIndex": 21
             },
             {
               "questionText": "Concernant l’organe en coupe :",
@@ -2049,7 +2094,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 2
+              "orderIndex": 22
             },
             {
               "questionText": "Structure 1 :",
@@ -2081,7 +2126,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 3
+              "orderIndex": 23
             },
             {
               "questionText": "Structure 2 :",
@@ -2113,7 +2158,7 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 4
+              "orderIndex": 24
             }
           ]
         }
@@ -2164,7 +2209,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "",
+              "questionText": "🩵 Conclusion :",
               "options": [
                 {
                   "text": "La moelle osseuse.",
@@ -2182,17 +2227,21 @@
                   "text": "Les ganglions lymphatiques.",
                   "isCorrect": true,
                   "isPartial": false
+                },
+                {
+                  "text": "Les follicules lymphoïdes associés aux muqueuses (MALT).",
+                  "isCorrect": true,
+                  "isPartial": false
+                },
+                {
+                  "text": "La rate.",
+                  "isCorrect": true,
+                  "isPartial": false
                 }
               ],
               "explanation": null,
               "orderIndex": 1
-            }
-          ]
-        },
-        {
-          "title": "Les follicules lymphoïdes associés aux muqueuses (MALT). (✅)",
-          "orderIndex": 1,
-          "questions": [
+            },
             {
               "questionText": "🩵 Conclusion :",
               "options": [
@@ -2221,10 +2270,10 @@
                 }
               ],
               "explanation": null,
-              "orderIndex": 0
+              "orderIndex": 2
             },
             {
-              "questionText": "",
+              "questionText": "🩵 Conclusion :",
               "options": [
                 {
                   "text": "Les ganglions lymphatiques.",
@@ -2242,21 +2291,28 @@
                   "text": "Le thymus et la moelle osseuse.",
                   "isCorrect": true,
                   "isPartial": false
+                },
+                {
+                  "text": "Les follicules lymphoïdes du tube digestif.",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Organe secondaire (MALT)."
+                },
+                {
+                  "text": "Les amygdales.",
+                  "isCorrect": false,
+                  "isPartial": false,
+                  "justification": "Font partie du système secondaire."
                 }
               ],
               "explanation": null,
-              "orderIndex": 1
+              "orderIndex": 3
             }
           ]
         },
         {
-          "title": "Les follicules lymphoïdes du tube digestif. (❌) → Organe secondaire (MALT).",
-          "orderIndex": 2,
-          "questions": []
-        },
-        {
           "title": "THYMUS",
-          "orderIndex": 3,
+          "orderIndex": 1,
           "questions": [
             {
               "questionText": "🩵 Conclusion :",
@@ -2785,7 +2841,7 @@
         },
         {
           "title": "GANGLION LYMPHATIQUE",
-          "orderIndex": 4,
+          "orderIndex": 2,
           "questions": [
             {
               "questionText": "🩵 Conclusion :",
@@ -3206,7 +3262,7 @@
         },
         {
           "title": "RATE",
-          "orderIndex": 5,
+          "orderIndex": 3,
           "questions": [
             {
               "questionText": "🩵 Conclusion :",

@@ -115,9 +115,13 @@ function parseFile(filePath) {
             // - Options commencent toujours par une lettre minuscule ou majuscule suivie d'un point + espace
             // - Ou lettre + tiret court + espace suivi d'une minuscule
             const isOption = /^[A-Fa-f][\.\-]\s+[a-z]/.test(line);
+            // Exclure les justifications et réponses annotées:
+            // - Contiennent des symboles de réponse: ✅ ❌ ⚠️ (✅) (❌) (⚠️)
+            // - Contiennent des flèches de justification: →
+            const hasAnswerSymbols = /[✅❌⚠️→]/.test(sectionTitle);
             // Les vraies sections ont TOUT EN MAJUSCULES (au moins 4 lettres consécutives)
             const isSection = /[A-Z]{4,}/.test(sectionTitle);
-            if (isSection && !isOption) {
+            if (isSection && !isOption && !hasAnswerSymbols) {
                 // Sauvegarder la section précédente
                 if (currentSection && currentQuestion) {
                     if (currentConclusion.length > 0) {
