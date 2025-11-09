@@ -1195,15 +1195,38 @@ interface UserStats {
                              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                              placeholder="Texte de l'option">
 
-                      <!-- Is Correct Checkbox -->
-                      <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox"
-                               [(ngModel)]="option.isCorrect"
-                               class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer">
-                        <span class="text-sm font-semibold" [class.text-green-600]="option.isCorrect" [class.text-gray-700]="!option.isCorrect">
-                          {{ option.isCorrect ? '✓ Option correcte' : 'Option incorrecte' }}
-                        </span>
-                      </label>
+                      <!-- Answer State (3 states) -->
+                      <div class="space-y-2">
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">État de la réponse *</label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-3 cursor-pointer hover:bg-green-50 p-2 rounded-lg transition-colors">
+                            <input type="radio"
+                                   [name]="'answer-state-' + i"
+                                   [value]="'correct'"
+                                   [(ngModel)]="option.answerState"
+                                   class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 cursor-pointer">
+                            <span class="text-sm font-semibold text-green-700">✅ Correcte</span>
+                          </label>
+
+                          <label class="flex items-center gap-3 cursor-pointer hover:bg-orange-50 p-2 rounded-lg transition-colors">
+                            <input type="radio"
+                                   [name]="'answer-state-' + i"
+                                   [value]="'partial'"
+                                   [(ngModel)]="option.answerState"
+                                   class="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500 cursor-pointer">
+                            <span class="text-sm font-semibold text-orange-700">⚠️ Nuancée / Débattue</span>
+                          </label>
+
+                          <label class="flex items-center gap-3 cursor-pointer hover:bg-red-50 p-2 rounded-lg transition-colors">
+                            <input type="radio"
+                                   [name]="'answer-state-' + i"
+                                   [value]="'incorrect'"
+                                   [(ngModel)]="option.answerState"
+                                   class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500 cursor-pointer">
+                            <span class="text-sm font-semibold text-red-700">❌ Incorrecte</span>
+                          </label>
+                        </div>
+                      </div>
 
                       <!-- Justification -->
                       <div>
@@ -2190,11 +2213,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     chapterId: '',
     questionText: '',
     options: [
-      { text: '', isCorrect: false, justification: '' },
-      { text: '', isCorrect: false, justification: '' },
-      { text: '', isCorrect: false, justification: '' },
-      { text: '', isCorrect: false, justification: '' },
-      { text: '', isCorrect: false, justification: '' }
+      { text: '', answerState: 'incorrect', justification: '' },
+      { text: '', answerState: 'incorrect', justification: '' },
+      { text: '', answerState: 'incorrect', justification: '' },
+      { text: '', answerState: 'incorrect', justification: '' },
+      { text: '', answerState: 'incorrect', justification: '' }
     ],
     explanation: ''
   };
@@ -3447,7 +3470,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     }
 
     // Validate at least one correct answer
-    const hasCorrectAnswer = this.newQuizForm.options.some(opt => opt.isCorrect && opt.text.trim().length > 0);
+    const hasCorrectAnswer = this.newQuizForm.options.some(opt => opt.answerState === 'correct' && opt.text.trim().length > 0);
     if (!hasCorrectAnswer) {
       this.addContentErrorMessage.set('Veuillez marquer au moins une option comme correcte');
       setTimeout(() => this.addContentErrorMessage.set(''), 5000);
@@ -3458,12 +3481,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     this.addContentSuccessMessage.set('');
     this.addContentErrorMessage.set('');
 
-    // Filter out empty options
+    // Filter out empty options and convert to backend format
     const validOptions = this.newQuizForm.options
       .filter(opt => opt.text.trim().length > 0)
       .map(opt => ({
         text: opt.text.trim(),
-        isCorrect: opt.isCorrect,
+        isCorrect: opt.answerState,  // Send as 'correct' | 'incorrect' | 'partial'
         justification: opt.justification.trim() || null
       }));
 
@@ -3497,11 +3520,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       chapterId: '',
       questionText: '',
       options: [
-        { text: '', isCorrect: false, justification: '' },
-        { text: '', isCorrect: false, justification: '' },
-        { text: '', isCorrect: false, justification: '' },
-        { text: '', isCorrect: false, justification: '' },
-        { text: '', isCorrect: false, justification: '' }
+        { text: '', answerState: 'incorrect', justification: '' },
+        { text: '', answerState: 'incorrect', justification: '' },
+        { text: '', answerState: 'incorrect', justification: '' },
+        { text: '', answerState: 'incorrect', justification: '' },
+        { text: '', answerState: 'incorrect', justification: '' }
       ],
       explanation: ''
     };
