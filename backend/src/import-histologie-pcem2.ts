@@ -91,12 +91,21 @@ function parseOption(line: string): ParsedOption | null {
 
   if (!match) return null;
 
-  const fullText = match[2] || '';
+  let fullText = match[2] || '';
   const justification = match[4]?.trim() || null;
   const answerState = detectAnswerState(line);
 
+  // Nettoyer tous les symboles de réponse du texte de l'option
+  // Enlever checkmarks, croix, warnings à la fin du texte
+  fullText = fullText
+    .replace(/\s*✔️?\s*$/g, '')  // ✔️ ou ✔
+    .replace(/\s*❌\s*$/g, '')    // ❌
+    .replace(/\s*⚠️?\s*$/g, '')  // ⚠️ ou ⚠
+    .replace(/\s*✅\s*$/g, '')    // ✅
+    .trim();
+
   return {
-    text: fullText.trim(),
+    text: fullText,
     answerState,
     justification
   };
