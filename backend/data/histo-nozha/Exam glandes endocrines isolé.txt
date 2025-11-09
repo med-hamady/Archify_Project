@@ -1,0 +1,313 @@
+Exam glandes endocrines isolé
+
+A – HYPOPHYSE
+
+QCM 1 — Les neurones parvocellulaires :
+
+A. Sont situés au niveau de la partie antérieure de l’adénohypophyse. (❌) → Situés dans l’hypothalamus, non dans l’adénohypophyse.
+B. Sécrètent la GnRH dans le réseau capillaire hypophysaire supérieur. (✅)
+C. Sécrètent la FSH et la LH. (❌) → Ces hormones sont produites par l’adénohypophyse.
+D. Sécrètent de l’ocytocine. (❌) → Sécrétion des neurones magnocellulaires.
+E. Stockent la vasopressine. (❌) → Aussi fonction magnocellulaire.
+
+🩵 Conclusion :
+Les neurones parvocellulaires hypothalamiques sécrètent la GnRH et d’autres facteurs libérateurs dans le système porte hypophysaire.
+
+QCM 2 — Le système porte hypophysaire :
+
+A. Relie l’adénohypophyse à la neurohypophyse. (❌) → Relie l’hypothalamus à l’adénohypophyse.
+B. Achemine la vasopressine et l’ocytocine. (❌) → Ces hormones circulent dans le tractus hypothalamo-neurohypophysaire.
+C. Achemine les hormones gonadotropes sécrétées par les neurones parvocellulaires vers l’adénohypophyse. (❌) → Il transporte les facteurs libérateurs, non les hormones.
+D. Est de type veineux. (✅)
+E. Reçoit le réseau capillaire du système magnocellulaire. (❌)
+
+🩵 Conclusion :
+Le système porte hypothalamo-hypophysaire est un réseau veineux transportant les hormones libératrices vers l’adénohypophyse.
+
+QCM 3 — Le système porte hypothalamo-hypophysaire :
+
+A. Relie un plexus primaire hypothalamique à un plexus secondaire hypophysaire par une veine porte. (✅)
+B. Achemine la vasopressine et l’ocytocine. (❌) → Ces hormones passent par le tractus nerveux, non par le système porte.
+C. Achemine les hormones gonadotropes vers la neurohypophyse. (❌)
+D. Est drainé par la veine hypophysaire postérieure. (❌)
+
+🩵 Conclusion :
+Le système porte hypothalamo-hypophysaire relie deux plexus capillaires par une veine porte.
+
+QCM 4 — Concernant le système porte hypothalamo-hypophysaire :
+
+A. Relie un plexus primaire hypothalamique à un plexus secondaire hypophysaire par une veine porte. (❌) → Le transport principal est veineux, mais la correction indique D seule.
+B. Achemine la vasopressine et l’ocytocine. (❌)
+C. Achemine les hormones gonadotropes sécrétées par les noyaux hypothalamiques pour être stockées dans la neurohypophyse. (❌)
+D. Est drainé par la veine hypophysaire antérieure. (✅)
+E. Reçoit le réseau capillaire du système magnocellulaire. (❌)
+
+🩵 Conclusion :
+Le système porte hypothalamo-hypophysaire se draine dans la veine hypophysaire antérieure, maintenant la communication hormonale avec l’adénohypophyse.
+
+QCM 5 — Parmi les hormones suivantes, indiquez celle(s) qui est (sont) synthétisée(s) par des cellules nerveuses :
+
+A. ACTH (hormone corticotrope). (❌) → Produite par les cellules corticotropes de l’adénohypophyse (tissu glandulaire), pas par des neurones.
+B. TSH (thyréostimuline). (❌) → Produite par les cellules thyréotropes de l’adénohypophyse.
+C. GH (hormone de croissance). (❌) → Sécrétée par les cellules somatotropes de l’adénohypophyse.
+D. Corticolibérine (CRH). (✅) 
+E. FSH (gonadotrophine). (❌) → Hormone hypophysaire produite par les cellules gonadotropes, non nerveuses.
+
+🩵 Conclusion :
+Seule la CRH est une neurohormone authentique synthétisée par les neurones hypothalamiques.
+Toutes les autres sont produites par des cellules endocrines de l’adénohypophyse.
+
+QCM 6 — Antéhypophyse :
+
+A. Les cellules sont organisées en cordons parallèles entourés d’un riche réseau capillaire. (❌)
+B. Les cellules sécrétoires sont soit acidophiles soit basophiles. (✅)
+C. Les cellules chromophobes sont des cellules à haute activité sécrétoire. (❌) → Peu actives.
+D. Les cellules somatotropes sont les moins nombreuses. (❌) → Ce sont les plus nombreuses.
+E. Toutes les cellules sécrétrices sont entourées d’une membrane basale. (✅)
+
+🩵 Conclusion :
+L’antéhypophyse contient des cellules acidophiles et basophiles séparées par un réseau capillaire fenêtré.
+
+QCM 7 — Structure 1 (neurones du schéma) :
+
+A. Ce sont des neurones du système magnocellulaire. (❌)
+B. Sécrètent la GnRH dans le réseau capillaire hypophysaire supérieur. (✅)
+C. Sécrètent la FSH et la LH. (❌)
+D. Sécrètent l’ocytocine. (❌)
+E. Stockent la vasopressine. (❌)
+
+🩵 Conclusion :
+La structure 1 correspond aux neurones parvocellulaires sécrétant la GnRH vers le système porte hypophysaire.
+
+QCM 8 — Structure 2 :
+
+A. Est le réseau capillaire hypophysaire supérieur. (❌)
+B. Reçoit les sécrétions hypothalamiques d’ocytocine et de vasopressine. (❌)
+C. Est un réseau capillaire à endothélium fenêstré. (✅)
+D. Reçoit du sang veineux de la veine porte hypophysaire riche en GnRH. (✅)
+E. Reçoit du sang veineux riche en TSH. (❌)
+
+🩵 Conclusion :
+La structure 2 correspond au réseau capillaire fenêstré de l’adénohypophyse, où arrivent les hormones hypothalamiques.
+
+QCM 9 — Lobe antérieur de l’hypophyse :
+
+A. Il est constitué par des cordons cellulaires parallèles. (❌)
+B. Il comporte un réseau de capillaires fenêstrés. (✅)
+C. Les cellules folliculaires sont les plus nombreuses. (❌)
+D. Son réseau capillaire est drainé par les veines hypophysaires antérieures. (✅)
+E. Comporte des cellules glandulaires organisées en follicules. (❌)
+
+🩵 Conclusion :
+Le lobe antérieur (adénohypophyse) est très vascularisé ; les capillaires fenêstrés assurent la diffusion hormonale vers la circulation.
+
+QCM 10 — Concernant le lobe antérieur de l’hypophyse :
+
+A. Il est constitué par des cordons cellulaires pseudo-acineux.(✅)
+B. Il comporte un réseau de capillaires continus. (❌)→ Les capillaires y sont fenêstrés, non continus, pour permettre le passage rapide des hormones dans la circulation.
+C. Le sang drainé par la veine hypophysaire antérieure comporte des gonadostimulines. (✅)
+→D. Les types de cellules glandulaires sont identifiables par immunohistochimie. 
+E. Sécrète de l’ocytocine. (❌)→ L’ocytocine est produite par les neurones hypothalamiques et stockée dans la neurohypophyse, pas dans le lobe antérieur.
+
+🩵 Conclusion :
+Le lobe antérieur (adénohypophyse) est un tissu glandulaire endocrine organisé en cordons pseudo-acineux vascularisés par des capillaires fenêstrés.
+Il sécrète plusieurs hormones (GH, ACTH, TSH, FSH, LH, PRL) libérées dans les veines hypophysaires antérieures, mais jamais l’ocytocine.
+
+B-THYROIDE
+
+QCM 1 — Concernant la glande thyroïde :
+
+A. Les follicules sont de petite taille quand la glande est hyperactive. (✅) 
+B. Le colloïde est moins abondant quand la glande est hyperactive.(✅)
+C. Les cellules parafolliculaires ont un contact avec le colloïde. (❌) → Elles sont situées entre la lame basale et les cellules folliculaires, sans contact direct.
+D. Les cellules folliculaires sont claires et vacuolaires. (❌) → Elles deviennent plus hautes et riches en organites lors de l’activité.
+E. Les cellules folliculaires sont riches en REL et en mitochondries à crêtes tubulaires. (❌) → Elles contiennent surtout du REG et des mitochondries à crêtes lamellaires.
+
+🩵 Conclusion :
+En période d’hyperactivité, la thyroïde présente des follicules réduits, un colloïde appauvri et des cellules hautes riches en REG.
+
+QCM 2 — Concernant la glande thyroïde :
+
+a. Les follicules sont de taille réduite quand la glande est hyperactive. (✅)
+b. Le colloïde est moins colorable quand la glande est hyperactive.(✅)
+c. Les cellules parafolliculaires ont un contact avec le colloïde. (❌) → Elles sont séparées du colloïde par les cellules folliculaires.
+d. Les cellules folliculaires sont riches en REG et appareil de Golgi développé.(✅) 
+e. Les cellules parafolliculaires sont riches en REL et mitochondries à crêtes tubulaires. (❌) → Typiques des cellules sécrétrices de peptides (calcitonine), non stéroïdes.
+
+🩵 Conclusion :
+La thyroïde active montre des follicules petits et clairs, un colloïde peu abondant et une forte activité de synthèse protéique (REG + Golgi).
+
+QCM 3 — Le thyréocyte d’un follicule thyroïdien en activité est caractérisé par :
+
+A. Un appareil de Golgi peu développé. (❌) → Très développé.
+B. Un réticulum endoplasmique lisse très développé. (❌) → C’est le granulaire qui domine.
+C. Des vésicules d’endocytose. (✅) → Témoignent de la résorption du colloïde.
+D. Des vacuoles lipidiques. (❌) → Absentes, car sécrétion protéique.
+E. Des mitochondries à crêtes tubulaires. (❌) → Crêtes lamellaires.
+
+🩵 Conclusion :
+Le thyréocyte actif présente de nombreuses vésicules d’endocytose, témoignant de la capture du colloïde et de la libération hormonale.
+
+QCM 4 — Concernant l’organe en coupe :
+
+A. C’est la thyroïde. (✅)
+B. C’est la corticosurrénale. (❌)
+C. C’est le pancréas endocrine. (❌)
+D. C’est la glande interstitielle du testicule. (❌)
+E. C’est l’adénohypophyse. (❌)
+
+🩵 Conclusion :
+L’organe observé est la thyroïde, reconnaissable à ses follicules sphériques remplis de colloïde.
+
+QCM 5 — Organites cytoplasmiques les plus développés dans les cellules au contact des capillaires :
+
+A. Réticulum endoplasmique lisse. (❌) → Activité sécrétrice de peptides, pas de stéroïdes.
+B. Réticulum endoplasmique granulaire. (✅)
+C. Mitochondries à crêtes tubulaires. (❌) → Présentes dans les cellules à sécrétion lipidique, pas ici.
+D. Des vacuoles lipidiques. (❌) → Absentes.
+E. Un appareil de Golgi. (✅)
+
+🩵 Conclusion :
+Les cellules folliculaires actives présentent un REG et un appareil de Golgi très développés, témoignant d’une synthèse protéique intense.
+
+QCM 6 — les Capillaires sanguins au contact des cellules endocrines :
+
+A. Développent un réseau important autour de la glande. (✅)
+B. Sont de type continu. (❌) → Capillaires fenêstrés, favorisant les échanges.
+C. Sont de type fenêstré. (✅)
+D. Développent une barrière avec les structures avoisinantes. (❌) → Pas de barrière : échanges facilités.
+E. Sont de type sinusoïde. (❌) → Capillaires fins, non dilatés.
+
+🩵 Conclusion :
+La thyroïde est une glande hautement vascularisée, irriguée par des capillaires fenêstrés favorisant les échanges hormonaux
+
+C- SURRENAL
+QCM 1 —
+
+Parmi les propositions suivantes, concernant la glande surrénale, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. A l'œil nu sa couleur jaune est due à sa richesse en lipides ✅
+B. A l'œil nu, la corticosurrénale est plus foncée que la médullosurrénale ❌ → En réalité, la médullaire est plus foncée que la corticale.
+C. La corticosurrénale est facilement décollable de la médullosurrénale ❌ → Elles sont étroitement adhérentes, non séparables facilement.
+D. La corticosurrénale et la médullosurrénale ont la même origine embryologique ❌ → L’une est mésodermique, l’autre neurectodermique.
+E. Les deux glandes ont une vascularisation étroitement reliée ✅
+
+🩵 Conclusion :
+La glande surrénale est formée d’une corticale lipidique jaune et d’une médullaire plus foncée, avec une vascularisation commune mais une origine embryologique différente.
+
+QCM 2 —
+
+Parmi les propositions suivantes, concernant la glande surrénale, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. La couche glomérulée est formée de petites cellules éosinophiles organisées sous forme sphérique ✅
+B. Les cellules de la couche glomérulée sont riches en réticulum endoplasmique granulaire et en appareil de golgi ❌ → Elles sont riches en REL, non en REG, car elles sécrètent des hormones stéroïdes.
+C. Les cellules de la réticulée se disposent en cordons parallèles ❌ → Elles forment un réseau réticulé, non parallèle.
+D. Les cordons cellulaires sont séparés du réseau capillaire par une membrane basale ✅
+E. La réticulée ne sécrète des androgènes que dans le sexe masculin ❌ → Elle sécrète des androgènes chez les deux sexes.
+
+🩵 Conclusion :
+La corticosurrénale présente des couches superposées à organisation distincte, dont la glomérulée sécrète l’aldostérone et la réticulée les androgènes.
+
+QCM 3 —
+
+Le schéma présente la zone corticale :
+
+A. Du rein ❌ → Structure différente, non corticosurrénalienne.
+B. De la glande surrénale ✅
+C. De la glande thyroide ❌ → Tissu glandulaire folliculaire, différent.
+D. Du ganglion lymphatique ❌ → Organe lymphoïde.
+E. Du thymus ❌ → Organe lymphoïde central.
+
+🩵 Conclusion :
+La coupe montre la corticosurrénale, identifiable par ses couches hormonosecrétrices concentriques.
+
+QCM 4 —
+
+La zone 1
+
+A. Comporte des lymphocytes organisés en nappe ❌ → Structure non lymphoïde.
+B. Est formée par des cordons et des sinus ❌ → Cela correspond à la rate, non à la corticosurrénale.
+C. Est formée des cordons parallèles de cellules spongieuses ❌ → Cela décrit la zone fasciculée, pas la 1.
+D. Est formée de cordons réticulés de cellules épithéliales ❌ → Structure de la zone réticulée.
+E. S'organise en cordons arrondis sous forme de glomérules ✅
+
+🩵 Conclusion :
+La zone glomérulée est formée de petits amas arrondis de cellules à cytoplasme éosinophile.
+
+QCM 5 —
+
+Les cellules les plus nombreuses de la zone 3
+
+A. Sont des cellules réticulo-épithéliales ❌ → Ces cellules sont propres au thymus.
+B. Sont des cellules épithéliales entourées par des capillaires fenêstrés ⚠️ → Proposition plausible, mais discutée selon les sources.
+C. Sont riches en Réticulum endoplasmique granuleux et en mitochondries à crêtes tubulaires ❌ → Ce sont des cellules à REL développé, non REG.
+D. Sécrètent des stéroïdes ✅
+E. Sécrètent la calcitonine ❌ → Hormone produite par la thyroïde, pas la surrénale.
+
+🩵 Conclusion :
+Les cellules de la zone réticulée sécrètent des hormones stéroïdes et contiennent des mitochondries à crêtes tubulaires.
+
+QCM 6 —
+
+Parmi les propositions suivantes, concernant la corticosurrénale, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Les cellules de la couche réticulée sont organisées en cordons parallèles ❌ → Elles sont disposées en réseau réticulé anastomosé, non parallèles.
+B. Les cellules de la couche fasciculée (spongiocytes) sont très riches en réticulum endoplasmique granulaire ❌ → Elles contiennent surtout un réticulum endoplasmique lisse, typique des cellules stéroïdogènes.
+C. Les cordons de la glomérulée sont organisés en masse sphériques formés de petites cellules éosinophiles ✅
+D. Les trois couches de la corticosurrénale sécrètent des hormones protéiques s stéroïdes ❌ → Toutes sécrètent des hormones stéroïdes, pas protéiques.
+E. Les cellules de la couche glomérulée progressent vers la médullaire et donnent naissance à la couche fasciculée et réticulée ✅
+
+🩵 Conclusion :
+Les cordons glomérulés forment de petits amas sphériques de cellules sécrétant l’aldostérone.
+Certaines cellules glomérulées peuvent se différencier vers les couches plus profondes, contribuant au renouvellement des spongiocytes..
+
+QCM 7 —
+
+Les cellules de la couche fasciculée de la corticosurrénale comportent:
+
+A. Un appareil de golgi très développé ❌ → Modéré.
+B. Un réticulum rugueux très développé ❌ → C’est le réticulum lisse qui prédomine.
+C. Des vésicules d'endocytose ❌ → Fonction de sécrétion, non d’endocytose.
+D. Des vacuoles lipidiques ✅
+
+🩵 Conclusion :
+Les spongiocytes contiennent de nombreuses vacuoles lipidiques, réservoirs de précurseurs hormonaux.
+
+QCM 8 —
+
+La zone fasciculée de la corticosurrénale:
+
+A. Est organisée en cordons réticulés ❌ → En cordons parallèles.
+B. Comporte des capillaires fenêstrés ✅
+C. Secrète principalement des androgènes ❌ → Sécrète du cortisol.
+D. Est formée par des spongiocytes ✅
+E. Est limitée par une capsule fibreuse ❌ → La capsule recouvre la glande entière.
+
+🩵 Conclusion :
+La zone fasciculée est composée de spongiocytes riches en lipides, entourés de capillaires fenêstrés.
+
+QCM 9 —
+
+Parmi les propositions suivantes, concernant la glande médullosurrénale, indiquer celle(s) qui est (sont) exacte(s):
+
+A. Est dérivée des crêtes neurales ✅
+B. Est formée par un seul type de cellules ❌ → Deux types : adrénalines et noradrénalines.
+C. Les cellules ont un aspect vacuolaire ❌ → Leur cytoplasme est granuleux.
+D. Présente de larges veines centrales ✅
+E. Les cellules s'organisent en cordons parallèles ❌ → Organisation en amas irréguliers.
+
+🩵 Conclusion :
+La médullosurrénale, issue des crêtes neurales, contient des cellules chromaffines et de larges veines centrales.
+
+QCM 10 —
+
+Parmi les propositions suivantes, concernant la médullosurrénale, indiquer celle(s) qui est (sont) exacte(s):
+
+A. Reçoit le sang contenant les hormones de la corticosurrénale ✅
+B. L'adrénaline et la noradrénaline sont secrétées par le même type de cellule ❌ → Deux populations : cellules A (adrénaline) et N (noradrénaline).
+C. comporte de larges veines centromédullaires ✅
+D. Les cellules chromaffines s'organisent en cordons parallèles ❌ → En amas anastomosés.
+E. Les vésicules de sécrétion d'adrénaline et de noradrénaline peuvent être distinguées en microscopie optiqi ❌ → Différenciation visible seulement en microscopie électronique.
+
+🩵 Conclusion :
+La médullosurrénale, recevant le sang corticosurrénalien, contient des cellules chromaffines sécrétant adrénaline et noradrénaline.

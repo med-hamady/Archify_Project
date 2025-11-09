@@ -1,0 +1,369 @@
+Exam système tégumentaire isolé
+
+A-LA PEAU 
+
+QCM 1 — Parmi les propositions suivantes, concernant l'épiderme, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Le nombre des mélanocytes est dépendant de l’exposition solaire et des facteurs génétiques. (✅)
+B. Les cellules de Langerhans participent à la phagocytose de la mélanine. (❌) → Elles interviennent dans la défense immunitaire, pas dans la phagocytose de la mélanine.
+C. La cohésion entre les kératinocytes provient des desmosomes interkératinocytaires. (❌)
+D. Les complexes de Merkel participent à la perception de la sensibilité tactile de la peau. (✅)
+E. Les kératinocytes et les cellules de Merkel ont la même origine embryologique. (❌) → Les cellules de Merkel dérivent de la crête neurale, contrairement aux kératinocytes.
+
+🩵 Conclusion :
+L’épiderme est composé de kératinocytes, de mélanocytes, de cellules de Langerhans et de Merkel, jouant un rôle dans la protection, la pigmentation et la sensibilité tactile.
+
+QCM 2 — La couche basale de l'épiderme :
+
+A. Est formée exclusivement de kératinocytes. (❌) → Elle contient aussi des mélanocytes et des cellules de Merkel.
+B. Est protégée des rayons UV par les grains de kératohyaline. (❌) → Ce sont les mélanosomes qui assurent cette protection.
+C. Comporte des corpuscules tactiles. (❌) → Les cellules de Merkel y sont présentes mais non organisées en corpuscules.
+D. Comporte des mélanosomes. (✅)
+
+🩵 Conclusion :
+La couche basale contient des mélanosomes assurant la photoprotection et le transfert de mélanine vers les kératinocytes.
+
+QCM 3 — Le schéma ci-dessous correspond à :
+
+A. Des cellules de la couche basale de l'épiderme. (❌)
+B. Des cellules de la couche épineuse de l'épiderme. (✅)
+C. Des mélanocytes. (❌)
+D. Des cellules de Langerhans. (❌)
+E. Des cellules de la couche cornée. (❌)
+
+🩵 Conclusion :
+Les cellules de la couche épineuse sont des kératinocytes unis par des desmosomes, formant un réseau résistant.
+
+QCM 4 — Parmi les propositions suivantes concernant les cornéocytes, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Les plus profondes d’entre elles desquament. (❌) → Ce sont les plus superficielles qui desquament.
+B. Cohésion forte entre elles par des desmosomes. (❌) → Les corps desmosomaux disparaissent à ce niveau.
+C. Les espaces extracellulaires contiennent un matériel lipidique provenant des kératinosomes. (✅)
+D. Le cytoplasme comporte plusieurs organites cytoplasmiques. (❌) → Les cornéocytes sont anucléés et dépourvus d’organites.
+E. La membrane plasmique est épaissie par l’accumulation de protéines (involucrine). (✅)
+
+🩵 Conclusion :
+Les cornéocytes, cellules mortes kératinisées, assurent la barrière protectrice grâce à leur membrane épaissie et à la présence de lipides intercellulaires.
+
+QCM 5 — Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. La mélanine est présente essentiellement dans les kératinocytes de la couche granuleuse. (❌) → Elle est plus abondante dans la couche basale.
+B. Les kératinocytes de la couche cornée présentent la concentration la plus élevée en desmosomes. (❌) → Les desmosomes sont plus nombreux dans la couche épineuse.
+C. Le mélanocyte est associé aux kératinocytes par des jonctions de type desmosome. (❌) → L’association est fonctionnelle, non structurale.
+D. La cellule de Merkel n'est pas reconnaissable en microscopie optique. (✅)
+E. Le cytoplasme des kératinocytes de la couche granuleuse renferme des kératinosomes et des grains de kératohyaline. (✅)
+
+🩵 Conclusion :
+Les kératinocytes de la couche granuleuse contiennent les kératinosomes et grains de kératohyaline, tandis que les cellules de Merkel sont difficiles à identifier au microscope optique.
+
+QCM 6 — Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Le mélanocyte est localisé dans la couche basale de l'épiderme. (✅)
+B. L’unité épidermo-mélanique est formée par un seul mélanocyte et plusieurs kératinocytes. (❌) → Elle comprend environ 1 mélanocyte pour 36 kératinocytes.
+C. Le cytoplasme des kératinocytes de la couche granuleuse renferme des granules de Birbeck. (❌) → Ces granules appartiennent aux cellules de Langerhans.
+D. Les cellules de Merkel sont des dérivés de la crête neurale. (❌) → Ce point n’est pas unanimement admis ; elles sont neuro-épithéliales.
+E. Le kératinocyte de la couche cornée est très riche en mélanosomes. (❌) → Les mélanosomes ne sont pas conservés à ce stade.
+
+🩵 Conclusion :
+Les mélanocytes basaux assurent la mélanogenèse et la distribution de la mélanine vers les kératinocytes environnants.
+
+QCM 7 — Le derme réticulaire :
+
+A. Est formé par du tissu conjonctif dense irrégulier. (✅)
+B. Comporte du tissu adipeux. (❌) → Le tissu adipeux appartient à l’hypoderme.
+C. Comporte des corpuscules de Meissner. (❌) → Ceux-ci se trouvent dans les papilles dermiques.
+D. Comporte le réseau planiforme superficiel. (❌) → Ce réseau se situe dans le derme papillaire.
+
+🩵 Conclusion :
+Le derme réticulaire, en tissu conjonctif dense, confère à la peau sa résistance mécanique et son élasticité.
+
+QCM 8 — Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Elles dérivent des crêtes neurales. (✅)
+B. Elles sont impliquées dans la réponse immunitaire. (❌) → Elles ont un rôle pigmentaire, non immunitaire.
+C. Elles sont riches en filaments de kératohyaline. (❌) → Ces filaments appartiennent aux kératinocytes granuleux.
+D. Elles stockent la mélanine dans les mélanosomes. (✅)
+E. Elles sont dépourvues de kératinosomes et de jonctions de type desmosome. (✅)
+
+🩵 Conclusion :
+Les mélanocytes, dérivés de la crête neurale, produisent et stockent la mélanine dans des mélanosomes, sans jonction desmosomale avec les kératinocytes.
+
+QCM 9 — Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s) :
+
+a. Ce sont des dérivés des crêtes neurales. (✅)
+b. Jouent un rôle dans la défense immunitaire. (❌) → Les mélanocytes n’ont pas de fonction immunitaire, contrairement aux cellules de Langerhans.
+c. Présentent des filaments de kératohyaline dans leur cytoplasme. (❌) → Ils n’en possèdent pas, ces filaments sont propres aux kératinocytes.
+d. Stockent la mélanine dans les granules de Birbeck. (❌) → Les granules de Birbeck appartiennent aux cellules de Langerhans, non aux mélanocytes.
+e. Tout comme les cellules de Langerhans, les mélanocytes sont dépourvus de kératinosomes et de jonctions de type desmosome. (✅)
+
+🩵 Conclusion :
+Les mélanocytes sont des cellules pigmentaires d’origine neuro-ectodermique, dépourvues de desmosomes et de kératinosomes, assurant la synthèse de la mélanine.
+
+QCM 10 — Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Sont des dérivés des crêtes neurales. (✅)
+B. Comme les cellules de Langerhans, elles sont impliquées dans la réponse immunitaire. (❌) → Elles ne participent pas à la défense immunitaire.
+C. Présentent des filaments de kératohyaline dans leur cytoplasme. (❌) → Absents, caractéristiques des kératinocytes granuleux.
+D. Stockent la mélanine dans les granules de Birbeck. (❌) → Faux, car ces granules appartiennent aux Langerhans.
+E. Tout comme les cellules de Langerhans, les mélanocytes sont dépourvus de kératinosomes et de jonctions de type desmosome. (✅)
+
+🩵 Conclusion :
+Les mélanocytes stockent la mélanine dans les mélanosomes et ne possèdent ni kératinosomes ni jonctions desmosomales.
+
+QCM 11 — Les mélanocytes sont :
+
+A. Des cellules issues de la crête neurale. (✅)
+B. Reliées avec les kératinocytes par des desmosomes. (❌) → Il n’existe pas de jonction de ce type entre eux.
+C. Une partie de la jonction dermo-épidermique. (✅)
+D. Riches en kératinosomes. (❌) → Ces organites sont spécifiques des kératinocytes.
+E. Plus nombreuses dans les peaux claires. (❌) → Leur nombre est similaire ; seule l’activité mélanique varie.
+
+🩵 Conclusion :
+Les mélanocytes, d’origine neuro-ectodermique, résident à la jonction dermo-épidermique et participent à la pigmentation de la peau.
+
+QCM 12 — La mélanine existe dans :
+
+A. Des cellules de la couche basale de l'épiderme. (✅)
+B. Des cellules de la couche épineuse de l'épiderme. (✅)
+C. Des cellules de Merkel. (❌) → Non pigmentées.
+D. Des cellules de Langerhans. (❌) → Fonction immunitaire, non pigmentaire.
+E. Des cellules de la couche cornée. (❌) → Les cornéocytes ne contiennent plus de mélanine.
+
+🩵 Conclusion :
+La mélanine est localisée dans les kératinocytes des couches basale et épineuse, assurant la photoprotection de l’ADN.
+
+QCM 13 — Parmi les propositions suivantes, concernant la peau épaisse, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Est formée exclusivement de kératinocytes. (❌) → On y trouve aussi des mélanocytes et des cellules de Merkel.
+B. La mélanine est présente essentiellement dans les kératinocytes de la couche granuleuse et basale. (❌) → Elle est limitée à la couche basale et épineuse.
+C. Les kératinocytes de la couche cornée présentent la concentration la plus élevée en desmosomes. (❌) → Ce sont ceux de la couche épineuse.
+D. Le mélanocyte est associé aux kératinocytes par des jonctions de type desmosome. (❌) → Association fonctionnelle, non structurale.
+E. Ne comporte pas de follicules pileux. (✅)
+
+🩵 Conclusion :
+La peau épaisse, comme celle de la paume et de la plante, est glabre (sans follicules pileux) et fortement kératinisée.
+
+QCM 14 — L’épidermolyse bulleuse est une anomalie de :
+
+A. La kératinisation. (❌) → Le trouble concerne l’adhérence épithéliale, pas la kératinisation.
+B. La jonction dermo-épidermique. (✅)
+C. La synthèse de la mélanine. (❌)
+D. La sensibilité profonde. (❌)
+E. La thermorégulation. (❌)
+
+🩵 Conclusion :
+L’épidermolyse bulleuse est due à une anomalie des protéines d’ancrage de la jonction dermo-épidermique, provoquant des décollements cutanés.
+
+QCM 15 — Parmi les propositions suivantes, concernant la couche basale de l'épiderme, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Est formée exclusivement de kératinocytes. (❌) → Elle contient aussi des mélanocytes et des cellules de Merkel.
+B. Est protégée des rayons UV par les grains de kératohyaline. (❌) → Protection assurée par les mélanosomes transférés.
+C. Comporte des hémidesmosomes. (✅)
+D. Comporte des mélanosomes. (✅)
+E. Comporte des kératinosomes. (❌) → Présents uniquement dans la couche granuleuse.
+
+🩵 Conclusion :
+La couche basale est une zone germinative ancrée à la lame basale par des hémidesmosomes, contenant aussi des mélanosomes protecteurs.
+
+B – INNERVATION
+
+QCM 1 — Parmi les propositions suivantes concernant les corpuscules de Pacini, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Sont situés dans l’hypoderme. (✅)
+B. Sont volumineux (1 à 2 mm). (✅)
+C. Sont particulièrement situés dans la pulpe des doigts. (❌) → Ils sont plutôt localisés dans le tissu sous-cutané profond.
+D. Sont situés dans les papilles dermiques. (❌) → Ce sont les corpuscules de Meissner qu’on y trouve.
+E. Sont responsables du tact fin. (❌) → Ils perçoivent les vibrations profondes, pas le tact fin.
+
+🩵 Conclusion :
+Les corpuscules de Pacini, volumineux et situés dans l’hypoderme, détectent les pressions et vibrations profondes.
+
+QCM 2 — Les corpuscules de Pacini sont :
+
+A. Situés dans l’hypoderme. (✅)
+B. Volumineux (1 à 2 mm). (✅)
+C. Des mécano-récepteurs. (✅)
+D. Situés dans les papilles dermiques. (❌) → Ils se trouvent dans les tissus profonds du derme et de l’hypoderme.
+E. Formés de terminaisons nerveuses libres. (❌) → Ils sont capsulés, non libres.
+
+🩵 Conclusion :
+Les corpuscules de Pacini sont de grands mécano-récepteurs encapsulés, sensibles aux vibrations et pressions profondes.
+
+QCM 3 — Parmi les propositions suivantes concernant les corpuscules de Meissner, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Sont situés dans l’hypoderme. (❌) → Ils sont localisés dans les papilles dermiques.
+B. Sont volumineux (1 à 2 mm). (❌) → Ils sont petits (≈ 100 µm).
+C. Les cellules de Schwann sont organisées en lamelles concentriques. (❌) → Ce type d’organisation est propre aux Pacini.
+D. Sont situés dans les papilles dermiques. (✅)
+E. Sont sensibles à la vibration. (❌) → Ils sont sensibles au tact fin et léger.
+
+🩵 Conclusion :
+Les corpuscules de Meissner, petits et situés dans les papilles dermiques, assurent la perception du tact fin.
+
+QCM 4 — Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Les corpuscules de Meissner sont particulièrement nombreux au niveau des pulpes des doigts. (❌) → Ils sont présents, mais en proportion modérée comparé à d’autres zones sensibles.
+B. Les corpuscules de Pacini sont situés dans les papilles dermiques. (❌) → Non, ils sont dans l’hypoderme.
+C. Les corpuscules de Merkel sont formés par l’association des cellules de Merkel et des terminaisons nerveuses libres. (✅)
+D. Dans le corpuscule de Meissner, la fibre nerveuse myélinisée est située au centre de lamelles cellulaires concentriques faites de cellules de Schwann. (❌) → Ce type de structure correspond aux Pacini, pas aux Meissner.
+E. Les corpuscules de Pacini sont spécifiques du tact fin. (❌) → Ils détectent les pressions profondes.
+
+🩵 Conclusion :
+Les cellules de Merkel sont des récepteurs sensoriels tactiles formés de cellules épithéliales associées à des terminaisons nerveuses libres.
+
+C – VASCULARISATION
+
+QCM 1 — Les structures impliquées dans la thermorégulation sont :
+
+A. Le réseau artériel planiforme superficiel. (✅)
+B. Le système nerveux sympathique. (✅)
+C. Le corpuscule de Pacini. (❌) → Il participe à la sensibilité, pas à la thermorégulation.
+D. Le corpuscule de Meissner. (❌) → Récepteur tactile, non thermique.
+E. Le glomus neurovasculaire. (✅)
+
+🩵 Conclusion :
+La thermorégulation cutanée dépend du réseau vasculaire superficiel, du système sympathique et des glomi neurovasculaires.
+
+ D – ANNEXES DE LA PEAU
+
+QCM 1 — Parmi les propositions suivantes, concernant les formations annexes de la peau, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. La partie excrétrice des glandes sudoripares est ramifiée. (❌) → Elle est simple tubuleuse contournée.
+B. Les glandes sudoripares eccrines et apocrines sont des glandes simples, tubuleuses contournées. (✅)
+C. L’innervation des glandes sudoripares est de type végétatif. (✅)
+D. Les glandes sudoripares eccrines sont souvent associées aux follicules pileux. (❌) → C’est le cas des apocrines.
+E. La glande sébacée est une glande alvéolaire composée. (❌) → Elle est simple alvéolaire.
+
+🩵 Conclusion :
+Les glandes sudoripares eccrines sont simples, tubuleuses et sous contrôle du système végétatif.
+
+QCM 2 — Les glandes sudoripares eccrines :
+
+A. L’excrétion se fait selon le mode apocrine. (❌) → Le mode de sécrétion est mérocrine.
+B. Sont hormonodépendantes. (❌) → Elles sont sous contrôle nerveux, pas hormonal.
+C. Sont situées dans le creux axillaire. (❌) → Cette localisation concerne les apocrines.
+D. Sont des glandes tubuleuses pelotonnées. (✅)
+
+🩵 Conclusion :
+Les glandes eccrines sont tubuleuses contournées, responsables de la sudation thermorégulatrice.
+
+QCM 3 — Les glandes sudoripares eccrines :
+
+A. Est une glande acineuse composée. (❌) → Elle est tubuleuse simple.
+B. Sont des glandes pelotonnées. (✅)
+C. Sont associées aux follicules pileux. (❌) → Association propre aux apocrines.
+D. Sécrètent du sébum. (❌) → Sécrétion aqueuse, pas lipidique.
+E. Sont hormonodépendantes. (❌) → Contrôle nerveux sympathique.
+
+🩵 Conclusion :
+Les glandes eccrines sont pelotonnées et sécrètent une sueur aqueuse, favorisant la thermorégulation.
+
+QCM 4 — La zone responsable de la croissance de l’ongle est :
+
+A. Le derme. (❌) → Il soutient mais ne génère pas la kératine.
+B. L’épiderme. (❌) → L’épiderme recouvre l’ongle sans en être la source.
+C. Le lit. (❌) → Le lit unguéal soutient la plaque mais ne la forme pas.
+D. La matrice. (✅)
+E. L’éponychium. (❌) → C’est la cuticule protectrice.
+
+🩵 Conclusion :
+La matrice unguéale est la zone germinative responsable de la croissance de l’ongle.
+
+E – GLANDES MAMMAIRES
+
+QCM 1 — La glande mammaire :
+
+A. Est de type tubulo-alvéolaire. (✅)
+B. Comporte du tissu palléal entre les lobules. (❌) → Le tissu palléal entoure les acini.
+C. Elle est d’origine mésoblastique. (❌) → Elle dérive de l’ectoderme.
+D. Est hormono-indépendante chez l’homme. (❌) → Elle reste sensible à certaines hormones.
+
+🩵 Conclusion :
+La glande mammaire est une glande tubulo-alvéolaire d’origine ectodermique.
+
+QCM 2 — Développement embryologique de la glande mammaire :
+
+A. Est identique pour les deux sexes. (✅)
+B. Les ébauches embryonnaires migrent le long de la crête mammaire. (❌) → Elles se forment sur la crête, sans migration importante.
+C. Après la naissance, la glande peut avoir une activité lactogène éphémère. (⚠️) → Cela peut survenir chez le nouveau-né, phénomène transitoire (“lait de sorcière”).
+D. La polythélie se manifeste par la présence de mamelons surnuméraires. (✅)
+E. Les canaux galactophores se mettent en place après la naissance. (❌) → Ils sont déjà présents avant la naissance.
+
+🩵 Conclusion :
+La glande mammaire se développe à partir de la crête mammaire embryonnaire, de manière similaire chez les deux sexes.
+
+QCM 3 — La glande mammaire :
+
+A. Est une glande tubuleuse contournée. (❌) → Elle est tubulo-alvéolaire, non contournée.
+B. Le tissu palléal est un tissu conjonctif lâche. (✅)
+C. Le système excréteur est formé par des canaux galactophores. (✅)
+D. Les canaux excréteurs sont revêtus par un épithélium épidermique. (❌) → Revêtement cubique ou cylindrique.
+E. Le développement embryologique est identique pour les deux sexes. (✅)
+
+🩵 Conclusion :
+La glande mammaire comporte un tissu conjonctif lâche palléal et un système galactophore excréteur.
+
+QCM 4 — Concernant la glande mammaire :
+
+A. La partie sécrétrice est de type tubulo-alvéolaire. (✅)
+B. Le tissu palléal est un tissu conjonctif lâche. (✅)
+C. Les canaux galactophores sont tapissés par un épithélium pigmenté. (❌) → L’épithélium est cubique simple.
+D. Elle est d’origine entoblastique. (❌) → Origine ectoblastique.
+E. Ne comporte pas de structures sécrétrices chez l’homme. (❌) → Des vestiges existent, mais inactifs.
+
+🩵 Conclusion :
+La glande mammaire est une glande tubulo-alvéolaire avec un tissu conjonctif lâche et des canaux galactophores non pigmentés.
+
+QCM 5 — Parmi les propositions suivantes concernant la glande mammaire, indiquer celle(s) qui est (sont) exacte(s) :
+
+a. Le tissu palléal est un tissu conjonctif lâche qui entoure les alvéoles. (✅)
+b. Est d’origine ectoblastique. (✅)
+c. Est formée exclusivement par du tissu conjonctif chez l’homme. (❌) → Chez l’homme, il existe une glande rudimentaire, mais pas exclusivement conjonctive.
+d. L’épithélium des alvéoles est doublé par une couche de cellules musculaires lisses. (✅)
+e. Est une glande mixte sous le contrôle hormonal de l’axe hypothalamo-hypophysaire. (❌) → C’est une glande exocrine soumise au contrôle hormonal, mais non mixte.
+
+🩵 Conclusion :
+La glande mammaire, d’origine ectoblastique, possède un tissu conjonctif palléal lâche et des cellules myoépithéliales entourant les alvéoles sécrétrices.
+
+QCM 6 — Parmi les propositions suivantes concernant la glande mammaire au cours du développement, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Se développe à partir de la 4ᵉ semaine au niveau de la crête génitale. (❌) → Elle se développe sur la crête mammaire, non génitale.
+B. Se développe de la même façon pour les deux sexes avant la puberté. (✅)
+C. Est insensible aux œstrogènes chez l’homme. (❌) → Une sensibilité hormonale minime existe.
+D. La polythélie est une anomalie du développement de la glande mammaire chez la femme. (❌) → Elle peut toucher les deux sexes.
+E. A la même origine embryologique que la peau et les phanères. (✅)
+
+🩵 Conclusion :
+La glande mammaire se développe initialement de manière identique chez les deux sexes, et partage la même origine embryologique que la peau et les phanères.
+
+QCM 7 — Au cours de la lactation :
+
+A. La partie sécrétrice est de type acineuse séreuse. (❌) → Elle est tubulo-alvéolaire séromuqueuse.
+B. La sécrétion du lait se fait seulement selon le mode mérocrine. (❌) → Elle est mixte : mérocrine et apocrine.
+C. L’entretien de la sécrétion lactée se fait par stimulation nerveuse lors des tétées. (✅)
+D. Pour l’évacuation du lait, toute la partie sécrétrice est doublée par des cellules myoépithéliales. (✅)
+E. Le tissu palléal se transforme en un tissu fibreux dense. (❌) → Il reste lâche pendant la lactation.
+
+🩵 Conclusion :
+La lactation dépend d’une stimulation nerveuse et d’un soutien myoépithélial, favorisant l’éjection du lait.
+
+QCM 8 — Modifications au cours du premier semestre de la grossesse :
+
+A. Disparition du tissu palléal. (❌) → Il augmente en volume.
+B. Accumulation de sécrétions dans les canaux galactophores. (❌) → Les canaux se développent mais restent vides.
+C. Prédominance du tissu adipeux. (❌) → Il diminue au profit du tissu glandulaire.
+D. Augmentation du nombre des unités sécrétrices. (✅)
+
+🩵 Conclusion :
+Durant la grossesse, la glande mammaire montre une hyperplasie des unités sécrétrices.
+
+QCM 9 — La persistance de la crête mammaire peut donner :
+
+A. Une athélie. (❌) → Absence de mamelon, pas liée à la persistance.
+B. Une polydactylie. (❌) → Anomalie digitale.
+C. Une polythélie. (✅)
+D. Une polymastie. (✅)
+E. Une amastie. (❌) → Absence totale du sein.
+
+🩵 Conclusion :
+La persistance de la crête mammaire peut entraîner polythélie (mamelons surnuméraires) ou polymastie (seins surnuméraires).

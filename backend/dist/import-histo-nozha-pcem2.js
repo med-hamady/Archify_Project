@@ -46,7 +46,8 @@ const prisma = new client_1.PrismaClient();
 // ============================================
 // CONFIGURATION
 // ============================================
-const SOURCE_DIR = 'C:\\Users\\pc\\Desktop\\FAC GAME\\pcem2\\Histo Nozha';
+// Chemin relatif pour fonctionner en local ET en production
+const SOURCE_DIR = path.join(__dirname, '..', 'data', 'histo-nozha');
 const FILES = [
     'Exam glandes endocrines isolé.txt',
     'Exam système digestif isolé.txt',

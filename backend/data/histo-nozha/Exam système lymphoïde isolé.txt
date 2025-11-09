@@ -1,0 +1,469 @@
+Exam système lymphoïde isolé
+
+A – INTRODUCTION
+
+QCM 1 — Parmi les propositions suivantes concernant le système lymphoïde, indiquer celle(s) qui est (sont) exacte(s) :
+
+A. Les organes lymphoïdes assurent uniquement la production des plaquettes. (❌) → Les plaquettes sont issues de la moelle osseuse, non du système lymphoïde.
+B. Les organes lymphoïdes sont des sites de différenciation des lymphocytes. (✅)
+C. La moelle osseuse ne fait pas partie du système lymphoïde. (❌) → Elle constitue un organe lymphoïde primaire.
+D. Le système lymphoïde assure la défense immunitaire. (✅)
+E. Le thymus est un organe lymphoïde secondaire. (❌) → Il s’agit d’un organe primaire.
+
+🩵 Conclusion :
+Les organes lymphoïdes (moelle osseuse et thymus) assurent la différenciation lymphocytaire et la défense immunitaire.
+
+QCM 2 — Les organes lymphoïdes secondaires comprennent :
+
+A. La moelle osseuse. (❌) → Organe primaire.
+B. Le thymus. (❌) → Organe primaire.
+C. Les ganglions lymphatiques. (✅)
+D. Les follicules lymphoïdes associés aux muqueuses (MALT). (✅)
+E. La rate. (✅)
+
+🩵 Conclusion :
+Les organes lymphoïdes secondaires (ganglions, MALT, rate) assurent la réponse immunitaire spécifique.
+
+QCM 3 — Le système lymphoïde est responsable :
+
+A. De la production des érythrocytes. (❌) → Fonction de la moelle osseuse hématopoïétique.
+B. De la reconnaissance et de la défense immunitaire. (✅)
+C. Du transport du dioxygène. (❌) → Assuré par les érythrocytes.
+D. De la coagulation sanguine. (❌) → Rôle des plaquettes et facteurs plasmatiques.
+
+🩵 Conclusion :
+Le système lymphoïde a pour rôle central la reconnaissance des antigènes et la défense immunitaire de l’organisme.
+
+QCM 4 — Les organes lymphoïdes primaires sont :
+
+A. Les ganglions lymphatiques. (❌) → Ce sont des organes secondaires.
+B. La rate. (❌) → Organe secondaire.
+C. Le thymus et la moelle osseuse. (✅)
+D. Les follicules lymphoïdes du tube digestif. (❌) → Organe secondaire (MALT).
+E. Les amygdales. (❌) → Font partie du système secondaire.
+
+🩵 Conclusion :
+Les organes lymphoïdes primaires sont la moelle osseuse (lymphocytes B) et le thymus (lymphocytes T).
+
+B.THYMUS
+
+QCM 1 — Le thymus :
+
+A. Est un organe lymphoïde périphérique. (❌) → C’est un organe lymphoïde central.
+B. Atteint sa taille maximale chez l’adulte. (✅)
+C. Est le siège des réactions immunitaires. (❌) → Ce rôle appartient surtout aux organes périphériques (ganglions, rate).
+D. Est le lieu de production des lymphocytes T. (❌) → Il assure la maturation, non la production.
+E. Est l’organe différenciateur des lymphocytes T et B. (❌) → Il différencie uniquement les lymphocytes T.
+
+🩵 Conclusion :
+Le thymus est un organe lymphoïde central, non immunoactif, où se différencient les lymphocytes T.
+
+QCM 2 — Dans le thymus, on trouve :
+
+A. Des corpuscules de Hassal. (✅)
+B. Des lymphocytes en apoptose. (✅)
+C. Des cordons de Billroth. (❌) → Spécifiques de la rate.
+D. Des macrophages. (✅)
+E. Des cellules souches hématopoïétiques. (❌) → Elles ne sont pas présentes dans le thymus.
+
+🩵 Conclusion :
+Le thymus contient des corpuscules de Hassal, des macrophages et de nombreux thymocytes en apoptose.
+
+QCM 3 — Dans les organes lymphoïdes, les zones thymo-dépendantes sont :
+
+A. La médullaire du ganglion lymphatique. (❌) → Zone B dépendante.
+B. La pulpe rouge de la rate. (❌) → Non lymphoïde.
+C. Le manchon périartériolaire de la pulpe blanche. (✅)
+D. Le corpuscule de Malpighi dans la rate. (❌) → Zone B dépendante.
+E. Le centre germinatif du follicule lymphoïde. (❌) → Zone B dépendante.
+
+🩵 Conclusion :
+Les zones thymo-dépendantes correspondent aux zones T, comme le manchon périartériolaire de la pulpe blanche.
+
+QCM 4 — Les cellules réticulo-épithéliales du thymus :
+
+A. Forment la charpente du thymus. (✅)
+B. Jouent un rôle de phagocytose des thymocytes en apoptose. (❌) → Ce rôle revient aux macrophages.
+C. Font partie de la barrière sang-thymus. (✅)
+D. Émettent des prolongements cytoplasmiques jointifs. (✅)
+E. Forment des mailles serrées dans le cortex. (❌) → Les mailles sont larges dans la médullaire.
+
+🩵 Conclusion :
+Les cellules réticulo-épithéliales constituent la charpente du thymus et participent à la barrière sang-thymus.
+
+QCM 5 — Parmi les organes qui ont un stroma de type épithélio-réticulaire :
+
+A. Rate. (❌) → Stroma conjonctif réticulé.
+B. Ganglion lymphatique. (❌) → Stroma conjonctif réticulé.
+C. Surrénale. (❌) → Stroma conjonctif.
+D. Rein. (❌) → Stroma conjonctif.
+E. Thymus. (✅)
+
+🩵 Conclusion :
+Le thymus est le seul organe lymphoïde à stroma épithélio-réticulaire.
+
+QCM 6 — Les veinules post-capillaires :
+
+A. Sont localisées au niveau du cortex thymique. (❌) → Elles se trouvent à la jonction cortico-médullaire.
+B. Comportent des cellules endothéliales non jointives. (✅)
+C. Sont perméables à tous les lymphocytes circulants. (❌) → Seuls les thymocytes matures les traversent.
+D. Facilitent le passage des thymocytes matures vers le sang. (✅)
+E. Participent à la constitution de la barrière sang-thymus. (❌) → Elles en sont exclues.
+
+🩵 Conclusion :
+Les veinules post-capillaires assurent la sortie des thymocytes matures du thymus vers la circulation sanguine.
+
+QCM 7 — Toutes les affirmations correspondantes au tissu réticulé sont vraies sauf une, laquelle ?
+
+A. Constitue la charpente du ganglion. (✅)
+B. Constitue la charpente du thymus. (❌) → C’est la seule affirmation fausse, donc la bonne réponse à cocher.
+C. Constitue la charpente de la rate. (✅)
+D. Se trouve au sein des sinus sous-capsulaires du ganglion. (✅)
+E. Est présent dans tous les organes lymphoïdes périphériques. (✅)
+
+🩵 Conclusion :
+Toutes les affirmations sont vraies sauf B, car le thymus possède une charpente épithélio-réticulaire et non un tissu réticulé.
+
+QCM 8 — Le corpuscule de Hassal :
+
+A. Est formé de cellules lymphoïdes dégénérées. (❌) → Formé de cellules épithéliales enroulées.
+B. Est présent uniquement dans le thymus de l’adulte. (❌) → Présent dès la vie fœtale.
+C. Produit des hormones pour la maturation lymphocytaire B. (❌) → Il intervient dans la maturation T, pas B.
+D. Est le lieu de maturation des lymphocytes T. (❌) → La maturation a lieu dans le cortex thymique.
+E. Est formé d’enroulements de cellules épithéliales. (✅)
+
+🩵 Conclusion :
+Le corpuscule de Hassal est une structure épithéliale spécifique du thymus, formée d’enroulements concentriques.
+
+QCM 9 — Concernant la cellule 1 :
+
+A. C’est une cellule réticulaire qui synthétise des fibres de réticuline. (❌) → Les cellules du thymus sont réticulo-épithéliales, pas conjonctives.
+B. Participent à la formation de la barrière sang-thymus. (✅)
+C. S’organisent en réseau formant la charpente de l’organe. (✅)
+D. Ce sont des cellules d’origine hématopoïétique. (❌) → Elles dérivent de l’ectoderme.
+E. Phagocytent les thymocytes apoptotiques. (❌) → Ce rôle appartient aux macrophages.
+
+🩵 Conclusion :
+La cellule 1 correspond à une cellule réticulo-épithéliale, élément structural du thymus et composant de la barrière sang-thymus.
+
+QCM 10 — Concernant la cellule 2 :
+
+A. Leurs progéniteurs forment des clones de prolifération dans la région médullaire. (❌) → La prolifération a lieu surtout dans le cortex thymique.
+B. Subissent un processus de sélection par les cellules dendritiques. (✅)
+C. Au cours de leur migration du cortex vers la médullaire, ils acquièrent des récepteurs CD4 et CD8. (❌) → Cette étape concerne la cellule 1 (thymocyte cortical en maturation).
+D. La majorité d’entre elles quittent la médullaire par des veinules post-capillaires. (✅)
+E. Au cours de leur maturation elles ont un contact avec les antigènes apportés par voie lymphatique afférente. (❌) → Le thymus n’a pas de lymphatiques afférents.
+
+🩵 Conclusion :
+La cellule 2 représente un thymocyte mature, sélectionné par les cellules dendritiques et quittant le thymus via les veinules post-capillaires.
+
+QCM 11 — Concernant la structure 4 :
+
+A. C’est un ensemble de cellules différenciées et fonctionnelles. (❌) → Structure dégénérative.
+B. Est le résultat de la dégénérescence de la cellule 2. (❌) → Formée par des cellules épithéliales.
+C. Est fortement colorée par l’éosine. (✅)
+D. Est une structure spécifique du thymus. (✅)
+E. Est le lieu de phagocytose des thymocytes apoptotiques. (❌) → Rôle des macrophages.
+
+🩵 Conclusion :
+La structure 4 est le corpuscule de Hassal, typique du thymus, éosinophile, issu de la dégénérescence épithéliale.
+
+QCM 12 — Concernant la jonction cortico-médullaire du thymus :
+
+A. Comporte des veinules post-capillaires à paroi perméable. (✅)
+B. Est le lieu d’un check-point positif de thymocytes matures. (✅)
+C. Comporte la concentration la plus élevée en thymocytes. (❌) → C’est le cortex qui en contient le plus.
+D. Est le siège de prolifération des thymocytes. (❌) → La prolifération est corticale.
+E. Peut comporter des lymphatiques afférents. (❌) → Absents du thymus.
+
+🩵 Conclusion :
+La jonction cortico-médullaire abrite les veinules post-capillaires et les zones de sélection positive des thymocytes matures.
+
+QCM 13 — Concernant les thymocytes :
+
+A. Sont protégés par la barrière thymique au niveau de la zone médullaire. (❌) → La barrière protège surtout le cortex.
+B. Subissent un processus de sélection par les cellules dendritiques. (✅)
+C. La majorité quitte le cortex par des veinules post-capillaires. (❌) → Seuls les matures traversent la jonction.
+D. Au cours de leur migration du cortex vers la médullaire, ils acquièrent les récepteurs CD4 et CD8. (✅)
+E. Ont un contact avec les antigènes apportés par voie lymphatique afférente. (❌) → Pas de contact antigénique dans le thymus.
+
+🩵 Conclusion :
+Les thymocytes maturent du cortex vers la médullaire, subissant une sélection par les cellules dendritiques et l’acquisition des marqueurs CD4/CD8.
+
+QCM 14 — La charpente du thymus est faite par :
+
+A. Des thymocytes. (❌)
+B. Des fibres de réticuline. (❌)
+C. Des fibres de collagène. (❌)
+D. Des cellules réticulo-épithéliales. (✅)
+E. Des fibroblastes. (❌)
+
+🩵 Conclusion :
+La charpente du thymus est assurée exclusivement par les cellules réticulo-épithéliales, caractéristiques de cet organe.
+
+QCM 15 — Au niveau du thymus, la médullaire comporte :
+
+A. Des sinus et des cordons. (❌) → Organisation propre à la rate.
+B. Des veinules post-capillaires. (❌) → Situées à la jonction cortico-médullaire.
+C. Des corpuscules de Hassal. (✅)
+D. Des artères afférentes. (❌) → Pas de système afférent lymphatique.
+E. Un vaisseau lymphatique afférent. (❌) → Le thymus n’en possède pas.
+
+🩵 Conclusion :
+La médullaire thymique contient les corpuscules de Hassal, structures épithéliales spécifiques de l’organe.
+
+C.GANGLION LYMPHATIQUE
+
+QCM 1 — Les ganglions lymphatiques :
+
+A. Sont des organes lymphoïdes centraux. (❌) → Ce sont des organes périphériques, non centraux.
+B. Sont le lieu de déroulement des réactions immunitaires. (✅)
+C. Sont situés sur le trajet des vaisseaux sanguins. (❌) → Ils sont situés sur le trajet lymphatique.
+D. Reçoivent des vaisseaux lymphatiques au niveau du hile ganglionnaire. (❌) → Les afférents arrivent sur le bord convexe, pas au hile.
+E. Comportent une charpente épithéliale bien développée. (❌) → Charpente réticulaire, pas épithéliale.
+
+🩵 Conclusion :
+Les ganglions lymphatiques sont des organes lymphoïdes périphériques, sièges des réactions immunitaires.
+
+QCM 2 — Les ganglions lymphatiques :
+
+A. Sont des organes lymphoïdes centraux. (❌)
+B. Sont le lieu de déroulement des réactions immunitaires. (✅)
+C. Sont situés sur le trajet des veines. (❌) → Situés sur le trajet lymphatique.
+D. Reçoivent des vaisseaux sanguins afférents sur leurs bords convexes. (❌) → Les vaisseaux lymphatiques afférents arrivent au bord convexe.
+E. Comportent une charpente épithéliale. (❌) → Charpente réticulaire conjonctive.
+
+🩵 Conclusion :
+Le ganglion lymphatique est le principal site d’activation immunitaire périphérique.
+
+QCM 3 — Dans le ganglion lymphatique, les follicules lymphoïdes :
+
+A. Occupent toute la zone corticale. (❌) → Ils n’occupent qu’une partie de la zone corticale.
+B. Occupent une partie de la zone médullaire. (❌) → Les follicules sont corticaux.
+C. Augmentent de volume en cas de réponse B dépendante. (✅)
+D. Sont toujours de type secondaire. (❌) → On trouve aussi des follicules primaires.
+E. Jouent un rôle dans le ralentissement de la lymphe. (❌) → Ce rôle revient aux sinus.
+
+🩵 Conclusion :
+Les follicules lymphoïdes corticaux s’hypertrophient lors des réponses B dépendantes.
+
+QCM 4 — Concernant le ganglion lymphatique :
+
+A. La charpente est principalement formée de fibres de réticuline. (✅)
+B. Le ganglion est découpé en lobules par des cloisons incomplètes. (❌) → Il n’est pas lobulé.
+C. Les macrophages y sont localisés exclusivement dans les sinus. (❌) → Ils sont aussi dans les cordons médullaires.
+D. Les sinus sont en continuité avec les vaisseaux lymphatiques. (✅)
+E. Les sinus médullaires ont un diamètre supérieur aux sinus corticaux. (✅)
+
+🩵 Conclusion :
+Le ganglion lymphatique possède une charpente réticulée et un réseau de sinus communicants avec les vaisseaux lymphatiques.
+
+QCM 5 — Zone corticale du ganglion lymphatique :
+
+A. Située au voisinage de la face convexe du ganglion. (✅)
+B. Contient surtout des cellules lymphoïdes B. (⚠️) → Proposition généralement vraie 
+C. Contient un nombre équivalent de follicules primaires et secondaires. (❌) → Les follicules secondaires sont plus nombreux en activité.
+D. Contient de nombreuses veinules post-capillaires. (❌) → Celles-ci se situent dans la zone paracorticale.
+E. Contient des cellules lymphoïdes T. (✅) → Présentes mais moins que dans la zone T dépendante.
+
+🩵 Conclusion :
+La zone corticale est surtout B dépendante, localisée en périphérie du ganglion, avec présence variable de T.
+
+QCM 6 — Structures qui participent à la filtration mécanique de la lymphe :
+
+A. Les cellules réticulaires. (✅)
+B. Les fibres réticulées. (✅)
+C. Les follicules lymphoïdes. (❌) → Ils assurent des fonctions immunitaires, pas de filtration mécanique.
+D. Les macrophages des sinus capsulaires. (❌) → Filtration biologique, non mécanique.
+E. Les cordons médullaires. (❌) → Sièges de cellules immunitaires.
+
+🩵 Conclusion :
+La filtration mécanique est assurée par le réseau réticulé du stroma : cellules et fibres réticulaires.
+
+QCM 7 — Les zones B dépendantes du ganglion lymphatique sont :
+
+A. La zone paracorticale. (❌) → Zone T dépendante.
+B. Les follicules lymphoïdes. (✅)
+C. Les manchons péri-artériolaires. (❌) → Structures de la rate.
+D. Les cordons médullaires. (✅)
+E. Les sinus radiaires. (❌) → Zone de drainage lymphatique, non B dépendante.
+
+🩵 Conclusion :
+Les zones B dépendantes du ganglion sont les follicules corticaux et les cordons médullaires, riches en lymphocytes B.
+
+QCM 8 — Les zones B dépendantes du ganglion lymphatique sont :
+
+A. La zone paracorticale. (❌)
+B. Les cordons et sinus de la zone médullaire. (❌) → Zone mixte.
+C. Les follicules lymphoïdes de la zone corticale. (✅)
+D. Le sinus marginal. (❌) → Espace de circulation lymphatique.
+E. Absentes en cas d’hyperactivation des zones T dépendantes. (❌)
+
+🩵 Conclusion :
+Les follicules corticaux constituent la principale zone B dépendante du ganglion lymphatique.
+
+QCM 9 — La fonction de l’organe représenté dans le schéma 1 est :
+
+A. Une filtration par une barrière biologique. (❌)
+B. Une filtration mécanique et biologique. (✅)
+C. Dépendante de la pression artérielle. (❌)
+D. Associée à une augmentation de la taille de l’organe quand il est activé. (✅)
+E. En rapport avec la circulation lymphatique. (✅)
+
+🩵 Conclusion :
+Le ganglion lymphatique assure une filtration mécanique et biologique de la lymphe, sa taille augmentant lors de réponses immunitaires.
+
+QCM 10 — La charpente de l’organe représenté dans le schéma 1 est :
+
+A. Conjonctive lâche. (❌)
+B. Réticulo-épithéliale. (❌)
+C. Réticulaire. (✅)
+D. Exclusivement cellulaire. (❌)
+E. Marquée par les sels de chrome. (❌) → Coloration histologique non spécifique.
+
+🩵 Conclusion :
+La charpente du ganglion lymphatique est formée d’un stroma réticulaire conjonctif.
+
+QCM 11 — Le ralentissement de la lymphe dans le ganglion lymphatique est assuré par :
+
+A. Le labyrinthe des sinus médullaires. (✅)
+B. Les valves des vaisseaux sanguins efférents. (❌) → Les valves concernent la circulation lymphatique.
+C. Les fibres de réticuline des sinus sous-capsulaires. (✅)
+D. Le drainage par un vaisseau efférent unique. (✅)
+E. La capsule conjonctive. (❌) → Rôle protecteur, pas hydrodynamique.
+
+🩵 Conclusion :
+La ralentissement de la lymphe est dû au labyrinthe des sinus et aux fibres réticulaires, permettant une filtration efficace.
+
+QCM 12 — Concernant l’organe lymphoïde représenté sur le schéma suivant :
+
+A. La structure 1 comporte des fibres élastiques et des cellules musculaires lisses. (❌) → Structure capsulaire conjonctive, pas musculaire.
+B. La structure 2 est un sinus médullaire. (❌) → La médullaire présente des cordons et des sinus, mais non numérotés ainsi sur le schéma.
+C. La structure 3 est une zone B dépendante. (✅)
+D. La structure 4 présente une architecture en nappe. (✅)
+E. La structure 5 est un corpuscule de Hassal. (❌) → Spécifique du thymus.
+
+🩵 Conclusion :
+Le schéma montre le ganglion lymphatique : la structure 3 correspond à la zone B dépendante, et la structure 4 présente l’organisation en nappe du tissu réticulaire.
+
+D – RATE
+
+QCM 1 — La rate :
+
+A. Présente une capsule conjonctive dense et résistante. (❌) → Capsule fibreuse mais relativement mince.
+B. La pulpe est organisée en cortex et médullaire. (❌) → Pas de distinction cortico-médullaire dans la rate.
+C. Comporte un réseau de sinus lymphatiques. (❌) → Les sinus sont sanguins, pas lymphatiques.
+D. Les structures lymphoïdes sont organisées autour des vaisseaux sanguins. (✅)
+
+🩵 Conclusion :
+La rate est un organe lymphoïde secondaire dont les formations lymphoïdes entourent les vaisseaux sanguins (pulpe blanche).
+
+QCM 2 — Concernant l’organe en coupe :
+
+A. C’est le ganglion lymphatique. (❌)
+B. C’est les amygdales palatines. (❌)
+C. C’est le thymus. (❌)
+D. C’est la rate. (✅)
+E. C’est l’appendice. (❌)
+
+🩵 Conclusion :
+L’organe observé correspond à la rate, reconnaissable par la présence d’une pulpe rouge et blanche.
+
+QCM 3 — Concernant la structure 3 :
+
+A. C’est la zone marginale. (❌)
+B. C’est le sinus marginal. (❌)
+C. C’est le corpuscule de Malpighi. (❌)
+D. C’est une zone B dépendante. (❌)
+E. Contient essentiellement des cordons de Billroth. (✅)
+
+🩵 Conclusion :
+La structure 3 correspond à une zone de la pulpe rouge, riche en cordons de Billroth.
+
+QCM 4 — Concernant la structure 4 :
+
+A. C’est une zone marginale. (❌)
+B. Ce sont les artères pénicillées. (❌)
+C. C’est le corpuscule de Malpighi. (✅)
+D. C’est une zone B dépendante. (✅)
+E. Contient essentiellement des cordons et des sinus. (❌)
+
+🩵 Conclusion :
+La structure 4 est un corpuscule de Malpighi, représentant la zone B dépendante de la pulpe blanche.
+
+QCM 5 — Concernant la zone marginale de la rate :
+
+A. Reçoit des branches artériolaires de l’artère centrale. (✅)
+B. Comporte des lymphocytes et des cellules présentatrices d’antigène. (✅)
+C. Est organisée en sinus et cordons. (❌) → Organisation propre à la pulpe rouge.
+D. C’est la région de destruction des globules rouges vieillis. (❌) → Siège dans la pulpe rouge.
+E. Fait partie de la pulpe rouge. (❌) → Zone de transition entre pulpe blanche et rouge.
+
+🩵 Conclusion :
+La zone marginale reçoit les artérioles terminales et contient des cellules immunocompétentes jouant un rôle dans la capture antigénique.
+
+QCM 6 — La gaine lymphoïde péri-artérielle est :
+
+A. La couronne externe du corpuscule de Malpighi. (⚠️) → la gaine peut entourer la partie centrale, parfois confondue avec la zone T.
+B. Un élément constitutif de la pulpe rouge. (❌) → Fait partie de la pulpe blanche.
+C. Une zone T dépendante. (✅)
+D. En relation fonctionnelle étroite avec la circulation lymphatique. (❌) → Circulation sanguine.
+E. L’équivalent structural et fonctionnel du centre germinatif des follicules lymphoïdes. (❌)
+
+🩵 Conclusion :
+La gaine lymphoïde péri-artérielle (PALS) est une zone T dépendante entourant l’artère centrale de la pulpe blanche.
+
+QCM 7 — Structures participant à la filtration du sang au niveau de la pulpe rouge :
+
+A. La zone marginale. (❌) → Zone de transition.
+B. Les sinus de Billroth. (❌) → Sinus veineux collecteurs.
+C. Le corpuscule de Malpighi. (❌) → Partie lymphoïde.
+D. Le manchon péri-artériolaire. (❌) → Zone T dépendante.
+E. Les cordons de Billroth. (✅)
+
+🩵 Conclusion :
+La filtration du sang dans la rate s’effectue principalement au niveau des cordons de Billroth de la pulpe rouge.
+
+QCM 8 — Les constituants de la pulpe rouge sont :
+
+A. Les corpuscules de Malpighi. (❌) → Font partie de la pulpe blanche.
+B. Les artères pénicillées. (❌) → Structures vasculaires nourricières.
+C. Les cordons de Billroth et les sinus veineux. (✅)
+D. Les manchons péri-artériolaires. (❌)
+E. Les sinus veineux et les artérioles centrales. (❌)
+
+🩵 Conclusion :
+La pulpe rouge comprend des cordons de Billroth et des sinus veineux remplis de sang.
+
+QCM 9 — Au niveau de la rate, la pulpe rouge est :
+
+A. Formée par un tissu lymphoïde disposé autour des artères. (❌) → C’est la pulpe blanche.
+B. Composée de cordons et de sinus vasculaires. (✅)
+C. Formée de corpuscules de Malpighi et de manchons péri-artériolaires. (❌)
+D. Macroscopiquement blanchâtre. (❌) → Rouge sombre.
+E. Zone T dépendante. (❌)
+
+🩵 Conclusion :
+La pulpe rouge se compose de cordons et sinus vasculaires, participant à la filtration et à la destruction des hématies âgées.
+
+QCM 10 — La pulpe rouge de la rate comporte :
+
+A. La zone marginale. (❌)
+B. Le sinus marginal. (❌)
+C. Le corpuscule de Malpighi. (❌)
+D. Le manchon péri-artériolaire. (❌)
+E. Les cordons de Billroth. (✅)
+
+🩵 Conclusion :
+Les cordons de Billroth sont les éléments caractéristiques de la pulpe rouge splénique.
+
+QCM 11 — Concernant la rate :
+
+A. Présente une capsule conjonctive épaisse et résistante. (❌) → Capsule fine et peu élastique.
+B. La pulpe blanche est organisée autour des vaisseaux. (✅)
+C. Est un organe hématopoïétique à l’âge adulte. (❌) → Ce rôle s’arrête après la naissance.
+D. Comporte un réseau de sinus lymphatiques. (❌)
+E. Est le lieu de destruction des globules rouges. (✅)
+
+🩵 Conclusion :
+La rate est un organe lymphoïde secondaire, non hématopoïétique chez l’adulte, dont la pulpe blanche entoure les vaisseaux et la pulpe rouge détruit les hématies vieillies
