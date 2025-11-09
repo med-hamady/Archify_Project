@@ -325,7 +325,8 @@ async function importToDatabase() {
             orderIndex: qIndex,
             options: question.options.map((opt) => ({
               text: opt.text,
-              isCorrect: opt.answerState === 'correct', // Convert to boolean
+              isCorrect: opt.answerState === 'correct', // true/false
+              isPartial: opt.answerState === 'partial', // true for partial answers
               justification: opt.justification
             }))
           }

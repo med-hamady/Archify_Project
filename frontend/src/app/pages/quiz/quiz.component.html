@@ -70,8 +70,9 @@
         *ngFor="let option of currentQuestion.options; let i = index"
         class="answer-option"
         [class.selected]="isSelected(i)"
-        [class.correct]="showResult && result?.options?.[i]?.isCorrect"
-        [class.incorrect]="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect"
+        [class.correct]="showResult && result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial"
+        [class.incorrect]="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial"
+        [class.partial]="showResult && result?.options?.[i]?.isPartial"
         [class.disabled]="answered"
         (click)="selectAnswer(i)">
         <span class="option-checkbox">
@@ -81,15 +82,18 @@
         <span class="option-text">{{ option.text }}</span>
 
         <!-- Result Icons -->
-        <span *ngIf="showResult && result?.options?.[i]?.isCorrect" class="result-icon correct-icon">
+        <span *ngIf="showResult && result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial" class="result-icon correct-icon">
           ✓
         </span>
-        <span *ngIf="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect" class="result-icon incorrect-icon">
+        <span *ngIf="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial" class="result-icon incorrect-icon">
           ✗
         </span>
+        <span *ngIf="showResult && result?.options?.[i]?.isPartial" class="result-icon partial-icon">
+          ⚠
+        </span>
 
-        <!-- Justification pour les réponses fausses -->
-        <div *ngIf="showResult && result?.options?.[i]?.justification && !result?.options?.[i]?.isCorrect" class="justification">
+        <!-- Justification pour les réponses fausses ou partielles -->
+        <div *ngIf="showResult && result?.options?.[i]?.justification" class="justification">
           <span class="justification-icon">💡</span>
           <span class="justification-text">{{ result?.options?.[i]?.justification }}</span>
         </div>

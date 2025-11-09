@@ -208,6 +208,12 @@
   animation: shake 0.5s ease;
 }
 
+.answer-option.partial {
+  border-color: #ff9800;
+  background: #fff3e0;
+  animation: pulse 0.5s ease;
+}
+
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.02); }
@@ -246,6 +252,10 @@
   background: #dc3545;
 }
 
+.answer-option.partial .option-letter {
+  background: #ff9800;
+}
+
 .option-text {
   flex: 1;
   color: #333;
@@ -264,6 +274,10 @@
 
 .incorrect-icon {
   color: #dc3545;
+}
+
+.partial-icon {
+  color: #ff9800;
 }
 
 /* Action Section */

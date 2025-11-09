@@ -6,7 +6,8 @@
 export interface QuestionOption {
   text: string;
   isCorrect?: boolean;  // undefined avant réponse, boolean après
-  justification?: string;  // pour les réponses fausses
+  isPartial?: boolean;  // true pour réponses partielles (ni vrai ni faux)
+  justification?: string;  // pour les réponses fausses ou partielles
   wasSelected?: boolean;  // true si l'utilisateur a sélectionné cette option
 }
 
