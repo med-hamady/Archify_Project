@@ -10,7 +10,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/index.js",
+    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/import-histo-nozha-pcem2.js && node dist/index.js",
     "start:dev": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
@@ -29,7 +29,10 @@
     "import:dcem1:semiologie": "node dist/import-dcem1-semiologie.js",
     "export:dcem1:json": "node dist/export-dcem1-json.js",
     "import:dcem1:direct": "node dist/import-dcem1-direct.js",
-    "export:dcem1": "node dist/export-dcem1-data.js"
+    "export:dcem1": "node dist/export-dcem1-data.js",
+    "import:histo:pcem2": "node dist/import-histo-nozha-pcem2.js",
+    "clear:histo:pcem2": "node dist/clear-histo-pcem2.js",
+    "export:histo:sql": "node dist/export-histo-pcem2-sql.js"
   },
   "keywords": [],
   "author": "",
