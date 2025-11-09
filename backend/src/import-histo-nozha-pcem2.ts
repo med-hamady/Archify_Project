@@ -99,12 +99,22 @@ function parseOption(line: string): ParsedOption | null {
 
   if (!match) return null;
 
-  const fullText = match[2] || '';
+  let fullText = match[2] || '';
   const justification = match[3]?.trim() || null;
   const answerState = detectAnswerState(line);
 
+  // Nettoyer tous les symboles de réponse du texte de l'option
+  fullText = fullText
+    .replace(/\s*\(✅\)\s*$/g, '')  // (✅)
+    .replace(/\s*\(❌\)\s*$/g, '')  // (❌)
+    .replace(/\s*\(⚠️\)\s*$/g, '')  // (⚠️)
+    .replace(/\s*✅\s*$/g, '')      // ✅
+    .replace(/\s*❌\s*$/g, '')      // ❌
+    .replace(/\s*⚠️\s*$/g, '')      // ⚠️
+    .trim();
+
   return {
-    text: fullText.trim(),
+    text: fullText,
     answerState,
     justification
   };
@@ -395,7 +405,7 @@ async function importToDatabase() {
             orderIndex: qIndex,
             options: question.options.map((opt) => ({
               text: opt.text,
-              isCorrect: opt.answerState,
+              isCorrect: opt.answerState === 'correct', // Convert to boolean
               justification: opt.justification
             }))
           }
