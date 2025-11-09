@@ -301,10 +301,18 @@ async function getSubjectProgress(userId, subjectId) {
         const chapterProgress = chapter.chapterProgresses[0];
         return chapterProgress && chapterProgress.progressPercent >= 100;
     }).length;
+    // Calculer dynamiquement le nombre total de questions
+    const totalQCM = await prisma.question.count({
+        where: {
+            chapter: {
+                subjectId
+            }
+        }
+    });
     return {
         subjectId,
         subjectTitle: subject.title,
-        totalQCM: subject.totalQCM,
+        totalQCM, // Calculé dynamiquement
         questionsAnswered: progress?.totalQuestionsAnswered || 0,
         progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
         challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
@@ -342,24 +350,33 @@ async function getUserSubjectsProgress(userId) {
         },
         orderBy: { title: 'asc' }
     });
-    return subjects.map(subject => {
+    // Calculer dynamiquement le nombre de questions pour chaque matière
+    return Promise.all(subjects.map(async (subject) => {
         const progress = subject.subjectProgresses[0];
         const chaptersTotal = subject.chapters.length;
         const chaptersCompleted = subject.chapters.filter(chapter => {
             const chapterProgress = chapter.chapterProgresses[0];
             return chapterProgress && chapterProgress.progressPercent >= 100;
         }).length;
+        // Calculer dynamiquement le nombre total de questions
+        const totalQCM = await prisma.question.count({
+            where: {
+                chapter: {
+                    subjectId: subject.id
+                }
+            }
+        });
         return {
             subjectId: subject.id,
             subjectTitle: subject.title,
-            totalQCM: subject.totalQCM,
+            totalQCM, // Calculé dynamiquement
             questionsAnswered: progress?.totalQuestionsAnswered || 0,
             progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
             challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
             chaptersCompleted,
             chaptersTotal
         };
-    });
+    }));
 }
 // ============================================
 // VÉRIFICATIONS DE DÉBLOCAGE
