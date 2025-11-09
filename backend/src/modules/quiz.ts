@@ -78,13 +78,21 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
       }
     }
 
-    // Trouver toutes les bonnes réponses
+    // Trouver toutes les bonnes réponses (exclure les partielles)
     const correctAnswerIndices = options
-      .map((opt: any, index: number) => opt.isCorrect ? index : -1)
+      .map((opt: any, index: number) => opt.isCorrect && !opt.isPartial ? index : -1)
       .filter((index: number) => index !== -1);
 
-    // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses
-    const selectedSet = new Set(selectedAnswers);
+    // Trouver les indices des réponses partielles (à ignorer dans le calcul)
+    const partialAnswerIndices = options
+      .map((opt: any, index: number) => opt.isPartial ? index : -1)
+      .filter((index: number) => index !== -1);
+
+    // Filtrer les réponses partielles des réponses sélectionnées (elles ne comptent pas)
+    const selectedNonPartial = selectedAnswers.filter(index => !partialAnswerIndices.includes(index));
+
+    // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses (en ignorant les partielles)
+    const selectedSet = new Set(selectedNonPartial);
     const correctSet = new Set(correctAnswerIndices);
 
     const isCorrect =
