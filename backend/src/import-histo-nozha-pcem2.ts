@@ -382,76 +382,29 @@ async function importToDatabase() {
         console.log(`   ✅ Chapitre trouvé: ${parsedFile.chapterName}`);
       }
 
-      // 4. Si des sections existent, créer des sous-chapitres
-      if (parsedFile.sections.length > 0) {
-        for (let sectionIndex = 0; sectionIndex < parsedFile.sections.length; sectionIndex++) {
-          const section = parsedFile.sections[sectionIndex];
+      // 4. Importer TOUTES les questions directement dans le chapitre principal
+      // Ne pas créer de sous-chapitres pour éviter la désorganisation
+      for (let qIndex = 0; qIndex < parsedFile.allQuestions.length; qIndex++) {
+        const question = parsedFile.allQuestions[qIndex];
 
-          let subChapter = await prisma.chapter.findFirst({
-            where: {
-              subjectId: subject.id,
-              title: `${parsedFile.chapterName} - ${section.sectionName}`
-            }
-          });
-
-          if (!subChapter) {
-            subChapter = await prisma.chapter.create({
-              data: {
-                subjectId: subject.id,
-                title: `${parsedFile.chapterName} - ${section.sectionName}`,
-                description: section.sectionName,
-                orderIndex: FILES.indexOf(fileName) * 100 + sectionIndex
-              }
-            });
+        await prisma.question.create({
+          data: {
+            chapterId: mainChapter.id,
+            questionText: question.questionText,
+            explanation: question.explanation,
+            orderIndex: qIndex,
+            options: question.options.map((opt) => ({
+              text: opt.text,
+              isCorrect: opt.answerState,
+              justification: opt.justification
+            }))
           }
+        });
 
-          // Importer les questions de cette section
-          for (let qIndex = 0; qIndex < section.questions.length; qIndex++) {
-            const question = section.questions[qIndex];
-
-            await prisma.question.create({
-              data: {
-                chapterId: subChapter.id,
-                questionText: question.questionText,
-                explanation: question.explanation,
-                orderIndex: qIndex,
-                options: question.options.map((opt) => ({
-                  text: opt.text,
-                  isCorrect: opt.answerState,
-                  justification: opt.justification
-                }))
-              }
-            });
-
-            totalQuestionsImported++;
-          }
-
-          console.log(`      ✅ Section "${section.sectionName}": ${section.questions.length} questions importées`);
-        }
-      } else {
-        // Pas de sections, importer directement dans le chapitre principal
-        for (let qIndex = 0; qIndex < parsedFile.allQuestions.length; qIndex++) {
-          const question = parsedFile.allQuestions[qIndex];
-
-          await prisma.question.create({
-            data: {
-              chapterId: mainChapter.id,
-              questionText: question.questionText,
-              explanation: question.explanation,
-              orderIndex: qIndex,
-              options: question.options.map((opt) => ({
-                text: opt.text,
-                isCorrect: opt.answerState,
-                justification: opt.justification
-              }))
-            }
-          });
-
-          totalQuestionsImported++;
-        }
-
-        console.log(`   ✅ ${parsedFile.allQuestions.length} questions importées`);
+        totalQuestionsImported++;
       }
+
+      console.log(`   ✅ ${parsedFile.allQuestions.length} questions importées dans "${parsedFile.chapterName}"`);
     }
 
     console.log('\n✅ Import terminé avec succès!');
