@@ -91,6 +91,15 @@
           </div>
         </div>
 
+        <!-- Subchapters List -->
+        <div *ngIf="chapter.subchapters && chapter.subchapters.length > 0" class="subchapters-list">
+          <div *ngFor="let subchapter of chapter.subchapters" class="subchapter-item">
+            <span class="subchapter-bullet">▪</span>
+            <span class="subchapter-title">{{ subchapter.title }}</span>
+            <span class="subchapter-count">({{ subchapter.questionsCount }} QCMs)</span>
+          </div>
+        </div>
+
         <!-- Progress Bar -->
         <div class="chapter-progress">
           <div class="progress-label">

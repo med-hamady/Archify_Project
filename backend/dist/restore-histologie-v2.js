@@ -87,28 +87,19 @@ function detectAnswerState(text) {
  * - "A-Texte ✅/❌/⚠️ → Justification"
  */
 function parseOption(line) {
-    // Format 1: "A. Texte ..." ou "a. Texte ..." (majuscules et minuscules)
-    let match = line.match(/^([A-Fa-f])\.\s+(.+?)(?:\s*\((?:✅|❌|⚠️)\))?\s*(?:→\s*(.+))?$/);
-    // Format 2: "A-Texte ..." ou "a-Texte ..." (majuscules et minuscules)
+    // Format 1: "A. Texte ..."
+    let match = line.match(/^([A-F])\.\s+(.+?)(?:\s*\((?:✅|❌|⚠️)\))?\s*(?:→\s*(.+))?$/);
+    // Format 2: "A-Texte ..."
     if (!match) {
-        match = line.match(/^([A-Fa-f])-(.+?)(?:\s+(?:✅|❌|⚠️))?\s*(?:→\s*(.+))?$/);
+        match = line.match(/^([A-F])-(.+?)(?:\s+(?:✅|❌|⚠️))?\s*(?:→\s*(.+))?$/);
     }
     if (!match)
         return null;
-    let fullText = match[2] || '';
+    const fullText = match[2] || '';
     const justification = match[3]?.trim() || null;
     const answerState = detectAnswerState(line);
-    // Nettoyer tous les symboles de réponse du texte de l'option
-    fullText = fullText
-        .replace(/\s*\(✅\)\s*$/g, '') // (✅)
-        .replace(/\s*\(❌\)\s*$/g, '') // (❌)
-        .replace(/\s*\(⚠️\)\s*$/g, '') // (⚠️)
-        .replace(/\s*✅\s*$/g, '') // ✅
-        .replace(/\s*❌\s*$/g, '') // ❌
-        .replace(/\s*⚠️\s*$/g, '') // ⚠️
-        .trim();
     return {
-        text: fullText,
+        text: fullText.trim(),
         answerState,
         justification
     };
@@ -194,8 +185,8 @@ function parseFile(filePath, fileName) {
         }
         // Si on attend le texte de la question (QCM sur 2 lignes)
         if (awaitingQuestionText && currentQuestion && !currentQuestion.questionText) {
-            // Continuer à accumuler le texte jusqu'à trouver une ligne option (A-/B-/a-/b-) ou vide
-            if (/^[A-Fa-f][-.]/.test(line)) {
+            // Continuer à accumuler le texte jusqu'à trouver une ligne option (A-/B-) ou vide
+            if (/^[A-F][-.]/.test(line)) {
                 // C'est une option, donc la question est terminée
                 currentQuestion.questionText = currentQuestionTextLines.join(' ').trim().replace(/:$/, '');
                 awaitingQuestionText = false;
@@ -223,8 +214,8 @@ function parseFile(filePath, fileName) {
             currentExplanation.push(line);
             continue;
         }
-        // Détection d'option (A., B., C., A-, B-, a., b., a-, b-, etc.)
-        if (currentQuestion && /^[A-Fa-f][-.]/.test(line)) {
+        // Détection d'option (A., B., C., A-, B-, etc.)
+        if (currentQuestion && /^[A-F][-.]/.test(line)) {
             const option = parseOption(line);
             if (option) {
                 currentOptions.push(option);
@@ -257,16 +248,50 @@ function parseFile(filePath, fileName) {
 // FONCTIONS D'IMPORT EN BASE DE DONNÉES
 // ============================================
 async function importToDatabase() {
-    console.log('🚀 Début de l\'import Histo Nozha PCEM2\n');
+    console.log('🔧 Restauration: Nettoyage de Histologie et création de Histo Nozha\n');
     try {
-        // 0. Vérifier si les fichiers source existent (pour éviter erreur en production)
+        // 0. Clean up contaminated "Histologie" PCEM2
+        console.log('📋 Étape 1: Nettoyage de "Histologie"...');
+        const histologieSubject = await prisma.subject.findFirst({
+            where: {
+                title: 'Histologie',
+                semester: 'PCEM2'
+            },
+            include: {
+                chapters: {
+                    include: {
+                        _count: { select: { questions: true } }
+                    }
+                }
+            }
+        });
+        if (histologieSubject) {
+            console.log(`   📚 Matière trouvée: ${histologieSubject.title}`);
+            console.log(`   📑 Chapitres actuels: ${histologieSubject.chapters.length}`);
+            const totalQuestions = histologieSubject.chapters.reduce((sum, ch) => sum + ch._count.questions, 0);
+            console.log(`   ❓ Questions actuelles: ${totalQuestions}`);
+            console.log('\n   🗑️  Suppression de tous les chapitres contaminés...');
+            for (const chapter of histologieSubject.chapters) {
+                await prisma.question.deleteMany({
+                    where: { chapterId: chapter.id }
+                });
+            }
+            await prisma.chapter.deleteMany({
+                where: { subjectId: histologieSubject.id }
+            });
+            console.log('   ✅ Tous les chapitres supprimés de "Histologie"\n');
+        }
+        else {
+            console.log('   ℹ️  Matière "Histologie" non trouvée (OK)\n');
+        }
+        // 1. Vérifier si les fichiers source existent
         if (!fs.existsSync(SOURCE_DIR)) {
             console.log('⚠️  Dossier source non trouvé:', SOURCE_DIR);
             console.log('   Import ignoré (normal en production sur Render.com).\n');
             return;
         }
-        // 1. Trouver ou créer la matière "Histo Nozha" pour PCEM2
-        console.log('📚 Recherche/création de la matière Histo Nozha...');
+        // 2. Trouver ou créer la matière "Histo Nozha" pour PCEM2
+        console.log('📋 Étape 2: Création de "Histo Nozha" comme matière séparée...');
         let subject = await prisma.subject.findFirst({
             where: {
                 title: 'Histo Nozha',
@@ -365,8 +390,7 @@ async function importToDatabase() {
                         orderIndex: qIndex,
                         options: question.options.map((opt) => ({
                             text: opt.text,
-                            isCorrect: opt.answerState === 'correct', // true/false
-                            isPartial: opt.answerState === 'partial', // true for partial answers
+                            isCorrect: opt.answerState,
                             justification: opt.justification
                         }))
                     }
@@ -375,8 +399,9 @@ async function importToDatabase() {
             }
             console.log(`   ✅ ${parsedFile.allQuestions.length} questions importées dans "${parsedFile.chapterName}"`);
         }
-        console.log('\n✅ Import terminé avec succès!');
-        console.log(`📊 Total: ${totalQuestionsImported} questions importées`);
+        console.log('\n✅ Restauration terminée avec succès!');
+        console.log(`📊 Total: ${totalQuestionsImported} questions importées dans "Histo Nozha"`);
+        console.log('📚 "Histologie" a été nettoyée (prête pour données originales si nécessaire)');
     }
     catch (error) {
         console.error('❌ Erreur lors de l\'import:', error);
@@ -405,4 +430,4 @@ importToDatabase()
         process.exit(1); // Exit error en développement
     }
 });
-//# sourceMappingURL=import-histo-nozha-pcem2.js.map
+//# sourceMappingURL=restore-histologie-v2.js.map

@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface Subchapter {
+  id: string;
+  title: string;
+  orderIndex: number;
+  questionsCount: number;
+}
+
 export interface Chapter {
   id: string;
   title: string;
@@ -10,6 +17,7 @@ export interface Chapter {
   questionsCount: number;
   progressPercent: number;
   challengeUnlocked: boolean;
+  subchapters?: Subchapter[];
 }
 
 export interface Subject {

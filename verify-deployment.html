@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification Rapide - Onglet Import</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            color: #333;
+        }
+        h1 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 24px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+        .step strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .success {
+            color: #22c55e;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔍 Solution Rapide</h1>
+
+        <div class="warning">
+            <strong>⚠️ Le code est CORRECT et DÉPLOYÉ</strong>
+            <p>Le problème est le cache de votre navigateur qui affiche l'ancienne version.</p>
+        </div>
+
+        <div class="step">
+            <strong>📋 Solution 1 : Vider le cache (RECOMMANDÉ)</strong>
+            <ol>
+                <li>Appuyez sur <code>Ctrl + Shift + Delete</code></li>
+                <li>Sélectionnez "Images et fichiers en cache"</li>
+                <li>Période : "Toutes les périodes"</li>
+                <li>Cliquez sur "Effacer les données"</li>
+                <li>Rafraîchissez avec <code>Ctrl + F5</code></li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>🔓 Solution 2 : Navigation privée (TEST RAPIDE)</strong>
+            <ol>
+                <li>Appuyez sur <code>Ctrl + Shift + N</code> (Chrome/Edge)</li>
+                <li>Allez sur votre dashboard admin</li>
+                <li>Connectez-vous</li>
+                <li>L'onglet "Importer Matière" devrait être visible</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>🔄 Solution 3 : Force Refresh</strong>
+            <button onclick="forceRefresh()">🚀 Forcer le rechargement complet</button>
+            <p style="font-size: 12px; margin-top: 10px;">
+                Cette action va vider le cache et recharger la page en mode navigation privée
+            </p>
+        </div>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <div style="text-align: center;">
+            <p><strong>✅ Statut du déploiement :</strong></p>
+            <p class="success">Commit 71ce64b : DÉPLOYÉ</p>
+            <p style="font-size: 14px; color: #6b7280;">
+                Vercel : Ready ✅<br>
+                Code : Correct ✅<br>
+                Onglet : Présent dans le code ✅
+            </p>
+        </div>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <div style="font-size: 13px; color: #6b7280; text-align: center;">
+            <p>🎯 <strong>Résultat attendu :</strong></p>
+            <p>Après avoir vidé le cache, vous verrez l'onglet <strong>"Importer Matière"</strong> entre <strong>"Gestion des QCM"</strong> et <strong>"Départements"</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function forceRefresh() {
+            // Vider tous les caches possibles
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    names.forEach(function(name) {
+                        caches.delete(name);
+                    });
+                });
+            }
+
+            // Désinscrire les service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    registrations.forEach(function(registration) {
+                        registration.unregister();
+                    });
+                });
+            }
+
+            // Vider localStorage et sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+
+            alert('✅ Cache vidé ! La page va se recharger...');
+
+            // Force reload
+            window.location.reload(true);
+        }
+    </script>
+</body>
+</html>

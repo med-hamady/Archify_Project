@@ -1,0 +1,48 @@
+feat: Add Histo Nozha PCEM2 import with auto-deployment
+
+🎯 Fonctionnalités principales:
+- Import automatique de 249 QCMs d'Histologie PCEM2
+- Système à 3 états pour les réponses (✅ correct, ❌ incorrect, ⚠️ partial)
+- Parsing flexible multi-format (supporte variations de syntaxe)
+- Script idempotent (peut être exécuté plusieurs fois sans doublons)
+- Safe pour production (ne bloque jamais le déploiement)
+
+📦 Fichiers ajoutés/modifiés:
+- backend/src/import-histo-nozha-pcem2.ts - Script d'import principal
+- backend/src/export-histo-pcem2-sql.ts - Export SQL pour production
+- backend/src/clear-histo-pcem2.ts - Script de nettoyage
+- backend/src/services/xp.service.ts - Support 3 états (✅❌⚠️)
+- backend/package.json - Scripts NPM + auto-exec au démarrage
+- DEPLOIEMENT_HISTO.md - Documentation complète
+- WORKFLOW_DEPLOIEMENT.md - Guide de déploiement
+
+🚀 Déploiement:
+Le script s'exécute automatiquement lors de `npm start` sur Render.com:
+1. Vérifie si les données existent → ignore si présent
+2. Vérifie si fichiers sources existent → ignore en production (normal)
+3. Ne fait jamais échouer le build
+
+📊 Données importées:
+- 7 fichiers sources analysés
+- 249 questions (QCMs) importées
+- 57 chapitres/sections créés
+- Support de 4 à 6 options par question
+- Justifications et conclusions préservées
+
+✨ Système de scoring:
+- Options ✅ (correct): +1 point si sélectionnée, -0.25 si ratée
+- Options ❌ (incorrect): -0.25 si sélectionnée, 0 sinon
+- Options ⚠️ (partial): 0 impact (neutre pour score et XP)
+
+🧪 Tests:
+- ✅ Import initial: 249 questions importées
+- ✅ Idempotence: Import ignoré à la 2ème exécution
+- ✅ Build TypeScript: Pas d'erreur de compilation
+- ✅ Compatibilité production: Gestion d'erreur robuste
+
+📝 Utilisation:
+npm run import:histo:pcem2  # Import manuel (idempotent)
+npm run clear:histo:pcem2   # Nettoyage
+npm run export:histo:sql    # Export SQL pour prod
+
+🔗 Related to: Système de gamification FacGame

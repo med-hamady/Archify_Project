@@ -395,6 +395,44 @@
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
 }
 
+/* Subchapters List */
+.subchapters-list {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #3b82f6;
+}
+
+.subchapter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.subchapter-bullet {
+  color: #3b82f6;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.subchapter-title {
+  flex: 1;
+  color: #333;
+  font-weight: 500;
+}
+
+.subchapter-count {
+  color: #666;
+  font-size: 0.85rem;
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
 /* Chapter Progress */
 .chapter-progress {
   margin-bottom: 1.5rem;

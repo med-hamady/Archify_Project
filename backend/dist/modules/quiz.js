@@ -70,12 +70,18 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, auth_1.requireQuizAccess,
                 });
             }
         }
-        // Trouver toutes les bonnes réponses
+        // Trouver toutes les bonnes réponses (exclure les partielles)
         const correctAnswerIndices = options
-            .map((opt, index) => opt.isCorrect ? index : -1)
+            .map((opt, index) => opt.isCorrect && !opt.isPartial ? index : -1)
             .filter((index) => index !== -1);
-        // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses
-        const selectedSet = new Set(selectedAnswers);
+        // Trouver les indices des réponses partielles (à ignorer dans le calcul)
+        const partialAnswerIndices = options
+            .map((opt, index) => opt.isPartial ? index : -1)
+            .filter((index) => index !== -1);
+        // Filtrer les réponses partielles des réponses sélectionnées (elles ne comptent pas)
+        const selectedNonPartial = selectedAnswers.filter(index => !partialAnswerIndices.includes(index));
+        // Vérifier si l'utilisateur a sélectionné exactement les bonnes réponses (en ignorant les partielles)
+        const selectedSet = new Set(selectedNonPartial);
         const correctSet = new Set(correctAnswerIndices);
         const isCorrect = selectedSet.size === correctSet.size &&
             [...selectedSet].every(index => correctSet.has(index));
@@ -217,7 +223,8 @@ exports.quizRouter.post('/answer', auth_1.requireAuth, auth_1.requireQuizAccess,
         const optionsWithFeedback = options.map((opt, index) => ({
             text: opt.text,
             isCorrect: opt.isCorrect,
-            justification: !opt.isCorrect ? opt.justification : undefined,
+            isPartial: opt.isPartial || false, // Include partial flag
+            justification: opt.justification || undefined, // Show justification for incorrect AND partial answers
             wasSelected: selectedAnswers.includes(index)
         }));
         // 13. Réponse complète

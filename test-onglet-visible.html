@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Onglet Import - FacGame</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        h2 { color: #666; margin-top: 0; }
+        .success { color: #22c55e; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+        button {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+        #result { margin-top: 20px; }
+        pre {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic Onglet "Importer Matière"</h1>
+
+    <div class="card">
+        <h2>1. Configuration</h2>
+        <label>URL de votre application Vercel :</label>
+        <input type="text" id="appUrl" placeholder="https://votre-app.vercel.app" value="">
+        <p style="font-size: 12px; color: #666;">
+            Entrez l'URL complète de votre application (sans /admin à la fin)
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>2. Tests automatiques</h2>
+        <button onclick="runAllTests()">🚀 Lancer tous les tests</button>
+        <button onclick="checkTabInCode()">📝 Test 1 : Vérifier le code</button>
+        <button onclick="checkDeployment()">🔄 Test 2 : Vérifier le déploiement</button>
+        <button onclick="checkCache()">🗑️ Test 3 : Vérifier le cache</button>
+
+        <div id="result"></div>
+    </div>
+
+    <div class="card">
+        <h2>3. Instructions manuelles</h2>
+        <ol>
+            <li><strong>Videz le cache :</strong> Ctrl + Shift + Delete → Effacer les données</li>
+            <li><strong>Rafraîchissez :</strong> Ctrl + F5 (force refresh)</li>
+            <li><strong>Testez en navigation privée :</strong> Ctrl + Shift + N</li>
+            <li><strong>Vérifiez Vercel :</strong> <a href="https://vercel.com/dashboard" target="_blank">Dashboard Vercel</a></li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>4. Commit récent</h2>
+        <pre>Commit: 71ce64b - "Force Vercel redeploy"
+Status: ✅ Poussé
+Action: Déploiement Vercel déclenché
+Temps d'attente: 2-3 minutes</pre>
+    </div>
+
+    <script>
+        function getAppUrl() {
+            let url = document.getElementById('appUrl').value.trim();
+            if (!url) {
+                alert('⚠️ Veuillez entrer l\'URL de votre application Vercel');
+                return null;
+            }
+            return url.replace(/\/$/, ''); // Remove trailing slash
+        }
+
+        async function checkTabInCode() {
+            const url = getAppUrl();
+            if (!url) return;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>⏳ Test 1 en cours...</p>';
+
+            try {
+                // Fetch the main bundle to check if "Importer Matière" exists
+                const response = await fetch(`${url}/main.js`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const text = await response.text();
+                const hasImportTab = text.includes('Importer Matière') || text.includes('import-subject');
+
+                if (hasImportTab) {
+                    resultDiv.innerHTML += `<p class="success">✅ Test 1 RÉUSSI : Le code contient "Importer Matière"</p>`;
+                } else {
+                    resultDiv.innerHTML += `<p class="error">❌ Test 1 ÉCHOUÉ : Le code ne contient pas "Importer Matière"</p>`;
+                    resultDiv.innerHTML += `<p>⚠️ Le déploiement n'est pas à jour. Attendez 2-3 minutes.</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML += `<p class="error">❌ Erreur : ${error.message}</p>`;
+            }
+        }
+
+        async function checkDeployment() {
+            const url = getAppUrl();
+            if (!url) return;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML += '<p>⏳ Test 2 en cours...</p>';
+
+            try {
+                const response = await fetch(`${url}/admin`, { method: 'HEAD' });
+                if (response.ok) {
+                    resultDiv.innerHTML += `<p class="success">✅ Test 2 RÉUSSI : L'application est accessible</p>`;
+
+                    // Check cache headers
+                    const cacheControl = response.headers.get('cache-control');
+                    resultDiv.innerHTML += `<p>📦 Cache-Control: ${cacheControl || 'Non défini'}</p>`;
+                } else {
+                    resultDiv.innerHTML += `<p class="error">❌ Test 2 ÉCHOUÉ : Status ${response.status}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML += `<p class="error">❌ Erreur : ${error.message}</p>`;
+            }
+        }
+
+        function checkCache() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML += '<p>⏳ Test 3 en cours...</p>';
+
+            // Check if service worker is registered
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    if (registrations.length > 0) {
+                        resultDiv.innerHTML += `<p class="error">⚠️ Service Worker actif détecté (${registrations.length})</p>`;
+                        resultDiv.innerHTML += `<p>Conseil : Désactivez-le dans DevTools → Application → Service Workers</p>`;
+                    } else {
+                        resultDiv.innerHTML += `<p class="success">✅ Aucun Service Worker actif</p>`;
+                    }
+                });
+            }
+
+            // Check localStorage
+            const lsSize = Object.keys(localStorage).length;
+            resultDiv.innerHTML += `<p>💾 LocalStorage: ${lsSize} clés</p>`;
+
+            // Check sessionStorage
+            const ssSize = Object.keys(sessionStorage).length;
+            resultDiv.innerHTML += `<p>💾 SessionStorage: ${ssSize} clés</p>`;
+
+            resultDiv.innerHTML += `<p class="success">✅ Test 3 TERMINÉ</p>`;
+        }
+
+        async function runAllTests() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>🔍 Résultats des tests :</h3>';
+
+            await checkTabInCode();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await checkDeployment();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            checkCache();
+
+            resultDiv.innerHTML += '<hr><h3>📋 Résumé :</h3>';
+            resultDiv.innerHTML += `
+                <p><strong>Prochaines étapes :</strong></p>
+                <ol>
+                    <li>Si tous les tests passent mais l'onglet n'apparaît pas → Videz le cache (Ctrl+Shift+Delete)</li>
+                    <li>Si le Test 1 échoue → Attendez 2-3 minutes le déploiement Vercel</li>
+                    <li>Si le problème persiste → Testez en navigation privée (Ctrl+Shift+N)</li>
+                </ol>
+            `;
+        }
+
+        // Auto-populate URL if on same domain
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            const currentUrl = `${window.location.protocol}//${window.location.hostname}`;
+            document.getElementById('appUrl').value = currentUrl;
+        }
+    </script>
+</body>
+</html>

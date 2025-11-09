@@ -158,6 +158,16 @@ exports.subjectsRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
                                 id: true
                             }
                         },
+                        subchapters: {
+                            orderBy: { orderIndex: 'asc' },
+                            include: {
+                                questions: {
+                                    select: {
+                                        id: true
+                                    }
+                                }
+                            }
+                        },
                         chapterProgresses: {
                             where: { userId },
                             select: {
@@ -179,16 +189,24 @@ exports.subjectsRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
         }
         // Récupérer la progression globale
         const subjectProgress = await (0, progress_service_1.getSubjectProgress)(userId, id);
-        // Mapper les chapitres avec leur progression
+        // Mapper les chapitres avec leur progression et sous-chapitres
         const chaptersWithProgress = subject.chapters.map(chapter => {
             const progress = chapter.chapterProgresses[0];
+            // Mapper les sous-chapitres
+            const subchaptersData = chapter.subchapters?.map(subchapter => ({
+                id: subchapter.id,
+                title: subchapter.title,
+                orderIndex: subchapter.orderIndex,
+                questionsCount: subchapter.questions.length
+            })) || [];
             return {
                 id: chapter.id,
                 title: chapter.title,
                 position: chapter.orderIndex,
                 questionsCount: chapter.questions.length,
                 progressPercent: progress ? progress.progressPercent : 0,
-                challengeUnlocked: progress ? progress.challengeUnlocked : false
+                challengeUnlocked: progress ? progress.challengeUnlocked : false,
+                subchapters: subchaptersData
             };
         });
         // Calculer dynamiquement si l'examen est débloqué (update4)

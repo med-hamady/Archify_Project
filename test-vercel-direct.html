@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Direct Vercel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1f2937;
+            color: white;
+        }
+        .card {
+            background: #374151;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        h1 { color: #60a5fa; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #60a5fa;
+            border-radius: 5px;
+            background: #1f2937;
+            color: white;
+            font-size: 16px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+        pre {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #4b5563;
+            color: #10b981;
+        }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        code {
+            background: #111827;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test Direct du Déploiement Vercel</h1>
+
+    <div class="card">
+        <h2>Étape 1 : Configuration</h2>
+        <p>Entrez l'URL de votre application Vercel :</p>
+        <input type="text" id="vercelUrl" placeholder="https://votre-app.vercel.app" value="">
+        <p style="font-size: 12px; color: #9ca3af;">Ne mettez pas /admin à la fin, juste l'URL de base</p>
+    </div>
+
+    <div class="card">
+        <h2>Étape 2 : Tests Automatiques</h2>
+        <button onclick="testAll()">🚀 Lancer TOUS les tests</button>
+        <button onclick="testMainJS()">📦 Test 1 : Vérifier main.js</button>
+        <button onclick="testRuntimeJS()">⚡ Test 2 : Vérifier runtime.js</button>
+        <button onclick="testPageSource()">🔎 Test 3 : Vérifier le HTML</button>
+
+        <div id="results" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>📋 Instructions Manuelles</h2>
+        <ol style="line-height: 1.8;">
+            <li>Allez sur votre dashboard admin : <code>https://votre-app.vercel.app/admin</code></li>
+            <li>Appuyez sur <code>F12</code> pour ouvrir les DevTools</li>
+            <li>Allez dans l'onglet <strong>Console</strong></li>
+            <li>Tapez cette commande :
+                <pre>document.body.innerText.includes('Importer Matière')</pre>
+            </li>
+            <li>Si résultat = <span class="success">true</span> → L'onglet existe dans le DOM</li>
+            <li>Si résultat = <span class="error">false</span> → Le build Vercel n'est pas à jour</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Test Angular Build</h2>
+        <p>Si les tests échouent, le problème peut être :</p>
+        <ol style="line-height: 1.8;">
+            <li><span class="warning">Angular build cache</span> : Vercel utilise l'ancien build</li>
+            <li><span class="warning">Environment variables</span> : Mauvaise configuration</li>
+            <li><span class="warning">Build command incorrect</span> : Vérifier dans Vercel settings</li>
+        </ol>
+
+        <h3 style="margin-top: 20px;">Solution recommandée :</h3>
+        <pre>1. Allez sur https://vercel.com/dashboard
+2. Sélectionnez votre projet FacGame
+3. Settings → General
+4. Vérifiez :
+   - Build Command: npm run build (ou ng build)
+   - Output Directory: dist/frontend/browser
+   - Install Command: npm install
+5. Deployments → Latest → Trois points (...) → Redeploy
+6. Cochez "Use existing build cache" = DÉCOCHÉ
+7. Cliquez "Redeploy"</pre>
+    </div>
+
+    <script>
+        function getUrl() {
+            const url = document.getElementById('vercelUrl').value.trim();
+            if (!url) {
+                alert('⚠️ Veuillez entrer l\'URL Vercel');
+                return null;
+            }
+            return url.replace(/\/$/, '');
+        }
+
+        async function testMainJS() {
+            const url = getUrl();
+            if (!url) return;
+
+            const results = document.getElementById('results');
+            results.innerHTML = '<p class="warning">⏳ Test 1 en cours...</p>';
+
+            try {
+                const response = await fetch(`${url}/main.js`);
+                const text = await response.text();
+
+                const hasImportTab = text.includes('Importer Matière') || text.includes('import-subject');
+
+                if (hasImportTab) {
+                    results.innerHTML += '<p class="success">✅ Test 1 RÉUSSI : main.js contient "Importer Matière"</p>';
+                } else {
+                    results.innerHTML += '<p class="error">❌ Test 1 ÉCHOUÉ : main.js NE contient PAS "Importer Matière"</p>';
+                    results.innerHTML += '<p class="warning">⚠️ Le build Vercel n\'est pas à jour. Il faut redéployer SANS cache.</p>';
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">❌ Erreur : ${error.message}</p>`;
+            }
+        }
+
+        async function testRuntimeJS() {
+            const url = getUrl();
+            if (!url) return;
+
+            const results = document.getElementById('results');
+            results.innerHTML += '<p class="warning">⏳ Test 2 en cours...</p>';
+
+            try {
+                // Try to fetch any chunk files
+                const indexResponse = await fetch(`${url}/index.html`);
+                const indexHtml = await indexResponse.text();
+
+                // Extract script tags
+                const scriptMatches = indexHtml.match(/<script[^>]*src="([^"]*)"[^>]*>/g);
+
+                if (scriptMatches) {
+                    results.innerHTML += `<p class="success">✅ Test 2 : Trouvé ${scriptMatches.length} fichiers JavaScript</p>`;
+                    results.innerHTML += `<pre>${scriptMatches.join('\n')}</pre>`;
+                } else {
+                    results.innerHTML += '<p class="error">❌ Aucun script trouvé dans index.html</p>';
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">❌ Erreur : ${error.message}</p>`;
+            }
+        }
+
+        async function testPageSource() {
+            const url = getUrl();
+            if (!url) return;
+
+            const results = document.getElementById('results');
+            results.innerHTML += '<p class="warning">⏳ Test 3 en cours...</p>';
+
+            try {
+                const response = await fetch(`${url}/admin`);
+                const html = await response.text();
+
+                const hasImportTab = html.includes('Importer Matière') || html.includes('import-subject');
+
+                if (hasImportTab) {
+                    results.innerHTML += '<p class="success">✅ Test 3 RÉUSSI : La page /admin contient "Importer Matière"</p>';
+                } else {
+                    results.innerHTML += '<p class="error">❌ Test 3 ÉCHOUÉ : La page /admin NE contient PAS "Importer Matière"</p>';
+                    results.innerHTML += '<p class="warning">⚠️ Angular n\'a pas inclus l\'onglet dans le build.</p>';
+                }
+
+                // Check if it's an Angular app
+                if (html.includes('ng-version') || html.includes('app-root')) {
+                    results.innerHTML += '<p class="success">✅ Application Angular détectée</p>';
+                } else {
+                    results.innerHTML += '<p class="warning">⚠️ Pas d\'application Angular détectée (SSR possible)</p>';
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">❌ Erreur : ${error.message}</p>`;
+            }
+        }
+
+        async function testAll() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h3 class="warning">🔍 Tests en cours...</h3>';
+
+            await testMainJS();
+            await new Promise(r => setTimeout(r, 1000));
+            await testRuntimeJS();
+            await new Promise(r => setTimeout(r, 1000));
+            await testPageSource();
+
+            results.innerHTML += '<hr style="border-color: #4b5563; margin: 20px 0;">';
+            results.innerHTML += '<h3>📊 Diagnostic :</h3>';
+            results.innerHTML += `
+                <p><strong>Si TOUS les tests échouent :</strong></p>
+                <ul style="line-height: 1.8;">
+                    <li>Le build Vercel utilise l'ancien code</li>
+                    <li>Solution : Redéployer SANS cache sur Vercel</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Si certains tests réussissent :</strong></p>
+                <ul style="line-height: 1.8;">
+                    <li>Le code est présent mais Angular ne le charge pas</li>
+                    <li>Vérifier les routes Angular et le lazy loading</li>
+                </ul>
+            `;
+        }
+
+        // Auto-populate if on same domain
+        if (window.location.hostname !== 'localhost') {
+            document.getElementById('vercelUrl').value = `${window.location.protocol}//${window.location.hostname}`;
+        }
+    </script>
+</body>
+</html>

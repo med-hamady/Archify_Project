@@ -177,6 +177,16 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
                 id: true
               }
             },
+            subchapters: {
+              orderBy: { orderIndex: 'asc' },
+              include: {
+                questions: {
+                  select: {
+                    id: true
+                  }
+                }
+              }
+            },
             chapterProgresses: {
               where: { userId },
               select: {
@@ -201,9 +211,17 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
     // Récupérer la progression globale
     const subjectProgress = await getSubjectProgress(userId, id);
 
-    // Mapper les chapitres avec leur progression
+    // Mapper les chapitres avec leur progression et sous-chapitres
     const chaptersWithProgress = subject.chapters.map(chapter => {
       const progress = chapter.chapterProgresses[0];
+
+      // Mapper les sous-chapitres
+      const subchaptersData = chapter.subchapters?.map(subchapter => ({
+        id: subchapter.id,
+        title: subchapter.title,
+        orderIndex: subchapter.orderIndex,
+        questionsCount: subchapter.questions.length
+      })) || [];
 
       return {
         id: chapter.id,
@@ -211,7 +229,8 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
         position: chapter.orderIndex,
         questionsCount: chapter.questions.length,
         progressPercent: progress ? progress.progressPercent : 0,
-        challengeUnlocked: progress ? progress.challengeUnlocked : false
+        challengeUnlocked: progress ? progress.challengeUnlocked : false,
+        subchapters: subchaptersData
       };
     });
 
