@@ -249,7 +249,8 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
     const optionsWithFeedback = options.map((opt: any, index: number) => ({
       text: opt.text,
       isCorrect: opt.isCorrect,
-      justification: !opt.isCorrect ? opt.justification : undefined,
+      isPartial: opt.isPartial || false, // Include partial flag
+      justification: opt.justification || undefined, // Show justification for incorrect AND partial answers
       wasSelected: selectedAnswers.includes(index)
     }));
 
