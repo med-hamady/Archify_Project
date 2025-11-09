@@ -92,7 +92,7 @@ import { DeviceService } from '../../services/device.service';
                   type="text"
                   formControlName="firstName"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Jean"
+                  placeholder=""
                   [class.border-red-500]="authForm.get('firstName')?.invalid && authForm.get('firstName')?.touched"
                 />
                 <div *ngIf="authForm.get('firstName')?.invalid && authForm.get('firstName')?.touched" 
@@ -111,7 +111,7 @@ import { DeviceService } from '../../services/device.service';
                   type="text"
                   formControlName="lastName"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Dupont"
+                  placeholder=""
                   [class.border-red-500]="authForm.get('lastName')?.invalid && authForm.get('lastName')?.touched"
                 />
                 <div *ngIf="authForm.get('lastName')?.invalid && authForm.get('lastName')?.touched" 
