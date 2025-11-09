@@ -15,8 +15,8 @@ const prisma = new PrismaClient();
 // CONFIGURATION
 // ============================================
 
-// Chemin source (local uniquement)
-const SOURCE_DIR = 'C:\\Users\\pc\\Desktop\\FAC GAME\\pcem2\\S INETR\\quiz pcem2\\histo';
+// Chemin relatif pour fonctionner en local ET en production
+const SOURCE_DIR = path.join(__dirname, '..', 'data', 'histologie');
 
 // Liste des fichiers (ordre alphanumérique)
 const FILES = [

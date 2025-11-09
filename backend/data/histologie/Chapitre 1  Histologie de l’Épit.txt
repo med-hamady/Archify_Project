@@ -1,0 +1,206 @@
+🧬 Chapitre 1 : Histologie de l’Épithélium (revêtement + glandulaire)
+
+
+1️⃣ Définition générale
+
+Question : Les tissus épithéliaux se caractérisent par :
+A. Des cellules très jointives ✔️
+B. Une abondance de matrice extracellulaire ❌ — La matrice y est quasi inexistante.
+C. Une vascularisation directe ❌ — Ils sont avasculaires.
+D. Une présence de membrane basale ✔️
+E. Une capacité de régénération ✔️
+
+Justification : Les épithéliums reposent sur une lame basale, sans vaisseaux, formés de cellules serrées capables de se renouveler rapidement.
+
+2️⃣ Localisation des épithéliums
+
+Question : Où peut-on trouver un épithélium pavimenteux simple ?
+A. Alvéoles pulmonaires ✔️
+B. Épiderme ❌ — L’épiderme est pavimenteux stratifié kératinisé.
+C. Endothélium vasculaire ✔️
+D. Muqueuse buccale ❌ — Pavimenteux stratifié non kératinisé.
+E. Tubules rénaux ❌ — Cubique simple.
+
+Justification : L’épithélium pavimenteux simple tapisse les surfaces d’échanges : alvéoles et endothélium.
+
+3️⃣ Épithélium cubique simple
+
+A. Tapisse les canaux excréteurs des glandes ✔️
+B. Présent dans l’estomac ❌ — C’est un épithélium prismatique.
+C. Rôle sécréteur ou absorbant ✔️
+D. Noyau aplati ❌ — Il est central et rond.
+E. Cellules allongées ❌ — Elles sont cubiques.
+
+Justification : Il compose les canaux et tubules ; cellules cubiques à noyau central pour sécrétion/absorption.
+
+4️⃣ Épithélium cylindrique simple
+
+A. Présent dans l’intestin grêle ✔️
+B. Contient souvent des cellules caliciformes ✔️
+C. Noyau basilaire ✔️
+D. Pavimenteux ❌ — Les cellules sont hautes.
+E. Spécialisé dans la filtration ❌ — Fonction d’absorption et de sécrétion.
+
+Justification : L’épithélium cylindrique simple est typique de la muqueuse intestinale, avec cellules caliciformes sécrétrices de mucus.
+
+5️⃣ Épithélium pseudostratifié cilié
+
+A. Toutes les cellules atteignent la surface ❌ — Certaines n’y parviennent pas.
+B. Présent dans la trachée ✔️
+C. Contient des cellules à mucus ✔️
+D. Pavimenteux ❌
+E. Sert au transport du mucus ✔️
+
+Justification : Pseudostratifié cilié = épithélium respiratoire : cellules caliciformes et cils évacuant le mucus.
+
+6️⃣ Épithélium pavimenteux stratifié kératinisé
+
+A. Forme l’épiderme ✔️
+B. Hydraté en permanence ❌ — Kératinisation = dessiccation.
+C. Contient des kératinocytes ✔️
+D. Présent sur la cornée ❌ — Non kératinisée.
+E. Résistant aux frottements ✔️
+
+Justification : Il protège la peau contre la déshydratation et les agressions mécaniques.
+
+7️⃣ Épithélium pavimenteux stratifié non kératinisé
+
+A. Tapisse la bouche ✔️
+B. L’œsophage ✔️
+C. L’urètre masculin distal ✔️
+D. L’estomac ❌ — Prismatique simple.
+E. La peau ❌ — Kératinisée.
+
+Justification : Il protège les muqueuses internes soumises au frottement mais non exposées à l’air.
+
+8️⃣ Épithélium transitionnel (urothélium)
+
+A. Présent dans la vessie ✔️
+B. Permet la distension ✔️
+C. Cellules superficielles en dôme ✔️
+D. Toujours aplati ❌ — Variable selon remplissage.
+E. Présent dans les bronches ❌
+
+Justification : L’urothélium s’adapte au volume urinaire ; cellules en dôme deviennent plates lors de la distension.
+
+9️⃣ Glande exocrine
+
+A. Déverse son produit dans le sang ❌ — C’est la glande endocrine.
+B. Possède un canal excréteur ✔️
+C. Sécrète des hormones ❌
+D. Sécrète mucus, sueur, enzymes ✔️
+E. Formée uniquement de cellules musculaires ❌
+
+Justification : Les glandes exocrines libèrent leurs sécrétions à la surface ou dans un canal.
+
+10️⃣ Glande endocrine
+
+A. Dépourvue de canal ✔️
+B. Libère son produit dans le sang ✔️
+C. Sécrète des enzymes digestives ❌ — Plutôt hormones.
+D. Riche en capillaires ✔️
+E. Reliée directement à un épithélium de revêtement ❌
+
+Justification : Les glandes endocrines sécrètent les hormones dans la circulation, sans canal excréteur.
+
+11️⃣ Jonctions cellulaires
+
+A. Zonula occludens (jonction serrée) ✔️
+B. Desmosome ✔️
+C. Hémidesmosome ✔️
+D. Gap junction ✔️
+E. Synapse chimique ❌ — Spécifique au tissu nerveux.
+
+Justification : Les quatre premières assurent cohésion et communication intercellulaire dans l’épithélium.
+
+12️⃣ Spécialisations apicales
+
+A. Microvillosités ✔️
+B. Cils ✔️
+C. Stéréocils ✔️
+D. Flagelles ✔️
+E. Corps de Nissl ❌ — Spécifiques aux neurones.
+
+Justification : Les spécialisations apicales augmentent surface d’échange ou mobilité cellulaire.
+
+13️⃣ Polarité cellulaire
+
+A. Membrane basale au pôle basal ✔️
+B. Cils au pôle apical ✔️
+C. Noyau excentré apical ❌ — Souvent basilaire.
+D. Contacts latéraux entre cellules ✔️
+E. Absence d’organisation ❌
+
+Justification : L’épithélium montre une polarité stricte : apical, latéral, basal bien différenciés.
+
+14️⃣ Types de sécrétion
+
+A. Mérocrine ✔️
+B. Apocrine ✔️
+C. Holocrine ✔️
+D. Paracrine ❌ — Voisinage, pas excrétion glandulaire.
+E. Endocrine ❌ — Sans canal, différente.
+
+Justification : Les sécrétions exocrines se font par voie méro-, apo-, ou holocrine selon la perte cellulaire.
+
+15️⃣ Exemple de glande mérocrine
+
+A. Glandes salivaires ✔️
+B. Glandes sébacées ❌ — Holocrines.
+C. Glandes sudoripares eccrines ✔️
+D. Glandes mammaires ❌ — Apocrines.
+E. Glandes lacrymales ✔️
+
+Justification : Sécrétion par exocytose sans perte de cytoplasme.
+
+16️⃣ Glande holocrine
+
+A. Destruction de la cellule ✔️
+B. Sécrétion lipidique ✔️
+C. Exemple : glande sébacée ✔️
+D. Sécrétion aqueuse ❌
+E. Régénération impossible ❌ — Les cellules se renouvellent à partir de la couche basale.
+
+Justification : Les glandes holocrines libèrent leur contenu en se désintégrant (sébum).
+
+17️⃣ Glande apocrine
+
+A. Perte partielle du cytoplasme ✔️
+B. Exemple : glande mammaire ✔️
+C. Exemple : glande sudoripare apocrine ✔️
+D. Sécrétion d’eau pure ❌
+E. Pas de membrane basale ❌
+
+Justification : Une portion du cytoplasme apical est éliminée avec le produit de sécrétion.
+
+18️⃣ Rôle de la membrane basale
+
+A. Soutien mécanique ✔️
+B. Filtration ✔️
+C. Nourrit les cellules épithéliales ✔️
+D. Traversée par les capillaires ❌ — Les vaisseaux s’arrêtent sous-jacents.
+E. Inexistante dans les épithéliums ❌
+
+Justification : Structure essentielle entre épithélium et conjonctif, filtre et support nutritif.
+
+19️⃣ Innervation de l’épithélium
+
+A. Présente ✔️
+B. Sensible à la douleur ✔️
+C. Richement vascularisé ❌ — Toujours avasculaire.
+D. Assure perception sensorielle ✔️
+E. Totalement dénué de terminaisons ❌
+
+Justification : Les terminaisons nerveuses atteignent la base épithéliale pour sensibilité.
+
+20️⃣ Capacité de régénération
+
+A. Faible ❌ — Très élevée.
+B. Grâce aux cellules souches basales ✔️
+C. Inexistante ❌
+D. Diminue avec l’âge ✔️
+E. Dépend de la vascularisation ❌ — Dépend de la nutrition sous-jacente.
+
+Justification : Les épithéliums se régénèrent activement via les cellules basales, mais plus lentement avec l’âge.
+
+

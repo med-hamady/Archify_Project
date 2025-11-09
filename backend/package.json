@@ -35,7 +35,8 @@
     "clear:histo-nozha:pcem2": "node dist/clear-histo-pcem2.js",
     "clear:histologie:pcem2": "node dist/clear-histologie-pcem2.js",
     "export:histo:sql": "node dist/export-histo-pcem2-sql.js",
-    "restore:histologie": "node dist/restore-histologie-v2.js"
+    "restore:histologie": "node dist/restore-histologie-v2.js",
+    "restore:all-histologie": "node dist/restore-all-histologie.js"
   },
   "keywords": [],
   "author": "",
