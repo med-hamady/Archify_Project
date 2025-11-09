@@ -89,12 +89,12 @@ function detectAnswerState(text: string): 'correct' | 'incorrect' | 'partial' {
  * - "A-Texte ✅/❌/⚠️ → Justification"
  */
 function parseOption(line: string): ParsedOption | null {
-  // Format 1: "A. Texte ..."
-  let match = line.match(/^([A-F])\.\s+(.+?)(?:\s*\((?:✅|❌|⚠️)\))?\s*(?:→\s*(.+))?$/);
+  // Format 1: "A. Texte ..." ou "a. Texte ..." (majuscules et minuscules)
+  let match = line.match(/^([A-Fa-f])\.\s+(.+?)(?:\s*\((?:✅|❌|⚠️)\))?\s*(?:→\s*(.+))?$/);
 
-  // Format 2: "A-Texte ..."
+  // Format 2: "A-Texte ..." ou "a-Texte ..." (majuscules et minuscules)
   if (!match) {
-    match = line.match(/^([A-F])-(.+?)(?:\s+(?:✅|❌|⚠️))?\s*(?:→\s*(.+))?$/);
+    match = line.match(/^([A-Fa-f])-(.+?)(?:\s+(?:✅|❌|⚠️))?\s*(?:→\s*(.+))?$/);
   }
 
   if (!match) return null;
@@ -212,8 +212,8 @@ function parseFile(filePath: string, fileName: string): ParsedFile {
 
     // Si on attend le texte de la question (QCM sur 2 lignes)
     if (awaitingQuestionText && currentQuestion && !currentQuestion.questionText) {
-      // Continuer à accumuler le texte jusqu'à trouver une ligne option (A-/B-) ou vide
-      if (/^[A-F][-.]/.test(line)) {
+      // Continuer à accumuler le texte jusqu'à trouver une ligne option (A-/B-/a-/b-) ou vide
+      if (/^[A-Fa-f][-.]/.test(line)) {
         // C'est une option, donc la question est terminée
         currentQuestion.questionText = currentQuestionTextLines.join(' ').trim().replace(/:$/, '');
         awaitingQuestionText = false;
@@ -241,8 +241,8 @@ function parseFile(filePath: string, fileName: string): ParsedFile {
       continue;
     }
 
-    // Détection d'option (A., B., C., A-, B-, etc.)
-    if (currentQuestion && /^[A-F][-.]/.test(line)) {
+    // Détection d'option (A., B., C., A-, B-, a., b., a-, b-, etc.)
+    if (currentQuestion && /^[A-Fa-f][-.]/.test(line)) {
       const option = parseOption(line);
       if (option) {
         currentOptions.push(option);
