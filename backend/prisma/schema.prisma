@@ -81,6 +81,7 @@ model Chapter {
   views     Int      @default(0)
 
   // Relations
+  subchapters       Subchapter[]
   questions         Question[]
   comments          Comment[]
   chapterProgresses ChapterProgress[]
@@ -89,16 +90,37 @@ model Chapter {
   @@index([subjectId, orderIndex], map: "chapters_subject_order_idx")
 }
 
+// FacGame: Sous-chapitres dans un chapitre (pour organisation détaillée)
+model Subchapter {
+  id          String  @id @default(cuid())
+  chapter     Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId   String
+  title       String // Ex: "ANATOMIE MICROSCOPIQUE", "GLOMÉRULE"
+  orderIndex  Int     @default(0)
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+
+  // Relations
+  questions Question[]
+
+  @@index([chapterId, orderIndex], map: "subchapters_chapter_order_idx")
+}
+
 // FacGame: Questions QCM
 model Question {
   id        String  @id @default(cuid())
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String
 
+  // Support pour sous-chapitres (optionnel)
+  subchapter   Subchapter? @relation(fields: [subchapterId], references: [id], onDelete: Cascade)
+  subchapterId String?
+
   questionText String @db.Text
 
-  // Structure des options: [{text: string, isCorrect: boolean, justification?: string}]
-  options Json // Array d'objets avec text, isCorrect, justification
+  // Structure des options: [{text: string, isCorrect: boolean, isPartial: boolean, justification?: string}]
+  options Json // Array d'objets avec text, isCorrect, isPartial, justification
 
   explanation String? @db.Text // Commentaire général de la question
 
@@ -111,6 +133,7 @@ model Question {
   attempts QuizAttempt[]
 
   @@index([chapterId, orderIndex], map: "questions_chapter_order_idx")
+  @@index([subchapterId, orderIndex], map: "questions_subchapter_order_idx")
 }
 
 // FacGame: Commentaires sur les chapitres
