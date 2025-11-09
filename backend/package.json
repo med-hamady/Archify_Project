@@ -32,7 +32,8 @@
     "export:dcem1": "node dist/export-dcem1-data.js",
     "import:histo:pcem2": "node dist/import-histo-nozha-pcem2.js",
     "clear:histo:pcem2": "node dist/clear-histo-pcem2.js",
-    "export:histo:sql": "node dist/export-histo-pcem2-sql.js"
+    "export:histo:sql": "node dist/export-histo-pcem2-sql.js",
+    "restore:histologie": "node dist/restore-histologie-v2.js"
   },
   "keywords": [],
   "author": "",
