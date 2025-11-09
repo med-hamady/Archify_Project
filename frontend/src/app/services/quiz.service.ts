@@ -13,6 +13,8 @@ export interface QuizQuestion {
   options: QuizOption[];  // Nouveau format JSON
   chapterId?: string;
   chapterTitle?: string;
+  subchapterId?: string;
+  subchapterTitle?: string;
   position?: number;
   totalQuestions?: number;
   orderIndex?: number;
@@ -77,14 +79,18 @@ export class QuizService {
    * @param chapterId ID du chapitre
    * @param replay Si true, recommence le chapitre depuis le début
    * @param currentQuestionId ID de la question actuelle (pour obtenir la suivante)
+   * @param subchapterId ID du sous-chapitre (optionnel, pour filtrer les questions)
    */
-  getNextQuestion(chapterId: string, replay: boolean = false, currentQuestionId?: string): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
+  getNextQuestion(chapterId: string, replay: boolean = false, currentQuestionId?: string, subchapterId?: string): Observable<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }> {
     let params = new HttpParams();
     if (replay) {
       params = params.set('replay', 'true');
     }
     if (currentQuestionId) {
       params = params.set('currentQuestionId', currentQuestionId);
+    }
+    if (subchapterId) {
+      params = params.set('subchapterId', subchapterId);
     }
 
     return this.http.get<{ success: boolean; question: QuizQuestion; completed?: boolean; message?: string }>(

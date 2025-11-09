@@ -20,6 +20,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
 
   chapterId: string | null = null;
+  subchapterId: string | null = null;
   currentQuestion: QuizQuestion | null = null;
   selectedAnswers: number[] = [];
   answered = false;
@@ -41,6 +42,8 @@ export class QuizComponent implements OnInit, OnDestroy {
     this.screenshotProtection.enableProtection();
 
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
+    this.subchapterId = this.route.snapshot.queryParamMap.get('subchapterId');
+
     if (this.chapterId) {
       this.loadNextQuestion();
     } else {
@@ -70,7 +73,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     this.chapterCompleted = false;
     this.completionMessage = null;
 
-    this.quizService.getNextQuestion(this.chapterId, replay, currentQuestionId).subscribe({
+    this.quizService.getNextQuestion(this.chapterId, replay, currentQuestionId, this.subchapterId || undefined).subscribe({
       next: (res) => {
         if (res.completed) {
           // Chapitre terminé

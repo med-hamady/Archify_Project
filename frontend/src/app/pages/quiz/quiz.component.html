@@ -5,6 +5,9 @@
       ← Retour
     </button>
     <div *ngIf="currentQuestion" class="progress-info">
+      <div *ngIf="currentQuestion.subchapterTitle" class="subchapter-badge">
+        📖 {{ currentQuestion.subchapterTitle }}
+      </div>
       <span class="question-counter">
         Question {{ (currentQuestion.position || currentQuestion.orderIndex || 0) + 1 }} / {{ currentQuestion.totalQuestions || 0 }}
       </span>

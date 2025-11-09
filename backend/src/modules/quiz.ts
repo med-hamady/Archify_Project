@@ -322,20 +322,35 @@ quizRouter.post('/answer', requireAuth, requireQuizAccess, async (req: any, res:
  * Query params:
  *   - replay=true pour rejouer le chapitre depuis le début
  *   - currentQuestionId=<id> pour obtenir la question suivante après celle-ci
+ *   - subchapterId=<id> pour filtrer les questions d'un sous-chapitre spécifique
  * Nécessite un abonnement actif avec accès aux quiz
  */
 quizRouter.get('/chapter/:chapterId/next', requireAuth, requireQuizAccess, async (req: any, res: any) => {
   try {
     const { chapterId } = req.params;
-    const { replay, currentQuestionId } = req.query;
+    const { replay, currentQuestionId, subchapterId } = req.query;
     const userId = req.userId;
 
-    console.log('🔍 [Quiz Next] ChapterId:', chapterId, 'CurrentQuestion:', currentQuestionId, 'Replay:', replay);
+    console.log('🔍 [Quiz Next] ChapterId:', chapterId, 'CurrentQuestion:', currentQuestionId, 'Replay:', replay, 'SubchapterId:', subchapterId);
 
-    // Récupérer toutes les questions du chapitre
+    // Construire le filtre pour les questions
+    const questionFilter: any = { chapterId };
+    if (subchapterId) {
+      questionFilter.subchapterId = subchapterId;
+    }
+
+    // Récupérer toutes les questions du chapitre (ou sous-chapitre)
     const allQuestions = await prisma.question.findMany({
-      where: { chapterId },
-      orderBy: { orderIndex: 'asc' }
+      where: questionFilter,
+      orderBy: { orderIndex: 'asc' },
+      include: {
+        subchapter: {
+          select: {
+            id: true,
+            title: true
+          }
+        }
+      }
     });
 
     if (allQuestions.length === 0) {
@@ -458,6 +473,8 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, requireQuizAccess, async
         questionText: nextQuestion.questionText,
         options: sanitizedOptions,
         chapterId: nextQuestion.chapterId,
+        subchapterId: nextQuestion.subchapterId,
+        subchapterTitle: (nextQuestion as any).subchapter?.title,
         orderIndex: nextQuestion.orderIndex,
         position: allQuestions.findIndex(q => q.id === nextQuestion.id),
         totalQuestions: allQuestions.length,

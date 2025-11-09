@@ -93,7 +93,11 @@
 
         <!-- Subchapters List -->
         <div *ngIf="chapter.subchapters && chapter.subchapters.length > 0" class="subchapters-list">
-          <div *ngFor="let subchapter of chapter.subchapters" class="subchapter-item">
+          <div
+            *ngFor="let subchapter of chapter.subchapters"
+            class="subchapter-item clickable"
+            (click)="navigateToSubchapterQuiz(chapter.id, subchapter.id)"
+            [title]="'Commencer le quiz pour: ' + subchapter.title">
             <span class="subchapter-bullet">▪</span>
             <span class="subchapter-title">{{ subchapter.title }}</span>
             <span class="subchapter-count">({{ subchapter.questionsCount }} QCMs)</span>

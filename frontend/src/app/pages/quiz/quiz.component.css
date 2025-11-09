@@ -38,6 +38,18 @@
   font-weight: 600;
 }
 
+.subchapter-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
 .question-counter {
   display: block;
   font-size: 0.9rem;
