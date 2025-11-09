@@ -906,6 +906,359 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Add Content Section -->
+      <div *ngIf="activeTab() === 'add-content'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Ajouter du Contenu</h2>
+            <p class="text-gray-600 mt-1">Ajoutez des matières, chapitres et quiz à la plateforme</p>
+          </div>
+        </div>
+
+        <!-- Sub-tabs -->
+        <div class="flex space-x-4 bg-white/60 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-gray-200/50">
+          <button (click)="addContentSubTab = 'subject'"
+                  [class]="addContentSubTab === 'subject' ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg' : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'"
+                  class="flex-1 py-3 px-6 rounded-lg font-medium text-sm transition-all duration-300">
+            📚 Ajouter une Matière
+          </button>
+          <button (click)="addContentSubTab = 'chapter'"
+                  [class]="addContentSubTab === 'chapter' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'"
+                  class="flex-1 py-3 px-6 rounded-lg font-medium text-sm transition-all duration-300">
+            📖 Ajouter un Chapitre
+          </button>
+          <button (click)="addContentSubTab = 'quiz'"
+                  [class]="addContentSubTab === 'quiz' ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'"
+                  class="flex-1 py-3 px-6 rounded-lg font-medium text-sm transition-all duration-300">
+            ❓ Ajouter un Quiz
+          </button>
+        </div>
+
+        <!-- Add Subject Form -->
+        <div *ngIf="addContentSubTab === 'subject'" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg mr-3">
+              📚
+            </span>
+            <span class="text-gray-700">Nouvelle Matière</span>
+          </h3>
+
+          <div class="space-y-6">
+            <!-- Niveau -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau *</label>
+              <select [(ngModel)]="newSubjectForm.semester"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <option value="">Sélectionner un niveau</option>
+                <option value="PCEM1">PCEM1</option>
+                <option value="PCEM2">PCEM2</option>
+                <option value="DCEM1">DCEM1</option>
+                <option value="DCEM2">DCEM2</option>
+                <option value="DCEM3">DCEM3</option>
+                <option value="DCEM4">DCEM4</option>
+              </select>
+            </div>
+
+            <!-- Titre -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Titre de la matière *</label>
+              <input type="text"
+                     [(ngModel)]="newSubjectForm.title"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                     placeholder="Ex: Anatomie, Physiologie, Parasitologie...">
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Description</label>
+              <textarea [(ngModel)]="newSubjectForm.description"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                        placeholder="Description de la matière"></textarea>
+            </div>
+
+            <!-- Tags -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Tags (séparés par des virgules)</label>
+              <input type="text"
+                     [(ngModel)]="newSubjectForm.tagsInput"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                     placeholder="Ex: anatomie, système nerveux, histologie">
+              <p class="text-xs text-gray-500 mt-2">Séparez les tags par des virgules</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-4">
+              <button (click)="createSubject()"
+                      [disabled]="addContentSaving()"
+                      class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ addContentSaving() ? 'Création...' : 'Créer la matière' }}
+              </button>
+              <button (click)="resetSubjectForm()"
+                      [disabled]="addContentSaving()"
+                      class="px-8 py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                Réinitialiser
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="addContentSuccessMessage()" class="p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <p class="text-sm font-semibold text-green-800">{{ addContentSuccessMessage() }}</p>
+            </div>
+            <div *ngIf="addContentErrorMessage()" class="p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <p class="text-sm font-semibold text-red-800">{{ addContentErrorMessage() }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Chapter Form -->
+        <div *ngIf="addContentSubTab === 'chapter'" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <span class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg mr-3">
+              📖
+            </span>
+            <span class="text-gray-700">Nouveau Chapitre</span>
+          </h3>
+
+          <div class="space-y-6">
+            <!-- Subject Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau *</label>
+                <select [(ngModel)]="newChapterForm.selectedSemester"
+                        (change)="onAddChapterSemesterChange()"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                  <option value="">Sélectionner un niveau</option>
+                  <option value="PCEM1">PCEM1</option>
+                  <option value="PCEM2">PCEM2</option>
+                  <option value="DCEM1">DCEM1</option>
+                  <option value="DCEM2">DCEM2</option>
+                  <option value="DCEM3">DCEM3</option>
+                  <option value="DCEM4">DCEM4</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Matière *</label>
+                <select [(ngModel)]="newChapterForm.subjectId"
+                        [disabled]="!newChapterForm.selectedSemester"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+                  <option value="">Sélectionner une matière</option>
+                  <option *ngFor="let subject of addChapterSubjects()" [value]="subject.id">
+                    {{ subject.title }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Titre -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Titre du chapitre *</label>
+              <input type="text"
+                     [(ngModel)]="newChapterForm.title"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                     placeholder="Ex: Chapitre 1 - Introduction">
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Description</label>
+              <textarea [(ngModel)]="newChapterForm.description"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        placeholder="Description du chapitre"></textarea>
+            </div>
+
+            <!-- PDF URL -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">URL du PDF (optionnel)</label>
+              <input type="text"
+                     [(ngModel)]="newChapterForm.pdfUrl"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                     placeholder="https://example.com/chapter.pdf">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-4">
+              <button (click)="createChapter()"
+                      [disabled]="addContentSaving()"
+                      class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ addContentSaving() ? 'Création...' : 'Créer le chapitre' }}
+              </button>
+              <button (click)="resetChapterForm()"
+                      [disabled]="addContentSaving()"
+                      class="px-8 py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                Réinitialiser
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="addContentSuccessMessage()" class="p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <p class="text-sm font-semibold text-green-800">{{ addContentSuccessMessage() }}</p>
+            </div>
+            <div *ngIf="addContentErrorMessage()" class="p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <p class="text-sm font-semibold text-red-800">{{ addContentErrorMessage() }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Quiz Form -->
+        <div *ngIf="addContentSubTab === 'quiz'" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg mr-3">
+              ❓
+            </span>
+            <span class="text-gray-700">Nouveau Quiz</span>
+          </h3>
+
+          <div class="space-y-6">
+            <!-- Chapter Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau *</label>
+                <select [(ngModel)]="newQuizForm.selectedSemester"
+                        (change)="onAddQuizSemesterChange()"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                  <option value="">Sélectionner un niveau</option>
+                  <option value="PCEM1">PCEM1</option>
+                  <option value="PCEM2">PCEM2</option>
+                  <option value="DCEM1">DCEM1</option>
+                  <option value="DCEM2">DCEM2</option>
+                  <option value="DCEM3">DCEM3</option>
+                  <option value="DCEM4">DCEM4</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Matière *</label>
+                <select [(ngModel)]="newQuizForm.selectedSubjectId"
+                        (change)="onAddQuizSubjectChange()"
+                        [disabled]="!newQuizForm.selectedSemester"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+                  <option value="">Sélectionner une matière</option>
+                  <option *ngFor="let subject of addQuizSubjects()" [value]="subject.id">
+                    {{ subject.title }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Chapitre *</label>
+                <select [(ngModel)]="newQuizForm.chapterId"
+                        [disabled]="!newQuizForm.selectedSubjectId"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+                  <option value="">Sélectionner un chapitre</option>
+                  <option *ngFor="let chapter of addQuizChapters()" [value]="chapter.id">
+                    {{ chapter.title }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Question Text -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Texte de la question *</label>
+              <textarea [(ngModel)]="newQuizForm.questionText"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="Entrez le texte de la question"></textarea>
+            </div>
+
+            <!-- Options -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-4">Options *</label>
+              <div class="space-y-4">
+                <div *ngFor="let option of newQuizForm.options; let i = index" class="border-2 border-gray-200 rounded-xl p-5 hover:border-purple-300 transition-all bg-gradient-to-r from-white to-gray-50">
+                  <div class="flex items-start gap-4">
+                    <!-- Option Letter -->
+                    <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">
+                      {{ String.fromCharCode(65 + i) }}
+                    </div>
+
+                    <div class="flex-1 space-y-3">
+                      <!-- Option Text -->
+                      <input type="text"
+                             [(ngModel)]="option.text"
+                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                             placeholder="Texte de l'option">
+
+                      <!-- Is Correct Checkbox -->
+                      <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox"
+                               [(ngModel)]="option.isCorrect"
+                               class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer">
+                        <span class="text-sm font-semibold" [class.text-green-600]="option.isCorrect" [class.text-gray-700]="!option.isCorrect">
+                          {{ option.isCorrect ? '✓ Option correcte' : 'Option incorrecte' }}
+                        </span>
+                      </label>
+
+                      <!-- Justification -->
+                      <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">Justification (optionnel)</label>
+                        <input type="text"
+                               [(ngModel)]="option.justification"
+                               class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                               placeholder="Justification pour cette option">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explanation -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Explication générale (optionnel)</label>
+              <textarea [(ngModel)]="newQuizForm.explanation"
+                        rows="2"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="Explication générale de la question"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-4">
+              <button (click)="createQuiz()"
+                      [disabled]="addContentSaving()"
+                      class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ addContentSaving() ? 'Création...' : 'Créer le quiz' }}
+              </button>
+              <button (click)="resetQuizForm()"
+                      [disabled]="addContentSaving()"
+                      class="px-8 py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                Réinitialiser
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="addContentSuccessMessage()" class="p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <p class="text-sm font-semibold text-green-800">{{ addContentSuccessMessage() }}</p>
+            </div>
+            <div *ngIf="addContentErrorMessage()" class="p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-center gap-3">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <p class="text-sm font-semibold text-red-800">{{ addContentErrorMessage() }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Users Management Section -->
       <div *ngIf="activeTab() === 'users'" class="space-y-8">
         <!-- Header -->
@@ -1805,6 +2158,50 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   };
   String = String; // Make String available in template
 
+  // Add Content Management
+  addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
+  addContentSaving = signal(false);
+  addContentSuccessMessage = signal('');
+  addContentErrorMessage = signal('');
+
+  // Add Subject Form
+  newSubjectForm = {
+    semester: '',
+    title: '',
+    description: '',
+    tagsInput: ''
+  };
+
+  // Add Chapter Form
+  newChapterForm = {
+    selectedSemester: '',
+    subjectId: '',
+    title: '',
+    description: '',
+    pdfUrl: ''
+  };
+  addChapterSubjects = signal<any[]>([]);
+  addChapterAllSubjects = signal<any[]>([]);
+
+  // Add Quiz Form
+  newQuizForm = {
+    selectedSemester: '',
+    selectedSubjectId: '',
+    chapterId: '',
+    questionText: '',
+    options: [
+      { text: '', isCorrect: false, justification: '' },
+      { text: '', isCorrect: false, justification: '' },
+      { text: '', isCorrect: false, justification: '' },
+      { text: '', isCorrect: false, justification: '' },
+      { text: '', isCorrect: false, justification: '' }
+    ],
+    explanation: ''
+  };
+  addQuizSubjects = signal<any[]>([]);
+  addQuizAllSubjects = signal<any[]>([]);
+  addQuizChapters = signal<any[]>([]);
+
   // Form data
   newCourse = {
     title: '',
@@ -1894,6 +2291,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
+    { id: 'add-content', name: 'Ajouter Contenu' },
     { id: 'users', name: 'Utilisateurs' },
     { id: 'subscriptions', name: 'Abonnements' },
     { id: 'analytics', name: 'Analytiques' }
@@ -1936,6 +2334,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadData();
     this.loadQcmSubjects();
+    this.loadAllSubjects(); // Load subjects for add content forms
 
     // Check for URL hash to set active tab
     const hash = window.location.hash.substring(1);
@@ -2873,6 +3272,241 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
     this.qcmSuccessMessage.set('');
     this.qcmErrorMessage.set('');
+  }
+
+  // ============================================
+  // ADD CONTENT METHODS
+  // ============================================
+
+  loadAllSubjects() {
+    this.http.get<any>(`${this.API_URL}/subjects/admin/all`).subscribe({
+      next: (data) => {
+        console.log('📚 All subjects loaded for add content:', data.subjects);
+        this.addChapterAllSubjects.set(data.subjects || []);
+        this.addQuizAllSubjects.set(data.subjects || []);
+      },
+      error: (error) => console.error('Error loading subjects for add content:', error)
+    });
+  }
+
+  // CREATE SUBJECT
+  createSubject() {
+    if (!this.newSubjectForm.semester || !this.newSubjectForm.title) {
+      this.addContentErrorMessage.set('Veuillez remplir tous les champs requis (Niveau et Titre)');
+      setTimeout(() => this.addContentErrorMessage.set(''), 5000);
+      return;
+    }
+
+    this.addContentSaving.set(true);
+    this.addContentSuccessMessage.set('');
+    this.addContentErrorMessage.set('');
+
+    const tags = this.newSubjectForm.tagsInput
+      ? this.newSubjectForm.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+      : [];
+
+    const subjectData = {
+      semester: this.newSubjectForm.semester,
+      title: this.newSubjectForm.title,
+      description: this.newSubjectForm.description || '',
+      tags: tags
+    };
+
+    this.http.post<any>(`${this.API_URL}/subjects`, subjectData).subscribe({
+      next: (data) => {
+        this.addContentSaving.set(false);
+        this.addContentSuccessMessage.set(`Matière "${data.subject.title}" créée avec succès!`);
+        this.resetSubjectForm();
+        this.loadAllSubjects(); // Reload subjects
+        setTimeout(() => this.addContentSuccessMessage.set(''), 5000);
+      },
+      error: (error) => {
+        this.addContentSaving.set(false);
+        console.error('Error creating subject:', error);
+        this.addContentErrorMessage.set(error.error?.error?.message || 'Erreur lors de la création de la matière');
+        setTimeout(() => this.addContentErrorMessage.set(''), 8000);
+      }
+    });
+  }
+
+  resetSubjectForm() {
+    this.newSubjectForm = {
+      semester: '',
+      title: '',
+      description: '',
+      tagsInput: ''
+    };
+  }
+
+  // CREATE CHAPTER
+  onAddChapterSemesterChange() {
+    this.newChapterForm.subjectId = '';
+
+    if (!this.newChapterForm.selectedSemester) {
+      this.addChapterSubjects.set([]);
+      return;
+    }
+
+    const filteredSubjects = this.addChapterAllSubjects().filter(
+      subject => subject.semester === this.newChapterForm.selectedSemester
+    );
+    this.addChapterSubjects.set(filteredSubjects);
+  }
+
+  createChapter() {
+    if (!this.newChapterForm.subjectId || !this.newChapterForm.title) {
+      this.addContentErrorMessage.set('Veuillez remplir tous les champs requis (Niveau, Matière et Titre)');
+      setTimeout(() => this.addContentErrorMessage.set(''), 5000);
+      return;
+    }
+
+    this.addContentSaving.set(true);
+    this.addContentSuccessMessage.set('');
+    this.addContentErrorMessage.set('');
+
+    const chapterData = {
+      subjectId: this.newChapterForm.subjectId,
+      title: this.newChapterForm.title,
+      description: this.newChapterForm.description || '',
+      pdfUrl: this.newChapterForm.pdfUrl || null
+    };
+
+    this.http.post<any>(`${this.API_URL}/chapters`, chapterData).subscribe({
+      next: (data) => {
+        this.addContentSaving.set(false);
+        this.addContentSuccessMessage.set(`Chapitre "${data.chapter.title}" créé avec succès!`);
+        this.resetChapterForm();
+        setTimeout(() => this.addContentSuccessMessage.set(''), 5000);
+      },
+      error: (error) => {
+        this.addContentSaving.set(false);
+        console.error('Error creating chapter:', error);
+        this.addContentErrorMessage.set(error.error?.error?.message || 'Erreur lors de la création du chapitre');
+        setTimeout(() => this.addContentErrorMessage.set(''), 8000);
+      }
+    });
+  }
+
+  resetChapterForm() {
+    this.newChapterForm = {
+      selectedSemester: '',
+      subjectId: '',
+      title: '',
+      description: '',
+      pdfUrl: ''
+    };
+    this.addChapterSubjects.set([]);
+  }
+
+  // CREATE QUIZ
+  onAddQuizSemesterChange() {
+    this.newQuizForm.selectedSubjectId = '';
+    this.newQuizForm.chapterId = '';
+    this.addQuizChapters.set([]);
+
+    if (!this.newQuizForm.selectedSemester) {
+      this.addQuizSubjects.set([]);
+      return;
+    }
+
+    const filteredSubjects = this.addQuizAllSubjects().filter(
+      subject => subject.semester === this.newQuizForm.selectedSemester
+    );
+    this.addQuizSubjects.set(filteredSubjects);
+  }
+
+  onAddQuizSubjectChange() {
+    this.newQuizForm.chapterId = '';
+
+    if (!this.newQuizForm.selectedSubjectId) {
+      this.addQuizChapters.set([]);
+      return;
+    }
+
+    this.http.get<any>(`${this.API_URL}/chapters/subject/${this.newQuizForm.selectedSubjectId}`).subscribe({
+      next: (data) => {
+        this.addQuizChapters.set(data.chapters || []);
+      },
+      error: (error) => console.error('Error loading chapters for quiz:', error)
+    });
+  }
+
+  createQuiz() {
+    if (!this.newQuizForm.chapterId || !this.newQuizForm.questionText) {
+      this.addContentErrorMessage.set('Veuillez remplir tous les champs requis (Niveau, Matière, Chapitre et Question)');
+      setTimeout(() => this.addContentErrorMessage.set(''), 5000);
+      return;
+    }
+
+    // Validate at least one option has text
+    const hasValidOptions = this.newQuizForm.options.some(opt => opt.text.trim().length > 0);
+    if (!hasValidOptions) {
+      this.addContentErrorMessage.set('Veuillez remplir au moins une option');
+      setTimeout(() => this.addContentErrorMessage.set(''), 5000);
+      return;
+    }
+
+    // Validate at least one correct answer
+    const hasCorrectAnswer = this.newQuizForm.options.some(opt => opt.isCorrect && opt.text.trim().length > 0);
+    if (!hasCorrectAnswer) {
+      this.addContentErrorMessage.set('Veuillez marquer au moins une option comme correcte');
+      setTimeout(() => this.addContentErrorMessage.set(''), 5000);
+      return;
+    }
+
+    this.addContentSaving.set(true);
+    this.addContentSuccessMessage.set('');
+    this.addContentErrorMessage.set('');
+
+    // Filter out empty options
+    const validOptions = this.newQuizForm.options
+      .filter(opt => opt.text.trim().length > 0)
+      .map(opt => ({
+        text: opt.text.trim(),
+        isCorrect: opt.isCorrect,
+        justification: opt.justification.trim() || null
+      }));
+
+    const quizData = {
+      chapterId: this.newQuizForm.chapterId,
+      questionText: this.newQuizForm.questionText,
+      options: validOptions,
+      explanation: this.newQuizForm.explanation || null
+    };
+
+    this.http.post<any>(`${this.API_URL}/questions`, quizData).subscribe({
+      next: (data) => {
+        this.addContentSaving.set(false);
+        this.addContentSuccessMessage.set('Question créée avec succès!');
+        this.resetQuizForm();
+        setTimeout(() => this.addContentSuccessMessage.set(''), 5000);
+      },
+      error: (error) => {
+        this.addContentSaving.set(false);
+        console.error('Error creating quiz:', error);
+        this.addContentErrorMessage.set(error.error?.error?.message || 'Erreur lors de la création de la question');
+        setTimeout(() => this.addContentErrorMessage.set(''), 8000);
+      }
+    });
+  }
+
+  resetQuizForm() {
+    this.newQuizForm = {
+      selectedSemester: '',
+      selectedSubjectId: '',
+      chapterId: '',
+      questionText: '',
+      options: [
+        { text: '', isCorrect: false, justification: '' },
+        { text: '', isCorrect: false, justification: '' },
+        { text: '', isCorrect: false, justification: '' },
+        { text: '', isCorrect: false, justification: '' },
+        { text: '', isCorrect: false, justification: '' }
+      ],
+      explanation: ''
+    };
+    this.addQuizSubjects.set([]);
+    this.addQuizChapters.set([]);
   }
 
 }
