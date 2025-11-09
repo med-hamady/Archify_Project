@@ -119,10 +119,19 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
     // Récupérer la progression de l'utilisateur
     const progressData = await getUserSubjectsProgress(userId);
 
-    // Mapper les données avec calcul dynamique de examUnlocked
+    // Mapper les données avec calcul dynamique de examUnlocked et totalQuestions
     const subjectsWithProgress = await Promise.all(subjects.map(async subject => {
       const progress = progressData.find(p => p.subjectId === subject.id);
       const examUnlocked = await isExamUnlocked(userId, subject.id);
+
+      // Calculer dynamiquement le nombre total de questions
+      const totalQuestions = await prisma.question.count({
+        where: {
+          chapter: {
+            subjectId: subject.id
+          }
+        }
+      });
 
       return {
         id: subject.id,
@@ -130,7 +139,7 @@ subjectsRouter.get('/', requireAuth, async (req: any, res: any) => {
         description: subject.description,
         semester: subject.semester,
         tags: subject.tags,
-        totalQuestions: subject.totalQCM,
+        totalQuestions, // Calculé dynamiquement
         totalChapters: subject.chapters.length,
         progressPercent: progress ? progress.progressPercent : 0,
         examUnlocked,
@@ -209,6 +218,15 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
     // Calculer dynamiquement si l'examen est débloqué (update4)
     const examUnlocked = await isExamUnlocked(userId, subject.id);
 
+    // Calculer dynamiquement le nombre total de questions
+    const totalQuestions = await prisma.question.count({
+      where: {
+        chapter: {
+          subjectId: subject.id
+        }
+      }
+    });
+
     return res.json({
       success: true,
       subject: {
@@ -217,7 +235,7 @@ subjectsRouter.get('/:id', requireAuth, async (req: any, res: any) => {
         description: subject.description,
         semester: subject.semester,
         tags: subject.tags,
-        totalQuestions: subject.totalQCM,
+        totalQuestions, // Calculé dynamiquement
         totalChapters: subject.chapters.length,
         progressPercent: subjectProgress ? subjectProgress.progressPercent : 0,
         examUnlocked,
