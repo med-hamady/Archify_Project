@@ -280,12 +280,12 @@ async function importToDatabase() {
       return;
     }
 
-    // 1. Trouver ou créer la matière "Histologie" pour PCEM2
-    console.log('📚 Recherche/création de la matière Histologie...');
+    // 1. Trouver ou créer la matière "Histo Nozha" pour PCEM2
+    console.log('📚 Recherche/création de la matière Histo Nozha...');
 
     let subject = await prisma.subject.findFirst({
       where: {
-        title: 'Histologie',
+        title: 'Histo Nozha',
         semester: 'PCEM2'
       },
       include: {
@@ -301,7 +301,7 @@ async function importToDatabase() {
     if (subject && subject.chapters.length > 0) {
       const totalQuestions = subject.chapters.reduce((sum, ch) => sum + ch.questions.length, 0);
 
-      console.log('✅ Données Histo PCEM2 déjà présentes:');
+      console.log('✅ Données Histo Nozha PCEM2 déjà présentes:');
       console.log(`   📚 Matière: ${subject.title}`);
       console.log(`   📑 Chapitres: ${subject.chapters.length}`);
       console.log(`   ❓ Questions: ${totalQuestions}`);
@@ -319,13 +319,13 @@ async function importToDatabase() {
     if (!subject) {
       const newSubject = await prisma.subject.create({
         data: {
-          title: 'Histologie',
+          title: 'Histo Nozha',
           semester: 'PCEM2',
-          description: 'Étude microscopique des tissus et organes - PCEM2',
-          tags: ['Histologie', 'PCEM2']
+          description: 'Histologie Nozha - Examens PCEM2 (249 QCMs)',
+          tags: ['Histologie', 'Histo Nozha', 'PCEM2', 'Examens']
         }
       });
-      console.log('✅ Matière "Histologie" créée');
+      console.log('✅ Matière "Histo Nozha" créée');
 
       // Re-fetch avec include pour uniformité
       subject = await prisma.subject.findUnique({
@@ -339,7 +339,7 @@ async function importToDatabase() {
         throw new Error('Impossible de récupérer la matière créée');
       }
     } else {
-      console.log('✅ Matière "Histologie" trouvée (vide, import en cours...)');
+      console.log('✅ Matière "Histo Nozha" trouvée (vide, import en cours...)');
     }
 
     let totalQuestionsImported = 0;

@@ -7,13 +7,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function clearData() {
-  console.log('🧹 Nettoyage des données Histologie PCEM2...\n');
+  console.log('🧹 Nettoyage des données Histo Nozha PCEM2...\n');
 
   try {
     // Find the subject
     const subject = await prisma.subject.findFirst({
       where: {
-        title: 'Histologie',
+        title: 'Histo Nozha',
         semester: 'PCEM2'
       },
       include: {
@@ -26,7 +26,7 @@ async function clearData() {
     });
 
     if (!subject) {
-      console.log('❌ Matière Histologie PCEM2 non trouvée');
+      console.log('❌ Matière Histo Nozha PCEM2 non trouvée');
       return;
     }
 
