@@ -14,6 +14,8 @@ exports.calculateXP = calculateXP;
 exports.checkConsecutiveBonus = checkConsecutiveBonus;
 exports.calculateChallengeBonus = calculateChallengeBonus;
 exports.calculatePerfectChapterBonus = calculatePerfectChapterBonus;
+exports.normalizeAnswerState = normalizeAnswerState;
+exports.evaluateQuestionWithXP = evaluateQuestionWithXP;
 exports.getXPCalculationSummary = getXPCalculationSummary;
 exports.validateXPParams = validateXPParams;
 exports.getXPExamples = getXPExamples;
@@ -150,6 +152,100 @@ function calculatePerfectChapterBonus(correctAnswers, totalQuestions, allFirstAt
         return exports.SPECIAL_BONUSES.PERFECT_CHAPTER;
     }
     return 0;
+}
+/**
+ * Normalise isCorrect en AnswerState (support ancien format boolean)
+ */
+function normalizeAnswerState(isCorrect) {
+    if (typeof isCorrect === 'boolean') {
+        return isCorrect ? 'correct' : 'incorrect';
+    }
+    return isCorrect;
+}
+/**
+ * Évalue une réponse à une question avec support des options partielles
+ *
+ * Règles:
+ * - Options ✅ (correct): comptent dans le score, doivent être toutes sélectionnées pour XP
+ * - Options ❌ (incorrect): pénalité si sélectionnées
+ * - Options ⚠️ (partial): N'AFFECTENT PAS le score ni le XP
+ *
+ * XP gagné si et seulement si:
+ * - Toutes les options ✅ sont sélectionnées
+ * - Aucune option ❌ n'est sélectionnée
+ * - Les options ⚠️ n'ont aucun impact
+ */
+function evaluateQuestionWithXP(questionOptions, userSelections, attemptNumber, positionInChapter = 0, totalQuestionsInChapter = 1) {
+    let score = 0;
+    let maxScore = 0;
+    let correctSelected = 0;
+    let correctMissed = 0;
+    let incorrectSelected = 0;
+    let partialSelected = 0;
+    // 1. Calculer le score de la question
+    questionOptions.forEach(option => {
+        const isSelected = option.id ? userSelections.includes(option.id) : false;
+        const answerState = normalizeAnswerState(option.isCorrect);
+        switch (answerState) {
+            case 'correct':
+                maxScore += 1;
+                if (isSelected) {
+                    score += 1;
+                    correctSelected++;
+                }
+                else {
+                    score -= 0.25;
+                    correctMissed++;
+                }
+                break;
+            case 'partial':
+                // ⚠️ Ne compte ni dans maxScore ni dans score
+                if (isSelected) {
+                    partialSelected++;
+                }
+                break;
+            case 'incorrect':
+                // Ne compte pas dans maxScore
+                if (isSelected) {
+                    score -= 0.25;
+                    incorrectSelected++;
+                }
+                break;
+        }
+    });
+    // Le score ne peut pas être négatif
+    score = Math.max(0, score);
+    // 2. Déterminer si la question est CORRECTE pour le XP
+    const totalCorrectOptions = questionOptions.filter(o => normalizeAnswerState(o.isCorrect) === 'correct').length;
+    const isQuestionCorrect = (correctSelected === totalCorrectOptions && // Toutes les ✅ sélectionnées
+        incorrectSelected === 0 // Aucune ❌ sélectionnée
+    );
+    // Les ⚠️ n'affectent pas isQuestionCorrect
+    // 3. Calculer le XP selon le système existant
+    let xpEarned = 0;
+    if (isQuestionCorrect) {
+        const xpResult = calculateXP({
+            difficulty: 'MOYEN',
+            attemptNumber,
+            positionInChapter,
+            totalQuestionsInChapter
+        });
+        xpEarned = xpResult.xpEarned;
+    }
+    const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
+    return {
+        isCorrect: isQuestionCorrect,
+        score,
+        maxScore,
+        percentage,
+        xpEarned,
+        details: {
+            correctSelected,
+            correctMissed,
+            incorrectSelected,
+            partialSelected
+        }
+    };
 }
 // ============================================
 // FONCTIONS UTILITAIRES

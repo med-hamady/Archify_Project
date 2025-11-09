@@ -13,23 +13,28 @@ exports.questionsRouter = express_1.default.Router();
 // ============================================
 // SCHÉMAS DE VALIDATION
 // ============================================
-// Format JSON pour les options: {text: string, isCorrect: boolean, justification?: string}
+// Format JSON pour les options:
+// - Ancien format: {text: string, isCorrect: boolean, justification?: string}
+// - Nouveau format: {text: string, isCorrect: 'correct'|'incorrect'|'partial', justification?: string}
 const optionSchema = zod_1.z.object({
     text: zod_1.z.string(),
-    isCorrect: zod_1.z.boolean(),
-    justification: zod_1.z.string().optional()
+    isCorrect: zod_1.z.union([
+        zod_1.z.boolean(), // Support ancien format
+        zod_1.z.enum(['correct', 'incorrect', 'partial']) // Nouveau format à trois états
+    ]),
+    justification: zod_1.z.string().nullable().optional()
 });
 const createQuestionSchema = zod_1.z.object({
     chapterId: zod_1.z.string(),
     questionText: zod_1.z.string().min(10, 'La question doit contenir au moins 10 caractères'),
-    options: zod_1.z.array(optionSchema).min(2).max(5, 'La question doit avoir entre 2 et 5 options'),
-    explanation: zod_1.z.string().optional(),
+    options: zod_1.z.array(optionSchema).min(2).max(6, 'La question doit avoir entre 2 et 6 options'),
+    explanation: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 const updateQuestionSchema = zod_1.z.object({
     questionText: zod_1.z.string().min(10).optional(),
-    options: zod_1.z.array(optionSchema).min(2).max(5).optional(),
-    explanation: zod_1.z.string().optional(),
+    options: zod_1.z.array(optionSchema).min(2).max(6).optional(),
+    explanation: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 // ============================================
