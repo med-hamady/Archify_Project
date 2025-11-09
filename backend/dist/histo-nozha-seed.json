@@ -20,7 +20,7 @@
           "orderIndex": 0,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les neurones parvocellulaires",
               "options": [
                 {
                   "text": "Sont situés au niveau de la partie antérieure de l’adénohypophyse.",
@@ -56,7 +56,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le système porte hypophysaire",
               "options": [
                 {
                   "text": "Relie l’adénohypophyse à la neurohypophyse.",
@@ -91,7 +91,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le système porte hypothalamo-hypophysaire",
               "options": [
                 {
                   "text": "Relie un plexus primaire hypothalamique à un plexus secondaire hypophysaire par une veine porte.",
@@ -119,7 +119,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant le système porte hypothalamo-hypophysaire",
               "options": [
                 {
                   "text": "Relie un plexus primaire hypothalamique à un plexus secondaire hypophysaire par une veine porte.",
@@ -152,7 +152,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les hormones suivantes, indiquez celle(s) qui est (sont) synthétisée(s) par des cellules nerveuses",
               "options": [
                 {
                   "text": "ACTH (hormone corticotrope).",
@@ -188,7 +188,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Antéhypophyse",
               "options": [
                 {
                   "text": "Les cellules sont organisées en cordons parallèles entourés d’un riche réseau capillaire.",
@@ -222,7 +222,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Structure 1 (neurones du schéma)",
               "options": [
                 {
                   "text": "Ce sont des neurones du système magnocellulaire.",
@@ -254,7 +254,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Structure 2",
               "options": [
                 {
                   "text": "Est le réseau capillaire hypophysaire supérieur.",
@@ -286,7 +286,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Lobe antérieur de l’hypophyse",
               "options": [
                 {
                   "text": "Il est constitué par des cordons cellulaires parallèles.",
@@ -318,7 +318,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "→D. Les types de cellules glandulaires sont identifiables par immunohistochimie.",
+              "questionText": "Concernant le lobe antérieur de l’hypophyse",
               "options": [
                 {
                   "text": "Il est constitué par des cordons cellulaires pseudo-acineux.",
@@ -353,7 +353,7 @@
           "orderIndex": 1,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la glande thyroïde",
               "options": [
                 {
                   "text": "Les follicules sont de petite taille quand la glande est hyperactive.",
@@ -388,7 +388,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la glande thyroïde",
               "options": [
                 {
                   "text": "Les follicules sont de taille réduite quand la glande est hyperactive.",
@@ -422,7 +422,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le thyréocyte d’un follicule thyroïdien en activité est caractérisé par",
               "options": [
                 {
                   "text": "Un appareil de Golgi peu développé.",
@@ -459,7 +459,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant l’organe en coupe",
               "options": [
                 {
                   "text": "C’est la thyroïde.",
@@ -491,7 +491,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Organites cytoplasmiques les plus développés dans les cellules au contact des capillaires",
               "options": [
                 {
                   "text": "Réticulum endoplasmique lisse.",
@@ -526,7 +526,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "les Capillaires sanguins au contact des cellules endocrines",
               "options": [
                 {
                   "text": "Développent un réseau important autour de la glande.",
@@ -2174,7 +2174,7 @@
           "orderIndex": 0,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant le système lymphoïde, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Les organes lymphoïdes assurent uniquement la production des plaquettes.",
@@ -2209,7 +2209,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les organes lymphoïdes secondaires comprennent",
               "options": [
                 {
                   "text": "La moelle osseuse.",
@@ -2243,7 +2243,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le système lymphoïde est responsable",
               "options": [
                 {
                   "text": "De la production des érythrocytes.",
@@ -2273,7 +2273,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les organes lymphoïdes primaires sont",
               "options": [
                 {
                   "text": "Les ganglions lymphatiques.",
@@ -2315,7 +2315,7 @@
           "orderIndex": 1,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le thymus",
               "options": [
                 {
                   "text": "Est un organe lymphoïde périphérique.",
@@ -2351,7 +2351,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans le thymus, on trouve",
               "options": [
                 {
                   "text": "Des corpuscules de Hassal.",
@@ -2385,7 +2385,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans les organes lymphoïdes, les zones thymo-dépendantes sont",
               "options": [
                 {
                   "text": "La médullaire du ganglion lymphatique.",
@@ -2421,7 +2421,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les cellules réticulo-épithéliales du thymus",
               "options": [
                 {
                   "text": "Forment la charpente du thymus.",
@@ -2455,7 +2455,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les organes qui ont un stroma de type épithélio-réticulaire",
               "options": [
                 {
                   "text": "Rate.",
@@ -2491,7 +2491,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les veinules post-capillaires",
               "options": [
                 {
                   "text": "Sont localisées au niveau du cortex thymique.",
@@ -2526,7 +2526,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Toutes les affirmations correspondantes au tissu réticulé sont vraies sauf une, laquelle ?",
               "options": [
                 {
                   "text": "Constitue la charpente du ganglion.",
@@ -2559,7 +2559,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le corpuscule de Hassal",
               "options": [
                 {
                   "text": "Est formé de cellules lymphoïdes dégénérées.",
@@ -2595,7 +2595,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la cellule 1",
               "options": [
                 {
                   "text": "C’est une cellule réticulaire qui synthétise des fibres de réticuline.",
@@ -2630,7 +2630,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la cellule 2",
               "options": [
                 {
                   "text": "Leurs progéniteurs forment des clones de prolifération dans la région médullaire.",
@@ -2665,7 +2665,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la structure 4",
               "options": [
                 {
                   "text": "C’est un ensemble de cellules différenciées et fonctionnelles.",
@@ -2700,7 +2700,7 @@
               "orderIndex": 10
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la jonction cortico-médullaire du thymus",
               "options": [
                 {
                   "text": "Comporte des veinules post-capillaires à paroi perméable.",
@@ -2735,7 +2735,7 @@
               "orderIndex": 11
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant les thymocytes",
               "options": [
                 {
                   "text": "Sont protégés par la barrière thymique au niveau de la zone médullaire.",
@@ -2770,7 +2770,7 @@
               "orderIndex": 12
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La charpente du thymus est faite par",
               "options": [
                 {
                   "text": "Des thymocytes.",
@@ -2802,7 +2802,7 @@
               "orderIndex": 13
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Au niveau du thymus, la médullaire comporte",
               "options": [
                 {
                   "text": "Des sinus et des cordons.",
@@ -2844,7 +2844,7 @@
           "orderIndex": 2,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les ganglions lymphatiques",
               "options": [
                 {
                   "text": "Sont des organes lymphoïdes centraux.",
@@ -2880,7 +2880,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les ganglions lymphatiques",
               "options": [
                 {
                   "text": "Sont des organes lymphoïdes centraux.",
@@ -2915,7 +2915,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans le ganglion lymphatique, les follicules lymphoïdes",
               "options": [
                 {
                   "text": "Occupent toute la zone corticale.",
@@ -2951,7 +2951,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant le ganglion lymphatique",
               "options": [
                 {
                   "text": "La charpente est principalement formée de fibres de réticuline.",
@@ -2985,7 +2985,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Zone corticale du ganglion lymphatique",
               "options": [
                 {
                   "text": "Située au voisinage de la face convexe du ganglion.",
@@ -3021,7 +3021,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Structures qui participent à la filtration mécanique de la lymphe",
               "options": [
                 {
                   "text": "Les cellules réticulaires.",
@@ -3056,7 +3056,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les zones B dépendantes du ganglion lymphatique sont",
               "options": [
                 {
                   "text": "La zone paracorticale.",
@@ -3091,7 +3091,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les zones B dépendantes du ganglion lymphatique sont",
               "options": [
                 {
                   "text": "La zone paracorticale.",
@@ -3125,7 +3125,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La fonction de l’organe représenté dans le schéma 1 est",
               "options": [
                 {
                   "text": "Une filtration par une barrière biologique.",
@@ -3157,7 +3157,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La charpente de l’organe représenté dans le schéma 1 est",
               "options": [
                 {
                   "text": "Conjonctive lâche.",
@@ -3190,7 +3190,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le ralentissement de la lymphe dans le ganglion lymphatique est assuré par",
               "options": [
                 {
                   "text": "Le labyrinthe des sinus médullaires.",
@@ -3224,7 +3224,7 @@
               "orderIndex": 10
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant l’organe lymphoïde représenté sur le schéma suivant",
               "options": [
                 {
                   "text": "La structure 1 comporte des fibres élastiques et des cellules musculaires lisses.",
@@ -3265,7 +3265,7 @@
           "orderIndex": 3,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La rate",
               "options": [
                 {
                   "text": "Présente une capsule conjonctive dense et résistante.",
@@ -3295,7 +3295,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant l’organe en coupe",
               "options": [
                 {
                   "text": "C’est le ganglion lymphatique.",
@@ -3327,7 +3327,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la structure 3",
               "options": [
                 {
                   "text": "C’est la zone marginale.",
@@ -3359,7 +3359,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la structure 4",
               "options": [
                 {
                   "text": "C’est une zone marginale.",
@@ -3391,7 +3391,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la zone marginale de la rate",
               "options": [
                 {
                   "text": "Reçoit des branches artériolaires de l’artère centrale.",
@@ -3426,7 +3426,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La gaine lymphoïde péri-artérielle est",
               "options": [
                 {
                   "text": "La couronne externe du corpuscule de Malpighi.",
@@ -3461,7 +3461,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Structures participant à la filtration du sang au niveau de la pulpe rouge",
               "options": [
                 {
                   "text": "La zone marginale.",
@@ -3497,7 +3497,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les constituants de la pulpe rouge sont",
               "options": [
                 {
                   "text": "Les corpuscules de Malpighi.",
@@ -3531,7 +3531,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Au niveau de la rate, la pulpe rouge est",
               "options": [
                 {
                   "text": "Formée par un tissu lymphoïde disposé autour des artères.",
@@ -3565,7 +3565,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La pulpe rouge de la rate comporte",
               "options": [
                 {
                   "text": "La zone marginale.",
@@ -3597,7 +3597,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la rate",
               "options": [
                 {
                   "text": "Présente une capsule conjonctive épaisse et résistante.",
@@ -3644,7 +3644,7 @@
           "orderIndex": 0,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La trachée",
               "options": [
                 {
                   "text": "Les anneaux cartilagineux sont formés de cartilage élastique.",
@@ -3674,7 +3674,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures de la zone de conduction respiratoire sont, sauf",
               "options": [
                 {
                   "text": "La trachée.",
@@ -3707,7 +3707,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures participant à la filtration mécanique de l’air au niveau des voies aériennes supérieures",
               "options": [
                 {
                   "text": "Le surfactant.",
@@ -3742,7 +3742,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures qui assurent le réchauffement de l’air au niveau des fosses nasales",
               "options": [
                 {
                   "text": "Le plexus veineux sous-muqueux.",
@@ -3778,7 +3778,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures qui assurent le réchauffement et l’humidification de l’air au niveau des fosses nasales",
               "options": [
                 {
                   "text": "Le plexus veineux sous-muqueux.",
@@ -3811,7 +3811,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures qui assurent l’épuration de l’air au niveau des fosses nasales",
               "options": [
                 {
                   "text": "Le plexus veineux sous-muqueux.",
@@ -3844,7 +3844,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant le pharynx",
               "options": [
                 {
                   "text": "Le nasopharynx est tapissé par une muqueuse respiratoire.",
@@ -3879,7 +3879,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la structure 1, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Est un épithélium cilié.",
@@ -3915,7 +3915,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Structure 2",
               "options": [
                 {
                   "text": "Est la fausse corde vocale.",
@@ -3956,7 +3956,7 @@
           "orderIndex": 1,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La zone respiratoire comprend, sauf",
               "options": [
                 {
                   "text": "Les bronchioles respiratoires.",
@@ -3988,7 +3988,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures responsables de l’épuration de l’air sont",
               "options": [
                 {
                   "text": "Les vibrisses.",
@@ -4022,7 +4022,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures qui assurent l'épuration de l'air au niveau des bronches sont",
               "options": [
                 {
                   "text": "Le plexus veineux de la muqueuse.",
@@ -4058,7 +4058,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Quelles sont parmi ces cellules celles qui font partie de la structure de l'épithélium alvéolaire",
               "options": [
                 {
                   "text": "Cellules de Clara.",
@@ -4093,7 +4093,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La barrière alvéolo-capillaire comporte",
               "options": [
                 {
                   "text": "Des macrophages alvéolaires.",
@@ -4123,7 +4123,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les cellules de Clara",
               "options": [
                 {
                   "text": "Sont des cellules ciliées.",
@@ -4153,7 +4153,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Muqueuse de la bronche respiratoire",
               "options": [
                 {
                   "text": "Joue un rôle d'épuration de l'air.",
@@ -4187,7 +4187,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L’alvéole",
               "options": [
                 {
                   "text": "Comporte des cellules musculaires lisses.",
@@ -4222,7 +4222,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La structure A joue un rôle dans",
               "options": [
                 {
                   "text": "L'épuration de l'air.",
@@ -4256,7 +4256,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La structure B",
               "options": [
                 {
                   "text": "Comporte des cellules épithéliales jointives.",
@@ -4291,7 +4291,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les canaux alvéolaires",
               "options": [
                 {
                   "text": "Comportent des nodules de cartilage hyalin.",
@@ -4326,7 +4326,7 @@
               "orderIndex": 10
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les bronchioles respiratoires",
               "options": [
                 {
                   "text": "Ne comportent pas d'alvéoles.",
@@ -4361,7 +4361,7 @@
               "orderIndex": 11
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les cellules représentées dans le schéma du septa interalvéolaire la (les) quelle(s) participe(nt) aux échanges gazeux au niveau des alvéoles pulmonaires",
               "options": [
                 {
                   "text": "Cellule 1.",
@@ -4396,7 +4396,7 @@
               "orderIndex": 12
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la cellule 2, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Entretient des jonctions cellulaires avec la cellule 1.",
@@ -4431,7 +4431,7 @@
               "orderIndex": 13
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la cellule 3, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Représente 95 % du revêtement épithélial des alvéoles.",
@@ -4467,7 +4467,7 @@
               "orderIndex": 14
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La cellule 4",
               "options": [
                 {
                   "text": "Est un pneumocyte type I.",
@@ -4500,7 +4500,7 @@
               "orderIndex": 15
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le septum inter-alvéolaire comporte",
               "options": [
                 {
                   "text": "Des capillaires continus.",
@@ -4534,7 +4534,7 @@
               "orderIndex": 16
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les macrophages alvéolaires",
               "options": [
                 {
                   "text": "Participent à la formation de la barrière alvéolo-capillaire.",
@@ -4568,7 +4568,7 @@
               "orderIndex": 17
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les macrophages alvéolaires",
               "options": [
                 {
                   "text": "Participent aux échanges alvéolo-capillaires.",
@@ -4596,7 +4596,7 @@
               "orderIndex": 18
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Cellules faisant partie de la barrière alvéolo-capillaire",
               "options": [
                 {
                   "text": "Cellules de Clara.",
@@ -4628,7 +4628,7 @@
               "orderIndex": 19
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La coupe histologique représente",
               "options": [
                 {
                   "text": "La trachée.",
@@ -4668,7 +4668,7 @@
           "orderIndex": 0,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant l'épiderme, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Le nombre des mélanocytes est dépendant de l’exposition solaire et des facteurs génétiques.",
@@ -4702,7 +4702,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La couche basale de l'épiderme",
               "options": [
                 {
                   "text": "Est formée exclusivement de kératinocytes.",
@@ -4732,7 +4732,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le schéma ci-dessous correspond à",
               "options": [
                 {
                   "text": "Des cellules de la couche basale de l'épiderme.",
@@ -4764,7 +4764,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant les cornéocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Les plus profondes d’entre elles desquament.",
@@ -4799,7 +4799,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "La mélanine est présente essentiellement dans les kératinocytes de la couche granuleuse.",
@@ -4834,7 +4834,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Le mélanocyte est localisé dans la couche basale de l'épiderme.",
@@ -4870,7 +4870,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le derme réticulaire",
               "options": [
                 {
                   "text": "Est formé par du tissu conjonctif dense irrégulier.",
@@ -4900,7 +4900,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Elles dérivent des crêtes neurales.",
@@ -4934,7 +4934,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Ce sont des dérivés des crêtes neurales.",
@@ -4969,7 +4969,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les mélanocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Sont des dérivés des crêtes neurales.",
@@ -5004,7 +5004,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les mélanocytes sont",
               "options": [
                 {
                   "text": "Des cellules issues de la crête neurale.",
@@ -5039,7 +5039,7 @@
               "orderIndex": 10
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La mélanine existe dans",
               "options": [
                 {
                   "text": "Des cellules de la couche basale de l'épiderme.",
@@ -5074,7 +5074,7 @@
               "orderIndex": 11
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la peau épaisse, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Est formée exclusivement de kératinocytes.",
@@ -5110,7 +5110,7 @@
               "orderIndex": 12
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L’épidermolyse bulleuse est une anomalie de",
               "options": [
                 {
                   "text": "La kératinisation.",
@@ -5143,7 +5143,7 @@
               "orderIndex": 13
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la couche basale de l'épiderme, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Est formée exclusivement de kératinocytes.",
@@ -5184,7 +5184,7 @@
           "orderIndex": 1,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant les corpuscules de Pacini, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Sont situés dans l’hypoderme.",
@@ -5219,7 +5219,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les corpuscules de Pacini sont",
               "options": [
                 {
                   "text": "Situés dans l’hypoderme.",
@@ -5253,7 +5253,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant les corpuscules de Meissner, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Sont situés dans l’hypoderme.",
@@ -5289,7 +5289,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la peau, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Les corpuscules de Meissner sont particulièrement nombreux au niveau des pulpes des doigts.",
@@ -5331,7 +5331,7 @@
           "orderIndex": 2,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures impliquées dans la thermorégulation sont",
               "options": [
                 {
                   "text": "Le réseau artériel planiforme superficiel.",
@@ -5371,7 +5371,7 @@
           "orderIndex": 3,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les formations annexes de la peau, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "La partie excrétrice des glandes sudoripares est ramifiée.",
@@ -5406,7 +5406,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les glandes sudoripares eccrines",
               "options": [
                 {
                   "text": "L’excrétion se fait selon le mode apocrine.",
@@ -5436,7 +5436,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les glandes sudoripares eccrines",
               "options": [
                 {
                   "text": "Est une glande acineuse composée.",
@@ -5472,7 +5472,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La zone responsable de la croissance de l’ongle est",
               "options": [
                 {
                   "text": "Le derme.",
@@ -5514,7 +5514,7 @@
           "orderIndex": 4,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La glande mammaire",
               "options": [
                 {
                   "text": "Est de type tubulo-alvéolaire.",
@@ -5544,7 +5544,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Développement embryologique de la glande mammaire",
               "options": [
                 {
                   "text": "Est identique pour les deux sexes.",
@@ -5579,7 +5579,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La glande mammaire",
               "options": [
                 {
                   "text": "Est une glande tubuleuse contournée.",
@@ -5613,7 +5613,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Concernant la glande mammaire",
               "options": [
                 {
                   "text": "La partie sécrétrice est de type tubulo-alvéolaire.",
@@ -5648,7 +5648,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la glande mammaire, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Le tissu palléal est un tissu conjonctif lâche qui entoure les alvéoles.",
@@ -5682,7 +5682,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la glande mammaire au cours du développement, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Se développe à partir de la 4ᵉ semaine au niveau de la crête génitale.",
@@ -5717,7 +5717,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Au cours de la lactation",
               "options": [
                 {
                   "text": "La partie sécrétrice est de type acineuse séreuse.",
@@ -5752,7 +5752,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Modifications au cours du premier semestre de la grossesse",
               "options": [
                 {
                   "text": "Disparition du tissu palléal.",
@@ -5782,7 +5782,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La persistance de la crête mammaire peut donner",
               "options": [
                 {
                   "text": "Une athélie.",
@@ -5830,7 +5830,7 @@
           "orderIndex": 0,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les pyramides de Malpighi de la zone médullaire rénale comportent",
               "options": [
                 {
                   "text": "Les anses de Henlé des glomérules juxta-médullaires.",
@@ -5865,7 +5865,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le tissu cortical rénal localisé entre les pyramides de Malpighi est",
               "options": [
                 {
                   "text": "Une strie médullaire.",
@@ -5901,7 +5901,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le lobe rénal inclut",
               "options": [
                 {
                   "text": "La pyramide, les stries de Ferrein correspondantes et le cortex rénal associé.",
@@ -5937,7 +5937,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans la substance médullaire, les pyramides de Malpighi regroupent",
               "options": [
                 {
                   "text": "Des glomérules des néphrons médullaires.",
@@ -5972,7 +5972,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les pyramides de Malpighi de la zone médullaire rénale comportent",
               "options": [
                 {
                   "text": "Les branches ascendantes et descendantes de l’anse de Henlé.",
@@ -6006,7 +6006,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans le parenchyme rénal, la substance médullaire est formée par",
               "options": [
                 {
                   "text": "Pyramide de Ferrein.",
@@ -6042,7 +6042,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les pyramides de Malpighi et de Ferrein constituent",
               "options": [
                 {
                   "text": "La zone médullaire.",
@@ -6077,7 +6077,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les néphrons juxta-médullaires, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "Sont les néphrons avec le segment tubulaire le plus court.",
@@ -6118,7 +6118,7 @@
           "orderIndex": 1,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant le glomérule rénal, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Est formé par un peloton de capillaires continus.",
@@ -6153,7 +6153,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le corpuscule de Malpighi du rein",
               "options": [
                 {
                   "text": "Contient des capillaires sanguins de type continu.",
@@ -6189,7 +6189,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La capsule de Bowman",
               "options": [
                 {
                   "text": "Comporte un feuillet pariétal constitué de podocytes.",
@@ -6224,7 +6224,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les capillaires glomérulaires, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Font partie d’un système porte veineux.",
@@ -6259,7 +6259,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les podocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Ont une membrane basale épaisse.",
@@ -6294,7 +6294,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les podocytes, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Constituent le feuillet pariétal de la capsule de Bowman.",
@@ -6329,7 +6329,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les structures glomérulaires suivantes, indiquer celles qui participent à la filtration glomérulaire",
               "options": [
                 {
                   "text": "Cellules mésangiales intra-glomérulaires.",
@@ -6364,7 +6364,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La barrière de filtration glomérulaire comporte",
               "options": [
                 {
                   "text": "Les cellules du lacis.",
@@ -6394,7 +6394,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "La barrière de filtration glomérulaire",
               "options": [
                 {
                   "text": "Est imperméable aux protéines de faible poids moléculaire.",
@@ -6429,7 +6429,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures impliquées dans la constitution de la barrière de filtration glomérulaire sont",
               "options": [
                 {
                   "text": "Les cellules mésangiales intra-glomérulaires.",
@@ -6464,7 +6464,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures impliquées dans la constitution de la barrière de filtration glomérulaire sont",
               "options": [
                 {
                   "text": "Les cellules mésangiales intra-glomérulaires.",
@@ -6498,7 +6498,7 @@
               "orderIndex": 10
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les structures glomérulaires suivantes, indiquer celles qui constituent la barrière de filtration glomérulaire",
               "options": [
                 {
                   "text": "Cellules mésangiales intra-glomérulaires.",
@@ -6532,7 +6532,7 @@
               "orderIndex": 11
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la barrière de filtration glomérulaire, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "La membrane basale est épaisse et formée de glycoprotéines chargées négativement.",
@@ -6567,7 +6567,7 @@
               "orderIndex": 12
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la barrière de filtration glomérulaire, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "La lésion de la barrière favorise le passage des protéines dans les urines primitives.",
@@ -6601,7 +6601,7 @@
               "orderIndex": 13
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les cellules mésangiales jouent le rôle de",
               "options": [
                 {
                   "text": "Barrière de filtration.",
@@ -6636,7 +6636,7 @@
               "orderIndex": 14
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les cellules mésangiales, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Constituent le feuillet pariétal de la capsule de Bowman.",
@@ -6671,7 +6671,7 @@
               "orderIndex": 15
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la structure en coupe, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "Est un néphron.",
@@ -6707,7 +6707,7 @@
               "orderIndex": 16
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la structure 1, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "Ce sont des cellules du tube contourné distal.",
@@ -6742,7 +6742,7 @@
               "orderIndex": 17
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la structure 2, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "Ce sont des cellules du tube contourné distal.",
@@ -6784,7 +6784,7 @@
           "orderIndex": 2,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant le tube contourné proximal, indiquer celle(s) exacte(s)",
               "options": [
                 {
                   "text": "La réabsorption est intense et favorisée par la présence d'une bordure en brosse.",
@@ -6819,7 +6819,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le tube contourné proximal présente",
               "options": [
                 {
                   "text": "Un épithélium cubique à cellules claires.",
@@ -6854,7 +6854,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L’anse de Henlé",
               "options": [
                 {
                   "text": "Peut se disposer dans la zone corticale ou médullaire du rein.",
@@ -6890,7 +6890,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L’anse de Henlé",
               "options": [
                 {
                   "text": "Est située exclusivement dans la substance médullaire.",
@@ -6926,7 +6926,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le tube contourné distal présente",
               "options": [
                 {
                   "text": "Un épithélium cubique à cellules claires.",
@@ -6961,7 +6961,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Le segment distal du néphron",
               "options": [
                 {
                   "text": "A une lumière plus étroite que celle du segment proximal.",
@@ -6997,7 +6997,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures impliquées dans la formation du gradient cortico-papillaire sont",
               "options": [
                 {
                   "text": "Le tube collecteur.",
@@ -7030,7 +7030,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures qui participent à la concentration des urines dans le rein sont",
               "options": [
                 {
                   "text": "La branche ascendante de l’anse de Henlé.",
@@ -7065,7 +7065,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures impliquées dans la concentration des urines sont",
               "options": [
                 {
                   "text": "Le tube collecteur.",
@@ -7099,7 +7099,7 @@
               "orderIndex": 8
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, indiquer les structures qui participent à la formation des urines primitives",
               "options": [
                 {
                   "text": "Endothélium des capillaires glomérulaires.",
@@ -7135,7 +7135,7 @@
               "orderIndex": 9
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les urines primitives de la chambre glomérulaire comportent",
               "options": [
                 {
                   "text": "De l'albumine.",
@@ -7176,7 +7176,7 @@
           "orderIndex": 3,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant l'appareil juxta-glomérulaire, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Est localisé au niveau du pôle urinaire du glomérule.",
@@ -7212,7 +7212,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Quelles sont parmi ces cellules celles qui font partie de la structure de l'appareil juxta-glomérulaire",
               "options": [
                 {
                   "text": "Cellules du lacis.",
@@ -7247,7 +7247,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L'appareil juxta-glomérulaire comporte parmi ces structures",
               "options": [
                 {
                   "text": "Une macula densa.",
@@ -7283,7 +7283,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les cellules du lacis",
               "options": [
                 {
                   "text": "Se disposent entre l'artériole afférente et le tube contourné proximal.",
@@ -7318,7 +7318,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures du néphron qui sécrètent de la rénine sont",
               "options": [
                 {
                   "text": "Les podocytes.",
@@ -7353,7 +7353,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les structures rénales suivantes, indiquer celles qui sécrètent de la rénine",
               "options": [
                 {
                   "text": "Cellules de la média de l'artériole afférente.",
@@ -7389,7 +7389,7 @@
               "orderIndex": 5
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Dans le rein, les cellules qui sécrètent la rénine sont",
               "options": [
                 {
                   "text": "Les cellules de la capsule de Bowman.",
@@ -7425,7 +7425,7 @@
               "orderIndex": 6
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures du néphron impliquées dans la régulation de la pression artérielle sont",
               "options": [
                 {
                   "text": "Les podocytes.",
@@ -7460,7 +7460,7 @@
               "orderIndex": 7
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les structures rénales suivantes, indiquer celles qui participent à la régulation de la pression artérielle",
               "options": [
                 {
                   "text": "Cellules à rénine de l'artériole afférente.",
@@ -7501,7 +7501,7 @@
           "orderIndex": 4,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Les structures vasculaires localisées dans la zone frontière entre le cortex et la médullaire rénale sont",
               "options": [
                 {
                   "text": "Artères et veines interlobaires.",
@@ -7537,7 +7537,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les capillaires glomérulaires, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Font partie d'un système porte artériel.",
@@ -7572,7 +7572,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant les néphrons de la jonction cortico-médullaire du rein, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "Sont les néphrons avec le segment tubulaire le plus court.",
@@ -7613,7 +7613,7 @@
           "orderIndex": 5,
           "questions": [
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes, concernant la structure de la paroi vésicale, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "L'épithélium est de type polymorphe.",
@@ -7648,7 +7648,7 @@
               "orderIndex": 0
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L’uretère",
               "options": [
                 {
                   "text": "Est formé par une muqueuse, une musculeuse et une adventice.",
@@ -7683,7 +7683,7 @@
               "orderIndex": 1
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "Parmi les propositions suivantes concernant la muqueuse vésicale, indiquer celle(s) qui est (sont) exacte(s)",
               "options": [
                 {
                   "text": "L'épithélium est de type polymorphe.",
@@ -7718,7 +7718,7 @@
               "orderIndex": 2
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L'épithélium urinaire",
               "options": [
                 {
                   "text": "Est un épithélium polymorphe.",
@@ -7753,7 +7753,7 @@
               "orderIndex": 3
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L'épithélium urinaire",
               "options": [
                 {
                   "text": "Est un épithélium polymorphe.",
@@ -7788,7 +7788,7 @@
               "orderIndex": 4
             },
             {
-              "questionText": "🩵 Conclusion :",
+              "questionText": "L'épithélium de transition ou polymorphe",
               "options": [
                 {
                   "text": "Est un épithélium sécrétoire.",

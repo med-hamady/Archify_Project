@@ -142,8 +142,10 @@ function parseFile(filePath) {
                 continue;
             }
         }
-        // Détection des QCMs
-        const qcmMatch = line.match(/^QCM\s+(\d+)\s*[—–-]/);
+        // Détection des QCMs avec texte optionnel sur la même ligne
+        // Format 1: "QCM 1 — Les neurones parvocellulaires :"
+        // Format 2: "QCM 1 —" (texte sur ligne suivante)
+        const qcmMatch = line.match(/^QCM\s+(\d+)\s*[—–-]\s*(.*)$/);
         if (qcmMatch) {
             // Sauvegarder la question précédente
             if (currentQuestion && currentSection) {
@@ -153,15 +155,16 @@ function parseFile(filePath) {
                 currentSection.questions.push(currentQuestion);
                 currentConclusion = [];
             }
-            // Nouvelle question
+            // Nouvelle question avec le texte extrait (s'il existe)
+            const questionText = qcmMatch[2].trim();
             currentQuestion = {
                 number: parseInt(qcmMatch[1]),
-                questionText: '',
+                questionText: questionText && questionText.endsWith(':') ? questionText.slice(0, -1).trim() : questionText,
                 options: []
             };
             continue;
         }
-        // Texte de la question (ligne après QCM X —)
+        // Texte de la question (ligne après QCM X —) - pour les cas où le texte est sur une ligne séparée
         if (currentQuestion && currentQuestion.questionText === '' && !line.match(/^[A-Fa-f][\.\-]/)) {
             currentQuestion.questionText = line;
             continue;
