@@ -128,7 +128,8 @@ export class FacgameDashboardComponent implements OnInit {
   }
 
   navigateToSubject(subjectId: string) {
-    this.router.navigate(['/chapters', subjectId]);
+    // Navigate to options page to show Quiz/Cours/Videos
+    this.router.navigate(['/subject-options', subjectId]);
   }
 
   navigateToProfile() {
