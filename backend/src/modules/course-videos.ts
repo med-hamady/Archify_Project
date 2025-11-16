@@ -159,7 +159,7 @@ router.post('/', requireAuth, requireAdmin, async (req: any, res) => {
       return res.status(400).json({
         success: false,
         error: 'Données invalides',
-        details: error.errors
+        details: error.issues
       });
     }
 
@@ -233,7 +233,7 @@ router.put('/:id', requireAuth, requireAdmin, async (req: any, res) => {
       return res.status(400).json({
         success: false,
         error: 'Données invalides',
-        details: error.errors
+        details: error.issues
       });
     }
 
