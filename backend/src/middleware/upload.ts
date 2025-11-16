@@ -73,11 +73,12 @@ const pdfFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCal
 const imageFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedMimes = [
     'image/jpeg',
+    'image/jpg',  // Some browsers use image/jpg instead of image/jpeg
     'image/png',
     'image/gif',
     'image/webp'
   ];
-  
+
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {

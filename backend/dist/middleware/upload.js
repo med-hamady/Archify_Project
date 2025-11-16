@@ -74,6 +74,7 @@ const pdfFilter = (req, file, cb) => {
 const imageFilter = (req, file, cb) => {
     const allowedMimes = [
         'image/jpeg',
+        'image/jpg', // Some browsers use image/jpg instead of image/jpeg
         'image/png',
         'image/gif',
         'image/webp'

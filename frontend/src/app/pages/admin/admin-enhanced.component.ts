@@ -888,7 +888,7 @@ interface UserStats {
             <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-all bg-gradient-to-br from-gray-50 to-white">
               <input type="file"
                      #questionImageInput
-                     accept="image/jpeg,image/png,image/gif,image/webp"
+                     accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
                      (change)="onQuestionImageSelected($event)"
                      class="hidden">
 
@@ -3415,8 +3415,8 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    // Validate file type (include both image/jpeg and image/jpg)
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       this.qcmErrorMessage.set('Format d\'image invalide. Utilisez JPEG, PNG, GIF ou WebP.');
       setTimeout(() => this.qcmErrorMessage.set(''), 5000);
