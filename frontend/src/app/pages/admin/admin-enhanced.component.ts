@@ -855,12 +855,82 @@ interface UserStats {
           </div>
 
           <!-- Explanation -->
-          <div class="mb-8">
+          <div class="mb-6">
             <label class="block text-sm font-semibold text-gray-700 mb-3">Explication générale (optionnel)</label>
             <textarea [(ngModel)]="qcmFormData.explanation"
                       rows="2"
                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       placeholder="Explication générale de la question"></textarea>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="mb-8">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Image (optionnel)</label>
+
+            <!-- Current Image -->
+            <div *ngIf="qcmFormData.imageUrl && !questionImageFile()" class="mb-4">
+              <p class="text-xs text-gray-600 mb-2">Image actuelle :</p>
+              <div class="relative inline-block">
+                <img [src]="qcmFormData.imageUrl"
+                     alt="Question image"
+                     class="max-w-xs max-h-48 rounded-xl border-2 border-gray-200 shadow-lg">
+                <button (click)="removeQuestionImage()"
+                        type="button"
+                        class="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 transition-all shadow-lg">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- File Input -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-all bg-gradient-to-br from-gray-50 to-white">
+              <input type="file"
+                     #questionImageInput
+                     accept="image/jpeg,image/png,image/gif,image/webp"
+                     (change)="onQuestionImageSelected($event)"
+                     class="hidden">
+
+              <div *ngIf="!questionImageFile()" class="text-center">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <button type="button"
+                        (click)="questionImageInput.click()"
+                        class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
+                  Choisir une image
+                </button>
+                <p class="text-xs text-gray-500 mt-3">JPEG, PNG, GIF ou WebP (max 10MB)</p>
+              </div>
+
+              <div *ngIf="questionImageFile()" class="flex items-center gap-4">
+                <img [src]="questionImagePreview()"
+                     alt="Preview"
+                     class="w-32 h-32 object-cover rounded-xl border-2 border-blue-400 shadow-lg">
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900">{{ questionImageFile()?.name }}</p>
+                  <p class="text-sm text-gray-500">{{ formatFileSize(questionImageFile()?.size) }}</p>
+                  <button type="button"
+                          (click)="cancelQuestionImageUpload()"
+                          class="mt-2 text-sm text-red-600 hover:text-red-800 font-semibold">
+                    Supprimer
+                  </button>
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div *ngIf="uploadingQuestionImage()" class="mt-4">
+                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                  <span>Upload en cours...</span>
+                  <span>{{ questionImageUploadProgress() }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all"
+                       [style.width.%]="questionImageUploadProgress()"></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Action Buttons -->
@@ -2177,9 +2247,16 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   qcmFormData = {
     questionText: '',
     options: [] as Array<{text: string, isCorrect: boolean, justification: string | null}>,
-    explanation: ''
+    explanation: '',
+    imageUrl: null as string | null
   };
   String = String; // Make String available in template
+
+  // Image upload signals
+  questionImageFile = signal<File | null>(null);
+  questionImagePreview = signal<string | null>(null);
+  uploadingQuestionImage = signal(false);
+  questionImageUploadProgress = signal(0);
 
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
@@ -3233,6 +3310,13 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
         this.qcmFormData.questionText = data.question.questionText;
         this.qcmFormData.options = JSON.parse(JSON.stringify(data.question.options)); // Deep copy
         this.qcmFormData.explanation = data.question.explanation || '';
+        this.qcmFormData.imageUrl = data.question.imageUrl || null;
+
+        // Reset image upload state
+        this.questionImageFile.set(null);
+        this.questionImagePreview.set(null);
+        this.uploadingQuestionImage.set(false);
+        this.questionImageUploadProgress.set(0);
       },
       error: (error) => {
         console.error('Error loading question details:', error);
@@ -3241,47 +3325,66 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveQcmQuestion() {
+  async saveQcmQuestion() {
     if (!this.selectedQcmQuestion) return;
 
     this.qcmSaving.set(true);
     this.qcmSuccessMessage.set('');
     this.qcmErrorMessage.set('');
 
-    const updateData = {
-      questionText: this.qcmFormData.questionText,
-      options: this.qcmFormData.options.map(opt => ({
-        text: opt.text,
-        isCorrect: opt.isCorrect,
-        justification: opt.justification || null
-      })),
-      explanation: this.qcmFormData.explanation || null
-    };
-
-    this.http.put<any>(`${this.API_URL}/questions/${this.selectedQcmQuestion}`, updateData).subscribe({
-      next: (data) => {
-        this.qcmSaving.set(false);
-        this.qcmSuccessMessage.set('Question mise à jour avec succès!');
-
-        // Refresh question data
-        this.selectedQcmQuestionData.set(data.question);
-
-        // Clear success message after 5 seconds
-        setTimeout(() => {
-          this.qcmSuccessMessage.set('');
-        }, 5000);
-      },
-      error: (error) => {
-        this.qcmSaving.set(false);
-        console.error('Error saving question:', error);
-        this.qcmErrorMessage.set(error.error?.error?.message || 'Erreur lors de la sauvegarde de la question');
-
-        // Clear error message after 8 seconds
-        setTimeout(() => {
-          this.qcmErrorMessage.set('');
-        }, 8000);
+    try {
+      // Upload image first if there's a new file selected
+      if (this.questionImageFile()) {
+        await this.uploadQuestionImage();
       }
-    });
+
+      const updateData = {
+        questionText: this.qcmFormData.questionText,
+        options: this.qcmFormData.options.map(opt => ({
+          text: opt.text,
+          isCorrect: opt.isCorrect,
+          justification: opt.justification || null
+        })),
+        explanation: this.qcmFormData.explanation || null,
+        imageUrl: this.qcmFormData.imageUrl
+      };
+
+      this.http.put<any>(`${this.API_URL}/questions/${this.selectedQcmQuestion}`, updateData).subscribe({
+        next: (data) => {
+          this.qcmSaving.set(false);
+          this.qcmSuccessMessage.set('Question mise à jour avec succès!');
+
+          // Refresh question data
+          this.selectedQcmQuestionData.set(data.question);
+
+          // Reset image upload state
+          this.questionImageFile.set(null);
+          this.questionImagePreview.set(null);
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.qcmSuccessMessage.set('');
+          }, 5000);
+        },
+        error: (error) => {
+          this.qcmSaving.set(false);
+          console.error('Error saving question:', error);
+          this.qcmErrorMessage.set(error.error?.error?.message || 'Erreur lors de la sauvegarde de la question');
+
+          // Clear error message after 8 seconds
+          setTimeout(() => {
+            this.qcmErrorMessage.set('');
+          }, 8000);
+        }
+      });
+    } catch (error: any) {
+      this.qcmSaving.set(false);
+      console.error('Error in saveQcmQuestion:', error);
+      this.qcmErrorMessage.set(error.message || 'Erreur lors de la sauvegarde');
+      setTimeout(() => {
+        this.qcmErrorMessage.set('');
+      }, 8000);
+    }
   }
 
   cancelQcmEdit() {
@@ -3292,9 +3395,119 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     this.qcmFormData.questionText = questionData.questionText;
     this.qcmFormData.options = JSON.parse(JSON.stringify(questionData.options));
     this.qcmFormData.explanation = questionData.explanation || '';
+    this.qcmFormData.imageUrl = questionData.imageUrl || null;
+
+    // Reset image upload state
+    this.questionImageFile.set(null);
+    this.questionImagePreview.set(null);
+    this.uploadingQuestionImage.set(false);
+    this.questionImageUploadProgress.set(0);
 
     this.qcmSuccessMessage.set('');
     this.qcmErrorMessage.set('');
+  }
+
+  // ============================================
+  // IMAGE UPLOAD METHODS
+  // ============================================
+
+  onQuestionImageSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      this.qcmErrorMessage.set('Format d\'image invalide. Utilisez JPEG, PNG, GIF ou WebP.');
+      setTimeout(() => this.qcmErrorMessage.set(''), 5000);
+      return;
+    }
+
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.qcmErrorMessage.set('L\'image est trop volumineuse. Taille maximale: 10MB.');
+      setTimeout(() => this.qcmErrorMessage.set(''), 5000);
+      return;
+    }
+
+    // Set file and create preview
+    this.questionImageFile.set(file);
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.questionImagePreview.set(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async uploadQuestionImage(): Promise<void> {
+    const file = this.questionImageFile();
+    if (!file || !this.selectedQcmQuestion) {
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      this.uploadingQuestionImage.set(true);
+      this.questionImageUploadProgress.set(0);
+
+      // Simulate progress (since we can't get real progress easily with HttpClient)
+      const progressInterval = setInterval(() => {
+        const current = this.questionImageUploadProgress();
+        if (current < 90) {
+          this.questionImageUploadProgress.set(current + 10);
+        }
+      }, 100);
+
+      this.http.post<any>(`${this.API_URL}/questions/${this.selectedQcmQuestion}/upload-image`, formData).subscribe({
+        next: (response) => {
+          clearInterval(progressInterval);
+          this.questionImageUploadProgress.set(100);
+          this.uploadingQuestionImage.set(false);
+
+          // Update form data with new image URL
+          this.qcmFormData.imageUrl = response.imageUrl;
+
+          // Clear file input
+          this.questionImageFile.set(null);
+          this.questionImagePreview.set(null);
+
+          resolve();
+        },
+        error: (error) => {
+          clearInterval(progressInterval);
+          this.uploadingQuestionImage.set(false);
+          this.questionImageUploadProgress.set(0);
+          console.error('Error uploading image:', error);
+          reject(new Error('Erreur lors de l\'upload de l\'image'));
+        }
+      });
+    });
+  }
+
+  removeQuestionImage() {
+    this.qcmFormData.imageUrl = null;
+    this.questionImageFile.set(null);
+    this.questionImagePreview.set(null);
+  }
+
+  cancelQuestionImageUpload() {
+    this.questionImageFile.set(null);
+    this.questionImagePreview.set(null);
+    this.uploadingQuestionImage.set(false);
+    this.questionImageUploadProgress.set(0);
+  }
+
+  formatFileSize(bytes: number | undefined): string {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   // ============================================
