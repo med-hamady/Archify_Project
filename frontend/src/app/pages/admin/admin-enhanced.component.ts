@@ -2533,6 +2533,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   };
 
 
+  // Navigation tabs
   tabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'courses', name: 'Cours' },
