@@ -62,6 +62,7 @@ const exam_1 = require("./modules/exam");
 const questions_1 = require("./modules/questions");
 const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
+const course_pdfs_1 = __importDefault(require("./modules/course-pdfs"));
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
@@ -95,6 +96,33 @@ app.get('/uploads/images/:filename', (req, res) => {
 });
 // Handle CORS preflight for question images
 app.options('/uploads/images/:filename', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(200).end();
+});
+// Serve course PDFs BEFORE helmet to avoid CSP restrictions
+app.get('/uploads/pdfs/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path_1.default.join(__dirname, '../uploads/pdfs', filename);
+    console.log('📄 ===== COURSE PDF REQUEST =====');
+    console.log('📄 Filename:', filename);
+    console.log('📄 Origin:', req.headers.origin);
+    // Set CORS headers - Allow all origins for PDFs since they're public
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.setHeader('Content-Type', 'application/pdf');
+    if (!fs_1.default.existsSync(filePath)) {
+        console.log('❌ PDF not found:', filePath);
+        return res.status(404).json({ error: 'PDF not found' });
+    }
+    console.log('✅ PDF exists, sending file');
+    return res.sendFile(filePath);
+});
+// Handle CORS preflight for PDFs
+app.options('/uploads/pdfs/:filename', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -505,6 +533,7 @@ app.use('/api/exam', generalLimiter, exam_1.examRouter);
 app.use('/api/questions', strictLimiter, questions_1.questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, admin_import_1.adminImportRouter); // Admin import/db tools
 app.use('/api/admin', strictLimiter, admin_subscription_1.adminSubscriptionRouter); // Admin subscription management
+app.use('/api/course-pdfs', generalLimiter, course_pdfs_1.default); // Course PDF management
 const port = process.env.PORT || 3000;
 // Auto-import quizzes si la base de données est vide
 async function autoImportQuizzes() {

@@ -62,6 +62,7 @@ model Subject {
   chapters          Chapter[]
   subjectProgresses SubjectProgress[]
   examResults       ExamResult[]
+  coursePdfs        CoursePdf[]
 }
 
 // FacGame: Chapitres dans une matière
@@ -348,6 +349,23 @@ model UserBadge {
 
   @@unique([userId, badgeId])
   @@index([userId], map: "user_badges_user_idx")
+}
+
+// FacGame: PDF de cours par matière
+model CoursePdf {
+  id        String  @id @default(cuid())
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  title       String // Titre du document (ex: "Cours complet d'Anatomie")
+  description String? // Description optionnelle
+  pdfUrl      String // URL du fichier PDF
+  orderIndex  Int     @default(0) // Ordre d'affichage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId, orderIndex], map: "course_pdfs_subject_order_idx")
 }
 
 // ============================================
