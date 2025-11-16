@@ -991,14 +991,31 @@ interface UserStats {
           <h3 class="text-lg font-semibold text-gray-900 mb-6">Ajouter un nouveau cours PDF</h3>
 
           <div class="space-y-6">
+            <!-- Semester Selection -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau *</label>
+              <select [(ngModel)]="selectedPdfSemester"
+                      (change)="onPdfSemesterChange()"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                <option value="">Sélectionner un niveau</option>
+                <option value="PCEM1">PCEM1</option>
+                <option value="PCEM2">PCEM2</option>
+                <option value="DCEM1">DCEM1</option>
+                <option value="DCEM2">DCEM2</option>
+                <option value="DCEM3">DCEM3</option>
+                <option value="DCEM4">DCEM4</option>
+              </select>
+            </div>
+
             <!-- Subject Selection -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-3">Matière *</label>
               <select [(ngModel)]="selectedPdfSubject"
                       (change)="loadCoursePdfs()"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                      [disabled]="!selectedPdfSemester"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
                 <option value="">Sélectionner une matière</option>
-                <option *ngFor="let subject of qcmSubjects()" [value]="subject.id">
+                <option *ngFor="let subject of pdfSubjects()" [value]="subject.id">
                   {{ subject.title }}
                 </option>
               </select>
@@ -1091,7 +1108,12 @@ interface UserStats {
             <div *ngFor="let pdf of coursePdfs()"
                  class="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
               <div class="flex-1">
-                <h4 class="font-semibold text-gray-900">{{ pdf.title }}</h4>
+                <div class="flex items-center gap-2 mb-1">
+                  <h4 class="font-semibold text-gray-900">{{ pdf.title }}</h4>
+                  <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-md font-medium">
+                    {{ getSubjectTitle(pdf.subjectId) }}
+                  </span>
+                </div>
                 <p *ngIf="pdf.description" class="text-sm text-gray-600 mt-1">{{ pdf.description }}</p>
                 <p class="text-xs text-gray-400 mt-2">Ordre: {{ pdf.orderIndex }}</p>
               </div>
@@ -2394,7 +2416,9 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   questionImageUploadProgress = signal(0);
 
   // Course PDF Management
+  selectedPdfSemester = '';
   selectedPdfSubject = '';
+  pdfSubjects = signal<any[]>([]);
   newPdfTitle = '';
   newPdfDescription = '';
   newPdfOrderIndex = 0;
@@ -3918,6 +3942,30 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   // ============================================
   // COURSE PDF MANAGEMENT METHODS
   // ============================================
+
+  onPdfSemesterChange() {
+    this.selectedPdfSubject = '';
+    this.coursePdfs.set([]);
+    this.pdfUploadSuccess = false;
+    this.pdfUploadError = '';
+
+    if (!this.selectedPdfSemester) {
+      this.pdfSubjects.set([]);
+      return;
+    }
+
+    // Filter subjects by semester
+    const filteredSubjects = this.qcmAllSubjects().filter(
+      subject => subject.semester === this.selectedPdfSemester
+    );
+
+    this.pdfSubjects.set(filteredSubjects);
+  }
+
+  getSubjectTitle(subjectId: string): string {
+    const subject = this.qcmAllSubjects().find(s => s.id === subjectId);
+    return subject ? subject.title : 'Matière inconnue';
+  }
 
   loadCoursePdfs() {
     if (!this.selectedPdfSubject) {
