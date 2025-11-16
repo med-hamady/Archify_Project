@@ -191,7 +191,8 @@ export class QuizComponent implements OnInit, OnDestroy {
       return this.currentQuestion.imageUrl;
     }
 
-    // Sinon, préfixer avec l'URL de l'API
-    return `${environment.apiUrl}${this.currentQuestion.imageUrl}`;
+    // Sinon, préfixer avec l'URL du backend (sans /api car les images sont servies à la racine)
+    const baseUrl = environment.apiUrl.replace('/api', '');
+    return `${baseUrl}${this.currentQuestion.imageUrl}`;
   }
 }
