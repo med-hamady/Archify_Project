@@ -1,6 +1,6 @@
 .options-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   padding: 2rem;
 }
 
@@ -32,25 +32,29 @@
 }
 
 .header h1 {
-  color: white;
+  color: #1e40af;
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 10px rgba(30, 64, 175, 0.4);
 }
 
 /* Loading & Error States */
 .loading, .error-message {
   text-align: center;
-  color: white;
   padding: 3rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 600px;
+  backdrop-filter: blur(8px);
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
