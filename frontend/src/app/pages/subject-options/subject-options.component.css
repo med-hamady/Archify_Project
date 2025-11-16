@@ -14,21 +14,24 @@
   position: absolute;
   top: 2rem;
   left: 2rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  border: 2px solid #3b82f6;
+  color: #1e40af;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: white;
+  border-color: #1e40af;
   transform: translateX(-5px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
 .header h1 {
