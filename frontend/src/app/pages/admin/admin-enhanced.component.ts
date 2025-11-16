@@ -2538,7 +2538,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
-    { id: 'course-pdfs', name: 'Cours PDF' },
+    { id: 'course-pdfs', name: 'Gestion PDF' },
     { id: 'add-content', name: 'Ajouter Contenu' },
     { id: 'users', name: 'Utilisateurs' },
     { id: 'subscriptions', name: 'Abonnements' },
