@@ -188,9 +188,9 @@ app.options('/uploads/images/:filename', (req, res) => {
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   } else {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    // When origin is undefined (direct image requests), allow all origins
+    res.setHeader('Access-Control-Allow-Origin', '*');
   }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.status(200).end();
@@ -204,18 +204,11 @@ app.get('/uploads/images/:filename', (req, res) => {
   console.log('🖼️  ===== QUESTION IMAGE REQUEST =====');
   console.log('🖼️  Filename:', filename);
   console.log('🖼️  Origin:', req.headers.origin);
-  console.log('🖼️  Allowed Origins:', allowedOrigins);
+  console.log('🖼️  Referer:', req.headers.referer);
 
-  // Set CORS headers FIRST - Allow both localhost and production
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    console.log('✅ Origin matched:', origin);
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    console.log('⚠️  Origin not in allowed list, using localhost. Origin:', origin);
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  // Set CORS headers - Allow all origins for images since they're public
+  // This is necessary because browsers don't always send Origin header for <img> tags
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
   res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours

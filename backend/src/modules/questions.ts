@@ -26,7 +26,7 @@ const optionSchema = z.object({
 
 const createQuestionSchema = z.object({
   chapterId: z.string(),
-  questionText: z.string().min(10, 'La question doit contenir au moins 10 caractères'),
+  questionText: z.string().min(3, 'La question doit contenir au moins 3 caractères'),
   options: z.array(optionSchema).min(2).max(6, 'La question doit avoir entre 2 et 6 options'),
   explanation: z.string().nullable().optional(),
   imageUrl: z.string().nullable().optional(),
@@ -34,7 +34,7 @@ const createQuestionSchema = z.object({
 });
 
 const updateQuestionSchema = z.object({
-  questionText: z.string().min(10).optional(),
+  questionText: z.string().min(3).optional(),
   options: z.array(optionSchema).min(2).max(6).optional(),
   explanation: z.string().nullable().optional(),
   imageUrl: z.string().nullable().optional(),

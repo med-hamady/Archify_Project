@@ -27,14 +27,14 @@ const optionSchema = zod_1.z.object({
 });
 const createQuestionSchema = zod_1.z.object({
     chapterId: zod_1.z.string(),
-    questionText: zod_1.z.string().min(10, 'La question doit contenir au moins 10 caractères'),
+    questionText: zod_1.z.string().min(3, 'La question doit contenir au moins 3 caractères'),
     options: zod_1.z.array(optionSchema).min(2).max(6, 'La question doit avoir entre 2 et 6 options'),
     explanation: zod_1.z.string().nullable().optional(),
     imageUrl: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 const updateQuestionSchema = zod_1.z.object({
-    questionText: zod_1.z.string().min(10).optional(),
+    questionText: zod_1.z.string().min(3).optional(),
     options: zod_1.z.array(optionSchema).min(2).max(6).optional(),
     explanation: zod_1.z.string().nullable().optional(),
     imageUrl: zod_1.z.string().nullable().optional(),
@@ -235,9 +235,13 @@ exports.questionsRouter.post('/', auth_1.requireAuth, auth_1.requireAdmin, async
 exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
     try {
         const { id } = req.params;
+        console.log('📝 ===== UPDATE QUESTION REQUEST =====');
+        console.log('📝 Question ID:', id);
+        console.log('📝 Request body:', JSON.stringify(req.body, null, 2));
         // Valider les données
         const validation = updateQuestionSchema.safeParse(req.body);
         if (!validation.success) {
+            console.log('❌ Validation failed:', JSON.stringify(validation.error.issues, null, 2));
             return res.status(400).json({
                 error: {
                     code: 'VALIDATION_ERROR',
@@ -246,6 +250,7 @@ exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 }
             });
         }
+        console.log('✅ Validation passed');
         const data = validation.data;
         // Vérifier que la question existe
         const existingQuestion = await prisma.question.findUnique({
