@@ -27,6 +27,7 @@ import { questionsRouter } from './modules/questions';
 import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
 import coursePdfsRouter from './modules/course-pdfs';
+import courseVideosRouter from './modules/course-videos';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
 import { seedDCEM1 } from './seed-dcem1';
@@ -569,6 +570,7 @@ app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, adminImportRouter); // Admin import/db tools
 app.use('/api/admin', strictLimiter, adminSubscriptionRouter); // Admin subscription management
 app.use('/api/course-pdfs', generalLimiter, coursePdfsRouter); // Course PDF management
+app.use('/api/course-videos', generalLimiter, courseVideosRouter); // Course video management
 
 const port = process.env.PORT || 3000;
 

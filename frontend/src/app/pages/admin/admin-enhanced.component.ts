@@ -1133,6 +1133,186 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Course Videos Section -->
+      <div *ngIf="activeTab() === 'course-videos'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Gestion des Vidéos YouTube</h2>
+            <p class="text-gray-600 mt-1">Ajoutez et gérez les vidéos YouTube de cours par matière</p>
+          </div>
+        </div>
+
+        <!-- Add Video Form -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Ajouter une nouvelle vidéo</h3>
+
+          <div class="space-y-6">
+            <!-- Semester Selection -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau *</label>
+              <select [(ngModel)]="selectedVideoSemester"
+                      (change)="onVideoSemesterChange()"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                <option value="">Sélectionner un niveau</option>
+                <option value="PCEM1">PCEM1</option>
+                <option value="PCEM2">PCEM2</option>
+                <option value="DCEM1">DCEM1</option>
+                <option value="DCEM2">DCEM2</option>
+                <option value="DCEM3">DCEM3</option>
+                <option value="DCEM4">DCEM4</option>
+              </select>
+            </div>
+
+            <!-- Subject Selection -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Matière *</label>
+              <select [(ngModel)]="selectedVideoSubject"
+                      (change)="loadCourseVideos()"
+                      [disabled]="!selectedVideoSemester"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+                <option value="">Sélectionner une matière</option>
+                <option *ngFor="let subject of videoSubjects()" [value]="subject.id">
+                  {{ subject.title }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Video Title -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Titre de la vidéo *</label>
+              <input type="text"
+                     [(ngModel)]="newVideoTitle"
+                     placeholder="Ex: Introduction à l'Anatomie"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- Video Description -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Description (optionnel)</label>
+              <textarea [(ngModel)]="newVideoDescription"
+                        rows="3"
+                        placeholder="Description de la vidéo..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"></textarea>
+            </div>
+
+            <!-- YouTube URL -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">URL YouTube *</label>
+              <input type="url"
+                     [(ngModel)]="newVideoYoutubeUrl"
+                     placeholder="https://www.youtube.com/watch?v=..."
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+              <p class="mt-2 text-sm text-gray-500">Format accepté: https://www.youtube.com/watch?v=xxx ou https://youtu.be/xxx</p>
+            </div>
+
+            <!-- Duration (optional) -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Durée (optionnel)</label>
+              <input type="text"
+                     [(ngModel)]="newVideoDuration"
+                     placeholder="Ex: 15:30"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+              <p class="mt-2 text-sm text-gray-500">Format: MM:SS ou HH:MM:SS</p>
+            </div>
+
+            <!-- Order Index -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Ordre d'affichage</label>
+              <input type="number"
+                     [(ngModel)]="newVideoOrderIndex"
+                     min="0"
+                     placeholder="0"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- Add Button -->
+            <div class="flex gap-4">
+              <button (click)="uploadCourseVideo()"
+                      [disabled]="uploadingVideo || !selectedVideoSubject || !newVideoTitle || !newVideoYoutubeUrl"
+                      class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!uploadingVideo">🎥 Ajouter la vidéo</span>
+                <span *ngIf="uploadingVideo">⏳ Ajout en cours...</span>
+              </button>
+
+              <button (click)="resetVideoForm()"
+                      type="button"
+                      class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-all duration-300">
+                Réinitialiser
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="videoUploadSuccess" class="p-4 bg-green-50 border border-green-200 rounded-xl">
+              <p class="text-green-800">✅ Vidéo ajoutée avec succès!</p>
+            </div>
+            <div *ngIf="videoUploadError" class="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <p class="text-red-800">❌ {{ videoUploadError }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- List of Videos -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Vidéos existantes</h3>
+
+          <div *ngIf="!selectedVideoSubject" class="text-center py-12 text-gray-500">
+            <p>Sélectionnez une matière pour voir les vidéos</p>
+          </div>
+
+          <div *ngIf="selectedVideoSubject && loadingCourseVideos" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <p class="mt-4 text-gray-600">Chargement...</p>
+          </div>
+
+          <div *ngIf="selectedVideoSubject && !loadingCourseVideos && courseVideos().length === 0" class="text-center py-12 text-gray-500">
+            <p>Aucune vidéo pour cette matière</p>
+          </div>
+
+          <div *ngIf="selectedVideoSubject && !loadingCourseVideos && courseVideos().length > 0" class="space-y-4">
+            <div *ngFor="let video of courseVideos()"
+                 class="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+              <div class="flex gap-4 flex-1">
+                <!-- Thumbnail -->
+                <div class="flex-shrink-0">
+                  <img [src]="video.thumbnailUrl"
+                       [alt]="video.title"
+                       class="w-32 h-20 object-cover rounded-lg"
+                       onerror="this.src='https://via.placeholder.com/120x90?text=Video'">
+                </div>
+
+                <!-- Info -->
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h4 class="font-semibold text-gray-900">{{ video.title }}</h4>
+                    <span class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-md font-medium">
+                      {{ getSubjectTitle(video.subjectId) }}
+                    </span>
+                  </div>
+                  <p *ngIf="video.description" class="text-sm text-gray-600 mt-1">{{ video.description }}</p>
+                  <div class="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                    <span *ngIf="video.duration">⏱️ {{ video.duration }}</span>
+                    <span>📋 Ordre: {{ video.orderIndex }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <a [href]="video.youtubeUrl"
+                   target="_blank"
+                   class="px-4 py-2 text-sm bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
+                  🎥 Voir
+                </a>
+                <button (click)="deleteCourseVideo(video.id)"
+                        class="px-4 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all">
+                  🗑️ Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Add Content Section -->
       <div *ngIf="activeTab() === 'add-content'" class="space-y-8">
         <!-- Header -->
@@ -2429,6 +2609,21 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   loadingCoursePdfs = false;
   coursePdfs = signal<any[]>([]);
 
+  // Course Video Management
+  selectedVideoSemester = '';
+  selectedVideoSubject = '';
+  videoSubjects = signal<any[]>([]);
+  newVideoTitle = '';
+  newVideoDescription = '';
+  newVideoYoutubeUrl = '';
+  newVideoDuration = '';
+  newVideoOrderIndex = 0;
+  uploadingVideo = false;
+  videoUploadSuccess = false;
+  videoUploadError = '';
+  loadingCourseVideos = false;
+  courseVideos = signal<any[]>([]);
+
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
   addContentSaving = signal(false);
@@ -2564,6 +2759,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
     { id: 'course-pdfs', name: 'Gestion PDF' },
+    { id: 'course-videos', name: 'Gestion Vidéos' },
     { id: 'add-content', name: 'Ajouter Contenu' },
     { id: 'users', name: 'Utilisateurs' },
     { id: 'subscriptions', name: 'Abonnements' },
@@ -4093,6 +4289,121 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.error('Error deleting PDF:', err);
           alert('Erreur lors de la suppression du PDF');
+        }
+      });
+  }
+
+  // ============================================
+  // COURSE VIDEO MANAGEMENT
+  // ============================================
+
+  onVideoSemesterChange() {
+    this.selectedVideoSubject = '';
+    this.courseVideos.set([]);
+    this.videoUploadSuccess = false;
+    this.videoUploadError = '';
+
+    if (!this.selectedVideoSemester) {
+      this.videoSubjects.set([]);
+      return;
+    }
+
+    // Filter subjects by semester
+    const filteredSubjects = this.qcmAllSubjects().filter(
+      subject => subject.semester === this.selectedVideoSemester
+    );
+
+    this.videoSubjects.set(filteredSubjects);
+  }
+
+  loadCourseVideos() {
+    if (!this.selectedVideoSubject) {
+      this.courseVideos.set([]);
+      return;
+    }
+
+    this.loadingCourseVideos = true;
+    this.http.get<any>(`${this.API_URL}/course-videos/subject/${this.selectedVideoSubject}`)
+      .subscribe({
+        next: (res) => {
+          this.courseVideos.set(res.courseVideos || []);
+          this.loadingCourseVideos = false;
+        },
+        error: (err) => {
+          console.error('Error loading course videos:', err);
+          this.loadingCourseVideos = false;
+          this.videoUploadError = 'Erreur lors du chargement des vidéos';
+        }
+      });
+  }
+
+  uploadCourseVideo() {
+    if (!this.selectedVideoSubject || !this.newVideoTitle || !this.newVideoYoutubeUrl) {
+      this.videoUploadError = 'Veuillez remplir tous les champs requis';
+      return;
+    }
+
+    this.uploadingVideo = true;
+    this.videoUploadSuccess = false;
+    this.videoUploadError = '';
+
+    const videoData = {
+      subjectId: this.selectedVideoSubject,
+      title: this.newVideoTitle,
+      description: this.newVideoDescription || undefined,
+      youtubeUrl: this.newVideoYoutubeUrl,
+      duration: this.newVideoDuration || undefined,
+      orderIndex: this.newVideoOrderIndex
+    };
+
+    this.http.post<any>(`${this.API_URL}/course-videos`, videoData)
+      .subscribe({
+        next: (res) => {
+          this.uploadingVideo = false;
+          this.videoUploadSuccess = true;
+          this.videoUploadError = '';
+
+          // Reload the list
+          this.loadCourseVideos();
+
+          // Reset form after 2 seconds
+          setTimeout(() => {
+            this.resetVideoForm();
+          }, 2000);
+        },
+        error: (err) => {
+          console.error('Error uploading video:', err);
+          this.uploadingVideo = false;
+          this.videoUploadSuccess = false;
+          this.videoUploadError = err.error?.error || 'Erreur lors de l\'ajout de la vidéo';
+        }
+      });
+  }
+
+  resetVideoForm() {
+    this.newVideoTitle = '';
+    this.newVideoDescription = '';
+    this.newVideoYoutubeUrl = '';
+    this.newVideoDuration = '';
+    this.newVideoOrderIndex = 0;
+    this.videoUploadSuccess = false;
+    this.videoUploadError = '';
+  }
+
+  deleteCourseVideo(id: string) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette vidéo ?')) {
+      return;
+    }
+
+    this.http.delete<any>(`${this.API_URL}/course-videos/${id}`)
+      .subscribe({
+        next: (res) => {
+          // Reload the list
+          this.loadCourseVideos();
+        },
+        error: (err) => {
+          console.error('Error deleting video:', err);
+          alert('Erreur lors de la suppression de la vidéo');
         }
       });
   }

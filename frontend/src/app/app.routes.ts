@@ -96,6 +96,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'video-viewer/:id',
+    loadComponent: () => import('./pages/video-viewer/video-viewer.component').then(m => m.VideoViewerComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'quiz/:chapterId',
     loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizComponent),
     canActivate: [authGuard, subscriptionGuard]

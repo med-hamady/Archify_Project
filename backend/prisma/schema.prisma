@@ -63,6 +63,7 @@ model Subject {
   subjectProgresses SubjectProgress[]
   examResults       ExamResult[]
   coursePdfs        CoursePdf[]
+  courseVideos      CourseVideo[]
 }
 
 // FacGame: Chapitres dans une matière
@@ -366,6 +367,26 @@ model CoursePdf {
   updatedAt DateTime @updatedAt
 
   @@index([subjectId, orderIndex], map: "course_pdfs_subject_order_idx")
+}
+
+// FacGame: Vidéos YouTube de cours par matière
+model CourseVideo {
+  id        String  @id @default(cuid())
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  title        String // Titre de la vidéo (ex: "Introduction à l'Anatomie")
+  description  String? // Description optionnelle
+  youtubeUrl   String // URL complète YouTube (ex: "https://www.youtube.com/watch?v=...")
+  youtubeId    String // ID de la vidéo YouTube extrait de l'URL
+  thumbnailUrl String? // URL de la miniature (auto-générée depuis YouTube)
+  duration     String? // Durée de la vidéo (ex: "12:34")
+  orderIndex   Int     @default(0) // Ordre d'affichage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId, orderIndex], map: "course_videos_subject_order_idx")
 }
 
 // ============================================

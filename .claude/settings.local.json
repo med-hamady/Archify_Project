@@ -16,7 +16,8 @@
       "Bash(node dist/import-histo-nozha-with-subchapters.js:*)",
       "Bash(git reset:*)",
       "Bash(node -e:*)",
-      "Bash(node dist/export-histo-nozha-seed.js:*)"
+      "Bash(node dist/export-histo-nozha-seed.js:*)",
+      "Bash(npm start)"
     ],
     "deny": [],
     "ask": []

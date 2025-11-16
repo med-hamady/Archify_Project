@@ -11,19 +11,44 @@
     <p>Chargement...</p>
   </div>
 
-  <!-- Content Placeholder -->
+  <!-- Content -->
   <div *ngIf="!loading" class="content">
-    <div class="placeholder-card">
+    <!-- Loading Videos -->
+    <div *ngIf="loadingVideos" class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des vidéos...</p>
+    </div>
+
+    <!-- No Videos Available -->
+    <div *ngIf="!loadingVideos && courseVideos.length === 0" class="placeholder-card">
       <div class="placeholder-icon">🎬</div>
-      <h2>Les vidéos seront bientôt disponibles</h2>
-      <p>Cette section est en cours de développement.</p>
-      <p class="hint">Vous pourrez bientôt regarder:</p>
-      <ul>
-        <li>🎥 Cours vidéo complets</li>
-        <li>📺 Tutoriels explicatifs</li>
-        <li>🔬 Démonstrations pratiques</li>
-        <li>⏱️ Apprentissage à votre rythme</li>
-      </ul>
+      <h2>Aucune vidéo disponible</h2>
+      <p>Les vidéos pour cette matière seront bientôt disponibles.</p>
+    </div>
+
+    <!-- Videos Grid -->
+    <div *ngIf="!loadingVideos && courseVideos.length > 0" class="videos-grid">
+      <div *ngFor="let video of courseVideos" class="video-card" (click)="openVideo(video)">
+        <!-- Thumbnail -->
+        <div class="video-thumbnail">
+          <img [src]="video.thumbnailUrl || 'https://via.placeholder.com/480x360?text=Video'"
+               [alt]="video.title"
+               onerror="this.src='https://via.placeholder.com/480x360?text=Video'">
+          <div class="play-overlay">
+            <div class="play-icon">▶</div>
+          </div>
+          <span *ngIf="video.duration" class="duration-badge">{{ video.duration }}</span>
+        </div>
+
+        <!-- Video Info -->
+        <div class="video-content">
+          <h3>{{ video.title }}</h3>
+          <p *ngIf="video.description" class="video-description">{{ video.description }}</p>
+          <div class="video-footer">
+            <span class="watch-btn">🎥 Regarder</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
