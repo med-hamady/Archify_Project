@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const zod_1 = require("zod");
 const client_1 = require("@prisma/client");
 const auth_1 = require("./auth");
+const upload_1 = require("../middleware/upload");
 const prisma = new client_1.PrismaClient();
 exports.questionsRouter = express_1.default.Router();
 // ============================================
@@ -29,12 +30,14 @@ const createQuestionSchema = zod_1.z.object({
     questionText: zod_1.z.string().min(10, 'La question doit contenir au moins 10 caractères'),
     options: zod_1.z.array(optionSchema).min(2).max(6, 'La question doit avoir entre 2 et 6 options'),
     explanation: zod_1.z.string().nullable().optional(),
+    imageUrl: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 const updateQuestionSchema = zod_1.z.object({
     questionText: zod_1.z.string().min(10).optional(),
     options: zod_1.z.array(optionSchema).min(2).max(6).optional(),
     explanation: zod_1.z.string().nullable().optional(),
+    imageUrl: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 // ============================================
@@ -73,6 +76,7 @@ exports.questionsRouter.get('/chapter/:chapterId', auth_1.requireAuth, auth_1.re
                 questionText: true,
                 options: true,
                 explanation: true,
+                imageUrl: true,
                 orderIndex: true,
                 createdAt: true
             }
@@ -133,6 +137,7 @@ exports.questionsRouter.get('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: question.questionText,
                 options: question.options,
                 explanation: question.explanation,
+                imageUrl: question.imageUrl,
                 orderIndex: question.orderIndex,
                 chapterId: question.chapterId,
                 chapterTitle: question.chapter.title,
@@ -195,6 +200,7 @@ exports.questionsRouter.post('/', auth_1.requireAuth, auth_1.requireAdmin, async
                 questionText: data.questionText,
                 options: data.options,
                 explanation: data.explanation,
+                imageUrl: data.imageUrl,
                 orderIndex
             }
         });
@@ -206,6 +212,7 @@ exports.questionsRouter.post('/', auth_1.requireAuth, auth_1.requireAdmin, async
                 questionText: question.questionText,
                 options: question.options,
                 explanation: question.explanation,
+                imageUrl: question.imageUrl,
                 orderIndex: question.orderIndex,
                 chapterId: question.chapterId
             }
@@ -256,6 +263,7 @@ exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: data.questionText,
                 options: data.options,
                 explanation: data.explanation,
+                imageUrl: data.imageUrl,
                 orderIndex: data.orderIndex
             }
         });
@@ -267,6 +275,7 @@ exports.questionsRouter.put('/:id', auth_1.requireAuth, auth_1.requireAdmin, asy
                 questionText: updatedQuestion.questionText,
                 options: updatedQuestion.options,
                 explanation: updatedQuestion.explanation,
+                imageUrl: updatedQuestion.imageUrl,
                 orderIndex: updatedQuestion.orderIndex,
                 chapterId: updatedQuestion.chapterId
             }
@@ -311,6 +320,55 @@ exports.questionsRouter.delete('/:id', auth_1.requireAuth, auth_1.requireAdmin, 
         console.error('Error deleting question:', err);
         return res.status(500).json({
             error: { code: 'SERVER_ERROR', message: 'Erreur lors de la suppression de la question' }
+        });
+    }
+});
+// ============================================
+// UPLOAD D'IMAGE POUR UNE QUESTION
+// ============================================
+/**
+ * POST /api/questions/:id/upload-image
+ * Upload une image pour une question (admin uniquement)
+ */
+exports.questionsRouter.post('/:id/upload-image', auth_1.requireAuth, auth_1.requireAdmin, upload_1.imageUpload.single('image'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Vérifier que la question existe
+        const question = await prisma.question.findUnique({
+            where: { id }
+        });
+        if (!question) {
+            return res.status(404).json({
+                error: { code: 'NOT_FOUND', message: 'Question non trouvée' }
+            });
+        }
+        // Vérifier qu'un fichier a été uploadé
+        if (!req.file) {
+            return res.status(400).json({
+                error: { code: 'NO_FILE', message: 'Aucune image fournie' }
+            });
+        }
+        // Générer l'URL de l'image
+        const imageUrl = (0, upload_1.getFileUrl)(req.file.path);
+        // Mettre à jour la question avec l'URL de l'image
+        const updatedQuestion = await prisma.question.update({
+            where: { id },
+            data: { imageUrl }
+        });
+        res.json({
+            success: true,
+            message: 'Image uploadée avec succès',
+            imageUrl,
+            question: {
+                id: updatedQuestion.id,
+                imageUrl: updatedQuestion.imageUrl
+            }
+        });
+    }
+    catch (err) {
+        console.error('Error uploading image:', err);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de l\'upload de l\'image' }
         });
     }
 });

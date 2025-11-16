@@ -11,6 +11,7 @@ export interface QuizQuestion {
   id: string;
   questionText: string;
   options: QuizOption[];  // Nouveau format JSON
+  imageUrl?: string;  // URL de l'image associée à la question
   chapterId?: string;
   chapterTitle?: string;
   subchapterId?: string;

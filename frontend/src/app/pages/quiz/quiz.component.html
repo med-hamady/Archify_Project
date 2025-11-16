@@ -67,6 +67,11 @@
       <h2>{{ currentQuestion.questionText }}</h2>
     </div>
 
+    <!-- Question Image (si présente) -->
+    <div *ngIf="currentQuestion.imageUrl" class="question-image">
+      <img [src]="currentQuestion.imageUrl" [alt]="currentQuestion.questionText" />
+    </div>
+
     <!-- Answer Options -->
     <div class="answer-options">
       <button

@@ -416,6 +416,7 @@ exports.quizRouter.get('/chapter/:chapterId/next', auth_1.requireAuth, auth_1.re
                 id: nextQuestion.id,
                 questionText: nextQuestion.questionText,
                 options: sanitizedOptions,
+                imageUrl: nextQuestion.imageUrl,
                 chapterId: nextQuestion.chapterId,
                 subchapterId: nextQuestion.subchapterId,
                 subchapterTitle: nextQuestion.subchapter?.title,

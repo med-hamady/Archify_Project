@@ -472,6 +472,7 @@ quizRouter.get('/chapter/:chapterId/next', requireAuth, requireQuizAccess, async
         id: nextQuestion.id,
         questionText: nextQuestion.questionText,
         options: sanitizedOptions,
+        imageUrl: nextQuestion.imageUrl,
         chapterId: nextQuestion.chapterId,
         subchapterId: nextQuestion.subchapterId,
         subchapterTitle: (nextQuestion as any).subchapter?.title,

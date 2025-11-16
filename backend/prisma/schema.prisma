@@ -124,6 +124,9 @@ model Question {
 
   explanation String? @db.Text // Commentaire général de la question
 
+  // Support d'images pour les QCM
+  imageUrl String? // URL de l'image associée à la question
+
   orderIndex Int @default(0)
 
   createdAt DateTime @default(now())
