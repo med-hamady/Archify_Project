@@ -976,6 +976,141 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Course PDFs Management Section -->
+      <div *ngIf="activeTab() === 'course-pdfs'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Gestion des Cours PDF</h2>
+            <p class="text-gray-600 mt-1">Uploadez et gérez les fichiers PDF de cours par matière</p>
+          </div>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Ajouter un nouveau cours PDF</h3>
+
+          <div class="space-y-6">
+            <!-- Subject Selection -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Matière *</label>
+              <select [(ngModel)]="selectedPdfSubject"
+                      (change)="loadCoursePdfs()"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                <option value="">Sélectionner une matière</option>
+                <option *ngFor="let subject of qcmSubjects()" [value]="subject.id">
+                  {{ subject.title }}
+                </option>
+              </select>
+            </div>
+
+            <!-- PDF Title -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Titre du document *</label>
+              <input type="text"
+                     [(ngModel)]="newPdfTitle"
+                     placeholder="Ex: Cours complet d'Anatomie"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- PDF Description -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Description (optionnel)</label>
+              <textarea [(ngModel)]="newPdfDescription"
+                        rows="3"
+                        placeholder="Description du document..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"></textarea>
+            </div>
+
+            <!-- Order Index -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Ordre d'affichage</label>
+              <input type="number"
+                     [(ngModel)]="newPdfOrderIndex"
+                     min="0"
+                     placeholder="0"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- PDF File Upload -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-3">Fichier PDF *</label>
+              <input type="file"
+                     #pdfFileInput
+                     (change)="onPdfFileSelected($event)"
+                     accept=".pdf"
+                     class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all hover:border-blue-400 cursor-pointer">
+              <p class="mt-2 text-sm text-gray-500">Maximum 50 MB. Format PDF uniquement.</p>
+              <p *ngIf="selectedPdfFile" class="mt-2 text-sm text-green-600">✓ Fichier sélectionné: {{ selectedPdfFile.name }}</p>
+            </div>
+
+            <!-- Upload Button -->
+            <div class="flex gap-4">
+              <button (click)="uploadCoursePdf()"
+                      [disabled]="uploadingPdf || !selectedPdfSubject || !newPdfTitle || !selectedPdfFile"
+                      class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!uploadingPdf">📤 Uploader le PDF</span>
+                <span *ngIf="uploadingPdf">⏳ Upload en cours...</span>
+              </button>
+
+              <button (click)="resetPdfForm()"
+                      type="button"
+                      class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-all duration-300">
+                Réinitialiser
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="pdfUploadSuccess" class="p-4 bg-green-50 border border-green-200 rounded-xl">
+              <p class="text-green-800">✅ PDF uploadé avec succès!</p>
+            </div>
+            <div *ngIf="pdfUploadError" class="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <p class="text-red-800">❌ {{ pdfUploadError }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- List of PDFs -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">Cours PDF existants</h3>
+
+          <div *ngIf="!selectedPdfSubject" class="text-center py-12 text-gray-500">
+            <p>Sélectionnez une matière pour voir les cours PDF</p>
+          </div>
+
+          <div *ngIf="selectedPdfSubject && loadingCoursePdfs" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Chargement...</p>
+          </div>
+
+          <div *ngIf="selectedPdfSubject && !loadingCoursePdfs && coursePdfs().length === 0" class="text-center py-12 text-gray-500">
+            <p>Aucun cours PDF pour cette matière</p>
+          </div>
+
+          <div *ngIf="selectedPdfSubject && !loadingCoursePdfs && coursePdfs().length > 0" class="space-y-4">
+            <div *ngFor="let pdf of coursePdfs()"
+                 class="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+              <div class="flex-1">
+                <h4 class="font-semibold text-gray-900">{{ pdf.title }}</h4>
+                <p *ngIf="pdf.description" class="text-sm text-gray-600 mt-1">{{ pdf.description }}</p>
+                <p class="text-xs text-gray-400 mt-2">Ordre: {{ pdf.orderIndex }}</p>
+              </div>
+              <div class="flex gap-2">
+                <a [href]="getPdfUrl(pdf.pdfUrl)"
+                   target="_blank"
+                   class="px-4 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all">
+                  📄 Voir
+                </a>
+                <button (click)="deleteCoursePdf(pdf.id)"
+                        class="px-4 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all">
+                  🗑️ Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Add Content Section -->
       <div *ngIf="activeTab() === 'add-content'" class="space-y-8">
         <!-- Header -->
@@ -2258,6 +2393,18 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   uploadingQuestionImage = signal(false);
   questionImageUploadProgress = signal(0);
 
+  // Course PDF Management
+  selectedPdfSubject = '';
+  newPdfTitle = '';
+  newPdfDescription = '';
+  newPdfOrderIndex = 0;
+  selectedPdfFile: File | null = null;
+  uploadingPdf = false;
+  pdfUploadSuccess = false;
+  pdfUploadError = '';
+  loadingCoursePdfs = false;
+  coursePdfs = signal<any[]>([]);
+
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
   addContentSaving = signal(false);
@@ -2391,6 +2538,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
+    { id: 'course-pdfs', name: 'Cours PDF' },
     { id: 'add-content', name: 'Ajouter Contenu' },
     { id: 'users', name: 'Utilisateurs' },
     { id: 'subscriptions', name: 'Abonnements' },
@@ -3764,6 +3912,140 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     };
     this.addQuizSubjects.set([]);
     this.addQuizChapters.set([]);
+  }
+
+  // ============================================
+  // COURSE PDF MANAGEMENT METHODS
+  // ============================================
+
+  loadCoursePdfs() {
+    if (!this.selectedPdfSubject) {
+      this.coursePdfs.set([]);
+      return;
+    }
+
+    this.loadingCoursePdfs = true;
+    this.http.get<any>(`${this.API_URL}/course-pdfs/subject/${this.selectedPdfSubject}`)
+      .subscribe({
+        next: (res) => {
+          this.coursePdfs.set(res.coursePdfs || []);
+          this.loadingCoursePdfs = false;
+        },
+        error: (err) => {
+          console.error('Error loading course PDFs:', err);
+          this.loadingCoursePdfs = false;
+          this.pdfUploadError = 'Erreur lors du chargement des cours PDF';
+        }
+      });
+  }
+
+  onPdfFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedPdfFile = input.files[0];
+
+      // Validate file size (50MB max)
+      if (this.selectedPdfFile.size > 50 * 1024 * 1024) {
+        this.pdfUploadError = 'Le fichier dépasse la taille maximale de 50 MB';
+        this.selectedPdfFile = null;
+        input.value = '';
+        return;
+      }
+
+      // Validate file type
+      if (this.selectedPdfFile.type !== 'application/pdf') {
+        this.pdfUploadError = 'Seuls les fichiers PDF sont acceptés';
+        this.selectedPdfFile = null;
+        input.value = '';
+        return;
+      }
+
+      this.pdfUploadError = '';
+    }
+  }
+
+  uploadCoursePdf() {
+    if (!this.selectedPdfSubject || !this.newPdfTitle || !this.selectedPdfFile) {
+      this.pdfUploadError = 'Veuillez remplir tous les champs requis';
+      return;
+    }
+
+    this.uploadingPdf = true;
+    this.pdfUploadSuccess = false;
+    this.pdfUploadError = '';
+
+    const formData = new FormData();
+    formData.append('pdf', this.selectedPdfFile);
+    formData.append('subjectId', this.selectedPdfSubject);
+    formData.append('title', this.newPdfTitle);
+    if (this.newPdfDescription) {
+      formData.append('description', this.newPdfDescription);
+    }
+    formData.append('orderIndex', this.newPdfOrderIndex.toString());
+
+    this.http.post<any>(`${this.API_URL}/course-pdfs`, formData)
+      .subscribe({
+        next: (res) => {
+          this.uploadingPdf = false;
+          this.pdfUploadSuccess = true;
+          this.pdfUploadError = '';
+
+          // Reload the list
+          this.loadCoursePdfs();
+
+          // Reset form after 2 seconds
+          setTimeout(() => {
+            this.resetPdfForm();
+          }, 2000);
+        },
+        error: (err) => {
+          console.error('Error uploading PDF:', err);
+          this.uploadingPdf = false;
+          this.pdfUploadSuccess = false;
+          this.pdfUploadError = err.error?.error || 'Erreur lors de l\'upload du PDF';
+        }
+      });
+  }
+
+  resetPdfForm() {
+    this.newPdfTitle = '';
+    this.newPdfDescription = '';
+    this.newPdfOrderIndex = 0;
+    this.selectedPdfFile = null;
+    this.pdfUploadSuccess = false;
+    this.pdfUploadError = '';
+
+    // Reset file input
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  getPdfUrl(pdfUrl: string): string {
+    if (pdfUrl.startsWith('http')) {
+      return pdfUrl;
+    }
+    const baseUrl = environment.apiUrl.replace('/api', '');
+    return `${baseUrl}${pdfUrl}`;
+  }
+
+  deleteCoursePdf(id: string) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce cours PDF ?')) {
+      return;
+    }
+
+    this.http.delete<any>(`${this.API_URL}/course-pdfs/${id}`)
+      .subscribe({
+        next: (res) => {
+          // Reload the list
+          this.loadCoursePdfs();
+        },
+        error: (err) => {
+          console.error('Error deleting PDF:', err);
+          alert('Erreur lors de la suppression du PDF');
+        }
+      });
   }
 
 }

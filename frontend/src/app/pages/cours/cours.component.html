@@ -11,19 +11,35 @@
     <p>Chargement...</p>
   </div>
 
-  <!-- Content Placeholder -->
+  <!-- Content -->
   <div *ngIf="!loading" class="content">
-    <div class="placeholder-card">
+    <!-- Loading PDFs -->
+    <div *ngIf="loadingPdfs" class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des cours...</p>
+    </div>
+
+    <!-- No PDFs Available -->
+    <div *ngIf="!loadingPdfs && coursePdfs.length === 0" class="placeholder-card">
       <div class="placeholder-icon">📖</div>
-      <h2>Les cours seront bientôt disponibles</h2>
-      <p>Cette section est en cours de développement.</p>
-      <p class="hint">Vous pourrez bientôt consulter:</p>
-      <ul>
-        <li>📄 Documents PDF des cours</li>
-        <li>📝 Résumés structurés par chapitre</li>
-        <li>🎨 Schémas et illustrations</li>
-        <li>📊 Tableaux récapitulatifs</li>
-      </ul>
+      <h2>Aucun cours disponible</h2>
+      <p>Les cours pour cette matière seront bientôt disponibles.</p>
+    </div>
+
+    <!-- PDFs List -->
+    <div *ngIf="!loadingPdfs && coursePdfs.length > 0" class="pdfs-grid">
+      <div *ngFor="let pdf of coursePdfs" class="pdf-card">
+        <div class="pdf-icon">📄</div>
+        <div class="pdf-content">
+          <h3>{{ pdf.title }}</h3>
+          <p *ngIf="pdf.description" class="pdf-description">{{ pdf.description }}</p>
+          <a [href]="getPdfUrl(pdf.pdfUrl)"
+             target="_blank"
+             class="btn-view-pdf">
+            📖 Consulter le PDF
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
