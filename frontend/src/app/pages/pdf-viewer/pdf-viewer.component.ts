@@ -17,21 +17,39 @@ export class PdfViewerComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
 
   pdfUrl: SafeResourceUrl | null = null;
+  rawPdfUrl: string = '';
   pdfTitle: string = '';
   loading = true;
+  isMobile = false;
 
   ngOnInit() {
     const encodedUrl = this.route.snapshot.paramMap.get('url') || '';
     this.pdfTitle = this.route.snapshot.queryParamMap.get('title') || 'Document PDF';
 
+    // Detect mobile device
+    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     if (encodedUrl) {
       // Decode the URL
       const decodedUrl = decodeURIComponent(encodedUrl);
+      this.rawPdfUrl = decodedUrl;
 
-      // Sanitize the URL for iframe
-      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(decodedUrl);
+      if (this.isMobile) {
+        // On mobile, use Google Docs Viewer for better compatibility
+        const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(decodedUrl)}&embedded=true`;
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(googleDocsUrl);
+      } else {
+        // On desktop, use direct iframe
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(decodedUrl);
+      }
+
       this.loading = false;
     }
+  }
+
+  downloadPdf() {
+    // Open the PDF in a new tab (will trigger download on mobile)
+    window.open(this.rawPdfUrl, '_blank');
   }
 
   goBack() {
