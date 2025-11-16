@@ -72,6 +72,34 @@ const logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL || 'info' });
 const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,https://archify-project.vercel.app,https://facgame.com,https://www.facgame.com')
     .split(',')
     .map((o) => o.trim());
+// Serve question images BEFORE helmet to avoid CSP restrictions
+// Images are public and need to be accessible cross-origin
+app.get('/uploads/images/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path_1.default.join(__dirname, '../uploads/images', filename);
+    console.log('🖼️  ===== QUESTION IMAGE REQUEST =====');
+    console.log('🖼️  Filename:', filename);
+    console.log('🖼️  Origin:', req.headers.origin);
+    console.log('🖼️  Referer:', req.headers.referer);
+    // Set CORS headers - Allow all origins for images since they're public
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    if (!fs_1.default.existsSync(filePath)) {
+        console.log('❌ Image not found:', filePath);
+        return res.status(404).json({ error: 'Image not found' });
+    }
+    console.log('✅ Image exists, sending file');
+    return res.sendFile(filePath);
+});
+// Handle CORS preflight for question images
+app.options('/uploads/images/:filename', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(200).end();
+});
 app.use((0, helmet_1.default)({
     contentSecurityPolicy: {
         directives: {
@@ -200,42 +228,6 @@ app.get('/uploads/payment-screenshots/:filename', auth_1.optionalAuth, (req, res
     }
     console.log('❌ Access denied - not authenticated');
     return res.status(403).json({ error: 'Access denied' });
-});
-// Handle CORS preflight for question images
-app.options('/uploads/images/:filename', (req, res) => {
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    else {
-        // When origin is undefined (direct image requests), allow all origins
-        res.setHeader('Access-Control-Allow-Origin', '*');
-    }
-    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.status(200).end();
-});
-// Serve question images (publicly accessible for quizzes)
-app.get('/uploads/images/:filename', (req, res) => {
-    const filename = req.params.filename;
-    const filePath = path_1.default.join(__dirname, '../uploads/images', filename);
-    console.log('🖼️  ===== QUESTION IMAGE REQUEST =====');
-    console.log('🖼️  Filename:', filename);
-    console.log('🖼️  Origin:', req.headers.origin);
-    console.log('🖼️  Referer:', req.headers.referer);
-    // Set CORS headers - Allow all origins for images since they're public
-    // This is necessary because browsers don't always send Origin header for <img> tags
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-    res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
-    res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
-    // Check if file exists
-    if (!fs_1.default.existsSync(filePath)) {
-        console.log('❌ Image not found:', filePath);
-        return res.status(404).json({ error: 'Image not found' });
-    }
-    console.log('✅ Image exists, sending file');
-    return res.sendFile(filePath);
 });
 // IMPORTANT: DO NOT serve uploads directory statically as it bypasses subscription checks
 // Videos are served via the protected route above: /uploads/videos/:filename
