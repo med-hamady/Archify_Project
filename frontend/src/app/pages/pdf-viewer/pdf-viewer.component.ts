@@ -47,11 +47,6 @@ export class PdfViewerComponent implements OnInit {
     }
   }
 
-  downloadPdf() {
-    // Open the PDF in a new tab (will trigger download on mobile)
-    window.open(this.rawPdfUrl, '_blank');
-  }
-
   goBack() {
     this.router.navigate(['/cours', this.route.snapshot.queryParamMap.get('subjectId')]);
   }
