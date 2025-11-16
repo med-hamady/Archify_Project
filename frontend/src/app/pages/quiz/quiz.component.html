@@ -68,8 +68,8 @@
     </div>
 
     <!-- Question Image (si présente) -->
-    <div *ngIf="currentQuestion.imageUrl" class="question-image">
-      <img [src]="currentQuestion.imageUrl" [alt]="currentQuestion.questionText" />
+    <div *ngIf="getQuestionImageUrl()" class="question-image">
+      <img [src]="getQuestionImageUrl()" [alt]="currentQuestion.questionText" />
     </div>
 
     <!-- Answer Options -->

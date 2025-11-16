@@ -868,10 +868,10 @@ interface UserStats {
             <label class="block text-sm font-semibold text-gray-700 mb-3">Image (optionnel)</label>
 
             <!-- Current Image -->
-            <div *ngIf="qcmFormData.imageUrl && !questionImageFile()" class="mb-4">
+            <div *ngIf="getQuestionImageUrl() && !questionImageFile()" class="mb-4">
               <p class="text-xs text-gray-600 mb-2">Image actuelle :</p>
               <div class="relative inline-block">
-                <img [src]="qcmFormData.imageUrl"
+                <img [src]="getQuestionImageUrl()"
                      alt="Question image"
                      class="max-w-xs max-h-48 rounded-xl border-2 border-gray-200 shadow-lg">
                 <button (click)="removeQuestionImage()"
@@ -3508,6 +3508,20 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  getQuestionImageUrl(): string | null {
+    if (!this.qcmFormData.imageUrl) {
+      return null;
+    }
+
+    // Si l'URL est déjà complète (commence par http), la retourner telle quelle
+    if (this.qcmFormData.imageUrl.startsWith('http')) {
+      return this.qcmFormData.imageUrl;
+    }
+
+    // Sinon, préfixer avec l'URL de l'API
+    return `${this.API_URL.replace('/api', '')}${this.qcmFormData.imageUrl}`;
   }
 
   // ============================================

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { QuizService, QuizQuestion, QuizAnswerResponse } from '../../services/quiz.service';
 import { ScreenshotProtectionService } from '../../services/screenshot-protection.service';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-quiz',
@@ -174,5 +175,22 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.router.navigate(['/dashboard']);
+  }
+
+  /**
+   * Retourne l'URL complète de l'image de la question
+   */
+  getQuestionImageUrl(): string | null {
+    if (!this.currentQuestion?.imageUrl) {
+      return null;
+    }
+
+    // Si l'URL est déjà complète (commence par http), la retourner telle quelle
+    if (this.currentQuestion.imageUrl.startsWith('http')) {
+      return this.currentQuestion.imageUrl;
+    }
+
+    // Sinon, préfixer avec l'URL de l'API
+    return `${environment.apiUrl}${this.currentQuestion.imageUrl}`;
   }
 }

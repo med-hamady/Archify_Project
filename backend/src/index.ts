@@ -182,6 +182,54 @@ app.get('/uploads/payment-screenshots/:filename', optionalAuth, (req: any, res) 
   return res.status(403).json({ error: 'Access denied' });
 });
 
+// Handle CORS preflight for question images
+app.options('/uploads/images/:filename', (req, res) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).end();
+});
+
+// Serve question images (publicly accessible for quizzes)
+app.get('/uploads/images/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../uploads/images', filename);
+
+  console.log('🖼️  ===== QUESTION IMAGE REQUEST =====');
+  console.log('🖼️  Filename:', filename);
+  console.log('🖼️  Origin:', req.headers.origin);
+
+  // Remove CSP headers for image files
+  res.removeHeader('Content-Security-Policy');
+  res.removeHeader('Content-Security-Policy-Report-Only');
+
+  // Set CORS headers - Allow both localhost and production
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
+
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    console.log('❌ Image not found:', filePath);
+    return res.status(404).json({ error: 'Image not found' });
+  }
+
+  console.log('✅ Image exists, sending file');
+  return res.sendFile(filePath);
+});
+
 // IMPORTANT: DO NOT serve uploads directory statically as it bypasses subscription checks
 // Videos are served via the protected route above: /uploads/videos/:filename
 // Other uploads (payment screenshots) should not be publicly accessible
