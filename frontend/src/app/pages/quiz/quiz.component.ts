@@ -40,7 +40,8 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Activer la protection anti-capture d'écran
-    this.screenshotProtection.enableProtection();
+    // DÉSACTIVÉ: Le clic droit est maintenant autorisé
+    // this.screenshotProtection.enableProtection();
 
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
     this.subchapterId = this.route.snapshot.queryParamMap.get('subchapterId');

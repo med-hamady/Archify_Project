@@ -3512,16 +3512,23 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
   getQuestionImageUrl(): string | null {
     if (!this.qcmFormData.imageUrl) {
+      console.log('🖼️ No imageUrl in qcmFormData');
       return null;
     }
 
+    console.log('🖼️ qcmFormData.imageUrl:', this.qcmFormData.imageUrl);
+
     // Si l'URL est déjà complète (commence par http), la retourner telle quelle
     if (this.qcmFormData.imageUrl.startsWith('http')) {
+      console.log('🖼️ Using absolute URL:', this.qcmFormData.imageUrl);
       return this.qcmFormData.imageUrl;
     }
 
     // Sinon, préfixer avec l'URL de l'API
-    return `${this.API_URL.replace('/api', '')}${this.qcmFormData.imageUrl}`;
+    const fullUrl = `${this.API_URL.replace('/api', '')}${this.qcmFormData.imageUrl}`;
+    console.log('🖼️ Constructed URL:', fullUrl);
+    console.log('🖼️ API_URL:', this.API_URL);
+    return fullUrl;
   }
 
   // ============================================

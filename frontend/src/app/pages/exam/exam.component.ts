@@ -61,7 +61,8 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Activer la protection anti-capture d'écran
-    this.screenshotProtection.enableProtection();
+    // DÉSACTIVÉ: Le clic droit est maintenant autorisé
+    // this.screenshotProtection.enableProtection();
 
     // Get user name
     const user = this.authService.getCurrentUser();
