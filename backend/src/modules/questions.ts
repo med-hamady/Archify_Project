@@ -257,9 +257,14 @@ questionsRouter.put('/:id', requireAuth, requireAdmin, async (req: any, res) => 
   try {
     const { id } = req.params;
 
+    console.log('📝 ===== UPDATE QUESTION REQUEST =====');
+    console.log('📝 Question ID:', id);
+    console.log('📝 Request body:', JSON.stringify(req.body, null, 2));
+
     // Valider les données
     const validation = updateQuestionSchema.safeParse(req.body);
     if (!validation.success) {
+      console.log('❌ Validation failed:', JSON.stringify(validation.error.issues, null, 2));
       return res.status(400).json({
         error: {
           code: 'VALIDATION_ERROR',
@@ -268,6 +273,8 @@ questionsRouter.put('/:id', requireAuth, requireAdmin, async (req: any, res) => 
         }
       });
     }
+
+    console.log('✅ Validation passed');
 
     const data = validation.data;
 
