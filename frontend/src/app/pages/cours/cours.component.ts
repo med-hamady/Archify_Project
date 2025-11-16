@@ -83,6 +83,18 @@ export class CoursComponent implements OnInit {
     return `${baseUrl}${pdfUrl}`;
   }
 
+  openPdf(pdf: CoursePdf) {
+    const fullUrl = this.getPdfUrl(pdf.pdfUrl);
+    const encodedUrl = encodeURIComponent(fullUrl);
+
+    this.router.navigate(['/pdf-viewer', encodedUrl], {
+      queryParams: {
+        title: pdf.title,
+        subjectId: this.subjectId
+      }
+    });
+  }
+
   goBack() {
     this.router.navigate(['/subject-options', this.subjectId]);
   }

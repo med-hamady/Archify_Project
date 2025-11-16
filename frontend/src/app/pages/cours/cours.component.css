@@ -173,9 +173,11 @@
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
   text-decoration: none;
+  border: none;
   border-radius: 12px;
   font-weight: 600;
   font-size: 1rem;
+  cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
 }

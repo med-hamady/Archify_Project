@@ -91,6 +91,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'pdf-viewer/:url',
+    loadComponent: () => import('./pages/pdf-viewer/pdf-viewer.component').then(m => m.PdfViewerComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'quiz/:chapterId',
     loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizComponent),
     canActivate: [authGuard, subscriptionGuard]

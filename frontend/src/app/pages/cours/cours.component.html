@@ -33,11 +33,9 @@
         <div class="pdf-content">
           <h3>{{ pdf.title }}</h3>
           <p *ngIf="pdf.description" class="pdf-description">{{ pdf.description }}</p>
-          <a [href]="getPdfUrl(pdf.pdfUrl)"
-             target="_blank"
-             class="btn-view-pdf">
+          <button (click)="openPdf(pdf)" class="btn-view-pdf">
             📖 Consulter le PDF
-          </a>
+          </button>
         </div>
       </div>
     </div>
