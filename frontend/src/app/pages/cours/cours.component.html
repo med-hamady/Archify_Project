@@ -1,0 +1,29 @@
+<div class="cours-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">← Retour</button>
+    <h1 *ngIf="subject">📚 Cours - {{ subject.title }}</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Content Placeholder -->
+  <div *ngIf="!loading" class="content">
+    <div class="placeholder-card">
+      <div class="placeholder-icon">📖</div>
+      <h2>Les cours seront bientôt disponibles</h2>
+      <p>Cette section est en cours de développement.</p>
+      <p class="hint">Vous pourrez bientôt consulter:</p>
+      <ul>
+        <li>📄 Documents PDF des cours</li>
+        <li>📝 Résumés structurés par chapitre</li>
+        <li>🎨 Schémas et illustrations</li>
+        <li>📊 Tableaux récapitulatifs</li>
+      </ul>
+    </div>
+  </div>
+</div>

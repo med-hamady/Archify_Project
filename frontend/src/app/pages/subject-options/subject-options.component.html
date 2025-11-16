@@ -1,0 +1,100 @@
+<div class="options-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">← Retour aux matières</button>
+    <h1 *ngIf="subject">{{ subject.title }}</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadSubject()">Réessayer</button>
+  </div>
+
+  <!-- Options Grid -->
+  <div *ngIf="!loading && !error && subject" class="options-grid">
+
+    <!-- Quiz Option -->
+    <div class="option-card quiz" (click)="navigateToQuiz()">
+      <div class="option-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <h2>Quiz</h2>
+      <p>Testez vos connaissances avec des QCM interactifs</p>
+      <div class="option-stats" *ngIf="subject">
+        <div class="stat-item">
+          <span class="stat-icon">📖</span>
+          <span>{{ subject.totalChapters }} chapitres</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">❓</span>
+          <span>{{ subject.totalQuestions }} questions</span>
+        </div>
+      </div>
+      <div class="option-footer">
+        <span class="cta">Commencer →</span>
+      </div>
+    </div>
+
+    <!-- Cours Option -->
+    <div class="option-card cours" (click)="navigateToCours()">
+      <div class="option-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+      </div>
+      <h2>Cours</h2>
+      <p>Consultez les supports de cours détaillés</p>
+      <div class="option-stats">
+        <div class="stat-item">
+          <span class="stat-icon">📄</span>
+          <span>Documents PDF</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">📝</span>
+          <span>Résumés structurés</span>
+        </div>
+      </div>
+      <div class="option-footer">
+        <span class="cta">Consulter →</span>
+      </div>
+    </div>
+
+    <!-- Videos Option -->
+    <div class="option-card videos" (click)="navigateToVideos()">
+      <div class="option-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="23 7 16 12 23 17 23 7"/>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+        </svg>
+      </div>
+      <h2>Vidéos</h2>
+      <p>Regardez des vidéos explicatives et tutoriels</p>
+      <div class="option-stats">
+        <div class="stat-item">
+          <span class="stat-icon">🎥</span>
+          <span>Cours vidéo</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">⏱️</span>
+          <span>À votre rythme</span>
+        </div>
+      </div>
+      <div class="option-footer">
+        <span class="cta">Regarder →</span>
+      </div>
+    </div>
+
+  </div>
+</div>

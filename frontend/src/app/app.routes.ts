@@ -71,8 +71,23 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'subject-options/:subjectId',
+    loadComponent: () => import('./pages/subject-options/subject-options.component').then(m => m.SubjectOptionsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'chapters/:subjectId',
     loadComponent: () => import('./pages/chapters/chapters.component').then(m => m.ChaptersComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'cours/:subjectId',
+    loadComponent: () => import('./pages/cours/cours.component').then(m => m.CoursComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'videos/:subjectId',
+    loadComponent: () => import('./pages/videos/videos.component').then(m => m.VideosComponent),
     canActivate: [authGuard]
   },
   {

@@ -40,7 +40,8 @@ export class SubjectsComponent implements OnInit {
   }
 
   navigateToChapters(subjectId: string) {
-    this.router.navigate(['/chapters', subjectId]);
+    // Navigate to options page instead of directly to chapters
+    this.router.navigate(['/subject-options', subjectId]);
   }
 
   navigateToExam(subjectId: string, event: Event) {
