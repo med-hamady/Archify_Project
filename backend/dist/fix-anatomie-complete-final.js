@@ -43,8 +43,8 @@ async function fixAnatomieCompleteFinal() {
 
     console.log(`✅ ${deletedChapters.count} chapitres supprimés\n`);
 
-    // Étape 3: Réimporter les chapitres emoji (13-22) = 200 questions
-    console.log('===== IMPORT CHAPITRES EMOJI (13-22) =====\n');
+    // Étape 3: Réimporter tous les chapitres depuis les fichiers
+    console.log('===== IMPORT CHAPITRES ANATOMIE PCEM2 =====\n');
     console.log('Exécution de fix-anatomie-pcem2.js...\n');
 
     try {
@@ -54,21 +54,7 @@ async function fixAnatomieCompleteFinal() {
       });
       console.log(stdout1);
     } catch (error) {
-      console.error('Erreur lors de l\'import emoji:', error.message);
-    }
-
-    // Étape 4: Réimporter les chapitres QCM (1-12) = 170 questions
-    console.log('\n===== IMPORT CHAPITRES QCM (1-12) =====\n');
-    console.log('Exécution de fix-anatomie-pcem2-qcm-manual.js...\n');
-
-    try {
-      const stdout2 = execSync('node dist/fix-anatomie-pcem2-qcm-manual.js', {
-        encoding: 'utf-8',
-        cwd: __dirname + '/..'
-      });
-      console.log(stdout2);
-    } catch (error) {
-      console.error('Erreur lors de l\'import QCM:', error.message);
+      console.error('Erreur lors de l\'import:', error.message);
     }
 
     // Étape 5: Vérification finale

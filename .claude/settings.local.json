@@ -18,7 +18,10 @@
       "Bash(node -e:*)",
       "Bash(node dist/export-histo-nozha-seed.js:*)",
       "Bash(npm start)",
-      "Bash(node check-study-time.js:*)"
+      "Bash(node check-study-time.js:*)",
+      "Bash(node:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npm run build:ts:*)"
     ],
     "deny": [],
     "ask": []
