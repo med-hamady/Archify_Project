@@ -149,10 +149,10 @@ function parseAnatomieFile(filePath) {
 async function main() {
     console.log('🚀 Démarrage de la réimportation des quiz d\'anatomie PCEM2...\n');
     try {
-        // 1. Trouver le sujet Anatomie PCEM2
-        const anatomieSubject = await prisma.subject.findFirst({
+        // 1. Trouver le sujet "Anatomie" PCEM2 (pas "Anatomie Ali Ghorbel")
+        let anatomieSubject = await prisma.subject.findFirst({
             where: {
-                title: { contains: 'Anatomie', mode: 'insensitive' },
+                title: 'Anatomie',
                 semester: 'PCEM2'
             },
             include: {
@@ -161,6 +161,22 @@ async function main() {
                 }
             }
         });
+        // Si pas trouvé, chercher avec contains mais exclure "Ali Ghorbel"
+        if (!anatomieSubject) {
+            const subjects = await prisma.subject.findMany({
+                where: {
+                    title: { contains: 'Anatomie', mode: 'insensitive' },
+                    semester: 'PCEM2'
+                },
+                include: {
+                    chapters: {
+                        include: { questions: true }
+                    }
+                }
+            });
+            // Prendre celui qui ne contient PAS "Ali Ghorbel"
+            anatomieSubject = subjects.find(s => !s.title.includes('Ali Ghorbel')) || subjects[0];
+        }
         if (!anatomieSubject) {
             console.error('❌ Sujet Anatomie PCEM2 non trouvé');
             return;
