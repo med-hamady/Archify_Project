@@ -82,7 +82,8 @@ function parseAnatomieFile(filePath) {
             const letter = optionMatch[1];
             const fullText = optionMatch[2];
             // Séparer le texte de la justification
-            // Format: "Texte de la réponse ✔️" ou "Texte ❌ — Justification"
+            // Format 1 (emoji): "Texte de la réponse ✔️" ou "Texte ❌ — Justification"
+            // Format 2 (QCM ch1-12): "Texte (✔️)" ou "Texte (❌) → Justification"
             const hasCheck = fullText.includes('✔️');
             const hasCross = fullText.includes('❌');
             let optionText = '';
@@ -90,17 +91,27 @@ function parseAnatomieFile(filePath) {
             let isCorrect = false;
             if (hasCheck) {
                 isCorrect = true;
-                optionText = fullText.replace('✔️', '').trim();
+                // Remove both formats: "✔️" and "(✔️)"
+                optionText = fullText.replace(/\s*\(?\s*✔️\s*\)?\s*$/, '').trim();
             }
             else if (hasCross) {
                 isCorrect = false;
-                const parts = fullText.split('❌');
-                optionText = parts[0].trim();
-                if (parts[1]) {
-                    // Extraire la justification après le "—"
-                    const justParts = parts[1].split('—');
-                    if (justParts.length > 1) {
-                        justification = justParts.slice(1).join('—').trim();
+                // Format 2: "Texte (❌) → Justification"
+                const format2Match = fullText.match(/^(.+?)\s*\(❌\)\s*→\s*(.+)$/);
+                if (format2Match) {
+                    optionText = format2Match[1].trim();
+                    justification = format2Match[2].trim();
+                }
+                else {
+                    // Format 1: "Texte ❌ — Justification"
+                    const parts = fullText.split('❌');
+                    optionText = parts[0].trim();
+                    if (parts[1]) {
+                        // Extraire la justification après le "—"
+                        const justParts = parts[1].split('—');
+                        if (justParts.length > 1) {
+                            justification = justParts.slice(1).join('—').trim();
+                        }
                     }
                 }
             }
@@ -118,7 +129,7 @@ function parseAnatomieFile(filePath) {
         }
         // Détecter la justification générale
         // Détecter la conclusion (🧠 Conclusion)
-        const conclusionMatch = line.match(/^🧠s*Conclusions*:s*(.+)/);
+        const conclusionMatch = line.match(/^🧠\s*Conclusion\s*:?\s*(.+)/);
         if (conclusionMatch && currentQuestion) {
             currentQuestion.explanation = conclusionMatch[1].trim();
             continue;
