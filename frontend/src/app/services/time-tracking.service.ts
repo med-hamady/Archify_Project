@@ -18,10 +18,19 @@ export class TimeTrackingService {
 
   // Observable for total study time
   private totalStudyTime$ = new BehaviorSubject<number>(0);
+  private statsLoaded = false;
 
   constructor() {
-    // Load initial study time stats
-    this.loadStats();
+    // Don't load stats here - wait for component to be ready
+  }
+
+  // Initialize and load stats
+  init(): void {
+    if (!this.statsLoaded) {
+      console.log('🔄 Initializing time tracking service...');
+      this.loadStats();
+      this.statsLoaded = true;
+    }
   }
 
   // Start tracking time
@@ -30,12 +39,14 @@ export class TimeTrackingService {
       return;
     }
 
+    // Make sure stats are loaded first
+    if (!this.statsLoaded) {
+      this.init();
+    }
+
     this.isTracking = true;
     this.startTime = Date.now();
     this.elapsedSeconds$.next(0);
-
-    // Load stats first to get the current total time
-    this.loadStats();
 
     // Update elapsed time every second
     this.intervalSubscription = interval(1000).subscribe(() => {
@@ -120,12 +131,16 @@ export class TimeTrackingService {
 
   // Load study time statistics
   loadStats(): void {
+    console.log('🔄 Loading study time stats...');
     this.http.get(`${this.apiUrl}/time-tracking/stats`).subscribe({
       next: (res: any) => {
+        console.log('📊 Study stats loaded:', res);
+        console.log('⏱️ Total study time seconds:', res.totalStudyTimeSeconds);
         this.totalStudyTime$.next(res.totalStudyTimeSeconds);
+        console.log('✅ BehaviorSubject updated with:', res.totalStudyTimeSeconds);
       },
       error: (err) => {
-        console.error('Error loading study stats:', err);
+        console.error('❌ Error loading study stats:', err);
       }
     });
   }
