@@ -21,7 +21,9 @@
       "Bash(node check-study-time.js:*)",
       "Bash(node:*)",
       "Bash(npx prisma generate:*)",
-      "Bash(npm run build:ts:*)"
+      "Bash(npm run build:ts:*)",
+      "Bash(git branch:*)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []

@@ -54,7 +54,7 @@ function parseAnatomieFile(filePath) {
     let currentQuestionTitle = '';
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const qcmMatch = line.match(/^QCMs+(d+)s+[—–-]s+(.+)/i);
+        const qcmMatch = line.match(/^QCM\s+(\d+)\s+[—–-]\s+(.+)/i);
         // Détecter une nouvelle section de QCM (1️⃣, 2️⃣, ..., 🔟, 11️⃣, ...)
         const sectionMatch = line.match(/^([0-9]️⃣|🔟|1[0-9]️⃣|20️⃣)\s+(.+)/);
         if (qcmMatch || sectionMatch) {
