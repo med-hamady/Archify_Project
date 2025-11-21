@@ -199,7 +199,6 @@ async function main() {
                     data: {
                         chapterId: chapter.id,
                         questionText: q.questionText,
-                        difficulty: 'MOYEN', // Par défaut
                         orderIndex: 0,
                         options: q.options.map(opt => ({
                             text: opt.text,
