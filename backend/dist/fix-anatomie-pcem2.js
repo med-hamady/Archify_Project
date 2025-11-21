@@ -197,17 +197,30 @@ async function main() {
         for (const file of files) {
             const filePath = path.join(anatomieDir, file);
             console.log(`📄 Traitement de: ${file}`);
-            const { title, questions } = parseAnatomieFile(filePath);
-            console.log(`   Titre: ${title}`);
+            const { title: parsedTitle, questions } = parseAnatomieFile(filePath);
+            // Utiliser le nom du fichier comme titre si le titre parsé est vide
+            // Format: "CHAPITRE 1 — OSTÉOLOGIE DU CRÂNE.txt" -> "Ostéologie du crâne"
+            let chapterTitle = parsedTitle;
+            if (!chapterTitle || chapterTitle.length < 3) {
+                // Extraire le titre du nom du fichier
+                const fileName = path.basename(file, '.txt');
+                // Enlever "CHAPITRE X — " ou "CHAPITRE X– "
+                chapterTitle = fileName.replace(/^CHAPITRE\s+\d+\s*[—–-]\s*/i, '').trim();
+                // Capitaliser correctement
+                if (chapterTitle) {
+                    chapterTitle = chapterTitle.charAt(0).toUpperCase() + chapterTitle.slice(1).toLowerCase();
+                }
+            }
+            console.log(`   Titre: ${chapterTitle}`);
             console.log(`   Questions trouvées: ${questions.length}`);
             // Trouver ou créer le chapitre correspondant
-            let chapter = anatomieSubject.chapters.find(c => c.title.toLowerCase().includes(title.toLowerCase().substring(0, 20)));
+            let chapter = anatomieSubject.chapters.find(c => c.title.toLowerCase().includes(chapterTitle.toLowerCase().substring(0, 20)));
             if (!chapter) {
                 // Créer un nouveau chapitre
                 const orderIndex = anatomieSubject.chapters.length;
                 const newChapter = await prisma.chapter.create({
                     data: {
-                        title,
+                        title: chapterTitle,
                         subjectId: anatomieSubject.id,
                         orderIndex,
                         description: null
