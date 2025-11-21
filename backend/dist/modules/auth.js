@@ -358,18 +358,24 @@ exports.authRouter.post('/login', async (req, res) => {
         });
         if (!isAuthorizedDevice) {
             // L'appareil n'est pas autorisé
-            if (authorizedDevices.length >= 2) {
-                // Maximum 2 appareils déjà enregistrés
+            // Limite de 4 machines pour les admins, 2 pour les étudiants
+            const maxDevices = user.role === 'ADMIN' ? 4 : 2;
+            if (authorizedDevices.length >= maxDevices) {
+                // Maximum d'appareils déjà enregistrés
                 console.log('[Auth] ❌ Login denied - Max devices reached:', {
                     userId: user.id,
                     email: user.email,
+                    role: user.role,
+                    maxDevices,
                     authorizedDevices,
                     attemptedDevice: body.deviceId
                 });
                 return res.status(403).json({
                     error: {
                         code: 'MAX_DEVICES_REACHED',
-                        message: 'Nombre maximum d\'appareils atteint (2 max: PC et téléphone). Contactez le support pour changer d\'appareil.'
+                        message: user.role === 'ADMIN'
+                            ? 'Nombre maximum d\'appareils atteint (4 max pour admin). Contactez le support pour changer d\'appareil.'
+                            : 'Nombre maximum d\'appareils atteint (2 max: PC et téléphone). Contactez le support pour changer d\'appareil.'
                     }
                 });
             }

@@ -68,21 +68,34 @@ router.post('/update', requireAuth, async (req: any, res) => {
       });
     }
 
-    // Calculate XP to award (60 XP per hour = 1 XP per minute)
-    const hoursStudied = Math.floor(elapsedSeconds / 3600);
-    const xpToAward = hoursStudied * 60;
+    // IMPORTANT: This endpoint is called every 5 minutes during a session
+    // The frontend sends elapsedSeconds = total seconds since session start
+    // We should only add the time increment (300 seconds) each time, not the full elapsed time
 
-    // Calculate previous hours to avoid duplicate rewards
-    const previousHours = Math.floor((user.totalStudyTimeSeconds || 0) / 3600);
-    const newHours = hoursStudied - previousHours;
-    const actualXpToAward = Math.max(0, newHours * 60);
+    // Since we're called every 300 seconds (5 minutes), we add exactly 300 seconds
+    // Exception: if elapsedSeconds < 300, it means this is an early update
+    const timeIncrement = 300; // Always add 5 minutes per update
+
+    const previousTotalTime = user.totalStudyTimeSeconds || 0;
+    const newTotalSeconds = previousTotalTime + timeIncrement;
+
+    // Calculate XP based on hours completed
+    const previousHours = Math.floor(previousTotalTime / 3600);
+    const newHours = Math.floor(newTotalSeconds / 3600);
+    const hoursCompleted = newHours - previousHours;
+    const actualXpToAward = Math.max(0, hoursCompleted * 60);
+
+    console.log(`⏱️ [Time Update] User ${userId}: Adding ${timeIncrement}s (${previousTotalTime}s → ${newTotalSeconds}s)`);
+    if (actualXpToAward > 0) {
+      console.log(`🎉 [XP Award] User ${userId}: +${actualXpToAward} XP for completing ${hoursCompleted} hour(s)`);
+    }
 
     // Update user with new study time and XP
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
         totalStudyTimeSeconds: {
-          increment: elapsedSeconds
+          increment: timeIncrement
         },
         ...(actualXpToAward > 0 && {
           xpTotal: {

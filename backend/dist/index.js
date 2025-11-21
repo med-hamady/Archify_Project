@@ -63,6 +63,8 @@ const questions_1 = require("./modules/questions");
 const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
 const course_pdfs_1 = __importDefault(require("./modules/course-pdfs"));
+const course_videos_1 = __importDefault(require("./modules/course-videos"));
+const time_tracking_1 = __importDefault(require("./modules/time-tracking"));
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
@@ -534,6 +536,8 @@ app.use('/api/questions', strictLimiter, questions_1.questionsRouter); // Admin 
 app.use('/api/admin', strictLimiter, admin_import_1.adminImportRouter); // Admin import/db tools
 app.use('/api/admin', strictLimiter, admin_subscription_1.adminSubscriptionRouter); // Admin subscription management
 app.use('/api/course-pdfs', generalLimiter, course_pdfs_1.default); // Course PDF management
+app.use('/api/course-videos', generalLimiter, course_videos_1.default); // Course video management
+app.use('/api/time-tracking', generalLimiter, time_tracking_1.default); // Time tracking and XP rewards
 const port = process.env.PORT || 3000;
 // Auto-import quizzes si la base de données est vide
 async function autoImportQuizzes() {
