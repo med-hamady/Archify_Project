@@ -139,7 +139,28 @@ async function importHistoTarek() {
   try {
     console.log('🔄 Starting Histo Tarek import (with Subchapters)...\n');
 
-    // First, clear existing data for this subject
+    // First, check if subject exists, create if not
+    let subject = await prisma.subject.findUnique({
+      where: { id: HISTO_TAREK_SUBJECT_ID }
+    });
+
+    if (!subject) {
+      console.log('📚 Subject not found, creating...');
+      subject = await prisma.subject.create({
+        data: {
+          id: HISTO_TAREK_SUBJECT_ID,
+          title: 'Histo Tarek',
+          description: 'Histologie par Dr. Tarek',
+          semester: 'PCEM1',
+          totalQCM: 200
+        }
+      });
+      console.log(`✅ Created subject: ${subject.title} (${subject.id})\n`);
+    } else {
+      console.log(`📚 Subject found: ${subject.title}\n`);
+    }
+
+    // Clear existing data for this subject
     console.log('🗑️  Clearing existing data...');
 
     // Get chapters to delete
