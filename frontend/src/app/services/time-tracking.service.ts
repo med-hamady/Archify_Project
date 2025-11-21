@@ -34,6 +34,9 @@ export class TimeTrackingService {
     this.startTime = Date.now();
     this.elapsedSeconds$.next(0);
 
+    // Load stats first to get the current total time
+    this.loadStats();
+
     // Update elapsed time every second
     this.intervalSubscription = interval(1000).subscribe(() => {
       const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
@@ -49,6 +52,10 @@ export class TimeTrackingService {
     this.http.post(`${this.apiUrl}/time-tracking/start`, {}).subscribe({
       next: (res: any) => {
         console.log('Study session started:', res);
+        // Update total study time from server response
+        if (res.totalStudyTimeSeconds !== undefined) {
+          this.totalStudyTime$.next(res.totalStudyTimeSeconds);
+        }
       },
       error: (err) => {
         console.error('Error starting study session:', err);
