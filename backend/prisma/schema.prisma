@@ -33,6 +33,11 @@ model User {
   lastActivityAt           DateTime?
   freeQcmUsed              Int       @default(0) // Nombre de QCM gratuits utilisés (max 10 pour PCEM1/PCEM2, max 30 pour DCEM1)
 
+  // Time tracking
+  totalStudyTimeSeconds    Int       @default(0) // Temps total d'étude en secondes
+  sessionStartTime         DateTime? // Heure de début de la session actuelle
+  lastXpRewardTime         DateTime? // Dernière fois qu'un XP a été donné pour le temps
+
   // Relations existantes
   subscriptions       Subscription[]
   comments            Comment[]

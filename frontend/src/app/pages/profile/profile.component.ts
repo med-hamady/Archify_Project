@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import {
   DetailedStats
 } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
+import { TimeTrackingService } from '../../services/time-tracking.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,10 +19,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   private profileService = inject(ProfileService);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  timeTrackingService = inject(TimeTrackingService);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
@@ -35,6 +37,12 @@ export class ProfileComponent implements OnInit {
   activities: Activity[] = [];
   stats: DetailedStats | null = null;
   devicesInfo: any = null; // Informations de diagnostic sur les appareils
+
+  // Time tracking
+  elapsedSeconds = 0;
+  totalStudyTimeSeconds = 0;
+  private timeSubscription: any = null;
+  private totalTimeSubscription: any = null;
 
   loading = true;
   error: string | null = null;
@@ -69,6 +77,28 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.loadProfile();
     this.loadDevicesInfo();
+
+    // Subscribe to time tracking updates
+    this.timeSubscription = this.timeTrackingService.getElapsedSeconds().subscribe(seconds => {
+      this.elapsedSeconds = seconds;
+    });
+
+    this.totalTimeSubscription = this.timeTrackingService.getTotalStudyTime().subscribe(seconds => {
+      this.totalStudyTimeSeconds = seconds;
+    });
+
+    // Start time tracking automatically
+    this.timeTrackingService.startTracking();
+  }
+
+  ngOnDestroy() {
+    // Clean up subscriptions
+    if (this.timeSubscription) {
+      this.timeSubscription.unsubscribe();
+    }
+    if (this.totalTimeSubscription) {
+      this.totalTimeSubscription.unsubscribe();
+    }
   }
 
   loadProfile() {
@@ -250,5 +280,31 @@ export class ProfileComponent implements OnInit {
         this.nameUpdateLoading = false;
       }
     });
+  }
+
+  // Time tracking methods
+  formatTime(seconds: number): string {
+    return this.timeTrackingService.formatTime(seconds);
+  }
+
+  getProgressToNextHour(): number {
+    const seconds = this.elapsedSeconds;
+    const remainingInHour = seconds % 3600;
+    return (remainingInHour / 3600) * 100;
+  }
+
+  getNextXpReward(): number {
+    const hours = Math.floor(this.elapsedSeconds / 3600);
+    return (hours + 1) * 60;
+  }
+
+  getTimeUntilNextReward(): string {
+    const secondsInCurrentHour = this.elapsedSeconds % 3600;
+    const secondsUntilNextHour = 3600 - secondsInCurrentHour;
+    return this.formatTime(secondsUntilNextHour);
+  }
+
+  getTotalHours(): number {
+    return Math.floor(this.totalStudyTimeSeconds / 3600);
   }
 }
