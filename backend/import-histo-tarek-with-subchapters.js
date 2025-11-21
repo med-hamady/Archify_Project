@@ -5,7 +5,7 @@ const path = require('path');
 const prisma = new PrismaClient();
 
 const HISTO_TAREK_SUBJECT_ID = 'cmi9505dz00009zq2szqoj972';
-const DATA_DIR = 'C:\\Users\\pc\\Desktop\\FAC GAME\\pcem1\\S inetrnational\\quiz pcem1\\Histo Tarek';
+const DATA_DIR = path.join(__dirname, 'data', 'histo-tarek');
 
 // Parse a text file to extract subchapters and questions
 function parseHistoTarekFile(filePath) {

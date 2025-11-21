@@ -1,0 +1,220 @@
+Tissu nerveux isolé
+
+QCM 1 — Les corps de Nissl :
+
+A. sont observés au niveau des dendrites (⚠️) → Présents parfois dans les grosses dendrites.
+B. sont observés au niveau de l'axone (❌) → Jamais présents dans l’axone.
+C. sont basophiles en microscopie optique (✅)
+D. correspondent à des lysosomes (❌) → Ce sont des amas de réticulum rugueux.
+E. sont des vésicules de transport des neurotransmetteurs (❌) → Rôle non lié au transport synaptique.
+
+🩵 Conclusion :
+Les corps de Nissl sont des structures basophiles correspondant au RER neuronal.
+
+QCM 2 — L’image ci-dessous représente :
+
+A. un tissu nerveux central (❌)
+B. un tissu musculaire (❌)
+C. des cellules gliales (❌)
+D. des cellules glandulaires (❌)
+E. des péricaryons (✅)
+
+🩵 Conclusion :
+L’image correspond à des corps cellulaires neuronaux.
+
+QCM 3 — La cellule de Purkinje :
+
+A. est un neurone bipolaire (❌) → Neurone multipolaire.
+B. est observée au niveau du cerveau (❌) → Caractéristique du cervelet.
+C. est observée au niveau du ganglion spinal (❌) → Jamais dans les ganglions.
+D. présente de multiples dendrites ramifiées (✅)
+E. est une cellule pyramidale (❌) → Ce sont les neurones corticaux.
+
+🩵 Conclusion :
+La cellule de Purkinje est un neurone du cortex cérébelleux, à arborisation dendritique très riche.
+
+QCM 4 — La synapse chimique :
+
+A. est visible en microscopie optique (❌) → Trop petite, visible seulement en ME.
+B. est riche en connexions (❌) → C’est la synapse électrique qui utilise les jonctions.
+C. transmet l’influx nerveux de façon unidirectionnelle (✅)
+D. fait intervenir des neurotransmetteurs (✅)
+E. fonctionne par un flux d'ions (❌) → Le flux d’ions intervient après la libération du neurotransmetteur.
+
+🩵 Conclusion :
+La synapse chimique transmet un signal unidirectionnel via des neurotransmetteurs.
+
+QCM 5 — À propos de la structure d’un nerf périphérique :
+
+A. le périnèvre enveloppe tout le nerf (❌) → C’est l’épinèvre qui entoure l’ensemble.
+B. les neurites observés sont en totalité des axones (❌) → On peut aussi observer des dendrites afférentes.
+C. les complexes axo-schwanniens sont myélinisés ou non myélinisés (✅)
+D. entre les neurites on peut observer des astrocytes (❌) → Présents seulement dans le SNC.
+E. la gaine de myéline est formée essentiellement de phospholipides (✅)
+
+🩵 Conclusion :
+Un nerf périphérique contient des unités myélinisées et non myélinisées entourées par les cellules de Schwann.
+
+QCM 6 — Concernant les nerfs périphériques :
+
+A. Chaque fibre est entourée de tissu conjonctif (⚠️) → Notion partiellement.
+B. Ils ne sont formés que de fibres amyéliniques (❌) → Ils contiennent les deux types.
+C. Ils sont vascularisés par des capillaires situés dans le périnèvre et l’épinèvre (❌) → Vascularisation non retenue ici.
+D. Les fibres sont regroupées en faisceaux délimités par le périnèvre (✅)
+E. Les fibres nerveuses sont entourées par les oligodendrocytes (❌) → Seulement dans le SNC.
+
+🩵 Conclusion :
+L’organisation en faisceaux séparés par le périnèvre caractérise le nerf périphérique.
+
+QCM 7 — Dans le système nerveux périphérique :
+
+A. Les fibres sont toutes myélinisées (❌) → Il existe aussi des fibres amyéliniques.
+B. Ce sont les cellules satellites qui myélinisent (✅) 
+C. Plusieurs cellules gliales s’associent pour myéliniser un axone (❌) → Une seule cellule de Schwann par segment.
+D. Le terme gaine de Schwann est synonyme de gaine de myéline (❌) → La gaine de Schwann inclut aussi la couche externe.
+E. les gaines de myéline sont une association de membranes et liserés cytoplasmiques (✅)
+
+🩵 Conclusion :
+La myéline du SNP résulte de l’enroulement membranaire des cellules de Schwann.
+
+QCM 8 — La gaine de myéline
+
+A. Est mise en place tout le long de la nérite par une seule cellule de Schwann. (❌) → Une cellule de Schwann produit un seul internode.
+B. Est mise en place par enroulement périodique de la membrane plasmique. (✅)
+C. A les mêmes constituants dans le SNC et le SNP. (✅)
+D. Est mise en place par les oligodendrocytes et les cellules de Schwann. (✅)
+E. Est absente dans les nérites du ganglion rachidien. (❌) → Les fibres sensitives y sont myélinisées.
+F. Est mise en place exclusivement par la cellule de Schwann. (❌) → Dans le SNC, c’est l’oligodendrocyte.
+
+🩵 Conclusion :
+La myéline résulte d’un enroulement membranaire assuré par Schwann en périphérie et oligodendrocytes au centre.
+
+QCM 9 — L’image ci-contre représente :
+
+A. une structure nerveuse. (✅)
+B. une structure épithéliale. (❌) → Aucune organisation épithéliale visible.
+C. une terminaison nerveuse sensitive. (✅)
+D. Un péricaryon. (❌) → Le corps cellulaire n’est pas présent.
+E. une cellule ganglionnaire. (❌)
+
+🩵 Conclusion :
+L’image montre une structure nerveuse comportant une terminaison sensitive.
+
+QCM 10 — Les terminaisons nerveuses sensitives encapsulées avec support sont :
+
+A. le fuseau neuromusculaire. (✅)
+B. Les corpuscules de Vater Pacini. (❌) → Ce sont des mécanorécepteurs profonds.
+C. Les corpuscules de Meissner. (❌) → Récepteurs tactiles superficiels.
+D. La plaque motrice. (❌) → Il s’agit d’une jonction neuromusculaire.
+E. L'organe tendineux de Golgi. (✅)
+
+🩵 Conclusion :
+Les terminaisons proprioceptives comme les fuseaux et l’organe de Golgi sont encapsulées.
+
+QCM 11 — Le tissu arachnoïdien :
+
+A. Forme un réseau à mailles délimitées par des axes conjonctivo-vasculaires. (✅)
+B. Est le siège de la circulation du liquide céphalo-rachidien. (✅)
+C. Est le lieu de résorption du liquide céphalo-rachidien. (❌) → La résorption se fait au niveau des granulations arachnoïdiennes.
+D. Entre en contact avec les lacs veineux de la dure-mère. (✅)
+E. Délimite avec la dure-mère l’espace péridural. (❌) → Cet espace est externe à la dure-mère.
+
+🩵 Conclusion :
+L’arachnoïde forme un feuillet participant aux espaces où circule le LCR.
+
+QCM 12 — Concernant les méninges :
+
+A. Elles entourent tout le système nerveux central et périphérique. (❌) → Elles entourent seulement le SNC.
+B. Elles sont constituées de tissu conjonctif mésenchymateux. (❌)
+C. La pie-mère constitue une couche externe. (❌) → C’est la couche interne.
+D. L'arachnoïde contient le liquide cérébrospinal. (✅)
+E. La dure-mère joue un rôle protecteur. (✅)
+
+🩵 Conclusion :
+Les méninges protègent le SNC et délimitent les espaces du LCR.
+
+QCM 13 — Le pachyméninge :
+
+A. Forme un réseau à mailles délimitées par des axes conjonctivo-vasculaires. (❌) → Cette organisation correspond plutôt à l’arachnoïde.
+B. Est le siège de la circulation du liquide céphalo-rachidien. (❌) → Le LCR circule dans l’espace sous-arachnoïdien.
+C. Est le lieu de résorption du liquide céphalo-rachidien. (✅)
+D. Délimite avec l’arachnoïde l’espace extradural. (❌) → L’espace extradural est externe à la dure-mère.
+
+🩵 Conclusion :
+Le pachyméninge est ici considéré comme participant à la résorption du LCR selon la correction.
+
+QCM 14 — Le pachyméninge :
+
+A. Forme un réseau à mailles délimitées par des axes conjonctivo-vasculaires. (❌)
+B. Est le siège de la circulation du liquide céphalo-rachidien. (❌)
+C. Est le lieu de résorption du liquide céphalo-rachidien. (✅)
+D. Entre en contact avec les expansions conjonctivo-vasculaires de l’arachnoïde. (✅)
+E. Délimite avec l’arachnoïde l’espace sous-dural. (✅)
+
+🩵 Conclusion :
+Le pachyméninge forme des limites avec l’arachnoïde et participe aux espaces méningés.
+
+QCM 15 — La dure-mère :
+
+A. Est un tissu conjonctif dense très vascularisé. (✅)
+B. Est appliquée directement sur le tissu nerveux. (❌) → La pie-mère est en contact direct avec le SNC.
+C. Est séparée de l’arachnoïde par l’espace sous-dural. (✅) 
+D. Est la source majeure du liquide céphalo-rachidien. (❌) → Le LCR provient des plexus choroïdes.
+E. Est à l’origine des corpuscules de Pacini. (❌)
+
+🩵 Conclusion :
+La dure-mère est la couche protectrice la plus externe, robuste et vascularisée.
+
+QCM 16 — Les épendymocytes sont :
+
+A. Des neurones bipolaires. (❌) → Ce sont des cellules gliales.
+B. Présents dans le cortex cérébral. (❌) → Ils bordent les cavités ventriculaires, pas le cortex.
+C. Des cellules gliales. (✅)
+D. Présents dans le tissu nerveux périphérique. (❌) → Uniquement dans le SNC.
+E. Des cellules qui bordent le canal médullaire de la moelle épinière. (✅)
+
+🩵 Conclusion :
+Les épendymocytes sont des cellules gliales bordant les cavités ventriculaires et le canal épendymaire.
+
+QCM 17 — Les astrocytes et les oligodendrocytes sont :
+
+A. Des cellules gliales. (✅)
+B. Des neurones bipolaires. (❌) → Ce ne sont pas des neurones.
+C. Présents dans le tissu nerveux central. (✅)
+D. Présents dans le tissu nerveux périphérique. (❌) → Exclusivement dans le SNC.
+E. Des cellules qui bordent le canal médullaire. (❌) → Ce rôle est assuré par les épendymocytes.
+
+🩵 Conclusion :
+Astrocytes et oligodendrocytes sont des cellules gliales exclusives du SNC.
+
+QCM 18 — Indiquer la réponse correcte :
+
+A. La myéline est uniquement présente dans le SNP. (❌) → Elle existe aussi dans le SNC.
+B. Les épendymocytes acquièrent une différenciation dans les plexus choroïdes. (✅)
+C. Les microgliocytes dérivent du système lymphoïde. (❌) → Ils dérivent du mésoderme (monocytes).
+D. Les axones comportent tous les organites du péricaryon. (❌) → Ils manquent notamment d’appareil de Golgi.
+E. Les capillaires encéphaliques sont fenêtrés. (❌) → Ils sont continus, non fenêtrés.
+
+🩵 Conclusion :
+Les épendymocytes jouent un rôle essentiel dans les plexus choroïdes pour le LCR.
+
+QCM 19 — Sur une coupe transversale de moelle :
+
+A. La substance grise est divisée en cornes antérieures et postérieures. (✅)
+B. Les corps cellulaires des neurones sont visibles dans la substance grise. (✅)
+C. Les fibres de la substance blanche se prolongent exclusivement dans les racines antérieures. (❌) → Elles prolongent aussi les racines postérieures.
+D. La substance blanche est au centre entourée par la substance grise. (❌) → C’est l’inverse : gris au centre, blanc en périphérie.
+E. Les motoneurones sont situés dans les cornes postérieures. (❌) → Ils sont dans les cornes antérieures.
+
+🩵 Conclusion :
+La moelle présente la substance grise en forme de papillon central entourée de substance blanche.
+
+QCM 20 — Les axones de la substance blanche sont enveloppés par :
+
+A. cellule ganglionnaire. (❌)
+B. oligodendrocytes. (✅)
+C. astrocyte. (❌)
+D. cellule de Schwann. (❌) → Présentes dans le SNP uniquement.
+
+🩵 Conclusion :
+Dans le SNC, les axones de la substance blanche sont myélinisés par les oligodendrocytes.

@@ -1,0 +1,438 @@
+Tissu osseux isolé 
+
+A. Intro
+
+QCM 1 —
+
+La matrice extracellulaire du tissu osseux contient :
+
+A. les Glycosaminoglycans (✅)
+B. l'acide hyaluronique (✅)
+C. l'élastine (❌) → L’os ne contient pas de fibres élastiques.
+D. l'ostéocalcine (✅)
+E. l'érythropoïétine (❌) → Hormone rénale, absente de la matrice osseuse.
+
+🩵 Conclusion :
+La matrice osseuse est constituée de GAG, d’acide hyaluronique et de protéines spécifiques comme l’ostéocalcine.
+
+QCM 2 —
+
+Quelles sont les propriétés spécifiques au tissu osseux ?
+
+A. Il est constitué par un assemblage d'unités structurales et fonctionnelles. (✅)
+B. Il est peu vascularisé. (❌) → L’os est au contraire très vascularisé.
+C. Il est dur mais très hydraté. (❌) → Sa minéralisation élevée diminue son hydratation.
+D. Il se développe par une croissance isogénique. (❌) → La croissance isogénique concerne le cartilage.
+E. Sa substance fondamentale contient une fibronectine spécifique (✅)
+
+🩵 Conclusion :
+Le tissu osseux possède une organisation en unités structurales et une matrice riche en glycoprotéines spécifiques.
+
+B.  Cellules du tissu osseux
+
+QCM 1 —
+
+L'ostéoblaste :
+
+A. Hydrolyse et phagocyte la matrice organique (❌) → Fonction de l’ostéoclaste.
+B. Secrète le collagène et le calcium (✅)
+C. intervient dans la régulation de l'ostéolyse (✅)
+D. Ne contient pas de nucléole (❌) → Il possède un nucléole actif.
+E. Contient peu de réticulum endoplasmique rugueux (❌) → Il est très riche en RER.
+
+🩵 Conclusion :
+L’ostéoblaste synthétise la matrice osseuse et participe à la régulation de l’ostéolyse.
+
+QCM 2 —
+
+À propos des ostéocytes :
+
+A. Ils dérivent des ostéoplastes (❌) → Ils dérivent des ostéoblastes emprisonnés.
+B. Ils sont capables d'élaborer de la matrice osseuse. (✅)
+C. Ils sont capables de détruire de la matrice osseuse. (✅)
+D. Ils forment une barrière en périphérie du tissu osseux. (❌) → Rôle des cellules bordantes.
+E. Ils sont entourés de tissu conjonctif réticulaire (❌) → Ils sont dans des lacunes minéralisées.
+
+🩵 Conclusion :
+Les ostéocytes maintiennent et remodèlent localement la matrice osseuse.
+
+QCM 3 —
+
+Concernant les ostéocytes :
+
+A. Ils résident dans des lacunes à l'intérieur de la substance fondamentale (✅)
+B. Ils sont habituellement multinucléés (❌) → Ils sont mononucléés.
+C. Ils sont actifs dans le rétablissement du taux constant de la calcémie (✅)
+D. Ils sont alignés le long de la surface de l'ostéoïde (❌) → Position des ostéoblastes.
+E. Ils sont filiformes (❌) → Ils sont ovoïdes avec prolongements.
+
+🩵 Conclusion :
+Les ostéocytes contrôlent l’homéostasie calcique et résident dans des lacunes profondes.
+
+QCM 4 —
+
+Les prolongements cytoplasmiques des ostéocytes :
+
+A. Secretent l'élastine (❌) → Aucune sécrétion de fibres élastiques.
+B. Sont liés par des jonctions communicantes (✅)
+C. Contiennent de nombreux filaments d'actine (⚠️) → Peu présents mais possible rôle structural.
+D. Disparaissent lorsque les ostéocytes se divisent (❌) → Ils ne se divisent pas.
+E. Contiennent l'appareil de Golgi (❌) → Le Golgi reste dans le corps cellulaire.
+
+🩵 Conclusion :
+Les prolongements des ostéocytes assurent la communication intercellulaire via les canalicules.
+
+QCM 5 —
+
+Toutes les propositions concernant l'ostéocyte sont vraies sauf une, laquelle ?
+
+A. a une fonction d'ostéolyse (❌)
+B. possède des prolongements cytoplasmiques (❌)
+C. est nourri par les capillaires des canalicules (❌)
+D. contracte des jonctions communicantes avec les ostéocytes voisins (❌)
+E. Est d'origine monocytaire (✅) → Il dérive d’un ostéoblaste.
+
+🩵 Conclusion :
+L’ostéocyte provient d’un ostéoblaste et non d’une lignée monocytaire.
+
+QCM 6 —
+
+Toutes les propositions concernant l'ostéocyte sont vraies sauf une, laquelle ?
+
+A. À une fonction de résorption massive (✅) → Cette fonction appartient à l’ostéoclaste.
+B. Possède des prolongements cytoplasmiques (❌)
+C. est nourri par diffusion (via les canalicules) (❌)
+D. contracte des jonctions communicantes avec les ostéocytes voisins (❌)
+E. Est sensible à la parathormone (❌)
+
+🩵 Conclusion :
+L’ostéocyte ne réalise pas de résorption massive.
+
+QCM 7 —
+
+Les cellules du tissu osseux qui dérivent des monocytes sont :
+
+A. Les ostéocytes (❌) → Dérivent des ostéoblastes.
+B. les fibroblastes du périoste (❌) → Dérivent du mésenchyme.
+C. Les ostéoblastes (❌) → Origine mésenchymateuse.
+D. Les ostéoclastes (✅)
+E. les cellules endothéliales (❌) → Origine mésodermique vasculaire.
+
+🩵 Conclusion :
+Les ostéoclastes dérivent de la lignée monocytaire.
+
+QCM 8 —
+
+Quels sont les éléments qui interviennent dans l'activité de l'ostéoclaste :
+
+A. La membrane plasmique périphérique (❌) → C’est la bordure en brosse qui est active.
+B. Toutes les hydrolases sécrétées par la cellule (❌) → Seules certaines interviennent.
+C. Les pompes Na+-K+. (❌) → Non impliquées dans l’ostéolyse.
+D. Les lysosomes (✅)
+E. Les hydrolases acides (✅)
+
+🩵 Conclusion :
+L’ostéoclaste utilise hydrolases acides et lysosomes pour résorber l’os.
+
+QCM 9 —
+
+Quels sont les éléments intervenant dans l'activité ostéolytique :
+
+A. La membrane plasmique microvillositaire (en brosse) (✅)
+B. Toutes les hydrolases sécrétées (❌) → Certaines seulement sont actives.
+C. Les pompes à protons (✅)
+D. Canaux ioniques voltage dépendants (❌) → Non impliqués.
+E. Enzymes lysosomiales (✅)
+
+🩵 Conclusion :
+La résorption osseuse dépend de la bordure en brosse, des hydrolases et des pompes à protons.
+
+QCM 10 —
+
+Quels sont les éléments qui interviennent dans l'activité ostéolytique de l'ostéoclaste :
+
+A. La membrane plasmique périphérique qui délimite la lacune de Howship. (❌) → La membrane active est la bordure en brosse, pas la périphérie.
+B. Les hydrolases acides sécrétées par la cellule (✅)
+C. Les pompes à proton (✅)
+D. Les vésicules intra-cytoplasmiques (❌) → Elles transportent des molécules mais n'assurent pas l’ostéolyse directe.
+E. la calcitonine sécrétée par la thyroïde (❌) → Elle inhibe l’ostéoclastogenèse.
+
+🩵 Conclusion :
+L’ostéoclaste résorbe l’os grâce aux hydrolases acides et aux pompes à protons.
+
+QCM 11 —
+
+Quels sont les éléments qui interviennent dans l'activité ostéolytique de l'ostéoclaste :
+
+A. La membrane plasmique périphérique qui délimite la lacune de Howship (❌)
+B. Toutes les hydrolases sécrétées par la cellule (❌)
+C. Les pompes Na+/K+ (❌) → Elles ne participent pas à la résorption.
+D. Les lysosomes. (✅)
+E. Les hydrolases acides (✅)
+
+🩵 Conclusion :
+Les lysosomes et hydrolases acides assurent la dégradation de la matrice minéralisée.
+
+QCM 12 —
+
+Toutes les propositions concernant l'ostéoclaste sont vraies sauf une, laquelle ?
+
+A. C'est une cellule de grande taille. (❌)
+B. contient de nombreuses mitochondries (❌)
+C. appartient au système de phagocytes mononucléés (❌)
+D. se trouve dans les lacunes de Howship (❌)
+E. sécrète la matrice extracellulaire du tissu osseux (✅) → Il résorbe l’os, il ne sécrète pas de matrice.
+
+🩵 Conclusion :
+L’ostéoclaste n’a aucune fonction de sécrétion matricielle.
+
+QCM 13 —
+
+Les cellules du tissu osseux qui sont riches en lysosome sont les :
+
+A. Ostéocytes (❌) → Peu de lysosomes, activité limitée.
+B. Fibroblastes du périoste (❌) → Activité sécrétoire, pas de lysosomation massive.
+C. Ostéoblastes (❌) → Synthèse de matrice, peu de lysosomes.
+D. Ostéoclastes (✅)
+E. Cellules endothéliales (❌) → Non spécialisées dans la digestion intracellulaire.
+
+🩵 Conclusion :
+Les ostéoclastes possèdent de nombreux lysosomes impliqués dans la résorption osseuse.
+
+C. Ostéogenèse
+
+QCM 1 —
+
+L'ossification de membrane :
+
+A. Concerne la formation de la majeure partie des os du crâne. (✅)
+B. Ne comporte pas la formation d'un os réticulaire. (❌) → L’ossification débute toujours par un os réticulaire.
+C. Le tissu osseux primaire formé est de type haversien (❌) → Le premier os déposé est non lamellaire.
+D. Une cavité médullaire se crée suite à une activité ostéoclastique. (❌) → Ce phénomène concerne surtout l’ossification endochondrale.
+E. Un os trabéculaire se forme dans l'ensemble de l'ébauche osseuse (✅)
+
+🩵 Conclusion :
+L’ossification de membrane forme directement un os réticulaire puis trabéculaire sans étape cartilagineuse.
+
+QCM 2 —
+
+L’ossification endomembraneuse :
+
+A. Est le mécanisme qui permet la formation des os plats. (✅)
+B. Elle se passe dans un tissu conjonctif embryonnaire. (✅)
+C. Ne peut avoir lieu qu'en présence de spicules de matrice cartilagineuse calcifiée. (❌) → Aucun support cartilagineux n’est impliqué.
+D. Elle se poursuit après la naissance au sein de certaines pièces osseuses. (✅)
+E. toutes les réponses ci-dessus sont vraies. (❌)
+
+🩵 Conclusion :
+L’ossification endomembraneuse se déroule dans un tissu conjonctif embryonnaire et persiste partiellement après la naissance.
+
+QCM 3 —
+
+Le cartilage de conjugaison :
+
+A. Est un tissu cartilagineux fibreux (❌) → C’est du cartilage hyalin.
+B. Est observé dans les diaphyses des os longs (❌) → Il se situe entre épiphyse et métaphyse.
+C. Donne naissance au tissu osseux haversien (✅)
+D. Contient des canaux de Volkmann (❌) → Le cartilage est avasculaire.
+E. Est nécessaire pour le développement de l'os long (✅)
+
+🩵 Conclusion :
+Le cartilage de conjugaison est indispensable à l’allongement des os longs et conduit à la formation d’os haversien.
+
+D. Structure histologique
+
+QCM 1 —
+
+Est-ce que la sécrétion de l'ostéoïde :
+
+A. Est réalisée par les cellules bordantes du tissu osseux (❌) → Réalisée par les ostéoblastes.
+B. Fait intervenir des pompes à protons. (❌) → Elles interviennent dans la résorption.
+C. Fait partie du remodelage osseux. (✅)
+D. Est une étape nécessaire pour la minéralisation du tissu osseux. (❌) → La minéralisation intervient après sa sécrétion.
+E. Est favorisée par certaines hormones. (✅)
+
+🩵 Conclusion :
+La sécrétion de l’ostéoïde participe au remodelage et est stimulée par des facteurs hormonaux.
+
+QCM 2 —
+
+À propos de l'os haversien :
+
+A. Il constitue la partie centrale des os plats. (❌) → Le centre des os plats est spongieux.
+B. L’espace entre les ostéones est occupé par des lamelles interstitielles. (✅)
+C. Sa résistance mécanique est faible. (❌) → Elle est élevée.
+D. Les canaux de Havers communiquent entre eux par le canal médullaire. (❌) → Communication via les canaux de Volkmann.
+E. Il est le siège d’un remaniement continu. (✅)
+
+🩵 Conclusion :
+L’os haversien est organisé en ostéones séparés par des lamelles interstitielles et constamment remodelé.
+
+QCM 3 —
+
+Comment est la structure histologique du tissu osseux spongieux ?
+
+A. Il est formé d'un assemblage de lamelles cylindriques. (❌) → Structure typique de l’os compact.
+B. Son aspect est monolithique par blocs. (❌) → Il n’est pas massif.
+C. Il est réticulaire, formé de travées anastomosées. (✅)
+D. Mis en place par apposition périostée. (❌) → C’est l’os compact externe.
+E. Structure mosaïque à ostéones. (❌) → Caractéristique de l’os compact.
+
+🩵 Conclusion :
+L’os spongieux est constitué de travées anastomosées formant un réseau.
+
+QCM 4 —
+
+Est-ce que la résorption osseuse :
+
+A. Est réalisée par les ostéocytes. (❌) → L’ostéolyse massive appartient à l’ostéoclaste.
+B. Fait intervenir des peroxysomes. (❌) → Ce sont les lysosomes qui interviennent.
+C. Fait partie du remodelage osseux. (✅)
+D. Intervient dans la mise en place de l'ostéoïde. (❌) → L’ostéoïde est produit après résorption.
+E. Est favorisée par la parathormone (✅)
+
+🩵 Conclusion :
+La résorption osseuse dépend de l’ostéoclaste et est stimulée par la parathormone.
+
+QCM 5 —
+
+Est-ce que la résorption osseuse :
+
+A. Est réalisée par les ostéoblastes. (❌) → Fonction de l’ostéoclaste.
+B. Fait intervenir des pompes à protons. (✅)
+C. Fait partie du remodelage osseux. (✅)
+D. Intervient dans la mise en place du tissu osseux haversien. (❌) → C’est la phase d’apposition.
+E. Est favorisée par la calcitonine (❌) → Elle inhibe la résorption.
+
+🩵 Conclusion :
+La résorption osseuse utilise le pompage de protons et participe au remodelage.
+
+QCM 6 —
+
+Est-ce que le tissu osseux compact primaire :
+
+A. Résistant aux forces (❌) → Moins résistant que le secondaire.
+B. Comporte des canaux de Volkmann (❌)
+C. Constitue les épiphyses des os longs. (❌) → Celles-ci sont spongieuses.
+D. Constitue sur la face externe de la corticale le système fondamental. (✅)
+E. Contient ostéones + interstitiel (❌)
+
+🩵 Conclusion :
+L’os compact primaire forme le système fondamental externe.
+
+QCM 7 —
+
+Est-ce que le tissu osseux compact secondaire (haversien) :
+
+A. Est résistant aux forces mécaniques. (✅)
+B. Comporte des ostéoclastes. (✅)
+C. Constitue les épiphyses des os longs. (❌)
+D. Est délimité par un système spongieux externe. (❌)
+E. Est constitué d’ostéones et de tissu interstitiel. (✅)
+
+🩵 Conclusion :
+L’os haversien combine ostéones, interstitiel et grande résistance mécanique.
+
+QCM 8 —
+
+Le tissu osseux de type haversien :
+
+A. Est un tissu osseux lamellaire. (✅)
+B. Est constitué d’ostéones. (✅)
+C. Possède des canaux de Havers directement reliés à la surface externe. (❌)
+D. Est vascularisé mais non innervé. (❌) → Il est innervé.
+E. Absent du système fondamental externe. (❌)
+
+🩵 Conclusion :
+L’os haversien est un os lamellaire organisé en ostéones.
+
+QCM 9 —
+
+Le tissu osseux de type réticulaire :
+
+A. Contient des fibres de collagène non orientées. (✅)
+B. Est un tissu compact. (❌) → C’est un os primaire.
+C. Absent chez l’adulte. (❌) → Présent transitoirement en réparation.
+D. Également appelé trabéculaire. (❌) → Ce terme désigne l’os spongieux.
+E. Associé à l’ossification. (✅)
+
+🩵 Conclusion :
+L’os réticulaire est un os primaire à collagène non orienté et transitoire.
+
+QCM 10 —
+
+La vascularisation osseuse :
+
+A. Est riche uniquement au niveau du tissu osseux spongieux. (❌) → Les deux compartiments (compact + spongieux) sont vascularisés.
+B. Intervient obligatoirement dans l'ossification endochondrale. (✅)
+C. Est importante pour la consolidation des fractures. (✅)
+D. Est absente dans les lamelles osseuses. (❌) → La nutrition se fait par diffusion depuis les canaux de Havers.
+E. Est présente au niveau de la zone sous-articulaire de l'épiphyse. (❌) → La zone articulaire est dépourvue de vaisseaux.
+
+🩵 Conclusion :
+La vascularisation est essentielle à l’ossification et à la réparation osseuse.
+
+QCM 11 —
+
+Le remodelage osseux :
+
+A. Fait intervenir l’ostéoclaste et l’ostéocyte. (❌) → Ce sont l’ostéoclaste et l’ostéoblaste qui assurent le remodelage.
+B. Intervient dans la mise en place de l’os haversien. (✅)
+C. N’est présent que dans l’ossification endomembraneuse. (❌) → Il existe dans toutes les formes d’ossification.
+D. Est nécessaire au développement de l’os long. (✅)
+E. Est toujours relié au cartilage de conjugaison. (❌) → Le remodelage existe indépendamment du cartilage.
+
+🩵 Conclusion :
+Le remodelage permet la structuration et le renouvellement du tissu osseux.
+
+QCM 12 —
+
+Concernant le remodelage osseux :
+
+A. Le tissu ostéoïde est minéralisé. (❌) → L’ostéoïde est un tissu non minéralisé.
+B. La prolifération des ostéoblastes est nécessaire. (✅)
+C. La parathormone inhibe la résorption osseuse. (❌) → Elle stimule la résorption.
+D. Les cellules bordantes sont des ostéoblastes au repos. (✅)
+E. Les ostéoblastes régulent la résorption ostéoclastique. (✅)
+
+🩵 Conclusion :
+Le remodelage dépend de la coordination ostéoblaste–ostéoclaste.
+
+QCM 13 —
+
+À propos du tissu osseux, toutes les propositions sont vraies sauf une :
+
+A. Il est constamment renouvelé. (❌)
+B. Il est sensible aux facteurs endocriniens. (❌)
+C. Il est richement vascularisé. (❌)
+D. Il peut se développer à partir du mésenchyme. (❌)
+E. Il peut croître par division cellulaire. (✅) → La croissance se fait par apposition.
+
+🩵 Conclusion :
+La croissance osseuse ne se fait jamais par mitose mais par apposition.
+
+QCM 14 —
+
+Le périoste :
+
+A. Est un tissu mésenchymateux. (❌) → C’est un tissu conjonctif fibreux.
+B. Est le siège d’une activité ostéogénique. (✅)
+C. Présent sur toute la surface externe de l’os. (❌) → Absent sur les surfaces articulaires.
+D. Se rattache par fibres élastiques. (❌) → Rattaché par fibres de Sharpey (collagène).
+E. Intervient dans la croissance osseuse par apposition. (✅)
+
+🩵 Conclusion :
+Le périoste permet la croissance appositionnelle et assure l’ostéogenèse périphérique.
+
+QCM 15 —
+
+L’ossification de membrane :
+
+A. Concerne la formation des os du crâne. (✅)
+B. Ne comporte pas d’os réticulaire. (❌) → Au contraire, elle commence par un os réticulaire.
+C. Produit directement un os haversien. (❌) → Le premier os est non lamellaire.
+D. Forme une cavité médullaire par ostéoclastes. (❌) → C’est surtout dans l’ossification endochondrale.
+E. Forme un os trabéculaire dans toute l’ébauche. (✅)
+
+🩵 Conclusion :
+L’ossification de membrane forme un os réticulaire puis trabéculaire sans phase cartilagineuse.
