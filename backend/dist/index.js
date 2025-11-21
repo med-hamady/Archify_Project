@@ -1033,25 +1033,21 @@ app.listen(port, async () => {
     autoImportQuizzes().catch(err => {
         logger.error({ error: err.message }, 'Auto-import failed');
     });
-    // Lancer l'auto-fix anatomie en arrière-plan
-    autoFixAnatomie().catch(err => {
-        logger.error({ error: err.message }, 'Auto-fix anatomie failed');
-    });
-    // Lancer l'auto-fix physiologie en arrière-plan
-    autoFixPhysiologie().catch(err => {
-        logger.error({ error: err.message }, 'Auto-fix physiologie failed');
-    });
-    // Lancer l'auto-fix anatomie PCEM1 en arrière-plan
-    autoFixAnatomiePCEM1().catch(err => {
-        logger.error({ error: err.message }, 'Auto-fix anatomie PCEM1 failed');
-    });
-    // Lancer l'auto-fix physiologie PCEM2 en arrière-plan
-    autoFixPhysioPCEM2().catch(err => {
-        logger.error({ error: err.message }, 'Auto-fix physiologie PCEM2 failed');
-    });
-    // Lancer l'auto-import des chapitres QCM anatomie PCEM2 en arrière-plan
-    autoImportAnatomieQCM().catch(err => {
-        logger.error({ error: err.message }, 'Auto-import QCM anatomie failed');
-    });
+    // Auto-fix désactivés - les données sont maintenant stables
+    // autoFixAnatomie().catch(err => {
+    //   logger.error({ error: err.message }, 'Auto-fix anatomie failed');
+    // });
+    // autoFixPhysiologie().catch(err => {
+    //   logger.error({ error: err.message }, 'Auto-fix physiologie failed');
+    // });
+    // autoFixAnatomiePCEM1().catch(err => {
+    //   logger.error({ error: err.message }, 'Auto-fix anatomie PCEM1 failed');
+    // });
+    // autoFixPhysioPCEM2().catch(err => {
+    //   logger.error({ error: err.message }, 'Auto-fix physiologie PCEM2 failed');
+    // });
+    // autoImportAnatomieQCM().catch(err => {
+    //   logger.error({ error: err.message }, 'Auto-import QCM anatomie failed');
+    // });
 });
 //# sourceMappingURL=index.js.map
