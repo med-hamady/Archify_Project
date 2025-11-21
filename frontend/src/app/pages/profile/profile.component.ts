@@ -312,6 +312,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getTotalHours(): number {
-    return Math.floor(this.totalStudyTimeSeconds / 3600);
+    return Math.floor(this.getCombinedStudyTime() / 3600);
+  }
+
+  // Combine stored total time with current session time for real-time display
+  getCombinedStudyTime(): number {
+    // totalStudyTimeSeconds = time saved in database
+    // elapsedSeconds = time in current session
+    // Combined = total including current session
+    return this.totalStudyTimeSeconds + this.elapsedSeconds;
   }
 }
