@@ -123,45 +123,6 @@
       </div>
     </div>
 
-    <!-- Study Timer Section -->
-    <div class="study-timer-card">
-      <div class="timer-header">
-        <h2>⏱️ Chronomètre d'Étude</h2>
-        <span class="timer-subtitle">Gagne 60 XP chaque heure !</span>
-      </div>
-
-      <div class="timer-content">
-        <!-- Session Timer -->
-        <div class="current-session">
-          <div class="session-label">Session actuelle</div>
-          <div class="timer-display">{{ formatTime(elapsedSeconds) }}</div>
-        </div>
-
-        <!-- Progress to next reward -->
-        <div class="reward-progress">
-          <div class="progress-header">
-            <span>Prochain XP dans: {{ getTimeUntilNextReward() }}</span>
-            <span class="xp-badge">+60 XP</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="getProgressToNextHour()"></div>
-          </div>
-        </div>
-
-        <!-- Total study time -->
-        <div class="total-time">
-          <div class="time-stat">
-            <span class="stat-label">📚 Temps total d'étude</span>
-            <span class="stat-value">{{ formatTime(getCombinedStudyTime()) }}</span>
-          </div>
-          <div class="time-stat">
-            <span class="stat-label">🏆 Heures complétées</span>
-            <span class="stat-value">{{ getTotalHours() }}h</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Navigation Tabs -->
     <div class="tabs">
       <button
