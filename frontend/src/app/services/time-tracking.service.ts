@@ -27,7 +27,6 @@ export class TimeTrackingService {
   // Initialize and load stats
   init(): void {
     if (!this.statsLoaded) {
-      console.log('🔄 Initializing time tracking service...');
       this.loadStats();
       this.statsLoaded = true;
     }
@@ -131,16 +130,12 @@ export class TimeTrackingService {
 
   // Load study time statistics
   loadStats(): void {
-    console.log('🔄 Loading study time stats...');
     this.http.get(`${this.apiUrl}/time-tracking/stats`).subscribe({
       next: (res: any) => {
-        console.log('📊 Study stats loaded:', res);
-        console.log('⏱️ Total study time seconds:', res.totalStudyTimeSeconds);
         this.totalStudyTime$.next(res.totalStudyTimeSeconds);
-        console.log('✅ BehaviorSubject updated with:', res.totalStudyTimeSeconds);
       },
       error: (err) => {
-        console.error('❌ Error loading study stats:', err);
+        console.error('Error loading study stats:', err);
       }
     });
   }

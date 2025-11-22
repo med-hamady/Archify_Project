@@ -78,23 +78,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loadProfile();
     this.loadDevicesInfo();
 
-    // Initialize time tracking service first
-    console.log('🚀 Initializing time tracking service...');
+    // Initialize time tracking service
     this.timeTrackingService.init();
 
-    // Subscribe to time tracking updates AFTER initialization
+    // Subscribe to time tracking updates
     this.timeSubscription = this.timeTrackingService.getElapsedSeconds().subscribe(seconds => {
       this.elapsedSeconds = seconds;
-      console.log('⏱️ Elapsed seconds updated in component:', seconds);
     });
 
     this.totalTimeSubscription = this.timeTrackingService.getTotalStudyTime().subscribe(seconds => {
       this.totalStudyTimeSeconds = seconds;
-      console.log('📊 Total study time updated in component:', seconds);
     });
 
     // Start time tracking automatically
-    console.log('🚀 Starting time tracking...');
     this.timeTrackingService.startTracking();
   }
 
