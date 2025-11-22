@@ -1,0 +1,514 @@
+NEUROANATOMIE
+
+A. 1er groupe
+
+QCM 1 —
+
+A propos des fibres de la sensibilité proprioceptive consciente, indiquez la réponse correcte ?
+
+A. Elles relaient dans la moelle et empruntent les cordons postérieurs (❌) → Elles ne font pas relais médullaire.
+B. elles décussent au niveau médullaire mais n'y font pas relais (❌) → Elles ne décussent pas au niveau médullaire.
+C. elles ne décussent pas mais font relais au niveau médullaire (❌) → Elles ne font pas relais dans la moelle.
+D. elles ne décussent pas et ne font pas relais au niveau médullaire (✅)
+E. elles décussent et font relais au niveau médullaire (❌) → Ni décussation ni relais médullaire.
+
+🩵 Conclusion :
+Pas de décussation ni de relais au niveau médullaire.
+
+✅ QCM 2 —
+
+Parmi les nerfs craniens suivants, lequel (lesquele) son origine apparente au niveau de la face antérieure du pont ?
+
+A. nerf optique (❌) → Origine au niveau du diencéphale.
+B. nerf olfactif (❌) → Origine au niveau du télencéphale.
+C. nerf oculomoteur (❌) → Origine antérieure du mésencéphale.
+D. nerf trochléaire (❌) → Origine postérieure du mésencéphale.
+E. nerf trijumeau (✅)
+
+🩵 Conclusion :
+Seul le trijumeau émerge de la face antérieure du pont.
+
+✅ QCM 3 —
+
+Le foramen ventriculaire médian du V4 (trou de Magendie) relie-t-il (1 seule réponse) ?
+
+A. le 3° ventricule et la citerne opto-chiasmatique (❌) → Pas de lien avec le V4.
+B. le 3° ventricule et le ventricule latéral (❌) → C’est le trou de Monro.
+C. le 3° ventricule et le 4° ventricule (❌) → C’est l’aqueduc du mésencéphale.
+D. le 4° ventricule et la citerne ponto cerebelleuse (❌) → Ce sont les foramens latéraux (Luschka).
+E. le 4° ventricule et la citerne cerebello-médullaire (grande citerne) (✅)
+
+🩵 Conclusion :
+Le trou de Magendie ouvre le V4 vers la grande citerne.
+
+✅ QCM 4 —
+
+A laquelle des racines suivantes correspond le dermatome du pli de l'aine
+
+A. T4 (❌) → Région du mamelon.
+B. Т6 (❌) → Région sous-mammaire.
+C. T8 (❌) → Région épigastrique.
+D. T10 (❌) → Ombilic.
+E. T11 (✅)
+
+🩵 Conclusion :
+Le pli de l’aine correspond à T11.
+
+✅ QCM 5 —
+
+Laquelle des artères suivantes vascularise-t-elle la face latérale de chaque hémisphère cérébral ?
+
+a. artère choroïdienne antérieure (❌) → Vascularisation profonde.
+b. artère cérébrale antérieure (❌) → Face médiale du cerveau.
+c. artère cérébrale postérieure (❌) → Lobes occipitaux et inféro-médians.
+d. artère communicante postérieure (❌) → Simple connexion du polygone de Willis.
+e. artère cérébrale moyenne (✅)
+
+🩵 Conclusion :
+La face latérale est vascularisée par l’artère cérébrale moyenne.
+
+✅ QCM 6 —
+
+Indiquez la (les) structure(S) qui se trouve(nt) à l'étage sus-tentoriel ?
+
+A. noyau dentelé (❌) → Structure cérébelleuse, sous-tentorielle.
+B. noyau caudé (✅)
+C. noyau gracile (❌) → Bulbe rachidien, sous-tentoriel.
+D. olive (❌) → Bulbe également.
+E. uncus (✅)
+
+🩵 Conclusion :
+Le noyau caudé et l’uncus sont situés en région sus-tentorielle.
+
+✅ QCM 7 —
+
+Lequel des nerfs suivants assure la motricité de la face ?
+
+A. nerf facial (✅)
+B. nerf trijumeau (❌) → Ce nerf assure la sensibilité faciale.
+C. nerf glosso-pharyngien (❌) → Innervation pharyngée.
+D. Hypoglosse (❌) → Motricité linguale.
+E. Nerf vague (❌) → Innervation laryngo-pharyngée.
+
+🩵 Conclusion :
+La motricité des muscles de la face dépend du nerf facial.
+
+✅ QCM 8 —
+
+Lequel des sinus veineux chemine dans la dure mère à la jonction de la faux du cerveau et du cervelet ?
+
+A. sinus longitudinal supérieur (❌) → Situé sur le bord supérieur de la faux.
+B. sinus longitudinal inférieur (❌) → Situé sur le bord libre de la faux.
+C. Sinus droit (✅)
+D. Sinus latéral (❌) → Suit le bord du tentorium mais pas la jonction faux–cervelet.
+E. sinus caverneux (❌) → Situé autour de la selle turcique.
+
+🩵 Conclusion :
+Le sinus droit occupe la jonction de la faux et du tentorium.
+
+✅ QCM 9 —
+
+Lequel des nerfs suivants innerve-t-il les principaux muscles masticateurs ?
+
+a. nerf facial (❌) → Innerve les muscles de la mimique.
+b. nerf trijumeau (✅)
+c. nerf glosso-pharyngien (❌) → Innervation pharyngée.
+d. nerf hypoglosse (❌) → Motricité de la langue.
+e. aucun de ces nerfs (❌) → Le trijumeau est le nerf moteur des muscles masticateurs.
+
+🩵 Conclusion :
+La mastication dépend du nerf trijumeau.
+
+✅ QCM 10 —
+
+Concernant le tronc cérébral, donnez la ou les propositions exactes :
+
+a. il dérive du rhombencéphale et du mésencéphale primitif (✅)
+b. il se situe dans la fosse cérébrale moyenne (❌) → Il est dans la fosse postérieure.
+c. le nerf oculomoteur naît de la face postérieure du mésencéphale (❌) → Il naît de la face antérieure.
+d. il forme le plancher du 4ème ventricule (✅)
+e. le pont est relié au cervelet par les pédoncules cérébelleux supérieurs (❌) → Par les pédoncules moyens.
+
+🩵 Conclusion :
+Le tronc cérébral dérive du rhombencéphale/mésencéphale et forme le plancher du V4.
+
+✅ QCM 11 —
+
+Concernant les vaisseaux de la base du cerveau, donnez les propositions correctes
+
+A. l’artère communicante antérieure relie les deux artères cérébrales postérieurs (❌) → Elle relie les deux artères cérébrales antérieures.
+B. l’artère choroïdienne antérieure est une branche de l’artère basilaire (❌) → C’est une branche de la carotide interne.
+C. l’artère communicante postérieure relie l’artère carotide interne homolatérale (✅)
+D. l’artère cérébelleuse postéro-inférieure est une branche de l’artère basilaire (✅) 
+E. l’artère cérébrale postérieure et l’artère cérébelleuse supérieure forme – vasculaire ou glisse le 4 (❌) → Les deux artères n’ont pas ce rôle.
+
+🩵 Conclusion :
+La seule bonne réponse est l’artère communicante postérieure.
+
+✅ QCM 13 —
+
+concernant les ventricules cerebraux , donnez la ou les propositions exactes
+
+A. le foramen ventriculaire laterale – trou de monro – communique les ventricules lateraux et le 3eme ventricule (✅)
+B. le carrefour ventriculaire contient souvent le plexus coroide (✅)
+C. l’epiphyse est situe en arriere du 3eme ventricule (✅) 
+D. la lame sus optique limite en avant le 3eme ventricule (✅) 
+E. l’aqueduc du mesencephale communique le 3 et le 4eme ventricule (✅
+
+🩵 Conclusion :
+Foramen de Monro + carrefour ventriculaire.
+
+✅ QCM 14 —
+
+A quel niveau décussent les fibres du faisceau spino-thalamique (sensibilité thermo-algique)?
+
+a. capsule interne (❌)
+b. mésencéphale (❌)
+c. pont (protubérance) (❌)
+d. bulbe (moelle allongée) (❌)
+e. moelle (✅)
+
+🩵 Conclusion :
+La décussation du faisceau spino-thalamique se fait dans la moelle.
+
+✅ QCM 15 —
+
+Concernant la moëlle épinière, donnez la ou les propositions exactes :
+
+A. elle comporte un renflement cervical et un renflement lombaire (❌) 
+B. son extrémité terminale ou cône se projette en S2 (❌) → Le cône est en L1–L2.
+C. le cône est attaché en bas au sac dural par le filum (✅)
+D. la queue de cheval désigne l'ensemble des nerfs issus du cône dans le ? (❌) 
+E. la moëlle thoracique est très vascularisée (❌) → Elle est la partie la moins vascularisée.
+
+🩵 Conclusion :
+Le filum terminal fixe l’extrémité de la moelle.
+
+B.2eme groupe
+
+QCM 1 —
+
+Laquelle des structures méningées suivantes sépare-t-elle la face inférieure des lobes occipitaux de la face supérieure du cervelet (CB)
+
+a. Sinus caverneux (❌) → Sinus veineux situé de part et d’autre de la selle turcique, pas entre lobes occipitaux et cervelet.
+b. Faux du cerveau (❌) → Cloison sagittale entre les deux hémisphères cérébraux.
+c. Tente du cervelet (✅)
+d. Ligament dentelé (❌) → Expansion de la pie-mère le long de la moelle épinière.
+e. Faux du cervelet (❌) → Sépare les deux hémisphères cérébelleux, pas les lobes occipitaux du cervelet.
+
+🩵 Conclusion :
+La tente du cervelet sépare les lobes occipitaux du cervelet.
+
+QCM 2 —
+
+A propos des fibres de la sensibilité proprioceptive consciente, indiquez la réponse correcte. 
+
+a. Elles relaient dans la moelle et empruntent les cordons postérieurs (❌) → Elles empruntent les cordons postérieurs sans relais médullaire.
+b. Elles décussent au niveau médullaire mais n'y font pas relais (❌) → Elles ne décussent pas au niveau de la moelle.
+c. Elles ne décussent pas mais font relais au niveau médullaire (❌) → Il n’existe pas de relais dans la moelle pour cette voie.
+d. Elles ne décussent pas et ne font pas relais au niveau médullaire (✅)
+e. Elles décussent et font relais au niveau médullaire (❌) → Ni décussation ni relais au niveau médullaire.
+
+🩵 Conclusion :
+La voie proprioceptive consciente ne décusse pas et ne fait pas relais dans la moelle.
+
+QCM 3 —
+
+Parmi les structures suivantes, laquelle (lesquelles) réunit (réunissent) les deux hémisphères ?
+
+A. Corps calleux (✅)
+B. Trigone (✅)
+C. Commissure blanche moyenne (❌) → Commissure du thalamus, n’unit pas directement les deux hémisphères cérébraux.
+D. Faisceau longitudinal médian (❌) → Faisceau de jonction du tronc cérébral, pas commissural inter-hémisphérique.
+E. Décussation du faisceau pyramidal (❌) → Croisement des fibres motrices au niveau bulbaire, pas une commissure reliant les hémisphères.
+
+🩵 Conclusion :
+Corps calleux et trigone sont des structures commissurales inter-hémisphériques.
+
+QCM 4 —
+
+L'Aqueduc du mésencéphale relie-t-il
+
+a. Le 3ème ventricule et la citerne opto-chiasmatique (❌) → La citerne opto-chiasmatique est une citerne sous-arachnoïdienne, pas un ventricule.
+b. Le 3ème ventricule et le 4ème ventricule (✅)
+c. Le 4ème ventricule et la citerne ponto-cérébelleuse (❌) → Communication par les foramens latéraux (Luschka), pas par l’aqueduc.
+d. Le 4ème ventricule et la citerne cérébello-médullaire (grande citerne) (❌) → Communication par le trou de Magendie.
+e. Les 4 premières propositions sont fausses. (❌) → La proposition b est vraie.
+
+🩵 Conclusion :
+L’aqueduc du mésencéphale relie le 3ème et le 4ème ventricule.
+
+QCM 5 —
+
+A laquelle des racines suivantes correspond le dermatome du mamelon (S)
+
+A. T4 (✅)
+B. T6 (❌) → Correspond à une région plus basse que le mamelon.
+C. T8 (❌) → Région abdominale supérieure.
+D. T10 (❌) → Correspond à l’ombilic.
+E. L1 (❌) → Région inguinale et partie haute de la cuisse.
+
+🩵 Conclusion :
+Le dermatome du mamelon correspond à la racine T4.
+
+QCM 6 —
+
+Laquelle des artères suivantes vascularise-t-elle l'opercule rolandique (partie basse frontale ascendante?)
+
+a. Artère choroidienne antérieure (❌) → Artère profonde destinée surtout aux structures internes (capsule interne, hippocampe…).
+b. Artère cérébrale antérieure (❌) → Vascularise surtout la face médiale des hémisphères.
+c. Artère cérébrale postérieure (❌) → Vascularise essentiellement le lobe occipital et la face inféro-médiane.
+d. Artère communicante postérieure (❌) → Artère de liaison dans le polygone de Willis, pas de territoire cortical propre.
+e. Artère cérébrale moyenne (✅)
+
+🩵 Conclusion :
+L’opercule rolandique est irrigué par l’artère cérébrale moyenne.
+
+QCM 7 —
+
+Parmi les nerfs craniens suivants, lequel (lesquels) a (ont) son origine apparente au niveau de la face antérieure du mésencéphale. (Cs)
+
+a. Nerf optique (❌) → Origine au niveau du diencéphale.
+b. Nerf olfactif (❌) → Origine au niveau du télencéphale.
+c. Nerf oculo-moteur commun (III) (✅)
+d. Nerf trochléaire (❌) → Seul nerf crânien à émerger de la face postérieure du mésencéphale.
+e. Nerf trijumeau (❌) → Origine apparente au niveau du pont.
+
+🩵 Conclusion :
+Seul le nerf oculomoteur (III) naît de la face antérieure du mésencéphale.
+
+QCM 8 —
+
+Indiquez la (les) structure(s) qui se trouve(nt) à l'étage sus-tentoriel ?
+
+A. Noyau dentelé (❌) → Noyau cérébelleux, situé en sous-tentoriel.
+B. Noyau caudé (✅)
+C. Noyau gracile (❌) → Noyau du bulbe rachidien, en sous-tentoriel.
+D. Hippocampe (✅)
+E. Putamen (✅)
+
+🩵 Conclusion :
+Noyau caudé, hippocampe et putamen sont des structures sus-tentorielles.
+
+QCM 9 —
+
+A quel niveau décussent les fibres du faisceau pyramidal (CS)
+
+a. Capsule interne (❌) → Lieu de passage des fibres, sans décussation.
+b. Mésencéphale (❌) → Pas le siège principal de la décussation pyramidale.
+c. Pont (protubérance) (❌) → Les fibres y transitent mais ne décussent pas en masse.
+d. Moelle (❌) → La décussation principale ne se fait pas dans la moelle segmentaire.
+e. Bulbe rachidienne (✅)
+
+🩵 Conclusion :
+Le faisceau pyramidal décusse principalement au niveau du bulbe rachidien.
+
+QCM 10 —
+
+L'extrémité du cône terminal se situe chez l'adulte normal (CS)
+
+A. Au niveau du corps de T11 (❌) → Niveau trop haut pour le cône terminal.
+B. Au niveau du disque L1-L2 (✅)
+C. Au niveau du corps de L3 (❌) → Niveau trop bas chez l’adulte.
+D. Au niveau du disque L5-S1 (❌) → Très inférieur au niveau réel du cône.
+E. Au niveau de ces propositions. (❌) → Toutes les propositions ne sont pas exactes, seule B l’est.
+
+🩵 Conclusion :
+Chez l’adulte, le cône terminal se projette au niveau du disque L1–L2
+
+C. 3eme groupe
+
+QCM 1
+
+Laquelle des structures méningées suivantes sépare-t-elle la face médiale (interne) des hémisphères cérébraux ?
+
+A. sinus caverneus (❌) → Sinus veineux parasellaire, ne sépare pas les hémisphères.
+B. Tente du cerveau (✅)
+C. Tente du cervelet (❌) → Sépare lobes occipitaux et cervelet.
+D. ligament dentelé (❌) → Structure spinale.
+E. faux du cerveau (❌) → Sépare les hémisphères cérébraux mais TA correction dit faux.
+
+🩵 Conclusion :
+Selon le corrigé, seule la tente du cerveau est correcte.
+
+✅ QCM 2
+
+A propos des fibres de la sensibilité douloureuse et thermique. indiquez la réponce
+
+A. elles relaient dans la moelle et emprument les cordons postérieurs (❌) → Elles empruntent la voie spino-thalamique.
+B. elles décussent au niveau médullaire mais ne font pas relais (❌) → Elles font un relais médullaire.
+C. elles ne decussent pas mais font relais au miveau medallaire (❌) → La voie thermalgique décusse dans la moelle.
+D. elles ne décussont pas et ne font pas relais au niveau médullaire (❌) → Doublement faux.
+E. elles décussent et font relais au niveau médullaire (✅)
+
+🩵 Conclusion :
+La voie douloureuse/thermique fait relais et décusse dans la moelle.
+
+✅ QCM 3
+
+Parmi les nerfs craniens suivants, lequel (lesquels) a (ont) son origine apparent nivcau de la face postéricure du mésencéphale
+
+a. nerf optique (❌) → Origine diencéphalique.
+b. nert olfactif (❌) → Origine au niveau du télencéphale.
+c. nerf oculontoleur (❌) → Origine antérieure du mésencéphale.
+d. nerf trochléaire (✅)
+e. nerf trijumeau (❌) → Origine au niveau du pont.
+
+🩵 Conclusion :
+Seul le trochléaire naît de la face postérieure du mésencéphale.
+
+✅ QCM 4
+
+Le foramen ventriculaire latéral (trou de Monro) relie-t-il 
+
+A. le 3ª ventricule et la citere opto-chias atique (❌) → Une citerne ne communique pas avec un ventricule.
+B. le 3° ventricule et le ventreule latéral (✅)
+C. le 3° ventricule et le 4" ventricule (❌) → C’est l’aqueduc du mésencéphale.
+D. le 4° ventricule et la citerne ponto cerebelleuse (❌) → Ce sont les foramens de Luschka.
+E. le 4° ventricule et la citerne cerebello-médullaire (❌) → C’est le trou de Magendie.
+
+🩵 Conclusion :
+Le trou de Monro relie ventricules latéraux et 3e ventricule.
+
+✅ QCM 5
+
+A laquelle des racines suivantes correspond le dermatome de l'ombilic
+
+A. T4 (❌) → Dermatome du mamelon.
+B. T6 (❌) → Région sous-mammaire.
+C. T8 (❌) → Région épigastrique.
+D. T10 (✅)
+E. aucune de ces reponses (❌) → T10 est correct.
+
+🩵 Conclusion :
+L’ombilic correspond à T10.
+
+✅ QCM 6
+
+Laquelle des artères suivantes vascularise telle la face antéro médiate des hémisphères cérébraux
+
+A. artère choroidienne anterieure (❌) → Vascularisation profonde.
+B. artère cérébrale antérieure (✅)
+C. artère cérébrale postéricure (❌) → Occipital et face inféro-médiane.
+D. artère communicante postérieure (❌) → Artère de jonction.
+E. Aucune des ces artère (❌)
+
+🩵 Conclusion :
+La face antéro-médiale est vascularisée par l’artère cérébrale antérieure.
+
+✅ QCM 7
+
+Indiquez la (les) structure(s) qui se trouvent) à l'étage sous-tentoriel ?
+
+A. noyau dentelé (✅)
+B. noyau caudé (❌) → Noyau central sus-tentoriel.
+C. noyau gracile (✅)
+D. olive (✅)
+E. Floculus (✅)
+
+🩵 Conclusion :
+Structures sous-tentorielles : dentelé, gracile, olive, floculus.
+
+✅ QCM 8
+
+Lequel des nerfe suivants innerve-t-il la sensibilité de la face ?
+
+a. nerf facial (❌) → Motricité faciale.
+b. nerf trijumeau (✅)
+c. nerf glosso pharyngien (❌) → Sensibilité pharyngée.
+d. nerf hypoglosse (❌) → Motricité linguale.
+e. aucun de ces nerfs (❌) → Le trijumeau est correct.
+
+🩵 Conclusion :
+Le trijumeau assure la sensibilité de la face.
+
+✅ QCM 9
+
+concernant la moelle épinière, donnez la ou les propositions exactes :
+
+A. elle comporte un renflement cervical et un ronflement lombaie (✅)
+B. son extrémité terminale ou cône se projette en L5-S1 (❌) → Niveau beaucoup trop bas.
+C. Le cône est attaché en bas au sac dural par le ligament dentelé (❌) → C’est le filum terminale.
+D. la queue de cheval désigne l'ensemble des nerfs dans leur trajet extra.? (❌) → TA correction = faux.
+E. la moele thoracique est vascularisée par de nombreuses artères (❌) → Segment le moins vascularisé.
+
+🩵 Conclusion :
+Seul le double renflement est correct.
+
+✅ QCM 10
+
+Concemant la tente du cervelet, donnez la ou les propositions exactes :
+
+A. elle sépare les (deux hémisphères cérébelleux (❌) → C’est la faux du cervelet.
+B. elle est perforés d'un orifice, le foramen magnum (❌) → Le foramen magnum appartient à l’os occipital.
+C. il sagit d'une cloison arachnoidienne (❌) → Structure de dure-mère.
+D. il continue dans sun epirsseur. le sinus droit (✅)
+E. elle sépare la face inférieure des deux lobes occipitaux de la supérieur (✅)
+
+🩵 Conclusion :
+La tente du cervelet contient le sinus droit et sépare lobes occipitaux et cervelet.
+
+✅ QCM 11
+
+Concernant le trone cérébral. donnez la ou les propositions exactes :
+
+A. il dérive du rhombencéphale et du mésencéphale primtil. (✅)
+B. il se situe dans la fosse cérébrale postérieure (✅)
+C: le nerf trochléaire naît de la face antérieure du mésencéphale (❌) → Il naît en postérieur.
+D. il forme le toit du 4ème rentricale (❌) → Il forme le plancher.
+E. le pont est relié au cerveles par les pédoncules cérébelleus moyens (✅)
+
+🩵 Conclusion :
+Dérive du rhombencéphale/mésencéphale et pont relié au cervelet par pédoncules moyens.
+
+✅ QCM 12
+
+Concernant les vaisseaux de la base du cerveau, donnez la ou les propositions exactes
+
+A. l'artère communicante antericure relie l'artère carotide interne a l'artère cérébrale postérieur homolatérale (❌) → Relie les deux ACA.
+B. l'artère choroïdicone antérieure est une branche de l'artère basilaire (❌) → Branche de la carotide interne.
+C. L’artère communicante posterieure relie l'artere carotide interne l’artère ? (❌)
+D. L’artère cerebelluse postero-inférieur est une branche de l’artère ? (✅)
+E. Katb 3nhe salhe mais Matgd tngre (✅)
+
+🩵 Conclusion :
+.
+
+✅ QCM 13
+
+Concernant les commissures blanches cérébrales, donnez la ou les réponses exacte
+
+A. le corps calleux forme le toit du V3 (❌) → Structure sus-ventriculaire, ne constitue pas le toit direct.
+B. la commissure blanche (antérieure) relie les 2 poles temporius (✅)
+C. le fornix (ou trigone) forme avec le noyau caudé. le foramen ventriculaire (❌)
+D. le corps du fornia est relié au corps calleus par le septum pelluciduim (✅)
+E. le corps calleux réunit les deux hémisphères cérébelleux (❌) → Réunit les hémisphères cérébraux.
+
+🩵 Conclusion :
+La commissure antérieure et le septum reliant fornix/corps calleux sont corrects.
+
+✅ QCM 14
+
+Concernant les ventricules cérébraux, donnez la ou les propositions exacte
+
+A. le foramen ventriculaire médian (trou de Magendic) fait communique les ventricules Latéraux et le 3°ventricule (❌) → C’est le trou de Monro.
+B. le carrefour ventriculaire contient souvent le plexus choroïde (✅)
+C. l'épiphyse est situé en arrière du 4° ventricule (❌) → En arrière du 3e, pas du 4e.
+D. la lame sus-optique limite en avant le 3eme ventricule (✅)
+E. aqueduc du mésencéphale fail commniquer le 4° ventricule et le citerne (❌) → Relie V3 et V4, pas une citerne.
+
+🩵 Conclusion :
+Seule la lame sus-optique limite le 3e ventricule.
+
+✅ QCM 15
+
+À quelle niveau decussent les fibres du faisceau lemniscale (sensibilité proprioceptive consciente)
+
+a. capsule interne (❌) → Lieu de passage, pas de décussation.
+b. mésencephale (✅)
+c. pont (protuborance) (❌) → Pas de décussation lemniscale.
+d. bulbe (moelle allongée) (❌)
+e. moelle (❌) → Décussation proprioceptive ne se fait pas à ce niveau.
+
+🩵 Conclusion :
+Décussation au mésencéphale.
