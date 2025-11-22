@@ -1,6 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth } from './auth';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -216,7 +217,6 @@ router.post('/end-beacon', async (req: any, res) => {
     }
 
     // Verify token manually (since we can't use middleware with sendBeacon)
-    const jwt = require('jsonwebtoken');
     let userId: string;
 
     try {
