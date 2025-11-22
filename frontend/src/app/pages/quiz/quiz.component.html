@@ -128,9 +128,7 @@
     <!-- Result Panel -->
     <div *ngIf="showResult && result" class="result-panel" [class.correct-result]="result.correct" [class.incorrect-result]="!result.correct">
       <div class="result-header">
-        <span class="result-icon-large">
-          {{ result.correct ? '🎉' : '😔' }}
-        </span>
+        <img [src]="result.correct ? '/vraie-reponse.png' : '/faux-reponse.png'" [alt]="result.correct ? 'Bonne réponse' : 'Mauvaise réponse'" class="result-icon-img"/>
         <h3>{{ result.correct ? 'Bonne réponse !' : 'Mauvaise réponse' }}</h3>
       </div>
 

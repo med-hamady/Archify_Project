@@ -393,6 +393,12 @@
   font-size: 3rem;
 }
 
+.result-icon-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 .result-header h3 {
   margin: 0;
   font-size: 1.8rem;
