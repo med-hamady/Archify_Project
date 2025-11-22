@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SubscriptionService } from '../../services/subscription.service';
+import { AdminContentService, SubjectWithStats, ChapterWithStats, Question } from '../../services/admin-content.service';
 import { environment } from '../../../environments/environment';
 
 
@@ -972,6 +973,260 @@ interface UserStats {
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">Aucune question sélectionnée</h3>
             <p class="text-gray-600">Sélectionnez un niveau, une matière, un chapitre et une question pour commencer l'édition.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subjects/Chapters Management Section -->
+      <div *ngIf="activeTab() === 'subjects-management'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <h2 class="text-2xl font-bold text-gray-900">Gestion des Matières et Chapitres</h2>
+          <p class="text-gray-600 mt-1">Modifier les titres, supprimer des matières, chapitres ou questions</p>
+        </div>
+
+        <!-- Message -->
+        <div *ngIf="contentMessage()"
+             [class]="contentMessage()?.type === 'success' ? 'bg-green-50 border-green-500 text-green-800' : 'bg-red-50 border-red-500 text-red-800'"
+             class="p-4 border-l-4 rounded-lg shadow">
+          {{ contentMessage()?.text }}
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="contentLoading()" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        </div>
+
+        <!-- Breadcrumb Navigation -->
+        <div class="bg-white rounded-xl shadow p-4 flex items-center gap-2 text-sm">
+          <button (click)="backToSubjects()"
+                  [class]="!selectedContentSubject() ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-blue-600'"
+                  class="flex items-center gap-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+            </svg>
+            Toutes les Matières
+          </button>
+          <span *ngIf="selectedContentSubject()" class="text-gray-400">/</span>
+          <button *ngIf="selectedContentSubject()" (click)="backToChapters()"
+                  [class]="!selectedContentChapter() ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-blue-600'">
+            {{ selectedContentSubject()?.title }}
+          </button>
+          <span *ngIf="selectedContentChapter()" class="text-gray-400">/</span>
+          <span *ngIf="selectedContentChapter()" class="text-blue-600 font-bold">
+            {{ selectedContentChapter()?.title }}
+          </span>
+        </div>
+
+        <!-- Subjects List -->
+        <div *ngIf="!selectedContentSubject()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let subject of contentSubjects()"
+               class="bg-white rounded-xl shadow-lg p-5 hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex-1 cursor-pointer" (click)="selectContentSubject(subject)">
+                <h3 class="font-bold text-lg text-gray-900 hover:text-blue-600">{{ subject.title }}</h3>
+                <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full mt-1">{{ subject.semester }}</span>
+              </div>
+              <div class="flex gap-2">
+                <button (click)="openEditSubject(subject)"
+                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Modifier">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </button>
+                <button (click)="deleteContentSubject(subject)"
+                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="flex gap-4 text-sm text-gray-500 mt-3 pt-3 border-t">
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                {{ subject.chaptersCount }} chapitres
+              </span>
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ subject.questionsCount }} questions
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapters List -->
+        <div *ngIf="selectedContentSubject() && !selectedContentChapter()" class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+            <h3 class="font-bold text-lg">Chapitres de {{ selectedContentSubject()?.title }}</h3>
+          </div>
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Questions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let chapter of contentChapters(); let i = index" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-500 font-medium">{{ i + 1 }}</td>
+                <td class="px-6 py-4 text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600"
+                    (click)="selectContentChapter(chapter)">
+                  {{ chapter.title }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                  <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                    {{ chapter.questionsCount }} QCM
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  <div class="flex gap-2">
+                    <button (click)="selectContentChapter(chapter)"
+                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Voir questions">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                      </svg>
+                    </button>
+                    <button (click)="openEditChapter(chapter)"
+                            class="p-2 text-green-600 hover:bg-green-50 rounded-lg" title="Modifier">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      </svg>
+                    </button>
+                    <button (click)="deleteContentChapter(chapter)"
+                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Supprimer">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="contentChapters().length === 0" class="p-8 text-center text-gray-500">
+            Aucun chapitre dans cette matière
+          </div>
+        </div>
+
+        <!-- Questions List -->
+        <div *ngIf="selectedContentChapter()" class="space-y-4">
+          <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl p-4">
+            <h3 class="font-bold text-lg">Questions de {{ selectedContentChapter()?.title }}</h3>
+            <p class="text-blue-100 text-sm">{{ contentQuestions().length }} questions</p>
+          </div>
+          <div class="space-y-4">
+            <div *ngFor="let question of contentQuestions(); let i = index"
+                 class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition-shadow">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900 mb-3">
+                    <span class="inline-block w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-center leading-8 mr-2 text-sm font-bold">{{ i + 1 }}</span>
+                    {{ question.questionText }}
+                  </p>
+                  <div class="ml-10 space-y-2">
+                    <div *ngFor="let opt of question.options; let j = index"
+                         class="flex items-center gap-2 text-sm p-2 rounded"
+                         [class]="opt.isCorrect ? 'bg-green-50 text-green-800' : 'text-gray-600'">
+                      <span class="font-bold w-6">{{ ['A', 'B', 'C', 'D', 'E'][j] }}.</span>
+                      <span>{{ opt.text }}</span>
+                      <svg *ngIf="opt.isCorrect" class="w-5 h-5 text-green-600 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <button (click)="deleteContentQuestion(question)"
+                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg ml-4" title="Supprimer">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="contentQuestions().length === 0" class="text-center py-12 text-gray-500 bg-white rounded-xl">
+              <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p>Aucune question dans ce chapitre</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Subject Modal -->
+      <div *ngIf="editSubjectModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+          <h3 class="text-xl font-bold mb-6 text-gray-900">Modifier la Matière</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+              <input type="text" [(ngModel)]="editSubjectData.title"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea [(ngModel)]="editSubjectData.description" rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Total QCM</label>
+              <input type="number" [(ngModel)]="editSubjectData.totalQCM"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+          </div>
+          <div class="flex gap-3 mt-6">
+            <button (click)="editSubjectModal.set(false)"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium">
+              Annuler
+            </button>
+            <button (click)="saveEditSubject()"
+                    [disabled]="contentLoading()"
+                    class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-400">
+              Enregistrer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Chapter Modal -->
+      <div *ngIf="editChapterModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+          <h3 class="text-xl font-bold mb-6 text-gray-900">Modifier le Chapitre</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+              <input type="text" [(ngModel)]="editChapterData.title"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea [(ngModel)]="editChapterData.description" rows="2"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Ordre d'affichage</label>
+              <input type="number" [(ngModel)]="editChapterData.orderIndex"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+          </div>
+          <div class="flex gap-3 mt-6">
+            <button (click)="editChapterModal.set(false)"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium">
+              Annuler
+            </button>
+            <button (click)="saveEditChapter()"
+                    [disabled]="contentLoading()"
+                    class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-400">
+              Enregistrer
+            </button>
           </div>
         </div>
       </div>
@@ -2558,6 +2813,19 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   selectedPaymentStatus = signal<string>('PENDING');
   subscriptionSubTab = signal<string>('plans'); // 'plans', 'users', 'payments'
 
+  // Subjects/Chapters Management
+  contentSubjects = signal<SubjectWithStats[]>([]);
+  contentChapters = signal<ChapterWithStats[]>([]);
+  contentQuestions = signal<Question[]>([]);
+  selectedContentSubject = signal<SubjectWithStats | null>(null);
+  selectedContentChapter = signal<ChapterWithStats | null>(null);
+  contentLoading = signal(false);
+  contentMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  editSubjectModal = signal(false);
+  editChapterModal = signal(false);
+  editSubjectData = { id: '', title: '', description: '', totalQCM: 0 };
+  editChapterData = { id: '', title: '', description: '', orderIndex: 0, pdfUrl: '' };
+
   // Modal states
   showAddPlanModal = signal(false);
   showAddCourseModal = signal(false);
@@ -2758,6 +3026,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
+    { id: 'subjects-management', name: 'Gestion Matières' },
     { id: 'course-pdfs', name: 'Gestion PDF' },
     { id: 'course-videos', name: 'Gestion Vidéos' },
     { id: 'add-content', name: 'Ajouter Contenu' },
@@ -2797,13 +3066,15 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     public authService: AuthService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private adminContentService: AdminContentService
   ) {}
 
   ngOnInit() {
     this.loadData();
     this.loadQcmSubjects();
     this.loadAllSubjects(); // Load subjects for add content forms
+    this.loadContentSubjects(); // Load subjects for content management
 
     // Check for URL hash to set active tab
     const hash = window.location.hash.substring(1);
@@ -4406,6 +4677,208 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
           alert('Erreur lors de la suppression de la vidéo');
         }
       });
+  }
+
+  // ============================================
+  // SUBJECTS/CHAPTERS MANAGEMENT METHODS
+  // ============================================
+
+  loadContentSubjects() {
+    this.contentLoading.set(true);
+    this.adminContentService.getSubjects().subscribe({
+      next: (data) => {
+        this.contentSubjects.set(data.subjects);
+        this.contentLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading content subjects:', error);
+        this.contentLoading.set(false);
+        this.showContentMessage('error', 'Erreur lors du chargement des matières');
+      }
+    });
+  }
+
+  selectContentSubject(subject: SubjectWithStats) {
+    this.selectedContentSubject.set(subject);
+    this.selectedContentChapter.set(null);
+    this.contentChapters.set([]);
+    this.contentQuestions.set([]);
+
+    this.adminContentService.getChapters(subject.id).subscribe({
+      next: (data) => {
+        this.contentChapters.set(data.chapters);
+      },
+      error: (error) => {
+        console.error('Error loading chapters:', error);
+        this.showContentMessage('error', 'Erreur lors du chargement des chapitres');
+      }
+    });
+  }
+
+  selectContentChapter(chapter: ChapterWithStats) {
+    this.selectedContentChapter.set(chapter);
+
+    this.adminContentService.getQuestions(chapter.id).subscribe({
+      next: (data) => {
+        this.contentQuestions.set(data.questions);
+      },
+      error: (error) => {
+        console.error('Error loading questions:', error);
+        this.showContentMessage('error', 'Erreur lors du chargement des questions');
+      }
+    });
+  }
+
+  openEditSubject(subject: SubjectWithStats) {
+    this.editSubjectData = {
+      id: subject.id,
+      title: subject.title,
+      description: subject.description || '',
+      totalQCM: subject.totalQCM
+    };
+    this.editSubjectModal.set(true);
+  }
+
+  saveEditSubject() {
+    this.contentLoading.set(true);
+    this.adminContentService.updateSubject(this.editSubjectData.id, {
+      title: this.editSubjectData.title,
+      description: this.editSubjectData.description,
+      totalQCM: this.editSubjectData.totalQCM
+    }).subscribe({
+      next: () => {
+        this.contentLoading.set(false);
+        this.editSubjectModal.set(false);
+        this.showContentMessage('success', 'Matière modifiée avec succès');
+        this.loadContentSubjects();
+        this.loadQcmSubjects();
+      },
+      error: (error) => {
+        console.error('Error updating subject:', error);
+        this.contentLoading.set(false);
+        this.showContentMessage('error', 'Erreur lors de la modification');
+      }
+    });
+  }
+
+  deleteContentSubject(subject: SubjectWithStats) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer la matière "${subject.title}" ?\n\nCela supprimera également ${subject.chaptersCount} chapitres et ${subject.questionsCount} questions.`)) {
+      return;
+    }
+
+    this.contentLoading.set(true);
+    this.adminContentService.deleteSubject(subject.id).subscribe({
+      next: (data) => {
+        this.contentLoading.set(false);
+        this.showContentMessage('success', `Matière supprimée (${data.deleted.chaptersCount} chapitres, ${data.deleted.questionsCount} questions)`);
+        this.selectedContentSubject.set(null);
+        this.contentChapters.set([]);
+        this.loadContentSubjects();
+        this.loadQcmSubjects();
+      },
+      error: (error) => {
+        console.error('Error deleting subject:', error);
+        this.contentLoading.set(false);
+        this.showContentMessage('error', 'Erreur lors de la suppression');
+      }
+    });
+  }
+
+  openEditChapter(chapter: ChapterWithStats) {
+    this.editChapterData = {
+      id: chapter.id,
+      title: chapter.title,
+      description: chapter.description || '',
+      orderIndex: chapter.orderIndex,
+      pdfUrl: chapter.pdfUrl || ''
+    };
+    this.editChapterModal.set(true);
+  }
+
+  saveEditChapter() {
+    this.contentLoading.set(true);
+    this.adminContentService.updateChapter(this.editChapterData.id, {
+      title: this.editChapterData.title,
+      description: this.editChapterData.description,
+      orderIndex: this.editChapterData.orderIndex,
+      pdfUrl: this.editChapterData.pdfUrl || undefined
+    }).subscribe({
+      next: () => {
+        this.contentLoading.set(false);
+        this.editChapterModal.set(false);
+        this.showContentMessage('success', 'Chapitre modifié avec succès');
+        if (this.selectedContentSubject()) {
+          this.selectContentSubject(this.selectedContentSubject()!);
+        }
+      },
+      error: (error) => {
+        console.error('Error updating chapter:', error);
+        this.contentLoading.set(false);
+        this.showContentMessage('error', 'Erreur lors de la modification');
+      }
+    });
+  }
+
+  deleteContentChapter(chapter: ChapterWithStats) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le chapitre "${chapter.title}" ?\n\nCela supprimera également ${chapter.questionsCount} questions.`)) {
+      return;
+    }
+
+    this.contentLoading.set(true);
+    this.adminContentService.deleteChapter(chapter.id).subscribe({
+      next: (data) => {
+        this.contentLoading.set(false);
+        this.showContentMessage('success', `Chapitre supprimé (${data.deleted.questionsCount} questions)`);
+        this.selectedContentChapter.set(null);
+        this.contentQuestions.set([]);
+        if (this.selectedContentSubject()) {
+          this.selectContentSubject(this.selectedContentSubject()!);
+        }
+        this.loadContentSubjects();
+      },
+      error: (error) => {
+        console.error('Error deleting chapter:', error);
+        this.contentLoading.set(false);
+        this.showContentMessage('error', 'Erreur lors de la suppression');
+      }
+    });
+  }
+
+  deleteContentQuestion(question: Question) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer cette question ?`)) {
+      return;
+    }
+
+    this.adminContentService.deleteQuestion(question.id).subscribe({
+      next: () => {
+        this.showContentMessage('success', 'Question supprimée');
+        if (this.selectedContentChapter()) {
+          this.selectContentChapter(this.selectedContentChapter()!);
+        }
+        this.loadContentSubjects();
+      },
+      error: (error) => {
+        console.error('Error deleting question:', error);
+        this.showContentMessage('error', 'Erreur lors de la suppression');
+      }
+    });
+  }
+
+  showContentMessage(type: 'success' | 'error', text: string) {
+    this.contentMessage.set({ type, text });
+    setTimeout(() => this.contentMessage.set(null), 5000);
+  }
+
+  backToSubjects() {
+    this.selectedContentSubject.set(null);
+    this.selectedContentChapter.set(null);
+    this.contentChapters.set([]);
+    this.contentQuestions.set([]);
+  }
+
+  backToChapters() {
+    this.selectedContentChapter.set(null);
+    this.contentQuestions.set([]);
   }
 
 }
