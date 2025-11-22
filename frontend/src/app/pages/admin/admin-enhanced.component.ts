@@ -977,6 +977,186 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- QROC Management Section -->
+      <div *ngIf="activeTab() === 'qroc'" class="space-y-8">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Gestion des QROC</h2>
+              <p class="text-gray-600 mt-1">Cartes flash (question/réponse) pour révision rapide</p>
+            </div>
+            <button (click)="openAddQrocModal()"
+                    [disabled]="!selectedQrocSubject"
+                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              Ajouter QROC
+            </button>
+          </div>
+        </div>
+
+        <!-- Selection Interface -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Level/Semester Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Niveau</label>
+            <select [(ngModel)]="selectedQrocSemester"
+                    (change)="onQrocSemesterChange()"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all">
+              <option value="">Sélectionner un niveau</option>
+              <option value="PCEM1">PCEM1</option>
+              <option value="PCEM2">PCEM2</option>
+              <option value="DCEM1">DCEM1</option>
+              <option value="DCEM2">DCEM2</option>
+              <option value="DCEM3">DCEM3</option>
+              <option value="DCEM4">DCEM4</option>
+            </select>
+          </div>
+
+          <!-- Subject Selection -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Matière</label>
+            <select [(ngModel)]="selectedQrocSubject"
+                    (change)="onQrocSubjectChange()"
+                    [disabled]="!selectedQrocSemester"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed">
+              <option value="">Sélectionner une matière</option>
+              <option *ngFor="let subject of qrocSubjects()" [value]="subject.id">
+                {{ subject.title }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div *ngIf="qrocSuccessMessage()" class="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg flex items-center gap-3">
+          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <p class="text-sm font-semibold text-green-800">{{ qrocSuccessMessage() }}</p>
+        </div>
+        <div *ngIf="qrocErrorMessage()" class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg flex items-center gap-3">
+          <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-semibold text-red-800">{{ qrocErrorMessage() }}</p>
+        </div>
+
+        <!-- QROC List -->
+        <div *ngIf="selectedQrocSubject && qrocList().length > 0" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Liste des QROC ({{ qrocList().length }})</h3>
+          <div class="space-y-4">
+            <div *ngFor="let qroc of qrocList(); let i = index"
+                 class="border-2 border-gray-200 rounded-xl p-5 hover:border-orange-300 transition-all bg-gradient-to-r from-white to-orange-50">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-gradient-to-br from-orange-500 to-amber-500 text-white px-3 py-1 rounded-lg text-sm font-bold">
+                      #{{ i + 1 }}
+                    </span>
+                    <span *ngIf="qroc.category" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">
+                      {{ qroc.category }}
+                    </span>
+                  </div>
+                  <p class="font-semibold text-gray-900 mb-2">{{ qroc.question }}</p>
+                  <p class="text-gray-600 text-sm">{{ qroc.answer }}</p>
+                </div>
+                <div class="flex gap-2">
+                  <button (click)="editQroc(qroc)"
+                          class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </button>
+                  <button (click)="deleteQroc(qroc.id)"
+                          class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="selectedQrocSubject && qrocList().length === 0" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-16 text-center">
+          <div class="max-w-md mx-auto">
+            <div class="w-20 h-20 bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun QROC</h3>
+            <p class="text-gray-600">Cette matière n'a pas encore de QROC. Cliquez sur "Ajouter QROC" pour en créer.</p>
+          </div>
+        </div>
+
+        <!-- Initial Empty State -->
+        <div *ngIf="!selectedQrocSubject" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-16 text-center">
+          <div class="max-w-md mx-auto">
+            <div class="w-20 h-20 bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Sélectionnez une matière</h3>
+            <p class="text-gray-600">Sélectionnez un niveau et une matière pour gérer les QROC.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add/Edit QROC Modal -->
+      <div *ngIf="showAddQrocModal() || showEditQrocModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 transform transition-all duration-300">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">{{ showEditQrocModal() ? 'Modifier le QROC' : 'Ajouter un QROC' }}</h3>
+            <button (click)="closeQrocModal()" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Question</label>
+              <textarea [(ngModel)]="qrocFormData.question"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        placeholder="Entrez la question"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Réponse</label>
+              <textarea [(ngModel)]="qrocFormData.answer"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        placeholder="Entrez la réponse"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie (optionnel)</label>
+              <input type="text"
+                     [(ngModel)]="qrocFormData.category"
+                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                     placeholder="Ex: Anatomie, Physiologie...">
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 mt-6">
+            <button (click)="closeQrocModal()"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">
+              Annuler
+            </button>
+            <button (click)="saveQroc()"
+                    [disabled]="qrocSaving() || !qrocFormData.question || !qrocFormData.answer"
+                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ qrocSaving() ? 'Enregistrement...' : (showEditQrocModal() ? 'Modifier' : 'Ajouter') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Subjects/Chapters Management Section -->
       <div *ngIf="activeTab() === 'subjects-management'" class="space-y-8">
         <!-- Header -->
@@ -2857,6 +3037,24 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   };
   String = String; // Make String available in template
 
+  // QROC Management
+  qrocSubjects = signal<any[]>([]);
+  qrocAllSubjects = signal<any[]>([]);
+  qrocList = signal<any[]>([]);
+  selectedQrocSemester = '';
+  selectedQrocSubject = '';
+  selectedQroc = signal<any>(null);
+  qrocSaving = signal(false);
+  qrocSuccessMessage = signal('');
+  qrocErrorMessage = signal('');
+  showAddQrocModal = signal(false);
+  showEditQrocModal = signal(false);
+  qrocFormData = {
+    question: '',
+    answer: '',
+    category: ''
+  };
+
   // Image upload signals
   questionImageFile = signal<File | null>(null);
   questionImagePreview = signal<string | null>(null);
@@ -3026,6 +3224,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
+    { id: 'qroc', name: 'Gestion QROC' },
     { id: 'subjects-management', name: 'Gestion Matières' },
     { id: 'course-pdfs', name: 'Gestion PDF' },
     { id: 'course-videos', name: 'Gestion Vidéos' },
@@ -3073,6 +3272,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadData();
     this.loadQcmSubjects();
+    this.loadQrocSubjects();
     this.loadAllSubjects(); // Load subjects for add content forms
     this.loadContentSubjects(); // Load subjects for content management
 
@@ -4169,6 +4369,169 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     console.log('🖼️ Constructed URL:', fullUrl);
     console.log('🖼️ API_URL:', this.API_URL);
     return fullUrl;
+  }
+
+  // ============================================
+  // QROC MANAGEMENT METHODS
+  // ============================================
+
+  loadQrocSubjects() {
+    this.http.get<any>(`${this.API_URL}/subjects/admin/all`).subscribe({
+      next: (data) => {
+        console.log('📚 QROC subjects loaded:', data.subjects);
+        this.qrocAllSubjects.set(data.subjects || []);
+        this.qrocSubjects.set([]);
+      },
+      error: (error) => console.error('Error loading QROC subjects:', error)
+    });
+  }
+
+  onQrocSemesterChange() {
+    this.selectedQrocSubject = '';
+    this.qrocList.set([]);
+    this.qrocSuccessMessage.set('');
+    this.qrocErrorMessage.set('');
+
+    if (!this.selectedQrocSemester) {
+      this.qrocSubjects.set([]);
+      return;
+    }
+
+    const filteredSubjects = this.qrocAllSubjects().filter(
+      subject => subject.semester === this.selectedQrocSemester
+    );
+    this.qrocSubjects.set(filteredSubjects);
+  }
+
+  onQrocSubjectChange() {
+    this.qrocList.set([]);
+    this.qrocSuccessMessage.set('');
+    this.qrocErrorMessage.set('');
+
+    if (!this.selectedQrocSubject) {
+      return;
+    }
+
+    // Load QROCs for selected subject
+    this.http.get<any>(`${this.API_URL}/qrocs/subject/${this.selectedQrocSubject}`).subscribe({
+      next: (data) => {
+        console.log('📋 QROCs loaded:', data.qrocs);
+        this.qrocList.set(data.qrocs || []);
+      },
+      error: (error) => {
+        console.error('Error loading QROCs:', error);
+        this.qrocErrorMessage.set('Erreur lors du chargement des QROCs');
+      }
+    });
+  }
+
+  openAddQrocModal() {
+    this.qrocFormData = {
+      question: '',
+      answer: '',
+      category: ''
+    };
+    this.selectedQroc.set(null);
+    this.showAddQrocModal.set(true);
+    this.qrocSuccessMessage.set('');
+    this.qrocErrorMessage.set('');
+  }
+
+  editQroc(qroc: any) {
+    this.qrocFormData = {
+      question: qroc.question,
+      answer: qroc.answer,
+      category: qroc.category || ''
+    };
+    this.selectedQroc.set(qroc);
+    this.showEditQrocModal.set(true);
+    this.qrocSuccessMessage.set('');
+    this.qrocErrorMessage.set('');
+  }
+
+  closeQrocModal() {
+    this.showAddQrocModal.set(false);
+    this.showEditQrocModal.set(false);
+    this.selectedQroc.set(null);
+    this.qrocFormData = {
+      question: '',
+      answer: '',
+      category: ''
+    };
+  }
+
+  saveQroc() {
+    if (!this.qrocFormData.question || !this.qrocFormData.answer) {
+      this.qrocErrorMessage.set('La question et la réponse sont obligatoires');
+      return;
+    }
+
+    this.qrocSaving.set(true);
+    this.qrocSuccessMessage.set('');
+    this.qrocErrorMessage.set('');
+
+    const qrocData = {
+      subjectId: this.selectedQrocSubject,
+      question: this.qrocFormData.question,
+      answer: this.qrocFormData.answer,
+      category: this.qrocFormData.category || null,
+      orderIndex: this.qrocList().length
+    };
+
+    const request = this.selectedQroc()
+      ? this.http.put<any>(`${this.API_URL}/qrocs/${this.selectedQroc().id}`, qrocData)
+      : this.http.post<any>(`${this.API_URL}/qrocs`, qrocData);
+
+    request.subscribe({
+      next: (data) => {
+        this.qrocSaving.set(false);
+        this.qrocSuccessMessage.set(
+          this.selectedQroc()
+            ? 'QROC modifié avec succès'
+            : 'QROC ajouté avec succès'
+        );
+        this.closeQrocModal();
+        this.onQrocSubjectChange(); // Reload QROCs
+
+        setTimeout(() => {
+          this.qrocSuccessMessage.set('');
+        }, 3000);
+      },
+      error: (error) => {
+        this.qrocSaving.set(false);
+        console.error('Error saving QROC:', error);
+        this.qrocErrorMessage.set('Erreur lors de l\'enregistrement du QROC');
+
+        setTimeout(() => {
+          this.qrocErrorMessage.set('');
+        }, 5000);
+      }
+    });
+  }
+
+  deleteQroc(qrocId: string) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce QROC ?')) {
+      return;
+    }
+
+    this.http.delete<any>(`${this.API_URL}/qrocs/${qrocId}`).subscribe({
+      next: () => {
+        this.qrocSuccessMessage.set('QROC supprimé avec succès');
+        this.onQrocSubjectChange(); // Reload QROCs
+
+        setTimeout(() => {
+          this.qrocSuccessMessage.set('');
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Error deleting QROC:', error);
+        this.qrocErrorMessage.set('Erreur lors de la suppression du QROC');
+
+        setTimeout(() => {
+          this.qrocErrorMessage.set('');
+        }, 5000);
+      }
+    });
   }
 
   // ============================================
