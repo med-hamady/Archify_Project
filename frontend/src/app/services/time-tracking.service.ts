@@ -10,6 +10,9 @@ export class TimeTrackingService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
+  // Keys for localStorage persistence
+  private readonly SESSION_START_KEY = 'archify_session_start';
+
   // Observable for elapsed time in seconds
   private elapsedSeconds$ = new BehaviorSubject<number>(0);
   private intervalSubscription: any = null;
@@ -21,7 +24,51 @@ export class TimeTrackingService {
   private statsLoaded = false;
 
   constructor() {
-    // Don't load stats here - wait for component to be ready
+    // Restore session start time from localStorage on page refresh
+    this.restoreSessionFromStorage();
+  }
+
+  // Restore session from localStorage (called on page refresh)
+  private restoreSessionFromStorage(): void {
+    const savedStartTime = localStorage.getItem(this.SESSION_START_KEY);
+    if (savedStartTime) {
+      const startTimeMs = parseInt(savedStartTime, 10);
+      if (!isNaN(startTimeMs) && startTimeMs > 0) {
+        // Calculate elapsed time since session started
+        const elapsedMs = Date.now() - startTimeMs;
+        if (elapsedMs > 0 && elapsedMs < 24 * 60 * 60 * 1000) { // Max 24 hours
+          console.log('[TimeTracking] Restoring session from localStorage, elapsed:', Math.floor(elapsedMs / 1000), 'seconds');
+          this.startTime = startTimeMs;
+          this.elapsedSeconds$.next(Math.floor(elapsedMs / 1000));
+          this.isTracking = true;
+          this.startInterval();
+
+          // Load total study time from backend
+          this.loadStats();
+          this.statsLoaded = true;
+        } else {
+          // Session too old, clear it
+          localStorage.removeItem(this.SESSION_START_KEY);
+        }
+      }
+    }
+  }
+
+  // Start the interval timer (separate from startTracking for restore)
+  private startInterval(): void {
+    if (this.intervalSubscription) {
+      return; // Already running
+    }
+
+    this.intervalSubscription = interval(1000).subscribe(() => {
+      const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+      this.elapsedSeconds$.next(elapsed);
+
+      // Every 5 minutes, update the backend
+      if (elapsed > 0 && elapsed % 300 === 0) {
+        this.updateBackend(elapsed);
+      }
+    });
   }
 
   // Initialize and load stats
@@ -47,16 +94,12 @@ export class TimeTrackingService {
     this.startTime = Date.now();
     this.elapsedSeconds$.next(0);
 
-    // Update elapsed time every second
-    this.intervalSubscription = interval(1000).subscribe(() => {
-      const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-      this.elapsedSeconds$.next(elapsed);
+    // Save start time to localStorage for persistence across page refreshes
+    localStorage.setItem(this.SESSION_START_KEY, this.startTime.toString());
+    console.log('[TimeTracking] Session started, saved to localStorage');
 
-      // Every 5 minutes, update the backend
-      if (elapsed > 0 && elapsed % 300 === 0) {
-        this.updateBackend(elapsed);
-      }
-    });
+    // Start the interval timer
+    this.startInterval();
 
     // Notify backend that session started
     this.http.post(`${this.apiUrl}/time-tracking/start`, {}).subscribe({
@@ -87,6 +130,10 @@ export class TimeTrackingService {
     }
 
     const elapsed = this.elapsedSeconds$.value;
+
+    // Clear localStorage session
+    localStorage.removeItem(this.SESSION_START_KEY);
+    console.log('[TimeTracking] Session stopped, cleared from localStorage');
 
     // Send final update to backend
     this.http.post(`${this.apiUrl}/time-tracking/end`, {
