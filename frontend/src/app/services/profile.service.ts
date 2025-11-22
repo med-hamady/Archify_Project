@@ -43,6 +43,8 @@ export interface SubjectProgress {
   answeredQCM: number;
   chaptersCompleted: number;
   chaptersTotal: number;
+  pdfCount: number;
+  videoCount: number;
 }
 
 export interface DetailedStats {

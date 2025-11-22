@@ -283,7 +283,9 @@ async function getSubjectProgress(userId, subjectId) {
                         where: { userId }
                     }
                 }
-            }
+            },
+            coursePdfs: true,
+            courseVideos: true
         }
     });
     if (!subject)
@@ -317,7 +319,9 @@ async function getSubjectProgress(userId, subjectId) {
         progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
         challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
         chaptersCompleted,
-        chaptersTotal
+        chaptersTotal,
+        pdfCount: subject.coursePdfs?.length || 0,
+        videoCount: subject.courseVideos?.length || 0
     };
 }
 /**
@@ -346,7 +350,9 @@ async function getUserSubjectsProgress(userId) {
             },
             subjectProgresses: {
                 where: { userId }
-            }
+            },
+            coursePdfs: true,
+            courseVideos: true
         },
         orderBy: { title: 'asc' }
     });
@@ -374,7 +380,9 @@ async function getUserSubjectsProgress(userId) {
             progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
             challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
             chaptersCompleted,
-            chaptersTotal
+            chaptersTotal,
+            pdfCount: subject.coursePdfs?.length || 0,
+            videoCount: subject.courseVideos?.length || 0
         };
     }));
 }

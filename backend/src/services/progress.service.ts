@@ -38,6 +38,8 @@ export interface SubjectProgressInfo {
   challengeUnlockedGlobal: boolean;
   chaptersCompleted: number;
   chaptersTotal: number;
+  pdfCount: number;
+  videoCount: number;
 }
 
 // ============================================
@@ -344,7 +346,9 @@ export async function getSubjectProgress(
             where: { userId }
           }
         }
-      }
+      },
+      coursePdfs: true,
+      courseVideos: true
     }
   });
 
@@ -382,7 +386,9 @@ export async function getSubjectProgress(
     progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
     challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
     chaptersCompleted,
-    chaptersTotal
+    chaptersTotal,
+    pdfCount: (subject as any).coursePdfs?.length || 0,
+    videoCount: (subject as any).courseVideos?.length || 0
   };
 }
 
@@ -415,7 +421,9 @@ export async function getUserSubjectsProgress(
       },
       subjectProgresses: {
         where: { userId }
-      }
+      },
+      coursePdfs: true,
+      courseVideos: true
     },
     orderBy: { title: 'asc' }
   });
@@ -446,7 +454,9 @@ export async function getUserSubjectsProgress(
       progressPercent: Math.round((progress?.progressPercent || 0) * 100) / 100,
       challengeUnlockedGlobal: progress?.challengeUnlockedGlobal || false,
       chaptersCompleted,
-      chaptersTotal
+      chaptersTotal,
+      pdfCount: (subject as any).coursePdfs?.length || 0,
+      videoCount: (subject as any).courseVideos?.length || 0
     };
   }));
 }

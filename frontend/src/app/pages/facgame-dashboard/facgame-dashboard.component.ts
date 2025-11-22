@@ -86,7 +86,9 @@ export class FacgameDashboardComponent implements OnInit {
           totalQCM: p.totalQCM,
           answeredQCM: p.questionsAnswered,
           chaptersCompleted: p.chaptersCompleted,
-          chaptersTotal: p.chaptersTotal
+          chaptersTotal: p.chaptersTotal,
+          pdfCount: p.pdfCount || 0,
+          videoCount: p.videoCount || 0
         }));
         this.loading = false;
       },
