@@ -43,7 +43,8 @@ exports.leaderboardRouter.get('/global', auth_1.requireAuth, async (req, res) =>
                 level: true,
                 semester: true,
                 consecutiveGoodAnswers: true,
-                legendQuestionsCompleted: true
+                legendQuestionsCompleted: true,
+                profilePicture: true
             }
         });
         // Ajouter le rang
@@ -56,6 +57,7 @@ exports.leaderboardRouter.get('/global', auth_1.requireAuth, async (req, res) =>
             semester: user.semester,
             consecutiveGoodAnswers: user.consecutiveGoodAnswers,
             legendQuestionsCompleted: user.legendQuestionsCompleted,
+            profilePicture: user.profilePicture,
             isCurrentUser: user.id === req.userId
         }));
         // Position de l'utilisateur actuel
@@ -133,7 +135,8 @@ exports.leaderboardRouter.get('/semester', auth_1.requireAuth, async (req, res) 
                 level: true,
                 semester: true,
                 consecutiveGoodAnswers: true,
-                legendQuestionsCompleted: true
+                legendQuestionsCompleted: true,
+                profilePicture: true
             }
         });
         // Calculer le rang de l'utilisateur actuel dans sa classe
@@ -157,6 +160,7 @@ exports.leaderboardRouter.get('/semester', auth_1.requireAuth, async (req, res) 
             semester: user.semester,
             consecutiveGoodAnswers: user.consecutiveGoodAnswers,
             legendQuestionsCompleted: user.legendQuestionsCompleted,
+            profilePicture: user.profilePicture,
             isCurrentUser: user.id === req.userId
         }));
         return res.json({
@@ -196,7 +200,8 @@ exports.leaderboardRouter.get('/semester/:semester', auth_1.requireAuth, async (
                 level: true,
                 semester: true,
                 consecutiveGoodAnswers: true,
-                legendQuestionsCompleted: true
+                legendQuestionsCompleted: true,
+                profilePicture: true
             }
         });
         const leaderboard = topUsers.map((user, index) => ({
@@ -208,6 +213,7 @@ exports.leaderboardRouter.get('/semester/:semester', auth_1.requireAuth, async (
             semester: user.semester,
             consecutiveGoodAnswers: user.consecutiveGoodAnswers,
             legendQuestionsCompleted: user.legendQuestionsCompleted,
+            profilePicture: user.profilePicture,
             isCurrentUser: user.id === req.userId
         }));
         return res.json({ leaderboard, semester });

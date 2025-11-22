@@ -239,6 +239,13 @@
   font-weight: bold;
   color: white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  overflow: hidden;
+}
+
+.podium-avatar .avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .podium-place.first .podium-avatar {
@@ -331,6 +338,13 @@
   font-weight: bold;
   color: white;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  overflow: hidden;
+}
+
+.user-avatar .avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-info {

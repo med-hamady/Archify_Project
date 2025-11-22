@@ -45,7 +45,8 @@ leaderboardRouter.get('/global', requireAuth, async (req: any, res: any) => {
         level: true,
         semester: true,
         consecutiveGoodAnswers: true,
-        legendQuestionsCompleted: true
+        legendQuestionsCompleted: true,
+        profilePicture: true
       }
     });
 
@@ -59,6 +60,7 @@ leaderboardRouter.get('/global', requireAuth, async (req: any, res: any) => {
       semester: user.semester,
       consecutiveGoodAnswers: user.consecutiveGoodAnswers,
       legendQuestionsCompleted: user.legendQuestionsCompleted,
+      profilePicture: user.profilePicture,
       isCurrentUser: user.id === req.userId
     }));
 
@@ -143,7 +145,8 @@ leaderboardRouter.get('/semester', requireAuth, async (req: any, res: any) => {
         level: true,
         semester: true,
         consecutiveGoodAnswers: true,
-        legendQuestionsCompleted: true
+        legendQuestionsCompleted: true,
+        profilePicture: true
       }
     });
 
@@ -169,6 +172,7 @@ leaderboardRouter.get('/semester', requireAuth, async (req: any, res: any) => {
       semester: user.semester,
       consecutiveGoodAnswers: user.consecutiveGoodAnswers,
       legendQuestionsCompleted: user.legendQuestionsCompleted,
+      profilePicture: user.profilePicture,
       isCurrentUser: user.id === req.userId
     }));
 
@@ -211,7 +215,8 @@ leaderboardRouter.get('/semester/:semester', requireAuth, async (req: any, res: 
         level: true,
         semester: true,
         consecutiveGoodAnswers: true,
-        legendQuestionsCompleted: true
+        legendQuestionsCompleted: true,
+        profilePicture: true
       }
     });
 
@@ -224,6 +229,7 @@ leaderboardRouter.get('/semester/:semester', requireAuth, async (req: any, res: 
       semester: user.semester,
       consecutiveGoodAnswers: user.consecutiveGoodAnswers,
       legendQuestionsCompleted: user.legendQuestionsCompleted,
+      profilePicture: user.profilePicture,
       isCurrentUser: user.id === req.userId
     }));
 

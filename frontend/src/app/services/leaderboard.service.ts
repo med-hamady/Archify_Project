@@ -13,6 +13,7 @@ export interface LeaderboardEntry {
   consecutiveGoodAnswers: number;
   legendQuestionsCompleted: number;
   isCurrentUser?: boolean;
+  profilePicture?: string | null;
 }
 
 export interface LeaderboardFilters {

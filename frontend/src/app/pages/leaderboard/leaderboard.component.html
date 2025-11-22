@@ -79,7 +79,8 @@
         <div class="podium-place second">
           <div class="podium-rank">🥈</div>
           <div class="podium-avatar">
-            <span>{{ entries[1].name.charAt(0).toUpperCase() }}</span>
+            <img *ngIf="entries[1].profilePicture" [src]="entries[1].profilePicture" alt="Photo de profil" class="avatar-img">
+            <span *ngIf="!entries[1].profilePicture">{{ entries[1].name.charAt(0).toUpperCase() }}</span>
           </div>
           <div class="podium-level">
             <img [src]="getLevelInfo(entries[1].level).image" [alt]="getLevelInfo(entries[1].level).label" class="podium-level-img">
@@ -93,7 +94,8 @@
           <div class="crown">👑</div>
           <div class="podium-rank">🥇</div>
           <div class="podium-avatar">
-            <span>{{ entries[0].name.charAt(0).toUpperCase() }}</span>
+            <img *ngIf="entries[0].profilePicture" [src]="entries[0].profilePicture" alt="Photo de profil" class="avatar-img">
+            <span *ngIf="!entries[0].profilePicture">{{ entries[0].name.charAt(0).toUpperCase() }}</span>
           </div>
           <div class="podium-level">
             <img [src]="getLevelInfo(entries[0].level).image" [alt]="getLevelInfo(entries[0].level).label" class="podium-level-img">
@@ -106,7 +108,8 @@
         <div class="podium-place third">
           <div class="podium-rank">🥉</div>
           <div class="podium-avatar">
-            <span>{{ entries[2].name.charAt(0).toUpperCase() }}</span>
+            <img *ngIf="entries[2].profilePicture" [src]="entries[2].profilePicture" alt="Photo de profil" class="avatar-img">
+            <span *ngIf="!entries[2].profilePicture">{{ entries[2].name.charAt(0).toUpperCase() }}</span>
           </div>
           <div class="podium-level">
             <img [src]="getLevelInfo(entries[2].level).image" [alt]="getLevelInfo(entries[2].level).label" class="podium-level-img">
@@ -131,7 +134,8 @@
           </div>
 
           <div class="user-avatar">
-            <span>{{ entry.name.charAt(0).toUpperCase() }}</span>
+            <img *ngIf="entry.profilePicture" [src]="entry.profilePicture" alt="Photo de profil" class="avatar-img">
+            <span *ngIf="!entry.profilePicture">{{ entry.name.charAt(0).toUpperCase() }}</span>
           </div>
 
           <div class="user-info">
@@ -179,7 +183,8 @@
           </div>
 
           <div class="user-avatar">
-            <span>{{ entry.name.charAt(0).toUpperCase() }}</span>
+            <img *ngIf="entry.profilePicture" [src]="entry.profilePicture" alt="Photo de profil" class="avatar-img">
+            <span *ngIf="!entry.profilePicture">{{ entry.name.charAt(0).toUpperCase() }}</span>
           </div>
 
           <div class="user-info">

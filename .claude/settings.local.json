@@ -23,7 +23,8 @@
       "Bash(npx prisma generate:*)",
       "Bash(npm run build:ts:*)",
       "Bash(git branch:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(npm run build:all:*)"
     ],
     "deny": [],
     "ask": []
