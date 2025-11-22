@@ -26,6 +26,7 @@ import { examRouter } from './modules/exam';
 import { questionsRouter } from './modules/questions';
 import { adminImportRouter } from './modules/admin-import';
 import { adminSubscriptionRouter } from './modules/admin-subscription';
+import { adminContentRouter } from './modules/admin-content';
 import coursePdfsRouter from './modules/course-pdfs';
 import courseVideosRouter from './modules/course-videos';
 import timeTrackingRouter from './modules/time-tracking';
@@ -570,6 +571,7 @@ app.use('/api/exam', generalLimiter, examRouter);
 app.use('/api/questions', strictLimiter, questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, adminImportRouter); // Admin import/db tools
 app.use('/api/admin', strictLimiter, adminSubscriptionRouter); // Admin subscription management
+app.use('/api/admin/content', strictLimiter, adminContentRouter); // Admin content management (CRUD)
 app.use('/api/course-pdfs', generalLimiter, coursePdfsRouter); // Course PDF management
 app.use('/api/course-videos', generalLimiter, courseVideosRouter); // Course video management
 app.use('/api/time-tracking', generalLimiter, timeTrackingRouter); // Time tracking and XP rewards

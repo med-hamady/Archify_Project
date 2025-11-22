@@ -62,6 +62,7 @@ const exam_1 = require("./modules/exam");
 const questions_1 = require("./modules/questions");
 const admin_import_1 = require("./modules/admin-import");
 const admin_subscription_1 = require("./modules/admin-subscription");
+const admin_content_1 = require("./modules/admin-content");
 const course_pdfs_1 = __importDefault(require("./modules/course-pdfs"));
 const course_videos_1 = __importDefault(require("./modules/course-videos"));
 const time_tracking_1 = __importDefault(require("./modules/time-tracking"));
@@ -535,6 +536,7 @@ app.use('/api/exam', generalLimiter, exam_1.examRouter);
 app.use('/api/questions', strictLimiter, questions_1.questionsRouter); // Admin only
 app.use('/api/admin', strictLimiter, admin_import_1.adminImportRouter); // Admin import/db tools
 app.use('/api/admin', strictLimiter, admin_subscription_1.adminSubscriptionRouter); // Admin subscription management
+app.use('/api/admin/content', strictLimiter, admin_content_1.adminContentRouter); // Admin content management (CRUD)
 app.use('/api/course-pdfs', generalLimiter, course_pdfs_1.default); // Course PDF management
 app.use('/api/course-videos', generalLimiter, course_videos_1.default); // Course video management
 app.use('/api/time-tracking', generalLimiter, time_tracking_1.default); // Time tracking and XP rewards
