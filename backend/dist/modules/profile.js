@@ -231,7 +231,9 @@ exports.profileRouter.get('/progress', auth_1.requireAuth, async (req, res) => {
                 progressPercent: sp.progressPercent,
                 chaptersCompleted: sp.chaptersCompleted,
                 chaptersTotal: sp.chaptersTotal,
-                challengeUnlocked: sp.challengeUnlockedGlobal
+                challengeUnlocked: sp.challengeUnlockedGlobal,
+                pdfCount: sp.pdfCount,
+                videoCount: sp.videoCount
             }))
         });
     }
