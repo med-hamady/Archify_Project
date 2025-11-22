@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { DeviceService } from './device.service';
-import { TimeTrackingService } from './time-tracking.service';
 
 export interface User {
   id: string;
@@ -85,9 +84,6 @@ export class AuthService {
   isPremium = computed(() => this.user()?.subscription?.isActive === true);
   isAdmin = computed(() => this.user()?.role === 'admin' || this.user()?.role === 'ADMIN' || this.user()?.role === 'superadmin' || this.user()?.role === 'SUPERADMIN');
 
-  // Inject TimeTrackingService to start chronometer on login
-  private timeTrackingService = inject(TimeTrackingService);
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -114,13 +110,6 @@ export class AuthService {
         next: (response) => {
           console.log('[AuthService] Token verified successfully');
           this.updateUser(response.user);
-
-          // Start study time tracking for returning students
-          const userRole = (response.user.role || '').toLowerCase();
-          if (userRole === 'student' && !this.timeTrackingService.isTrackingActive()) {
-            console.log('[AuthService] Starting study time tracking for returning student');
-            this.timeTrackingService.startTracking();
-          }
         },
         error: (err) => {
           console.error('[AuthService] Token verification failed:', {
@@ -137,12 +126,6 @@ export class AuthService {
           } else {
             console.log('[AuthService] Network/server error, keeping user logged in');
             // User stays logged in, token will be verified on next request
-            // Still start tracking if user appears to be a student
-            const userRole = (user.role || '').toLowerCase();
-            if (userRole === 'student' && !this.timeTrackingService.isTrackingActive()) {
-              console.log('[AuthService] Starting study time tracking despite network error');
-              this.timeTrackingService.startTracking();
-            }
           }
         },
       });
@@ -228,14 +211,8 @@ export class AuthService {
           });
           this.setAuthData(response);
 
-          // Start study time tracking for students
-          const userRole = response.user.role.toLowerCase();
-          if (userRole === 'student') {
-            console.log('[AuthService] Starting study time tracking for student');
-            this.timeTrackingService.startTracking();
-          }
-
           // Redirect admins to admin dashboard, others to user dashboard
+          const userRole = response.user.role.toLowerCase();
           if (userRole === 'admin' || userRole === 'superadmin') {
             this.router.navigate(['/admin']);
           } else {
@@ -262,14 +239,8 @@ export class AuthService {
         tap(response => {
           this.setAuthData(response);
 
-          // Start study time tracking for new students
-          const userRole = response.user.role.toLowerCase();
-          if (userRole === 'student') {
-            console.log('[AuthService] Starting study time tracking for new student');
-            this.timeTrackingService.startTracking();
-          }
-
           // Redirect admins to admin dashboard, others to user dashboard
+          const userRole = response.user.role.toLowerCase();
           if (userRole === 'admin' || userRole === 'superadmin') {
             this.router.navigate(['/admin']);
           } else {
@@ -284,12 +255,6 @@ export class AuthService {
   }
 
   logout(): void {
-    // Stop study time tracking before logout
-    if (this.timeTrackingService.isTrackingActive()) {
-      console.log('[AuthService] Stopping study time tracking on logout');
-      this.timeTrackingService.stopTracking();
-    }
-
     // Inform backend and clear stored data
     this.http.post<void>(`${this.API_URL}/auth/logout`, {}).subscribe({ next: () => {}, error: () => {} });
     localStorage.removeItem(this.USER_KEY);

@@ -10,7 +10,6 @@ import {
   DetailedStats
 } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
-import { TimeTrackingService } from '../../services/time-tracking.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +22,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private profileService = inject(ProfileService);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
-  timeTrackingService = inject(TimeTrackingService);
 
   profile: UserProfile | null = null;
   badges: Badge[] = [];
@@ -41,12 +39,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   activities: Activity[] = [];
   stats: DetailedStats | null = null;
   devicesInfo: any = null; // Informations de diagnostic sur les appareils
-
-  // Time tracking
-  elapsedSeconds = 0;
-  totalStudyTimeSeconds = 0;
-  private timeSubscription: any = null;
-  private totalTimeSubscription: any = null;
 
   loading = true;
   error: string | null = null;
@@ -81,31 +73,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadProfile();
     this.loadDevicesInfo();
-
-    // Initialize time tracking service (loads stats)
-    this.timeTrackingService.init();
-
-    // Subscribe to time tracking updates
-    this.timeSubscription = this.timeTrackingService.getElapsedSeconds().subscribe(seconds => {
-      this.elapsedSeconds = seconds;
-    });
-
-    this.totalTimeSubscription = this.timeTrackingService.getTotalStudyTime().subscribe(seconds => {
-      this.totalStudyTimeSeconds = seconds;
-    });
-
-    // Note: Time tracking is now started automatically on login (see AuthService)
-    // No need to call startTracking() here as it's already running
   }
 
   ngOnDestroy() {
-    // Clean up subscriptions
-    if (this.timeSubscription) {
-      this.timeSubscription.unsubscribe();
-    }
-    if (this.totalTimeSubscription) {
-      this.totalTimeSubscription.unsubscribe();
-    }
+    // Clean up subscriptions if needed
   }
 
   loadProfile() {
@@ -288,40 +259,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.nameUpdateLoading = false;
       }
     });
-  }
-
-  // Time tracking methods
-  formatTime(seconds: number): string {
-    return this.timeTrackingService.formatTime(seconds);
-  }
-
-  getProgressToNextHour(): number {
-    const seconds = this.elapsedSeconds;
-    const remainingInHour = seconds % 3600;
-    return (remainingInHour / 3600) * 100;
-  }
-
-  getNextXpReward(): number {
-    const hours = Math.floor(this.elapsedSeconds / 3600);
-    return (hours + 1) * 60;
-  }
-
-  getTimeUntilNextReward(): string {
-    const secondsInCurrentHour = this.elapsedSeconds % 3600;
-    const secondsUntilNextHour = 3600 - secondsInCurrentHour;
-    return this.formatTime(secondsUntilNextHour);
-  }
-
-  getTotalHours(): number {
-    return Math.floor(this.getCombinedStudyTime() / 3600);
-  }
-
-  // Combine stored total time with current session time for real-time display
-  getCombinedStudyTime(): number {
-    // totalStudyTimeSeconds = time saved in database
-    // elapsedSeconds = time in current session
-    // Combined = total including current session
-    return this.totalStudyTimeSeconds + this.elapsedSeconds;
   }
 
   // Profile picture methods
