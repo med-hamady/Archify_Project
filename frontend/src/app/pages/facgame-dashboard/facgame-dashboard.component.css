@@ -484,6 +484,12 @@
   color: white;
 }
 
+.btn-continuer-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 .btn-start:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
