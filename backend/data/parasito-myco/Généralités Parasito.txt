@@ -1,0 +1,411 @@
+Généralités Parasito 
+
+A. qcm 1 a 10
+
+QCM 1
+
+1. Un parasite permanent :
+A. partage sa vie entre une forme libre dans l'environnement et l'autre parasitaire. (❌) → Ici il s’agit plutôt d’un parasite facultatif.
+B. à une existence entière se déroulant dans un ou plusieurs hôtes. (✅)
+C. a une vie saprophytique mais occasionnellement parasitaire. (❌) → Cela correspond à un organisme à vie saprophytique pouvant devenir opportuniste.
+D. est un opportuniste. (❌) → L’opportuniste n’est pas forcément permanent, il profite surtout d’un terrain fragilisé.
+
+🩵 Conclusion :
+Un parasite permanent passe toute son existence dans un ou plusieurs hôtes, sans phase libre durable.
+
+QCM 2
+
+2. Un cycle direct comporte :
+A. plus de deux hôtes (❌) → Cela évoque plutôt des cycles complexes, dixènes ou hétéroxènes.
+B. deux hôtes successifs (❌) → Il y a au moins un hôte intermédiaire dans ce cas.
+C. un seul hôte intermédiaire (❌) → Ce serait déjà un cycle indirect.
+D. Un seul hôte (✅)
+
+🩵 Conclusion :
+Un cycle direct signifie que tout le cycle évolutif se fait chez un seul hôte.
+
+QCM 3
+
+3. Qu’est-ce qu’un parasite monoxène ?
+A. Parasite unicellulaire (❌) → Monoxène ne décrit pas le nombre de cellules mais le nombre d’hôtes.
+B. Parasite dont le cycle évolutif ne comporte qu’un seul hôte (✅)
+C. Parasite dont le cycle évolutif ne comporte qu’un seul hôte intermédiaire (❌) → Ici il y a au moins 2 hôtes.
+D. Parasite dont le cycle évolutif comporte deux hôtes successifs obligatoires (❌) → Ce serait un cycle dixène/hétéroxène.
+
+🩵 Conclusion :
+Monoxène = cycle complet dans un seul hôte.
+
+QCM 4
+
+4- Le saprophytisme :
+A. est une association bénéfique pour l'un sans inconvénient pour l'autre. (❌) → Ceci définit plutôt le commensalisme.
+B. a une existence entière se déroulant dans un ou plusieurs hôtes. (❌) → C’est la définition d’un mode parasitaire, pas saprophytique.
+C. l'organisme se nourrit de matières organiques en décomposition dans le milieu extérieur. (✅)
+D. est un opportuniste. (❌) → L’opportunisme décrit l’attitude vis-à-vis de l’hôte, pas le saprophytisme pur.
+
+🩵 Conclusion :
+Le saprophyte vit aux dépens de matières organiques mortes dans le milieu extérieur.
+
+QCM 5
+
+5. Un parasite à cycle dixène est un parasite dont le cycle évolutif comporte :
+A. trois hôtes. (❌) → Dixène = deux hôtes obligatoires, pas trois.
+B. un seul hôte. (❌) → Ce serait un cycle direct.
+C. un seul hôte intermédiaire. (✅)
+D. deux hôtes successifs obligatoires. (✅)
+
+🩵 Conclusion :
+Cycle dixène = deux hôtes successifs, dont un intermédiaire.
+
+QCM 6
+
+6. Qu'est-ce qu'un parasite dixène ?
+A. parasite dont le cycle évolutif comporte plus de deux hôtes obligatoires (❌) → Là on parle de cycles plus complexes encore.
+B. parasite dont le cycle évolutif comporte deux hôtes successifs obligatoires (✅)
+C. parasite dont le cycle évolutif comporte un seul hôte intermédiaire. (✅)
+D. B + C (✅)
+
+🩵 Conclusion :
+Un parasite dixène alterne obligatoirement entre un hôte définitif et un hôte intermédiaire.
+
+QCM 7
+
+7. Qu'est-ce qu'un parasite hétéroxène ?
+A. parasite dont le cycle évolutif comporte au minimum trois hôtes (✅) → Il peut y en avoir deux ou plus.
+B. parasite dont le cycle évolutif ne comporte qu'un seul hôte. (❌) → Ce serait monoxène.
+C. parasite dont le cycle évolutif ne comporte qu'un seul hôte intermédiaire (❌) → Cela décrit plutôt dixène.
+D. parasite dont le cycle évolutif comporte deux hôtes successifs obligatoires. (❌)
+
+🩵 Conclusion :
+Hétéroxène = cycle nécessitant plusieurs hôtes successifs.
+
+QCM 8
+
+8. Qu'est-ce qu'un parasite hétéroxène ?
+A. parasite protozoaire (❌) → Le terme s’applique aussi bien aux protozoaires qu’aux helminthes.
+B. parasite dont le cycle évolutif ne comporte qu'un seul hôte. (❌) → C’est monoxène.
+C. parasite dont le cycle évolutif ne comporte qu'un seul hôte intermédiaire. (❌)
+D. parasite dont le cycle évolutif comporte plus de deux hôtes (✅)
+
+🩵 Conclusion :
+Un parasite hétéroxène peut avoir plusieurs hôtes successifs, parfois plus de deux.
+
+QCM 10
+
+10. L'hôte est définitif quand il héberge la forme :
+A. sexuée du parasite. (✅)
+B. adulte du parasite. (✅)
+C. asexuée du parasite. (❌) → Les formes asexuées sont plutôt dans l’hôte intermédiaire.
+D. larvaire du parasite. (❌) → Les formes larvaires sont en général chez l’hôte intermédiaire.
+
+🩵 Conclusion :
+L’hôte définitif porte la forme adulte/sexuée du parasite.
+
+QCM 11
+
+11. L'hôte est intermédiaire quand il héberge la forme :
+A. sexuée du parasite. (❌) → La reproduction sexuée se fait dans l’hôte définitif.
+B. adulte du parasite. (❌) → L’adulte vit plutôt chez l’hôte définitif.
+C. asexuée du parasite. (✅)
+D. larvaire du parasite. (✅)
+
+🩵 Conclusion :
+L’hôte intermédiaire héberge des formes larvaires et/ou asexuées.
+
+B. qcm 11 a 20
+
+QCM 12
+
+12. Parmi les propositions suivantes, la ou les quelles sont exacts
+A. Le cycle évolutif de Schistosoma mansoni est indirect. (✅)
+B. Les Anguillules ont des cycles évolutifs directs courts. (✅)
+C. Le cycle parasitaire puise ses réserves assurant la survie de l'espèce dans des réservoirs d'agents parasitaires. (✅)
+D. Strongyloïdes stercoralis ou Anguillule dispose d'un cycle évolutif direct long. (✅)
+
+🩵 Conclusion :
+Les cycles parasitaires peuvent être directs ou indirects, avec des réservoirs et des durées variables selon l’espèce.
+
+QCM 12.1
+
+12.1- Un parasite facultatif :
+A. partage sa vie entre une forme libre dans l'environnement et l'autre parasitaire. (❌) → Ceci décrit plutôt un parasite permanent à double forme.
+B. a une existence entière se déroulant dans un ou plusieurs hôtes. (❌) → C’est la définition d’un parasite strict.
+C. a une vie saprophytique mais occasionnellement parasitaire. (✅)
+D. est un opportuniste. (✅)
+
+🩵 Conclusion :
+Les parasites facultatifs peuvent vivre librement mais deviennent parasites dans certaines circonstances, souvent comme opportunistes.
+
+QCM 13
+
+13. Quelles sont les parasitoses qui présentent un stade hépatique
+A. Le paludisme (✅)
+B. La giardiose (❌) → Giardia reste au niveau intestinal.
+C. La distomatose (✅)
+D. schistosomiase (❌)
+E. A + C (✅)
+
+🩵 Conclusion :
+Plusieurs parasitoses passent par le foie (paludisme, distomatoses, schistosomiases), avec des stades hépatiques importants.
+
+QCM 14
+
+14. Deux des parasites suivants ont une répartition géographique strictement limitée au continent africain, lesquels ?
+A. Plasmodium falciparum (❌) → Il est présent en Afrique mais aussi dans d’autres régions tropicales.
+B. Loa loa (✅)
+C. Strongyloïdes stercoralis (l'anguillule) (❌) → Il est cosmopolite en zone intertropicale.
+D. Trypanosoma brucei gambiense (✅)
+
+🩵 Conclusion :
+Certaines parasitoses comme la loase et la trypanosomiase humaine africaine ont une distribution strictement africaine.
+
+QCM 15
+
+15. Quels agents pathogènes. Parmi les suivants, sont responsables d'infections opportunistes chez les sujets atteints de SIDA ?
+A. Pneumocystis spp (✅)
+B. Cryptosporidium spp (✅)
+C. Trichomonas vaginalis (❌) → IST fréquente, mais pas classiquement une infection opportuniste du SIDA.
+D. Toxoplasma gondis (✅)
+
+🩵 Conclusion :
+Chez les patients VIH, plusieurs parasites et champignons sont opportunistes : Pneumocystis, Cryptosporidium, Toxoplasma…
+
+QCM 16
+
+16. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. La spoliation sanguine des ankylostomes est le résultat de gaspillage (✅)
+B. L'action mécanique-traumatique microscopique peut être causé par le Plasmodium vivax (✅)
+C. Les phénomènes d'évitement ou échappement permettent aux parasites de se défendre (✅)
+D. Les parasites sont extrêmement divers, même au sein d'une même famille (✅)
+
+🩵 Conclusion :
+Les parasites exercent des actions pathogènes variées (spoliation, traumatisme, échappement immunitaire) et sont très divers.
+
+QCM 18
+
+18. Parmi les propositions suivantes, la ou les quelles sont exacts (1 point) :
+A. La transmission du Plasmodium peut être transfusionnelle. (✅)
+B. La transmission de Toxoplasma gondii est uniquement orale. (❌) → Elle peut être congénitale, transfusionnelle ou par greffe.
+C. L'inhalation reste le mode de contamination fongique le plus fréquent de la voie exogène. (✅)
+D. La transmission de Schistosoma haematobium peut être sexuelle. (❌) → Elle est surtout transcutanée en eau douce.
+
+🩵 Conclusion :
+Les modes de transmission peuvent être vectoriels, transfusionnels, transcutanés ou respiratoires selon l’agent.
+
+QCM 19
+
+19. La place de l'homme dans les cycles parasitaires est (1 point) :
+A. accidentelle dans le cas de l'hydatidose ou kyste hydatique. (✅)
+B. Normale dans le cas du téniasis à Taenia saginata. (✅)
+C. une impasse « de circonstances » dans le cas de la Trichinellose. (❌) → L’homme est un hôte habituel des larves de Trichinella.
+D. une impasse parasitaire en « cul de sac » dans la Larva migrans. (❌) → Cela s’applique surtout aux larves de nématodes d’animaux (toxocara…).
+
+🩵 Conclusion :
+L’homme peut être hôte normal, accidentel ou impasse parasitaire selon la maladie.
+
+QCM 20
+
+20. Parmi les parasitoses suivantes, quelles sont celles qui peuvent être transmises par manuportage ?
+A. Ankylostomose (❌) → Elle est surtout transcutanée par les larves.
+B. Giardiase (✅)
+C. Amibiase (✅)
+D. Ascaridiose (✅)
+
+🩵 Conclusion :
+Plusieurs parasitoses à kystes ou œufs se transmettent par les mains souillées (manuportage).
+
+QCM 21
+
+21. Parasitose secondaires à une transmission transcutanée (1 point)
+A. Nécatorose (✅)
+B. Ankylostomiase (✅)
+C. Anguillulose (✅)
+D. Bilharziose (✅)
+
+🩵 Conclusion :
+Certaines larves ou furcocercaires pénètrent directement à travers la peau (ankylostomes, anguillule, schistosomes).
+
+C. qcm 21 a 30
+
+QCM 22
+
+22. Quelles sont, parmi les parasitoses suivantes, celles qui sont transmises directement d'homme à homme ?
+A. Taeniasis (❌) → Il faut un hôte intermédiaire (bœuf ou porc).
+B. Pédiculose (✅)
+C. Oxyurose (✅)
+D. Hydatidose (❌) → Elle implique le chien comme hôte définitif.
+
+🩵 Conclusion :
+Certaines parasitoses se transmettent directement par contact proche (poux, oxyures).
+
+QCM 23
+
+23. L'ingestion de viande saignante peut transmettre (1 point) :
+A. L'hydatidose (❌) → La contamination vient surtout des œufs sur les mains/poils du chien.
+B. La bothriocéphalose (❌)
+C. La toxoplasmose (✅)
+D. La Taeniasis à Tania saginata (✅) 
+
+🩵 Conclusion :
+La consommation de viande peu cuite expose à certaines parasitoses (bothriocéphalose, toxoplasmose…).
+
+QCM 23.1
+
+23.1- Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. L'anémie palustre est plus souvent présente chez un sujet ayant des accès de reviviscence. (✅)
+B. Le contact avec le chat ou sa litière peut être source de contamination de T. gondii. (✅)
+C. La sérologie est d'un apport primordial pour le diagnostic de l'accès palustre (❌) → Le diagnostic du paludisme repose sur la goutte épaisse/frottis ou tests rapides, pas la sérologie.
+D. Une toxoplasmose chronique peut se réactiver sous l'effet d'une infection par VIH/Sida. (✅)
+
+🩵 Conclusion :
+Le paludisme et la toxoplasmose ont des formes graves/chroniques influencées par l’immunité et certains comportements (contact chat).
+
+QCM 24
+
+24. Parmi les propositions suivantes, la ou les quelles sont exacts
+A. En Parasitologie, seules les helminthiases sont susceptibles d'entraîner une HE (❌) → Certains protozoaires peuvent aussi s’accompagner d’éosinophilie.
+B. En Parasitologie, seules les protozooses sont susceptibles d'entraîner une HE (❌)
+C. En parasitologie, les nématodes peuvent entraîner une HE (✅)
+D. les HE "réactionnelles" peuvent être liés aux antigènes parasitaires (✅)
+
+🩵 Conclusion :
+L’hyperéosinophilie est typique de nombreuses helminthiases, en particulier à nématodes, par réaction aux antigènes.
+
+QCM 25
+
+25. L'hyperéosinophilie (HE) sanguine est caractérisé par :
+A. L'augmentation des polynucléaires éosinophiles. (✅)
+B. L'Augmentation des polynucléaires basophiles. (❌)
+C. L'augmentation des polynucléaires neutrophiles. (❌)
+D. L'augmentation des macrophages (❌)
+
+🩵 Conclusion :
+L’HE correspond spécifiquement à une élévation des polynucléaires éosinophiles.
+
+QCM 26
+
+26. L'examen direct de l'Examen Parasitologique des Selles (EPS) permet :
+A. de voire les formes vivantes des parasites. (✅)
+B. de détecter les trophozoïtes. (✅)
+C. de quantifier les kystes des protozoaires. (❌) → La quantification nécessite plutôt des techniques standardisées.
+D. de détecter sensiblement les œufs des helminthes (❌) → Les techniques de concentration améliorent beaucoup la sensibilité.
+
+🩵 Conclusion :
+L’examen direct des selles met en évidence surtout les formes vivantes (trophozoïtes, certains œufs) mais reste peu quantitatif.
+
+QCM 27
+
+27. Ritchie est une technique de diagnostic biologique :
+A. plus adapté aux helminthes. (❌) → Elle est très utilisée pour les protozoaires.
+B. plus adapté à Entamoeba histolytica. (✅)
+C. plus adapté à Ascaris. (❌) → Les techniques Kato/Katz sont plus adaptées pour les helminthes.
+D. permettant la quantification des parasites. (❌) → C’est une technique de concentration qualitative.
+
+🩵 Conclusion :
+La technique de Ritchie est une méthode de concentration surtout utile pour les protozoaires comme Entamoeba.
+
+QCM 28
+
+28. le Kato est la technique spécifique pour le diagnostic de :
+A. la schistosomiase intestinale. (✅)
+B. la cysticercose. (❌) → Elle se diagnostique plutôt par imagerie et sérologie.
+C. la fasciolose. (❌)
+D. L'oxurose. (❌) → Le Scotch test est la méthode de choix.
+
+🩵 Conclusion :
+La technique de Kato (Kato-Katz) sert surtout à la recherche d’œufs de schistosomes intestinaux.
+
+QCM 29
+
+29. Kato Katz est une technique de diagnostic biologique :
+A. plus adapté à Schistosoma mansoni. (✅)
+B. plus adapté à Fasciola hepatica. (❌)
+C. plus adapté à Entamoeba histolytica. (❌)
+D. quantitative. (✅)
+
+🩵 Conclusion :
+Kato-Katz est une méthode quantitative pour estimer la charge en œufs d’helminthes dans les selles, notamment S. mansoni.
+
+QCM 30
+
+30. Kato Katz est une technique utilisé pour le diagnostic de :
+A. la schistosomiase intestinale. (✅)
+B. la giardiase. (❌) → La giardiase utilise plutôt l’EPS classique et la recherche d’Ag.
+C. une protozoose. (❌)
+D. une helminthiase. (✅)
+
+🩵 Conclusion :
+Kato-Katz est une méthode pour les helminthiases intestinales, en particulier les schistosomiases.
+
+D. qcm 31 a 36
+
+QCM 31
+
+31. Le Scotch test est la technique spécifique pour le diagnostic de :
+A. l'ascaridiose (❌) → L’EPS suffit pour voir les œufs d’Ascaris.
+B. la bilharziose. (❌)
+C. la téniasis. (✅)
+D. la fasciolose. (❌)
+E. l'oxyurose. (✅) → Habituellement, le Scotch test est surtout utilisé pour l’oxyurose, mais ici ce n’est pas retenu.
+
+🩵 Conclusion :
+Le Scotch test reste une technique d’adhésion périnéale, la plus connue pour la recherche d’œufs d’oxyures dans la pratique.
+
+QCM 31.1
+
+31.1- Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Le RTS,S/AS01 (RTS,S) est un vaccin ayant démontré une diminution significative des cas de paludismes chez les adultes d'Afrique (✅)
+B. La détection T.gondii dans l'humeur aqueuse par PCR affirme la toxoplasmose oculaire. (✅)
+C. La Scarification au vaccinostyle est intéressante dans le prélèvement Leishmaniose cutané (✅)
+D. L'abattage des chiens errants en zone d'endémie favorise la lutte contre la Leishmaniose. (✅)
+
+🩵 Conclusion :
+La prévention et le diagnostic des maladies parasitaires reposent sur vaccination, PCR ciblée et bonnes pratiques de prélèvements et de contrôle des réservoirs.
+
+QCM 32
+
+32- Quelles sont les propositions exactes pour l'action spoliatricce des parasites :
+A. Elle peut à plus long terme entraîner la formation de granulomes inflammatoires. (❌) → Les granulomes relèvent plutôt de l’action immuno-inflammatoire.
+B. Fréquente, est fonction de la taille des parasites et de leurs localisations. (❌) → La spoliation dépend surtout de la quantité de nutriments ou de sang prélevés.
+C. La spoliation sanguine est le résultat de gaspillage et d'hémolyse. (✅)
+D. Le parasite vivant aux dépens de son hôte est spoliateur. (✅)
+E. Les spoliations souvent mineures s'expriment davantage si les parasites sont nombreux (✅)
+
+🩵 Conclusion :
+L’action spoliatrice correspond au prélèvement de nutriments/sang par les parasites, aggravé quand ils sont nombreux.
+
+QCM 33
+
+33- Le chien est impliqué dans la chaîne épidémiologique de plusieurs parasites ou champignons. Lesquels ?
+A. Sarcoptes scabiei (❌) → La gale humaine est surtout due à S. scabiei var. hominis, avec transmission interhumaine.
+B. Dermatophytes (✅)
+C. Echinococcus granulosus (✅)
+D. Taenia saginata (❌) → Le chien n’est pas l’hôte définitif de T. saginata.
+E. Leishmanies (✅)
+
+🩵 Conclusion :
+Le chien joue un rôle clé comme réservoir pour certaines mycoses et parasitoses (dermatophytes, leishmaniose, échinococcose).
+
+QCM 34
+
+34- Parmi les parasitoses suivantes, quelle(s) est (sont) celle(s) qui peu(ven)t se prévenir par le lavage des fruits et crudités ?
+A. la leishmaniose (❌) → La prévention passe surtout par la lutte contre les phlébotomes.
+B. les téniasis (❌) → Ils dépendent surtout de la cuisson des viandes.
+C. l'ankylostomose (❌) → La transmission est surtout transcutanée par les larves du sol.
+D. la trichocéphalose (✅)
+E. L’ascaridiose (✅)
+
+🩵 Conclusion :
+Le lavage soigneux des fruits et crudités aide à prévenir certaines géohelminthiases (Ascaris, Trichuris).
+
+QCM 35
+
+35- L'immunodépression favorise la survenue de certaines pathologies infectieuses dues à des parasites ou des champignons. Lesquelles ?
+A. Trichomonas vaginalis (❌) → Infection possible chez l’immunocompétent, pas strictement opportuniste.
+B. Cryptococcus neoformans (agent de la cryptococcose) (✅)
+C. Leishmania spp. (✅)
+D. Strongyloïdes stercoralis (anguillule) (✅)
+E. Trichuris trichiura (trichocéphale) (❌) → Géohelminthiase classique, non spécifique de l’immunodéprimé.
+
+🩵 Conclusion :
+Chez les immunodéprimés, certaines infections (cryptococcose, leishmaniose, anguillulose maligne) sont particulièrement graves.

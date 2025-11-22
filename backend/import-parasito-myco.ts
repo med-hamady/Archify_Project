@@ -25,7 +25,7 @@ interface Chapter {
 const SUBJECT_TITLE = 'Parasito-myco Ba Ousmane';
 const SUBJECT_DESCRIPTION = 'Parasitologie et Mycologie - Ba Ousmane';
 const SEMESTER = 'DCEM1';
-const SOURCE_FOLDER = 'C:\\Users\\pc\\Desktop\\FAC GAME\\Parasito-myco Ba Ousmane';
+const SOURCE_FOLDER = path.join(__dirname, 'data', 'parasito-myco');
 
 function parseQCMFile(content: string, chapterTitle: string): Question[] {
   const questions: Question[] = [];

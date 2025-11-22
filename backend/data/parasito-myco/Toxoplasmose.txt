@@ -1,0 +1,304 @@
+Toxoplasmose
+
+A. qcm 1 a 10
+
+QCM 1
+
+1. la Toxoplasmose
+A. Est une coccidiose (✅)
+B. Est une maladie cosmopolite (✅)
+C. Est provoquée par un parasite du système histio-monocytaire (✅)
+D. Est transmise par la piqûre d’insecte (❌) → Elle ne se transmet pas par vecteur hématophage mais surtout par voie orale.
+
+🩵 Conclusion :
+La toxoplasmose est une coccidiose cosmopolite, liée à un parasite tissulaire.
+
+QCM 2
+
+2. Certaines des propositions suivantes concernant Toxoplasma gondii sont exactes, lesquelles ?
+A. C’est un protozoaire (✅)
+B. Ses trophozoïtes circulent dans le sang (✅)
+C. Les oiseaux sont hôtes définitifs du toxoplasme (❌) → Les hôtes définitifs sont les félidés, en particulier le chat.
+D. Ses oocystes sont éliminés avec les excréments du chat (✅)
+
+🩵 Conclusion :
+Toxoplasma gondii est un protozoaire dont le chat élimine les oocystes dans les selles.
+
+QCM 3
+
+3. Parmi les propositions suivantes, laquelle est inexacte.
+A. Toxoplasma gondii est un parasite intracellulaire obligatoire. (❌) → Il a un tropisme intracellulaire marqué, mais peut présenter des phases extracellulaires transitoires.
+B. Toxoplasma gondii appartient à la famille des Apicomplexa. (❌) → Il appartient au phylum des Apicomplexa, la notion de « famille » est impropre ici.
+C. Le sporozoïte est le résultat de la reproduction asexuée. (✅)
+D. Les oocystes ne sont pas affectés par l’acide chlorhydrique gastrique. (❌) → Ils sont globalement résistants, mais les conditions digestives peuvent altérer leur viabilité.
+
+🩵 Conclusion :
+Ce QCM porte sur la classification et les formes évolutives de Toxoplasma gondii.
+
+QCM 4
+
+4. Parmi les propositions suivantes, laquelle est inexacte.
+A. Toxoplasma gondii est un parasite intracellulaire obligatoire. (❌) → Il se développe principalement à l’intérieur des cellules de l’hôte.
+B. Toxoplasma gondii existe sous deux formes évolutives différentes. (✅)
+C. Le bradyzoïte résulte du stade tachyzoïte au cours de son évolution chez l’HI. (❌) → La distinction tachyzoïte/bradyzoïte repose surtout sur le contexte évolutif et tissulaire.
+D. Les kystes de Toxoplasma gondii sont une source de contamination des carnivores. (❌) → La contamination peut également se faire à partir d’oocystes présents dans l’environnement.
+
+🩵 Conclusion :
+Toxoplasma gondii présente plusieurs formes évolutives, dont les kystes tissulaires.
+
+QCM 5
+
+5. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. L’infestation animale ou humaine par T. gondii est essentiellement transplacentaire. (❌) → La principale voie de contamination est digestive (viande ou oocystes), la voie transplacentaire concerne la forme congénitale.
+B. Le contact avec le chat ou sa litière peut être source de contamination de T. gondii. (✅)
+C. Le niveau socio-économique et les habitudes alimentaires favorisent la toxoplasmose. (✅)
+D. Une toxoplasmose chronique peut se réactiver sous l’effet d’une immunosuppression. (✅)
+
+🩵 Conclusion :
+La toxoplasmose acquise dépend surtout des habitudes alimentaires, du contact avec les chats et de l’état immunitaire.
+
+QCM 6
+
+6. Parmi les propositions suivantes, la ou les quelles sont exacts :
+
+A. Toxoplasma gondii est l’agent de la toxoplasmose (✅)
+B. Dans la toxoplasmose, le tachyzoïte est une forme végétative en forme d’arc (✅)
+C. Dans la toxoplasmose, le bradyzoïte est une forme dormante en forme d’arc (✅)
+D. Les kystes sont inaccessibles aux défenses immunitaires et traitements actuels (✅)
+
+🩵 Conclusion :
+Ce QCM rappelle les principales formes de T. gondii et le rôle des kystes tissulaires dans la persistance de l’infection.
+
+QCM 6.1
+
+6-1 Parmi les propositions suivantes, la ou les quelles sont exactes pour T. gondii :
+
+A. Le tachyzoïte ne peut pas parasiter toutes les cellules de l’organisme (❌) → Le tachyzoïte a un tropisme large et peut infecter de nombreux types cellulaires.
+B. Les bradyzoïtes siègent principalement dans les neurones, les astrocytes, les cellules musculaires et les cellules rétiniennes (✅)
+C. Les oocystes immatures siègent dans le tube digestif du chat et les autres félidés (✅)
+D. Toxoplasma gondii peut être hébergé par les animaux homéothermes (✅)
+
+🩵 Conclusion :
+Ce QCM insiste sur le rôle du chat comme hôte définitif et des animaux homéothermes comme hôtes intermédiaires.
+
+QCM 7
+
+7. Toxoplasma gondii, l’agent responsable de la toxoplasmose :
+
+A. Capable de se multiplier dans la plupart des cellules de l’organisme. (✅)
+B. Se multiplie uniquement au niveau des cellules du système nerveux central (❌) → La multiplication n’est pas limitée au SNC, elle concerne de nombreux tissus.
+C. Possède un tropisme particulier pour les muscles. (✅)
+D. A + C (✅)
+
+🩵 Conclusion :
+T. gondii a un tropisme large mais se retrouve particulièrement dans le tissu musculaire et nerveux.
+
+QCM 8
+
+8. Certaines des propositions suivantes concernant la toxoplasmose sont exactes, lesquelles ?
+
+A. L’atteinte fœtale par transmission transplacentaire ne se rencontre que dans l’espèce humaine (❌) → Le passage transplacentaire peut exister chez d’autres espèces de mammifères.
+B. la toxoplasmose du patient immunodéprimé peut être due à la réactivation d’une toxoplasmose ancienne (✅)
+C. Le passage transplacentaire du toxoplasme est plus fréquent lors du premier mois de la grossesse que lors du dernier mois (❌) → Le risque de passage augmente avec l’âge gestationnel.
+D. La transmission à l'homme se fait principalement par consommation de viande de mouton mal cuite (✅)
+
+🩵 Conclusion :
+Ce QCM met en avant la réactivation chez l’immunodéprimé et le rôle de la viande mal cuite dans la transmission.
+
+QCM 9
+
+9. La transmission de la toxoplasmose acquise est assurée :
+
+A. Uniquement par consommation de viande des animaux parasités (❌) → D’autres sources existent, comme les oocystes du chat dans l’environnement.
+B. Par contact avec le chat ou sa litière. (✅)
+C. Par inhalation d’oocystes. (❌) → La contamination se fait surtout par ingestion, pas par inhalation directe.
+D. B + C (❌) → La combinaison proposée inclut un mode de transmission non retenu.
+
+🩵 Conclusion :
+La toxoplasmose acquise est surtout liée au contact avec des matières contaminées par les selles du chat et à l’ingestion.
+
+B. qcm 11 a 20
+
+QCM 10
+
+10. La transmission de la toxoplasmose acquise est assurée par :
+
+A. consommation de viande contaminée par des oocystes (❌) → La viande contient des kystes tissulaires, pas des oocystes.
+B. contact avec le chat ou sa litière. (✅)
+C. Par inhalation d’oocystes. (❌) → La voie principale est digestive.
+D. voie transplacentaire lors d’une primo-infection (❌) → Cette voie concerne la toxoplasmose congénitale, pas la forme « acquise » classique.
+
+🩵 Conclusion :
+Ce QCM distingue la toxoplasmose acquise par contact environnemental de la forme congénitale transplacentaire.
+
+QCM 11
+
+11. Au cours de la grossesse, la toxoplasmose peut provoquer :
+
+A. avortement spontané (✅)
+B. mortinaissance (✅)
+C. hydrocéphalie (✅)
+D. choriorétinite précoce (✅)
+
+🩵 Conclusion :
+La toxoplasmose pendant la grossesse peut entraîner des complications graves allant de l’avortement aux séquelles neurologiques et oculaires.
+
+QCM 12
+
+12. Parmi les propositions suivantes, la ou les quelles sont exacts :
+
+A. Toxoplasmose « bénigne (dégradée) » peut être responsable de retard psychomoteur. (✅)
+B. À la suite d'une toxoplasmose aiguë, un équilibre s’installe entre l'homme et le parasite. (✅)
+C. pendant le premier trimestre, l’infection fœtale est rare mais grave. (✅)
+D. Pendant le troisième trimestre, l’infection fœtale est fréquente mais souvent bénigne. (✅)
+
+🩵 Conclusion :
+Ce QCM résume le caractère latent de l’infection et les différences de gravité selon le trimestre de contamination.
+
+QCM 13
+
+13. Au cours de la toxoplasmose congénitale :
+
+A. les lésions sont d’autant plus graves que la contamination est précoce. (✅)
+B. pendant le premier trimestre, l’infection fœtale est rare mais grave. (✅)
+C. pendant le troisième trimestre, l’infection fœtale est fréquente mais souvent bénigne (✅)
+D. L’infection fœtale est toujours grave. (❌) → La gravité varie selon le terme de la grossesse.
+
+🩵 Conclusion :
+La toxoplasmose congénitale est d’autant plus grave que la contamination maternelle est précoce.
+
+QCM 14
+
+14. Au cours de la toxoplasmose congénitale :
+
+A. les lésions sont d’autant plus graves que la contamination est précoce. (✅)
+B. pendant le premier trimestre, l’infection fœtale est rare et bénigne. (❌) → Lorsqu’elle survient tôt, elle est au contraire grave.
+C. pendant le troisième trimestre, l’infection fœtale est fréquente et bénigne (✅)
+D. l’infection fœtale est toujours bénigne. (❌) → Certaines formes provoquent des atteintes sévères.
+
+🩵 Conclusion :
+Ce QCM reprend le lien entre âge gestationnel et gravité des lésions fœtales.
+
+QCM 15
+
+15. Au cours de la toxoplasmose congénitale le fœtus ne peut être infecté que si la mère est contaminée :
+
+A. pendant la grossesse. (✅)
+B. avant la grossesse. (❌) → Une infection ancienne équilibrée ne transmet plus le parasite au fœtus.
+C. pendant le troisième trimestre. (✅)
+D. A+C. (✅)
+
+🩵 Conclusion :
+La toxoplasmose congénitale nécessite une primo-infection maternelle pendant la grossesse.
+
+QCM 16
+
+16. Au cours de la grossesse, la toxoplasmose congénitale peut provoquer :
+
+A. calcifications intracrâniennes (✅)
+B. mortinaissance (✅)
+C. des séquelles neurologiques importantes (✅)
+D. choriorétinite précoce (✅)
+
+🩵 Conclusion :
+Ce QCM résume les principales conséquences cliniques de la toxoplasmose congénitale sur le fœtus et le nouveau-né.
+
+QCM 17
+
+17. Certaines des propositions suivantes relatives au diagnostic de la toxoplasmose chez l’adulte sont exactes, lesquelles ?
+
+A. La toxoplasmose peut être évoquée devant des lésions oculaires (✅)
+B. La recherche de toxoplasmes dans le sang permet de connaître le statut immunitaire d’une femme enceinte (❌)
+C. La recherche d’antigènes toxoplasmiques dans le sérum permet de connaître le statut immunitaire d’une femme enceinte (❌) → Le statut immunitaire est évalué principalement par la sérologie (anticorps).
+D. Les atteintes toxoplasmiques chez l’adulte peuvent être la conséquence d’une toxoplasmose congénitale (✅)
+
+🩵 Conclusion :
+Ce QCM insiste sur l’intérêt du contexte clinique et des examens biologiques dans le diagnostic chez l’adulte.
+
+QCM 17.1
+
+17.1- Parmi les propositions suivantes concernant le dg de la toxoplasmose, lesquelles sont vraies ?
+
+A. Le diagnostic biologique peut être réalisé devant un accouchement de mort-né (✅)
+B. Un syndrome mononucléosique et une accélération de la vitesse de sédimentation sont habituels. (✅)
+C. Examen direct et sur frottis colorés au MGG sont des examens souvent positifs. (❌) → La mise en évidence directe du parasite est rarement positive en pratique courante.
+D. Chez une femme enceinte séronégative : des contrôles mensuels doivent être effectués jusqu’à terme, le jour de l’accouchement et 1 mois après. (✅) 
+
+🩵 Conclusion :
+Ce QCM rappelle les aspects biologiques du diagnostic et le suivi sérologique des femmes enceintes.
+
+QCM 18
+
+18. Pour l’interprétation sérologique de la toxoplasmose chez la femme enceinte parmi les propositions suivantes, laquelle (lesquelles) est (sont) exacte (s)
+
+A. IgG < 7 UI/ml : Toxoplasmose confirmée. (❌) → Un taux très faible d’IgG traduit au contraire une absence d’immunité.
+B. 8 < IgG < 250 UI/ml : Toxoplasmose ancienne, “immunité” probable. (✅)
+C. IgG > 300 UI/ml : Toxoplasmose évolutive (✅)
+D. B+C (✅)
+
+🩵 Conclusion :
+Ce QCM montre comment interpréter les taux d’IgG pour distinguer infection ancienne et infection évolutive.
+
+QCM 18.1
+
+18.1- Chez les femmes enceintes qui s’infectent par Toxoplasma gondii en cours de grossesse, quelle(s) est (sont) l’(les) affirmation(s) exacte(s) ?
+
+A. Le risque de passage du parasite au fœtus est constant au cours de la grossesse (❌) → Le risque varie selon le terme.
+B. Le risque de passage au fœtus est maximum en début de grossesse (❌) → Il est plus faible en début de grossesse.
+C. Le risque de passage au fœtus est minimum en début de grossesse (✅)
+D. Le risque de passage au fœtus augmente avec l’âge de la grossesse (✅)
+E. Le risque de passage au fœtus diminue avec l’âge de la grossesse (❌) → C’est l’inverse qui est observé.
+
+🩵 Conclusion :
+Le passage fœtal est moins fréquent au début de la grossesse mais devient plus probable en fin de grossesse.
+
+QCM 19
+
+19. Parmi les propositions suivantes concernant la sérologie de la toxoplasmose, lesquelles sont vraies ?
+
+A. Une sérologie négative exclut le risque de réactivation à l’occasion d’un déficit immunitaire (❌) → Un résultat isolé ne permet pas toujours d’exclure une infection latente méconnue.
+B. Le dépistage sérologique chez la femme enceinte peut se limiter à la recherche des IgG spécifiques (✅)
+C. Le test d’avidité des IgG est destiné à dater la contamination maternelle (✅)
+D. La sérologie de la toxoplasmose est obligatoire dans le cadre de la transfusion sanguine (❌) → Elle n’est pas systématiquement exigée pour les produits sanguins.
+
+🩵 Conclusion :
+Ce QCM insiste sur le rôle central de la sérologie et du test d’avidité dans la prise en charge des femmes enceintes.
+
+C. qcm 21 a 24
+
+QCM 20
+
+20. Parmi les propositions suivantes, la ou les quelles sont exacts :
+
+A. La présence d’Anticorps néonataux est un signe de Toxoplasmose congénitale. (✅)
+B. La détection T. gondii dans l’humeur aqueuse par PCR affirme la toxoplasmose oculaire, (✅)
+C. Pendant le premier trimestre, l’infection fœtale par T. gondii est rare mais grave. (✅)
+D. La sérologie permet de déterminer seulement si le sujet immunodéprimé a été en contact avec Toxoplasma gondii. (✅)
+
+🩵 Conclusion :
+Ce QCM relie sérologie, diagnostic néonatal et atteintes oculaires à la toxoplasmose.
+
+QCM 21
+
+21. Parmi les médicaments suivants lequel (lesquels) est (sont) actifs) sur Toxoplasma gondii :
+
+A. Pyriméthamine (Malocide) (✅)
+B. Sulfadiazine (Adiazine) (✅)
+C. Ivermectine (Stormectol) (❌) → Utilisée surtout contre les helminthes, pas dans le traitement de la toxoplasmose.
+D. Atovaquone (Wellvone) (✅)
+
+🩵 Conclusion :
+Ce QCM rappelle les principales molécules utilisées dans le traitement spécifique de la toxoplasmose.
+
+QCM 22
+
+22. Concernant la toxoplasmose quelle(s) est(sont) la(les) proposition(s) exacte(s)
+
+A. Elle peut se contracter par ingestion de viande peu cuite (✅)
+B. L’infection toxoplasmique persiste pendant toute la vie de l’individu (✅)
+C. Elle peut se contracter par griffures de chat (❌) → La contamination ne se fait pas par griffure, mais par ingestion d’oocystes ou de kystes.
+D. Les kystes de T. gondii sont normalement bien tolérés chez l’immunocompétent (✅)
+E. La prévalence de l’infection toxoplasmique est faible en France (<10%) (❌) → La séroprévalence est classiquement plus élevée.
+
+🩵 Conclusion :
+Ce QCM résume les principaux modes de contamination et la notion d’infection latente bien tolérée chez l’immunocompétent.

@@ -1,0 +1,607 @@
+Paludisme 
+
+A. Épidémiologie et Physiopathologie
+
+QCM 1
+
+1. Au cours du paludisme, les rechutes hépatiques sont provoquées par :
+A. Plasmodium falciparum (❌) → Ne forme pas de formes dormantes hépatiques.
+B. Plasmodium vivax (✅)
+C. Plasmodium ovale (✅)
+D. Plasmodium malariae (❌) → Donne des recrudescences sanguines, pas des rechutes hépatiques.
+
+🩵 Conclusion :
+Les rechutes hépatiques sont dues aux formes dormantes de P. vivax et P. ovale.
+
+QCM 2
+
+2. Parmi les propositions suivantes, laquelle est inexacte.
+A. Le Plasmodium knowlesi est proche génétiquement du P. vivax. (❌)
+B. L’anophèle femelle a un maximum d’activité de piqure entre 23 heures et 6 heures. (❌)
+C. Le sporozoïte est le résultat de la reproduction sexuée. (❌)
+D. Les oocystes sont affectés par l’acide chlorhydrique gastrique. (✅) → Le cycle se déroule dans l’anophèle, pas dans l’estomac humain.
+
+🩵 Conclusion :
+Ce QCM rappelle la biologie de l’anophèle et des stades sexués du Plasmodium.
+
+QCM 3
+
+3. Le Plasmodium falciparum :
+A. Est l’unique agent du paludisme grave (✅)
+B. Est transmis par piqure d’anophèle femelle (✅)
+C. Peut causer un paludisme viscéral (✅)
+D. Possède un réservoir animal (❌) → Le réservoir est essentiellement humain.
+
+🩵 Conclusion :
+P. falciparum est l’agent principal du paludisme grave, transmis par l’anophèle, sans réservoir animal.
+
+QCM 4
+
+4. Plasmodium falciparum est capable de parasiter :
+A. les hématies de tout âge. (✅)
+B. les hématies jeunes (✅)
+C. les hématies âgées. (✅)
+D. B + C. (✅)
+
+🩵 Conclusion :
+P. falciparum peut infecter les globules rouges de tous les âges.
+
+QCM 5
+
+5. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Le cycle sexué sporogonique du Plasmodium aboutit à la formation de sporozoïtes. (✅)
+B. Le cycle évolutif des plasmodies est un cycle hétéroxène. (✅)
+C. Le Plasmodium parasite toutes les cellules sanguines. (❌) → Il parasite les hématies, pas toutes les cellules du sang.
+D. Le Plasmodium parasite les hépatocytes. (✅)
+
+🩵 Conclusion :
+Le cycle du Plasmodium est hétéroxène, avec des stades hépatiques et sanguins.
+
+QCM 6
+
+6. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Plasmodium knowlesi est proche génétiquement de Plasmodium vivax (✅)
+B. La schizogonie érythrocytaire des plasmodies se déroule chez l’Homme (✅)
+C. La schizogonie exo-érythrocytaire des plasmodies se déroule chez l’anophèle femelle (❌) → Elle se déroule au niveau hépatique chez l’homme.
+D. La Prémunition du paludisme est d’acquisition progressive en exposition continue. (✅)
+
+🩵 Conclusion :
+La schizogonie érythrocytaire est humaine et la prémunition s’acquiert en zone d’endémie.
+
+QCM 7
+
+7. L’éclatement des rosaces libèrent :
+A. La substance pyrogène (✅)
+B. L’hémoglobine (❌) → Le mécanisme fébrile est surtout lié aux médiateurs libérés et aux mérozoïtes.
+C. Les sporozoïtes (❌) → Les sporozoïtes proviennent de l’anophèle, pas des rosaces.
+D. Les mérozoïtes (✅)
+
+🩵 Conclusion :
+Les accès fébriles sont liés à la libération de mérozoïtes et de substances pyrogènes lors de l’éclatement des hématies.
+
+QCM 8
+
+8. Au cours de l’accès fébrile, les hématies libèrent :
+A. les mérozoïtes. (✅)
+B. L’hématozoïne (✅)
+C. les pigments malariques. (✅)
+D. A+B+C (✅)
+
+🩵 Conclusion :
+L’éclatement des hématies libère mérozoïtes et pigments responsables de la symptomatologie.
+
+QCM 9
+
+9. Au cours de l’infection par P. vivax, les hématies :
+A. augmentent de taille. (✅)
+B. contients des granulations de schüffner. (✅)
+C. contients des produits de dégradation d’hémoglobine (✅)
+D. possèdent une taille normale. (❌) → Elles sont au contraire augmentées de volume.
+
+🩵 Conclusion :
+P. vivax entraîne une augmentation de taille et des altérations caractéristiques des hématies.
+
+QCM 10
+
+10. Au cours de l’infection par P. ovale, les hématies possèdent
+A. des bords déchiquetés. (✅)
+B. une forme arrondie. (❌) → Elles ont une forme plutôt ovale.
+C. une forme ovale. (✅)
+D. une taille normale. (❌) → Elles sont souvent modifiées de taille et de forme.
+
+🩵 Conclusion :
+P. ovale déforme les hématies en formes ovalaires à bords irréguliers.
+
+QCM 11
+
+11. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Le Plasmodium falciparum est l'espèce la plus redoutable, responsable de fièvre tierce maligne (✅)
+B. Le Plasmodium vivax parasite fréquemment une personne de race noire. (❌) → La résistance liée au système Duffy limite P. vivax chez les sujets noirs.
+C. Le Plasmodium ovale est presque exclusivement rencontré en Afrique. (✅)
+D. Le Plasmodium knowlesi est l’espèce la plus ancienne. (❌) → C’est une espèce zoonotique récente chez l’homme.
+
+🩵 Conclusion :
+Ce QCM insiste sur la gravité de P. falciparum et la répartition géographique des espèces.
+
+QCM 12
+
+12. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Les hypnozoïtes sont des formes parasitaires dormantes rencontrées chez les P. falciparum (❌) → Ils existent surtout chez P. vivax et P. ovale.
+B. L'accès pernicieux est surtout la complication majeure du paludisme à P. falciparum. (✅)
+C. La fièvre est due à l'éclatement des rosaces qui libèrent le pigment (hémosine). (✅)
+D. Les manifestations cliniques du paludisme sont liées exclusivement à la schizogonie hépatique. (❌) → Elles dépendent surtout de la schizogonie érythrocytaire.
+
+🩵 Conclusion :
+Le paludisme grave à P. falciparum donne des accès pernicieux liés à la schizogonie sanguine.
+
+QCM 13
+
+13. Parmi les propositions suivantes, la ou les quelles sont exacts
+A. Le rôle de l'immunité est extrêmement important au cours du paludisme. (✅)
+B. Le neuropaludisme est la complication majeure du paludisme à P. falciparum. (✅)
+C. Paludisme viscéral évolutive associe anémie et splénomégalie. (✅)
+D. La Prémunition est acquise progressivement en exposition continue en zone endémique. (✅)
+
+🩵 Conclusion :
+Immunité, neuropaludisme et paludisme viscéral sont des notions clés en zone d’endémie.
+
+QCM 14
+
+14. Parmi les facteurs suivants, lequel (lesquels) est (sont) impliqué (s) dans l'accès palustre pernicieux (neuropaludisme) ?
+A. Séquestration des globules rouges parasités dans les capillaires cérébraux (✅)
+B. Ralentissement de la microcirculation. (✅)
+C. Formation des rosettes. (✅)
+D. Polyparasitisme. (✅)
+
+🩵 Conclusion :
+Le neuropaludisme est lié à la séquestration et aux troubles de la microcirculation cérébrale.
+
+QCM 15
+
+15. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. La séquestration d’hématies parasitées explique l'accès pernicieux du paludisme. (✅)
+B. L’intervention de cytokines ou autres médiateurs élucidarait aussi le neuropaludisme (✅)
+C. L'immunodépression fait partie des 15 critères de gravité du paludisme défini par l’OMS (❌) → Ce n’est pas un critère classique de gravité.
+D. L’hyperparasitémie > 4% chez un sujet non immun est un critère de gravité du paludisme (✅)
+
+🩵 Conclusion :
+La gravité du paludisme associe séquestration, médiateurs inflammatoires et hyperparasitémie.
+
+QCM 16
+
+16- Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Les gamétocytes sont arrondis pour toutes les espèces plasmodiales sauf pour P. falciparum (✅)
+B. Les schizontes du Plasmodium sont constitués de plusieurs noyaux. (✅)
+C. Le Plasmodium est haploïde pendant la majeure partie de son cycle de développement. (✅)
+D. L’accès intermittent est la forme clinique la plus fréquente du paludisme. (❌) → Les présentations cliniques sont variées et cette forme n’est pas l’unique mode d’expression.
+
+🩵 Conclusion :
+Ce QCM résume des points de morphologie et de cycle des plasmodies.
+
+B. Clinique
+
+QCM 1
+
+1. La période d’incubation pour P. Falciparum varie de :
+A. 7 à 15 jours (✅)
+B. 7 jours à 2 mois. (✅)
+C. 12 à 20 jours. (❌) → Cet intervalle est plus long que les durées classiquement observées.
+D. 2 à 9 mois. (❌) → Cette durée correspond à des formes à longue incubation, pas au paludisme à P. falciparum.
+
+🩵 Conclusion :
+L’incubation du paludisme à P. falciparum est généralement courte, de l’ordre de quelques jours à quelques semaines.
+
+QCM 2
+
+2. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. L’accès intermittent est la forme clinique la plus fréquente. (❌) → Le paludisme peut se manifester sous différentes formes, pas uniquement par un accès intermittent typique.
+B. Le contact avec le chat ou sa litière peut être source de contamination de T. gondii (✅)
+C. Le paludisme de l’enfant est dominé par l’anémie grave et le neuropaludisme. (✅)
+D. Une toxoplasmose chronique peut se réactiver sous l'effet d'une infection par VIH/Sida. (✅)
+
+🩵 Conclusion :
+Ce QCM rappelle la gravité du paludisme de l’enfant et les liens entre immunodépression et toxoplasmose.
+
+QCM 3
+
+3. L'accès palustre simple est caractérisé par :
+A. Sensation de froid et hypotension (❌) → Les frissons sont fréquents mais l’hypotension n’est pas un critère du simple accès.
+B. libération de l’hémozoine. (✅)
+C. rythme d'accès palustre non constant. (❌) → Le rythme est en général régulier pour une espèce donnée.
+D. signe d’hémorragie diffuse. (❌) → Les signes hémorragiques sont plutôt associés aux formes sévères.
+
+🩵 Conclusion :
+L’accès palustre simple est lié à la libération d’hémozoïne lors de l’éclatement des hématies parasitées.
+
+QCM 4
+
+4. L'accès palustre simple est caractérisés par :
+A. hypotension. (❌) → L’hypotension traduit plutôt une forme grave.
+B. anémie. (❌) → L’anémie s’installe surtout au cours des épisodes répétés ou sévères.
+C. Rythme d'accès palustre le plus souvent constant. (✅)
+D. signe d’hémorragie diffuse. (❌) → Les hémorragies ne font pas partie du tableau simple.
+
+🩵 Conclusion :
+L’accès palustre simple correspond à des accès fébriles de rythme en général régulier, sans défaillance majeure.
+
+QCM 5
+
+5. L'accès palustre pernicieux est caractérisé par
+A. parasitémie élevée (plus de 10%) (✅)
+B. formation des rosettes. (✅)
+C. séquestration des globules rouges parasités dans les capillaires (✅)
+D. libération de pigment malarique (❌) → La libération de pigment existe aussi dans les accès non compliqués.
+
+🩵 Conclusion :
+L’accès pernicieux associe forte parasitémie, rosettes et séquestration capillaire des hématies parasitées.
+
+QCM 6
+
+6. L'accès pernicieux au cours du paludisme est provoqué par :
+A. Plasmodium falciparum (✅)
+B. Plasmodium vivax (❌) → Habituellement responsable de formes moins graves.
+C. Plasmodium ovale (❌) → Rarement à l’origine de formes pernicieuses.
+D. Plasmodium malaria (❌) → Donne plutôt des formes chroniques.
+
+🩵 Conclusion :
+Les accès pernicieux sont essentiellement liés à P. falciparum.
+
+QCM 7
+
+7. La gravité de l'infection par P. falciparum est liée au
+A. Parasitémie élevée (✅)
+B. parasitisme des hématies à tout âge (✅)
+C. Ralentissement de la microcirculation. (✅) 
+D. présence des taches de Maurer (❌) → Ce sont des signes microscopiques sans lien direct avec le degré de gravité.
+
+🩵 Conclusion :
+La gravité de P. falciparum tient à la forte parasitémie et à l’atteinte de toutes les catégories d’hématies.
+
+QCM 8
+
+8. La néphrite quartane survient après années d’infection de
+A. P.falciparum (❌) → Cette espèce n’est pas en cause dans la néphrite quartane.
+B. P.ovale (❌) → Elle n’est pas classiquement responsable de néphrite quartane.
+C. P.vivax (❌) → Ne donne pas la forme quartane typique.
+D. P.malaria (✅)
+
+🩵 Conclusion :
+La néphrite quartane est classiquement liée à une infection prolongée par P. malariae.
+
+QCM 9
+
+9. Au cours du paludisme grave :
+A. Se forme les rosasses (❌) → Cette formulation est incomplète pour décrire le phénomène.
+B. Les hématies saines s’agglutinent autour d'une hématie parasitée (✅)
+C. Les hématies saines s’agglutinent entre elles (❌) → L’agglutination se fait habituellement autour d’une hématie parasitée.
+D. A + C (❌) → L’association décrite ne correspond pas au mécanisme typique.
+
+🩵 Conclusion :
+Dans le paludisme grave, les rosettes correspondent à des hématies saines regroupées autour d’une hématie parasitée.
+
+QCM 10
+
+10. Le paludisme grave
+A. Est tout paludisme compliqué d’un critère de gravité (❌) → La définition repose sur un ensemble de critères précis et ne se limite pas à cette formulation.
+B. Nécessite généralement une prise en charge en réanimation (✅)
+C. S’observe uniquement en zone tropicale (❌) → Il peut être observé aussi chez les voyageurs de retour de zone d’endémie.
+D. Peut-être contracté suite à une transfusion sanguine (✅)
+
+🩵 Conclusion :
+Le paludisme grave peut nécessiter la réanimation et peut survenir après une transfusion contaminée.
+
+QCM 11
+
+11. Paludisme viscéral évolutif (PVE) est caractérisé par (1 point) :
+A. une association anémie et splénomégalie (✅)
+B. altération de l'état général (asthénie, anorexie, amaigrissement) (✅)
+C. retard staturo-pondéral chez l’enfant et cachexie chez l’adulte (✅)
+D. syndrome algique : douleurs abdominales, céphalées, myalgies, arthralgies. (❌) → Ces douleurs ne définissent pas le PVE de façon spécifique.
+
+🩵 Conclusion :
+Le PVE associe anémie, splénomégalie et altération prolongée de l’état général.
+
+QCM 12
+
+12– Parmi les propositions suivantes, laquelle est inexacte.
+A. Le paludisme viscéral évolutif entraîne un retard staturo-pondéral chez l’enfant. (❌)
+B. L’acidose métabolique est un critère de gravité dans le diagnostic clinique du paludisme. (❌)
+C. Le tableau clinique du paludisme sous chimioprophylaxie peut être trompeur. (❌)
+D. La thrombopénie n’est pas un très bon signe d’orientation. (✅) → La thrombopénie est au contraire un élément très évocateur.
+
+🩵 Conclusion :
+La thrombopénie est un excellent signe d’orientation en faveur du paludisme.
+
+QCM 13
+
+13. Chez la femme enceinte le paludisme peut entraîner
+A. Avortement (✅)
+B. Accouchement prématuré (✅)
+C. Faible poids de naissance (✅)
+D. Néphropathie par dépôt de complexe Ag-Ac (✅)
+
+🩵 Conclusion :
+Le paludisme pendant la grossesse expose à de nombreuses complications maternelles et fœtales.
+
+QCM 15 
+
+15– Parmi les propositions suivantes, laquelle est inexacte.
+A. L’homme est le seul réservoir connu des espèces plasmodiales rencontrées en RIM (❌) → Cette affirmation n’est pas exacte pour toutes les situations épidémiologiques.
+B. L’Acidose métabolique est un critère de gravité dans le diagnostic clinique du paludisme. (❌) → Cette notion doit être interprétée avec prudence selon le contexte.
+C. La durée du développement sporogonique des Plasmodium est indépendante du climat. (✅)
+D. La thrombopénie est un très bon signe d'orientation pour le diagnostic du paludisme (❌) → Cette proposition ne correspond pas à la formulation testée ici.
+
+🩵 Conclusion :
+Ce QCM insiste sur l’importance du réservoir humain, du climat et de certains marqueurs de gravité du paludisme.
+
+QCM 16
+
+16– Parmi les éléments cliniques et perturbations biologiques su...ue(nt) un (des) critère(s) de gravité du paludisme selon l’OMS ?
+A. Thrombopénie < 100 giga/L (❌) → La thrombopénie n’est pas, à elle seule, un critère majeur de gravité.
+B. Insuffisance rénale (créatininémie > 265 μmol/l ou diurèse < 400 ml/24h chez l’adulte) (✅) 
+C. Parasitémie > 4 % chez un sujet non immun (✅)
+D. Hypoglycémie (< 2,2 mmol/l) (✅) 
+E. Augmentation des enzymes hépatiques de 2N. (❌) → Ce n’est pas un critère spécifique de gravité du paludisme.
+
+🩵 Conclusion :
+L’hyperparasitémie chez un sujet non immun est un des éléments majeurs de gravité du paludisme.
+
+C. Diagnostic
+
+QCM 1
+
+1. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Le test de diagnostic rapide (TDR) est actuellement la méthode de référence. (❌) → La méthode de référence reste la microscopie (goutte épaisse + frottis).
+B. La Goutte épaisse, technique très ancienne, reste la méthode de référence. (✅)
+C. Le frottis mince facilite le diagnostic d’espèce. (✅)
+D. Le test de diagnostic rapide (TDR) n’a jamais été une méthode de référence. (✅)
+E. Le test de diagnostic rapide (TDR) peut révéler des faux positifs. (✅)
+
+🩵 Conclusion :
+Le diagnostic de référence reste la microscopie, les TDR ont des limites avec des faux résultats possibles.
+
+QCM 2
+
+2. Le diagnostic de certitude de du paludisme 
+A. Repose sur le frottis sanguin et la malaria test (❌) → Le frottis seul ne suffit pas, la combinaison standard repose sur microscopie goutte épaisse + frottis.
+B. Repose sur la goutte épaisse et la malaria test (❌) → La malaria test ne remplace pas le frottis sanguin.
+C. Repose sur la goutte épaisse et le frottis sanguin (✅)
+D. Toutes les propositions sont justes (❌) → Toutes les combinaisons proposées ne donnent pas le diagnostic de certitude.
+
+🩵 Conclusion :
+Le diagnostic de certitude repose sur l’association goutte épaisse et frottis mince.
+
+QCM 3
+
+3. Parmi les propositions suivantes, laquelle est inexacte. La microscopie :
+A. Permet de suivre l’efficacité d’un traitement antipaludique. (❌) → Elle permet de contrôler l’évolution de la parasitémie.
+B. N’est pas un suivi rétrospectif des patients paludéens. (✅)
+C. Est la méthode de diagnostic biologique de référence. (❌) → Elle reste la technique de base pour confirmer le paludisme.
+D. Comprend la goutte épaisse et un frottis mince. (❌) → Ces deux préparations font partie intégrante de la microscopie.
+
+🩵 Conclusion :
+La microscopie est la méthode de référence avec goutte épaisse et frottis pour diagnostiquer et suivre le paludisme.
+
+QCM 4
+
+4. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Il est nécessaire de fixer la goutte épaisse et le frottis mince avec le méthanol. (❌) → La goutte épaisse n’est pas fixée au méthanol, pour permettre la déshémoglobinisation.
+B. La goutte épaisse est moins sensible que le frottis mince dans le diagnostic du paludisme. (❌) → La goutte épaisse est au contraire plus sensible.
+C. Dans le diagnostic du paludisme, le méthanol permet de fixer le frottis mince. (✅)
+D. la goutte épaisse et le frottis mince sont des méthodes quantitatives. (✅)
+
+🩵 Conclusion :
+Le frottis mince est fixé au méthanol et la microscopie permet aussi d’estimer la parasitémie.
+
+QCM 5
+
+5. Parmi les propositions suivantes, la ou les quelles sont exacts :
+A. Les TDRs du paludisme sont sensibles aux conditions de stockage et de transport. (✅)
+B. Microscopia est la méthode de référence dans le diagnostic du paludisme. (✅)
+C. Les faux positifs des TDRs sont liés, en partie, à l’allongement de la durée du test. (✅)
+D. Les faux négatifs des TDRs sont surtout les a leurs seuils de détection. (✅)
+
+🩵 Conclusion :
+Les TDR dépendent des conditions de conservation et peuvent donner des faux positifs ou négatifs, mais la référence reste la microscopie.
+
+QCM 6
+
+6. Parmi les propositions suivantes, la ou les quelles sont exacts : 
+A. Le test de diagnostic rapide (TDR) du paludisme peut entraîner des faux négatifs. (✅)
+B. Le TDR du paludisme permet de suivre l’efficacité d’un traitement antipaludique. (❌) → Le TDR sert au diagnostic, pas au suivi de la décroissance de la parasitémie.
+C. La goutte épaisse permet l’identification des espèces plasmodiales. (❌) → L’identification d’espèce se fait surtout sur le frottis mince.
+D. Le méthanol permet de fixer le frottis mince. (✅)
+E. La microscopie, méthode de référence, est plus sensible que la PCR. (❌) → La PCR est une technique plus sensible que la microscopie.
+
+🩵 Conclusion :
+Ce QCM insiste sur les limites du TDR et rappelle le rôle central de la microscopie (goutte épaisse + frottis) dans le diagnostic.
+
+QCM 7
+
+7. Parmi les propositions suivantes, la ou les quelles sont exacts : 
+A. Le test de diagnostic rapide (TDR) du paludisme est immunochromatographique. (✅)
+B. Le TDR est systématique avant administration d’un CTA à un enfant de moins de 5 ans. (❌) → L’indication dépend des recommandations, ce n’est pas décrit comme systématique dans tous les cas.
+C. La goutte épaisse sera toujours déshémoglobinée avant sa coloration par le Giemsa. (✅)
+D. La microscopie entraine des faux positifs. (❌) → Les faux positifs sont surtout un problème des TDR, pas de la microscopie bien réalisée.
+
+🩵 Conclusion :
+Ce QCM rappelle la nature immunochromatographique du TDR et l’importance de la bonne préparation de la goutte épaisse.
+
+QCM 9
+
+9. Parmi les propositions suivantes, la ou les quelles sont exacts : 
+A. Le TPI et le SMC ou TPS sont des stratégies préventives du paludisme. (✅)
+B. La détection T.gondii dans l’humeur aqueuse par PCR affirme la toxoplasmose oculaire. (✅)
+C. La sérologie n’est d’aucun apport pour le diagnostic de l’accès palustre. (✅)
+D. La Thrombopénie est un très bon signe d’orientation dans le diagnostic du paludisme. (✅)
+
+🩵 Conclusion :
+Ce QCM met l’accent sur les stratégies préventives du paludisme et les outils utilisés dans le diagnostic des infections parasitaires et de l’accès palustre.
+
+QCM 10
+
+10- Parmi les propositions suivantes, la ou les quelles sont exacts : 
+
+Examen Paludisme isolé
+
+A. L’anthrophilie, l’endophilie et l’endophagie sont des facteurs favorisants liés à l’Anophèles femelle vectrice du paludisme. (✅)
+B. Les formes âgées de P. falciparum disparaissent de la circulation sanguine périphérique. (✅)
+C. la Goutte Epaisse permet de poser le diagnostic biologique de genre du paludisme. (✅)
+D. Le méthanol permet de fixer le Frottis mince lors de la réalisation de la microscopie. (✅)
+
+🩵 Conclusion :
+Ce QCM rappelle le rôle du vecteur, le comportement des formes parasitaires de P. falciparum et les bases techniques de la microscopie dans le paludisme.
+
+D. Traitement 
+
+1. La prise en charge du paludisme simple d’un patient de 29 ans nécessite
+A. une confirmation biologique avant administration des ACT ou CTA
+B. une administration de Primaquine en cas d’accès de reviviscence à P. vivax.
+C. uniquement un bon diagnostic clinique.
+D. Une utilisation d’un TPI
+
+🩵 Conclusion : 
+.
+
+E. Cas clinique 1 — Examen 2024 SN
+
+QCM 1
+
+1- Compte tenu du contexte clinico-épidémiologique, quel(s) diagnostic(s) devez-vous évoquer en première intention ?
+
+A. Fièvre typhoïde (✅)
+B. Dengue (✅)
+C. Accès palustre (✅)
+D. Leishmaniose viscérale (✅)
+E. Amibiase viscérale (✅)
+
+🩵 Conclusion :
+Chez un fébrile revenant de zone tropicale, plusieurs infections (bactériennes, parasitaires, virales) doivent être évoquées en première intention.
+
+QCM 2
+
+2- Quel(s) élément(s), non précisé(s) dans l’énoncé, pourriez-vous faire préciser à votre patient afin de conforter l’hypothèse diagnostique à privilégier ?
+
+A. Utilisation ou non d’une moustiquaire (✅)
+B. Port de vêtements longs le soir (✅)
+C. Notion de baignade en eau douce (❌) → Oriente plutôt vers des parasitoses hydriques (schistosomiase, etc.) que vers le paludisme.
+D. Prise ou non d’une prophylaxie du paludisme (molécule et durée) (✅)
+E. Utilisation de répulsifs (✅)
+
+🩵 Conclusion :
+Les questions sur la protection anti-moustiques et la chimioprophylaxie aident à évaluer le risque palustre.
+
+QCM 3
+
+3- Parmi les examens biologiques suivants, indiquez celui (ceux) réalisé(s) en première intention pour confirmer votre principale hypothèse diagnostique.
+
+A. Sérologie palustre (recherche d’anticorps) (❌) → Trop lente et inadaptée pour le diagnostic d’urgence.
+B. Goutte épaisse (✅)
+C. Frottis sanguin (✅)
+D. Test de diagnostic rapide (TDR paludisme) (❌) → Utile, mais la confirmation de référence repose sur la microscopie.
+E. Recherche d’ADN par PCR (❌) → Méthode sensible mais non utilisée en première intention aux urgences.
+
+🩵 Conclusion :
+Le diagnostic de paludisme repose d’abord sur la microscopie (goutte épaisse + frottis).
+
+QCM 4
+
+4- Parmi les propositions suivantes concernant les outils du diagnostic du paludisme, indiquez-la (les) proposition(s) exacte(s).
+
+A. La goutte épaisse permet de visualiser les parasites intra-érythrocytaires (✅)
+B. La goutte épaisse est plus sensible que le frottis sanguin (✅)
+C. La sérologie est adaptée au diagnostic d’urgence du paludisme (❌) → Elle ne permet pas de poser un diagnostic rapide.
+D. Le frottis sanguin permet l’identification d’espèce (✅)
+E. Le TDR permet l’identification de P. falciparum. (✅)
+
+🩵 Conclusion :
+La goutte épaisse sert au dépistage sensible et le frottis à l’identification d’espèce, les TDR ciblant surtout P. falciparum.
+
+QCM 5
+
+5- Votre diagnostic de première intention est confirmé. L’espèce identifiée est Plasmodium falciparum.
+Quelle(s) information(s) supplémentaire(s) attendez-vous de votre collègue parasitologue pour adapter votre prise en charge ?
+
+A. Sensibilité à la chloroquine (❌) → L’étude de sensibilité n’est pas disponible en routine d’urgence.
+B. Parasitémie (✅)
+C. Hémoglobinémie (✅)
+D. Numération plaquettaire (❌) → Pertinente pour la gravité globale, mais la question cible surtout les paramètres utiles pour la prise en charge palustre.
+E. Numération leucocytaire (❌) → Moins spécifique pour guider la stratégie antipaludique.
+
+🩵 Conclusion :
+La valeur de la parasitémie et certains paramètres sanguins orientent la sévérité et le choix du traitement.
+
+F. Cas clinique 2 — Examen février 2017
+
+QCM 1
+
+1– Parmi les propositions suivantes, l’une d’elles correspond à l’attitude que vous devez adopter. Cochez-la.
+
+A. Adresser le patient en consultation au service des maladies infectieuses du CHN (❌) → Inadapté face à un tableau urgent fébrile avec troubles de conscience.
+B. Prescrire immédiatement un antipaludique (❌) → Il faut d’abord confirmer biologiquement le paludisme.
+C. Prescrire une antibiothérapie antibactérienne (❌) → Non justifiée sans diagnostic précis.
+D. Demander en urgence un test biologique à la recherche de paludisme (✅)
+
+🩵 Conclusion :
+Devant une suspicion de paludisme grave, la priorité est de demander un examen biologique urgent.
+
+QCM 2
+
+2– Quels arguments anamnestiques, parmi les suivants, vous permettent d’orienter votre diagnostic vers un paludisme à Plasmodium falciparum ?
+
+A. Les vomissements (❌) → Signe non spécifique, commun à plusieurs infections.
+B. La durée d’incubation (✅)
+C. P. falciparum est la seule espèce plasmodiale présente au niveau de la Moughataa (❌)
+D. L’obnubilation (✅)
+
+🩵 Conclusion :
+La durée d’incubation et la répartition locale de l’espèce orientent vers P. falciparum.
+
+QCM 3
+
+3– Quelles sont, parmi les propositions suivantes, celles qui vont faire évoquer un paludisme à Plasmodium falciparum sur le frottis sanguin de ce patient ?
+
+A. Parasitémie ≥ à 10% (✅)
+B. Présence de Hypnozoïtes (❌) → Les hypnozoïtes sont des formes hépatiques de P. vivax/P. ovale, invisibles sur frottis.
+C. Présence d’hématies multiparasitées (✅)
+D. Hyperleucocytose à polynucléaires neutrophiles (❌) → Non spécifique d’un paludisme à P. falciparum.
+
+🩵 Conclusion :
+Une forte parasitémie et des hématies multiparasitées sont très évocatrices de P. falciparum.
+
+QCM 4
+
+4– Parmi les propositions suivantes, quelles sont celles qui s’appliquent au mode de contamination de l’homme par les agents du paludisme ?
+
+A. L’anophèle femelle transmet toutes les espèces (✅)
+B. Les anophèles piquent l’homme tout au long de la journée (❌) → Elles piquent surtout la nuit.
+C. Le vecteur représente l’hôte définitif des agents du paludisme (✅)
+D. Les déjections intestinales de l’anophèle sont contaminantes lorsqu’elles piquent l’homme (❌) → La transmission se fait par la salive lors de la piqûre, pas par les déjections.
+
+🩵 Conclusion :
+Le paludisme se transmet par la piqûre nocturne de l’anophèle femelle, qui est l’hôte définitif du parasite.
+
+QCM 5
+
+5– Parmi les propositions suivantes, quelles sont celles qui s’appliquent aux mesures prophylactiques que ce patient autochtone de Bassiknou ?
+
+A. Utilisation de répulsifs contre les moustiques (✅)
+B. Vaccination anti-palustre (✅)
+C. Utilisation de moustiquaires (✅)
+D. Prendre une chimioprophylaxie médicamenteuse (✅)
+
+🩵 Conclusion :
+La prévention du paludisme repose sur la protection contre les piqûres et, selon le contexte, la vaccination et la chimioprophylaxie.
+
+QCM 6
+
+6– Parmi les propositions suivantes, quelle(s) est (sont) celle(s) qui s’applique(ent) à la stratégie thérapeutique de ce patient venu de Bassiknou ?
+
+A. Administration de l’association Artesunate + Amodiaquine (ASAQ) en 1ère intention (✅)
+B. Administration de l’association Artemether + Lumefantrine en 2ème intention (✅)
+C. Mise en route d’un traitement à base de quinine (Quinimax) par voie orale (❌) → La quinine par voie orale n’est pas privilégiée dans ce contexte.
+D. Mise en route d’un traitement à base de quinine (Quinimax) par voie intraveineuse (❌) → Réservée à des situations spécifiques de paludisme grave.
+
+🩵 Conclusion :
+Le traitement repose sur les combinaisons thérapeutiques à base d’artémisinine, en première et deuxième intention.
+
