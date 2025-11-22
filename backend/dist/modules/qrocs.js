@@ -14,14 +14,14 @@ const createQrocSchema = zod_1.z.object({
     subjectId: zod_1.z.string(),
     question: zod_1.z.string().min(3, 'La question doit contenir au moins 3 caractères'),
     answer: zod_1.z.string().min(1, 'La réponse est requise'),
-    category: zod_1.z.string().optional(),
+    category: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 const updateQrocSchema = zod_1.z.object({
     subjectId: zod_1.z.string().optional(),
     question: zod_1.z.string().min(3).optional(),
     answer: zod_1.z.string().min(1).optional(),
-    category: zod_1.z.string().optional(),
+    category: zod_1.z.string().nullable().optional(),
     orderIndex: zod_1.z.number().int().min(0).optional()
 });
 // GET /api/qrocs/subject/:subjectId - Get all QROCs for a subject

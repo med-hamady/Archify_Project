@@ -11,7 +11,7 @@ const createQrocSchema = z.object({
   subjectId: z.string(),
   question: z.string().min(3, 'La question doit contenir au moins 3 caractères'),
   answer: z.string().min(1, 'La réponse est requise'),
-  category: z.string().optional(),
+  category: z.string().nullable().optional(),
   orderIndex: z.number().int().min(0).optional()
 });
 
@@ -19,7 +19,7 @@ const updateQrocSchema = z.object({
   subjectId: z.string().optional(),
   question: z.string().min(3).optional(),
   answer: z.string().min(1).optional(),
-  category: z.string().optional(),
+  category: z.string().nullable().optional(),
   orderIndex: z.number().int().min(0).optional()
 });
 
