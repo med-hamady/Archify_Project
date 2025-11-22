@@ -238,6 +238,16 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
+.stat-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.stat-img.locked {
+  filter: grayscale(100%) opacity(0.5);
+}
+
 .stat.exam-badge.unlocked .stat-icon {
   font-size: 1.8rem;
   animation: pulse 2s infinite;
@@ -368,6 +378,12 @@
 
 .meta-icon {
   font-size: 1.1rem;
+}
+
+.meta-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .meta-item.challenge {
@@ -528,6 +544,20 @@
 
 .btn-icon {
   font-size: 1.3rem;
+}
+
+.btn-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.btn-icon-img.locked {
+  filter: grayscale(100%) opacity(0.5);
+}
+
+.meta-icon-img.locked {
+  filter: grayscale(100%) opacity(0.5);
 }
 
 .btn-text {
