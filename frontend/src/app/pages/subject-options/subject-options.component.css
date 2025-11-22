@@ -132,21 +132,27 @@
 }
 
 .option-card.quiz .option-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
 }
 
 .option-card.cours .option-icon {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: transparent;
 }
 
 .option-card.videos .option-icon {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: transparent;
 }
 
 .option-icon svg {
   width: 40px;
   height: 40px;
   color: white;
+}
+
+.option-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
 .option-card:hover .option-icon {

@@ -24,7 +24,8 @@
       "Bash(npm run build:ts:*)",
       "Bash(git branch:*)",
       "Bash(git ls-tree:*)",
-      "Bash(npm run build:all:*)"
+      "Bash(npm run build:all:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []
