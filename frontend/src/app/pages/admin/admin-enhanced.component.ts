@@ -4466,6 +4466,11 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.qrocFormData.question.trim().length < 3) {
+      this.qrocErrorMessage.set('La question doit contenir au moins 3 caractères');
+      return;
+    }
+
     this.qrocSaving.set(true);
     this.qrocSuccessMessage.set('');
     this.qrocErrorMessage.set('');
