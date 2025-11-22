@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="header">
     <button class="back-btn" routerLink="/dashboard">← Tableau de bord</button>
-    <h1>📚 Choisissez une matière</h1>
+    <h1><img src="/chapitres.png" alt="Matières" class="header-icon"/> Choisissez une matière</h1>
   </div>
 
   <!-- Loading State -->
@@ -47,14 +47,14 @@
       <!-- Stats -->
       <div class="subject-stats">
         <div class="stat">
-          <span class="stat-icon">📖</span>
+          <img src="/chapitres.png" alt="Chapitres" class="stat-icon-img"/>
           <div class="stat-info">
             <span class="stat-value">{{ subject.totalChapters }}</span>
             <span class="stat-label">Chapitres</span>
           </div>
         </div>
         <div class="stat">
-          <span class="stat-icon">❓</span>
+          <img src="/question.png" alt="Questions" class="stat-icon-img"/>
           <div class="stat-info">
             <span class="stat-value">{{ subject.totalQuestions }}</span>
             <span class="stat-label">Questions</span>
@@ -68,19 +68,14 @@
           *ngIf="subject.examUnlocked"
           class="unlock-badge exam unlocked clickable"
           (click)="navigateToExam(subject.id, $event)">
-          <span class="badge-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="24" height="24">
-              <circle cx="32" cy="32" r="30" fill="#4CAF50"/>
-              <path d="M20 32l8 8 16-16" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <span class="badge-label">Mode Examen</span>
+          <img src="/mode-examen.png" alt="Mode Examen" class="badge-icon-img"/>
+          <span class="badge-label">MODE EXAMEN</span>
         </div>
         <div
           *ngIf="!subject.examUnlocked"
           class="unlock-badge exam">
-          <span class="badge-icon">🔒</span>
-          <span class="badge-label">Mode Examen</span>
+          <img src="/mode-examen.png" alt="Mode Examen" class="badge-icon-img locked"/>
+          <span class="badge-label">MODE EXAMEN</span>
         </div>
       </div>
 
