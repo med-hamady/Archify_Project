@@ -223,10 +223,10 @@
 .card-content {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   text-align: center;
-  padding: 2rem 0;
+  padding: 2rem 1rem;
   overflow-y: auto;
   max-height: 350px;
   scrollbar-width: thin;
@@ -440,7 +440,7 @@
   }
 
   .card-content {
-    padding: 1rem 0;
+    padding: 1rem 0.75rem;
     max-height: 250px;
   }
 
