@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="header">
     <button class="back-btn" (click)="goBack()">← Retour</button>
-    <h1 *ngIf="subject">📚 Cours - {{ subject.title }}</h1>
+    <h1 *ngIf="subject"><img src="/cours-matiere.png" alt="Cours" class="header-icon"/> Cours - {{ subject.title }}</h1>
   </div>
 
   <!-- Loading State -->
@@ -29,12 +29,12 @@
     <!-- PDFs List -->
     <div *ngIf="!loadingPdfs && coursePdfs.length > 0" class="pdfs-grid">
       <div *ngFor="let pdf of coursePdfs" class="pdf-card">
-        <div class="pdf-icon">📄</div>
+        <img src="/pdf-document.png" alt="PDF" class="pdf-icon-img"/>
         <div class="pdf-content">
           <h3>{{ pdf.title }}</h3>
           <p *ngIf="pdf.description" class="pdf-description">{{ pdf.description }}</p>
           <button (click)="openPdf(pdf)" class="btn-view-pdf">
-            📖 Consulter le PDF
+            <img src="/cours-pdf.png" alt="PDF" class="btn-pdf-icon"/> Consulter le PDF
           </button>
         </div>
       </div>
