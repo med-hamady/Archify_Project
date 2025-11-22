@@ -22,6 +22,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   chapterId: string | null = null;
   subchapterId: string | null = null;
+  subjectId: string | null = null;
   currentQuestion: QuizQuestion | null = null;
   selectedAnswers: number[] = [];
   answered = false;
@@ -45,6 +46,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
     this.chapterId = this.route.snapshot.paramMap.get('chapterId');
     this.subchapterId = this.route.snapshot.queryParamMap.get('subchapterId');
+    this.subjectId = this.route.snapshot.queryParamMap.get('subjectId');
 
     if (this.chapterId) {
       this.loadNextQuestion();
@@ -175,7 +177,11 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    if (this.subjectId) {
+      this.router.navigate(['/chapters', this.subjectId]);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   /**

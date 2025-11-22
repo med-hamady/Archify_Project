@@ -50,12 +50,14 @@ export class ChaptersComponent implements OnInit {
   }
 
   navigateToQuiz(chapterId: string) {
-    this.router.navigate(['/quiz', chapterId]);
+    this.router.navigate(['/quiz', chapterId], {
+      queryParams: { subjectId: this.subjectId }
+    });
   }
 
   navigateToSubchapterQuiz(chapterId: string, subchapterId: string) {
     this.router.navigate(['/quiz', chapterId], {
-      queryParams: { subchapterId }
+      queryParams: { subchapterId, subjectId: this.subjectId }
     });
   }
 
