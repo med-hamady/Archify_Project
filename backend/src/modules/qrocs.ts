@@ -16,6 +16,7 @@ const createQrocSchema = z.object({
 });
 
 const updateQrocSchema = z.object({
+  subjectId: z.string().optional(),
   question: z.string().min(3).optional(),
   answer: z.string().min(1).optional(),
   category: z.string().optional(),
