@@ -37,8 +37,15 @@ function isRealSubChapter(line: string, nextLines: string[], previousLines: stri
     return false;
   }
 
-  const hasConclusionBefore = previousLines.some(l => l.includes('🩵') || l.includes('Conclusion'));
-  if (hasConclusionBefore) {
+  // Vérifier si c'est dans une conclusion (ligne DIRECTEMENT après 🩵 ou Conclusion)
+  // On vérifie seulement la ligne précédente immédiate (pas toutes les 3)
+  const previousLine = previousLines[previousLines.length - 1] || '';
+  const isPreviousLineEmpty = previousLine.trim() === '';
+  const lineBeforePrevious = previousLines[previousLines.length - 2] || '';
+
+  // Si la ligne précédente est une conclusion OU si la ligne vide précédente était après une conclusion
+  if (previousLine.includes('🩵') || previousLine.includes('Conclusion') ||
+      (isPreviousLineEmpty && (lineBeforePrevious.includes('🩵') || lineBeforePrevious.includes('Conclusion')))) {
     return false;
   }
 
@@ -47,7 +54,8 @@ function isRealSubChapter(line: string, nextLines: string[], previousLines: stri
     return false;
   }
 
-  const hasQCMAfter = nextLines.some(l => l.match(/^QCM\s+\d+/i));
+  // Vérifier si un QCM ou une question numérotée apparaît dans les prochaines lignes
+  const hasQCMAfter = nextLines.some(l => l.match(/^QCM\s+\d+/i) || l.match(/^\d+[\s\.\-–—]+/));
   return hasQCMAfter;
 }
 
@@ -178,6 +186,7 @@ function parseFileWithSubChapters(content: string, chapterTitle: string): SubCha
     const previousLines = lines.slice(Math.max(0, i - 3), i);
 
     if (isRealSubChapter(line, nextLines, previousLines)) {
+      // Sauvegarder la question précédente si elle existe
       if (currentQuestion && currentQuestion.questionText && currentSubChapter) {
         currentQuestion.options = currentOptions;
         currentQuestion.explanation = currentExplanation.join(' ').trim() || null;
@@ -188,11 +197,13 @@ function parseFileWithSubChapters(content: string, chapterTitle: string): SubCha
         currentSubChapter.questions.push(currentQuestion as Question);
       }
 
+      // Sauvegarder le sous-chapitre précédent s'il existe
       if (currentSubChapter && currentSubChapter.title) {
         currentSubChapter.orderIndex = subChapterIndex++;
         subChapters.push(currentSubChapter as SubChapter);
       }
 
+      // Créer un nouveau sous-chapitre
       const subChapterMatch = line.match(/^([A-J])\.\s+(.+)/);
       if (subChapterMatch) {
         currentSubChapter = {
@@ -376,8 +387,8 @@ async function importParasitoMycoFinal() {
       });
 
       if (hasSubChapters(content)) {
-        console.log(`   Structure: AVEC sous-chapitres`);
         const subChapters = parseFileWithSubChapters(content, mainChapterTitle);
+        console.log(`   Structure: ${subChapters.length} sous-chapitres`);
 
         let subchapterOrderIndex = 0;
         for (const subChapterData of subChapters) {
