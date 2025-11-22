@@ -26,6 +26,80 @@ export class TimeTrackingService {
   constructor() {
     // Restore session start time from localStorage on page refresh
     this.restoreSessionFromStorage();
+
+    // Listen for app close/tab close events
+    this.setupBeforeUnloadListener();
+  }
+
+  // Setup listener for when user closes the app/tab
+  private setupBeforeUnloadListener(): void {
+    // beforeunload - fires when tab/window is being closed
+    window.addEventListener('beforeunload', (event) => {
+      if (this.isTracking) {
+        console.log('[TimeTracking] App closing, saving study time...');
+        this.saveTimeOnClose();
+      }
+    });
+
+    // visibilitychange - detect when tab becomes hidden (optional: for mobile)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden' && this.isTracking) {
+        // Save current progress when tab is hidden (useful for mobile)
+        this.saveProgressToBackend();
+      }
+    });
+
+    // pagehide - more reliable on mobile Safari
+    window.addEventListener('pagehide', (event) => {
+      if (this.isTracking) {
+        console.log('[TimeTracking] Page hide event, saving study time...');
+        this.saveTimeOnClose();
+      }
+    });
+  }
+
+  // Save time synchronously when closing (using sendBeacon for reliability)
+  private saveTimeOnClose(): void {
+    const elapsed = this.elapsedSeconds$.value;
+    const token = localStorage.getItem('archify_access_token');
+
+    if (elapsed > 0 && token) {
+      // Use sendBeacon with token in body for reliable delivery even when page is closing
+      // The backend has a special endpoint that accepts token in body for beacon requests
+      const data = JSON.stringify({
+        totalSeconds: elapsed,
+        token: token // Include token in body since sendBeacon can't send headers
+      });
+      const url = `${this.apiUrl}/time-tracking/end-beacon`;
+
+      // Try sendBeacon first (more reliable for page close)
+      const beaconSent = navigator.sendBeacon(
+        url,
+        new Blob([data], { type: 'application/json' })
+      );
+
+      if (beaconSent) {
+        console.log('[TimeTracking] Beacon sent successfully with', elapsed, 'seconds');
+      } else {
+        console.log('[TimeTracking] Beacon failed, time will be recovered on next login');
+      }
+    }
+
+    // Clear localStorage to prevent double-counting on next visit
+    localStorage.removeItem(this.SESSION_START_KEY);
+  }
+
+  // Save progress to backend (non-blocking, for visibility change)
+  private saveProgressToBackend(): void {
+    const elapsed = this.elapsedSeconds$.value;
+    if (elapsed > 60) { // Only save if more than 1 minute
+      this.http.post(`${this.apiUrl}/time-tracking/update`, {
+        elapsedSeconds: elapsed
+      }).subscribe({
+        next: () => console.log('[TimeTracking] Progress saved on visibility change'),
+        error: () => {} // Silent fail
+      });
+    }
   }
 
   // Restore session from localStorage (called on page refresh)

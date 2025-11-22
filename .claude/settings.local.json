@@ -28,7 +28,8 @@
       "Bash(dir:*)",
       "Bash(xcopy:*)",
       "Bash(cmd /c xcopy:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

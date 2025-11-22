@@ -202,6 +202,90 @@ router.post('/end', requireAuth, async (req: any, res) => {
   }
 });
 
+// POST /api/time-tracking/end-beacon - End study session (for sendBeacon - token in body)
+// This endpoint is used when the browser tab is closing and can't send headers
+router.post('/end-beacon', async (req: any, res) => {
+  try {
+    const { totalSeconds, token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: 'Token manquant'
+      });
+    }
+
+    // Verify token manually (since we can't use middleware with sendBeacon)
+    const jwt = require('jsonwebtoken');
+    let userId: string;
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+      userId = decoded.userId;
+    } catch (jwtError) {
+      return res.status(401).json({
+        success: false,
+        error: 'Token invalide'
+      });
+    }
+
+    if (typeof totalSeconds !== 'number' || totalSeconds < 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Temps total invalide'
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        totalStudyTimeSeconds: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Utilisateur non trouvé'
+      });
+    }
+
+    // Calculate total hours
+    const previousTotalSeconds = user.totalStudyTimeSeconds || 0;
+    const newTotalSeconds = previousTotalSeconds + totalSeconds;
+
+    const previousHours = Math.floor(previousTotalSeconds / 3600);
+    const newHours = Math.floor(newTotalSeconds / 3600);
+    const completedHours = newHours - previousHours;
+    const xpToAward = completedHours * 60;
+
+    console.log(`⏱️ [Beacon] User ${userId}: Saving ${totalSeconds}s on app close (${previousTotalSeconds}s → ${newTotalSeconds}s)`);
+
+    // Update user
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        totalStudyTimeSeconds: newTotalSeconds,
+        sessionStartTime: null,
+        ...(xpToAward > 0 && {
+          xpTotal: {
+            increment: xpToAward
+          },
+          lastXpRewardTime: new Date()
+        })
+      }
+    });
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('Error ending study session (beacon):', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la fin de la session'
+    });
+  }
+});
+
 // GET /api/time-tracking/stats - Get study time statistics
 router.get('/stats', requireAuth, async (req: any, res) => {
   try {
