@@ -170,7 +170,8 @@ app.use('/uploads', (0, cors_1.default)({
     allowedHeaders: ['Content-Type', 'Authorization', 'Range'],
     exposedHeaders: ['Content-Range', 'Accept-Ranges', 'Content-Length']
 }));
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: '10mb' })); // Increased limit for base64 image uploads
+app.use(express_1.default.urlencoded({ extended: true, limit: '10mb' }));
 app.use((0, cookie_parser_1.default)());
 // Handle CORS preflight for video files
 app.options('/uploads/:filename', (req, res) => {
