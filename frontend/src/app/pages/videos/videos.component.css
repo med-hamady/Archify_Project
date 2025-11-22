@@ -39,6 +39,15 @@
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .loading {
@@ -184,6 +193,7 @@
 .watch-btn {
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.625rem 1.5rem;
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   color: white;
@@ -192,6 +202,12 @@
   font-size: 0.95rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+}
+
+.btn-video-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .video-card:hover .watch-btn {

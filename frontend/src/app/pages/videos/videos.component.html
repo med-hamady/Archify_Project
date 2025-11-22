@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="header">
     <button class="back-btn" (click)="goBack()">← Retour</button>
-    <h1 *ngIf="subject">🎥 Vidéos - {{ subject.title }}</h1>
+    <h1 *ngIf="subject"><img src="/video.png" alt="Vidéos" class="header-icon"/> Vidéos - {{ subject.title }}</h1>
   </div>
 
   <!-- Loading State -->
@@ -45,7 +45,7 @@
           <h3>{{ video.title }}</h3>
           <p *ngIf="video.description" class="video-description">{{ video.description }}</p>
           <div class="video-footer">
-            <span class="watch-btn">🎥 Regarder</span>
+            <span class="watch-btn"><img src="/video.png" alt="Regarder" class="btn-video-icon"/> Regarder</span>
           </div>
         </div>
       </div>
