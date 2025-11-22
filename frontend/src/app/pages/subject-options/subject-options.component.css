@@ -119,6 +119,10 @@
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
+.option-card.qroc::before {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+}
+
 .option-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -149,6 +153,10 @@
 }
 
 .option-card.videos .option-icon {
+  background: transparent;
+}
+
+.option-card.qroc .option-icon {
   background: transparent;
 }
 
@@ -236,6 +244,10 @@
 
 .option-card.videos .cta {
   color: #4facfe;
+}
+
+.option-card.qroc .cta {
+  color: #fda085;
 }
 
 .option-card:hover .cta {

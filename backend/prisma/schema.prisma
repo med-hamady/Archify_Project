@@ -69,6 +69,7 @@ model Subject {
   examResults       ExamResult[]
   coursePdfs        CoursePdf[]
   courseVideos      CourseVideo[]
+  qrocs             Qroc[]
 }
 
 // FacGame: Chapitres dans une matière
@@ -392,6 +393,23 @@ model CourseVideo {
   updatedAt DateTime @updatedAt
 
   @@index([subjectId, orderIndex], map: "course_videos_subject_order_idx")
+}
+
+// FacGame: QROC (Questions à Réponse Ouverte et Courte) - Cartes flash question/réponse
+model Qroc {
+  id        String  @id @default(cuid())
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+
+  question   String @db.Text // La question affichée sur le recto de la carte
+  answer     String @db.Text // La réponse affichée sur le verso de la carte
+  category   String? // Catégorie optionnelle (ex: "Anatomie du crâne", "Physiologie cardiaque")
+  orderIndex Int    @default(0) // Ordre d'affichage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId, orderIndex], map: "qrocs_subject_order_idx")
 }
 
 // ============================================

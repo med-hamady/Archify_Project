@@ -91,6 +91,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'qroc/:subjectId',
+    loadComponent: () => import('./pages/qroc/qroc.component').then(m => m.QrocComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'pdf-viewer/:url',
     loadComponent: () => import('./pages/pdf-viewer/pdf-viewer.component').then(m => m.PdfViewerComponent),
     canActivate: [authGuard]

@@ -1,0 +1,108 @@
+<div class="qroc-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">← Retour</button>
+    <h1 *ngIf="subject"><img src="/question.png" alt="QROC" class="header-icon"/> QROC - {{ subject.title }}</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des cartes...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadData()">Réessayer</button>
+  </div>
+
+  <!-- No QROCs Available -->
+  <div *ngIf="!loading && !error && qrocs.length === 0" class="placeholder-card">
+    <div class="placeholder-icon">
+      <img src="/question.png" alt="QROC" class="placeholder-img"/>
+    </div>
+    <h2>Aucun QROC disponible</h2>
+    <p>Les cartes QROC pour cette matière seront bientôt disponibles.</p>
+  </div>
+
+  <!-- QROC Content -->
+  <div *ngIf="!loading && !error && qrocs.length > 0" class="qroc-content">
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-info">
+        <span>Carte {{ currentIndex + 1 }} / {{ qrocs.length }}</span>
+        <span *ngIf="currentQroc?.category" class="category-badge">{{ currentQroc?.category }}</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+    </div>
+
+    <!-- Flip Card -->
+    <div class="flip-card-container" (click)="flipCard()">
+      <div class="flip-card" [class.flipped]="isFlipped">
+        <!-- Front - Question -->
+        <div class="flip-card-front">
+          <div class="card-label">Question</div>
+          <div class="card-content">
+            <p>{{ currentQroc?.question }}</p>
+          </div>
+          <div class="card-hint">
+            Cliquez pour voir la réponse
+          </div>
+        </div>
+
+        <!-- Back - Answer -->
+        <div class="flip-card-back">
+          <div class="card-label">Réponse</div>
+          <div class="card-content">
+            <p>{{ currentQroc?.answer }}</p>
+          </div>
+          <div class="card-hint">
+            Cliquez pour voir la question
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="navigation-controls">
+      <button
+        class="nav-btn prev-btn"
+        (click)="previousCard()"
+        [disabled]="currentIndex === 0">
+        ← Précédent
+      </button>
+
+      <div class="action-buttons">
+        <button class="action-btn shuffle-btn" (click)="shuffleCards()" title="Mélanger les cartes">
+          Mélanger
+        </button>
+        <button class="action-btn reset-btn" (click)="resetCards()" title="Recommencer">
+          Recommencer
+        </button>
+      </div>
+
+      <button
+        class="nav-btn next-btn"
+        (click)="nextCard()"
+        [disabled]="currentIndex === qrocs.length - 1">
+        Suivant →
+      </button>
+    </div>
+
+    <!-- Card Indicators -->
+    <div class="card-indicators">
+      <button
+        *ngFor="let qroc of qrocs; let i = index"
+        class="indicator-dot"
+        [class.active]="i === currentIndex"
+        (click)="goToCard(i)"
+        [title]="'Carte ' + (i + 1)">
+      </button>
+    </div>
+
+  </div>
+</div>
