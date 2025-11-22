@@ -227,6 +227,27 @@
   justify-content: center;
   text-align: center;
   padding: 2rem 0;
+  overflow-y: auto;
+  max-height: 350px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(224, 124, 81, 0.3) transparent;
+}
+
+.card-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-content::-webkit-scrollbar-thumb {
+  background-color: rgba(224, 124, 81, 0.3);
+  border-radius: 3px;
+}
+
+.card-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(224, 124, 81, 0.5);
 }
 
 .card-content p {
@@ -235,6 +256,10 @@
   margin: 0;
   font-weight: 500;
   color: #1a202c;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  width: 100%;
 }
 
 .card-hint {
@@ -405,17 +430,29 @@
   }
 
   .flip-card {
-    min-height: 400px;
+    min-height: 350px;
   }
 
   .flip-card-front,
   .flip-card-back {
-    min-height: 400px;
-    padding: 2rem;
+    min-height: 350px;
+    padding: 1.5rem;
+  }
+
+  .card-content {
+    padding: 1rem 0;
+    max-height: 250px;
   }
 
   .card-content p {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
   }
 
   .navigation-controls {
@@ -430,5 +467,41 @@
   .action-buttons {
     width: 100%;
     justify-content: center;
+  }
+
+  .card-hint {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .qroc-container {
+    padding: 0.75rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    padding: 1.25rem;
+  }
+
+  .card-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .nav-btn {
+    padding: 0.9rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .action-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
