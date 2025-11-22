@@ -82,7 +82,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loadProfile();
     this.loadDevicesInfo();
 
-    // Initialize time tracking service
+    // Initialize time tracking service (loads stats)
     this.timeTrackingService.init();
 
     // Subscribe to time tracking updates
@@ -94,8 +94,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.totalStudyTimeSeconds = seconds;
     });
 
-    // Start time tracking automatically
-    this.timeTrackingService.startTracking();
+    // Note: Time tracking is now started automatically on login (see AuthService)
+    // No need to call startTracking() here as it's already running
   }
 
   ngOnDestroy() {

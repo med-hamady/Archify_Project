@@ -25,7 +25,10 @@
       "Bash(git branch:*)",
       "Bash(git ls-tree:*)",
       "Bash(npm run build:all:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(xcopy:*)",
+      "Bash(cmd /c xcopy:*)",
+      "Bash(powershell -Command:*)"
     ],
     "deny": [],
     "ask": []
