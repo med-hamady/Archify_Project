@@ -28,6 +28,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profile: UserProfile | null = null;
   badges: Badge[] = [];
 
+  // Profile picture upload
+  profilePictureLoading = false;
+  profilePictureError: string | null = null;
+
   // Edit name form
   editNameForm: FormGroup;
   isEditingName = false;
@@ -121,7 +125,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           consecutiveGoodAnswers: res.profile.gamification.consecutiveStreak,
           bestStreak: res.profile.gamification.bestStreak || 0,
           legendQuestionsCompleted: res.profile.gamification.legendQuestionsCompleted,
-          createdAt: res.profile.createdAt
+          createdAt: res.profile.createdAt,
+          profilePicture: res.profile.profilePicture
         };
         this.loadBadges();
         this.loadActivity();
@@ -317,5 +322,78 @@ export class ProfileComponent implements OnInit, OnDestroy {
     // elapsedSeconds = time in current session
     // Combined = total including current session
     return this.totalStudyTimeSeconds + this.elapsedSeconds;
+  }
+
+  // Profile picture methods
+  onProfilePictureSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      this.profilePictureError = 'Veuillez sélectionner une image valide';
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      this.profilePictureError = 'L\'image ne doit pas dépasser 5 Mo';
+      return;
+    }
+
+    this.profilePictureLoading = true;
+    this.profilePictureError = null;
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageData = reader.result as string;
+      this.uploadProfilePicture(imageData);
+    };
+    reader.onerror = () => {
+      this.profilePictureError = 'Erreur lors de la lecture du fichier';
+      this.profilePictureLoading = false;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private uploadProfilePicture(imageData: string) {
+    this.profileService.uploadProfilePicture(imageData).subscribe({
+      next: (response) => {
+        if (this.profile) {
+          this.profile.profilePicture = response.profilePicture;
+        }
+        this.profilePictureLoading = false;
+        this.profilePictureError = null;
+      },
+      error: (err) => {
+        console.error('Error uploading profile picture:', err);
+        this.profilePictureError = err.error?.message || 'Erreur lors de l\'upload de la photo';
+        this.profilePictureLoading = false;
+      }
+    });
+  }
+
+  deleteProfilePicture() {
+    if (!this.profile?.profilePicture) return;
+
+    this.profilePictureLoading = true;
+    this.profilePictureError = null;
+
+    this.profileService.deleteProfilePicture().subscribe({
+      next: () => {
+        if (this.profile) {
+          this.profile.profilePicture = undefined;
+        }
+        this.profilePictureLoading = false;
+      },
+      error: (err) => {
+        console.error('Error deleting profile picture:', err);
+        this.profilePictureError = err.error?.message || 'Erreur lors de la suppression';
+        this.profilePictureLoading = false;
+      }
+    });
   }
 }

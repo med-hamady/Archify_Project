@@ -42,7 +42,8 @@
     <div class="profile-header">
       <div class="avatar-section">
         <div class="avatar-circle">
-          <span class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
+          <img *ngIf="profile.profilePicture" [src]="profile.profilePicture" alt="Photo de profil" class="profile-picture">
+          <span *ngIf="!profile.profilePicture" class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
         </div>
         <div class="level-badge-overlay" [style.background]="getLevelInfo()?.color">
           <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-badge-image">
