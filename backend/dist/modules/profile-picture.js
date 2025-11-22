@@ -21,7 +21,22 @@ exports.profilePictureRouter = (0, express_1.Router)();
 exports.profilePictureRouter.post('/picture', auth_1.requireAuth, async (request, reply) => {
     const userId = request.userId;
     try {
+        // Check if Cloudinary is configured
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+            console.error('Cloudinary not configured. Missing environment variables.');
+            return reply.status(500).json({
+                success: false,
+                message: 'Service de stockage d\'images non configuré. Contactez l\'administrateur.',
+            });
+        }
         const { imageData } = uploadProfilePictureSchema.parse(request.body);
+        // Validate image data
+        if (!imageData || !imageData.startsWith('data:image/')) {
+            return reply.status(400).json({
+                success: false,
+                message: 'Format d\'image invalide. Veuillez utiliser une image valide.',
+            });
+        }
         // Upload to Cloudinary
         const uploadResult = await cloudinary_1.v2.uploader.upload(imageData, {
             folder: 'facgame/profile-pictures',
@@ -51,9 +66,23 @@ exports.profilePictureRouter.post('/picture', auth_1.requireAuth, async (request
     }
     catch (error) {
         console.error('Error uploading profile picture:', error);
+        // Check for specific Cloudinary errors
+        if (error.message?.includes('Must supply cloud_name')) {
+            return reply.status(500).json({
+                success: false,
+                message: 'Service de stockage d\'images non configuré.',
+            });
+        }
+        if (error.message?.includes('Invalid image')) {
+            return reply.status(400).json({
+                success: false,
+                message: 'Image invalide ou corrompue.',
+            });
+        }
         return reply.status(500).json({
             success: false,
             message: 'Erreur lors de l\'upload de la photo de profil',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
