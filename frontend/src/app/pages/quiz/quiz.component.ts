@@ -137,6 +137,9 @@ export class QuizComponent implements OnInit, OnDestroy {
 
     this.quizService.answerQuestion(this.currentQuestion.id, this.selectedAnswers).subscribe({
       next: (res) => {
+        console.log('🔍 [DEBUG] API Response:', res);
+        console.log('🔍 [DEBUG] Result Options:', res.result.options);
+
         this.result = res.result;
         this.showResult = true;
 
