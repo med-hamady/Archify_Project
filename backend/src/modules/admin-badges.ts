@@ -2,8 +2,10 @@
  * Admin Badge Management Routes
  *
  * Routes pour la gestion des badges par les admins
+ * - Créer des badges personnalisés avec image
+ * - Supprimer des badges
  * - Voir tous les badges
- * - Voir les majors de chaque classe
+ * - Voir les majors de chaque classe (top 3)
  * - Attribuer/Retirer des badges aux utilisateurs
  */
 
@@ -11,6 +13,14 @@ import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth, requireAdmin } from './auth';
 import { z } from 'zod';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configuration Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const prisma = new PrismaClient();
 export const adminBadgesRouter = Router();
@@ -19,22 +29,20 @@ export const adminBadgesRouter = Router();
 // VALIDATION SCHEMAS
 // ============================================
 
+const createBadgeSchema = z.object({
+  name: z.string().min(2, 'Le nom doit avoir au moins 2 caractères'),
+  description: z.string().min(5, 'La description doit avoir au moins 5 caractères'),
+  imageData: z.string().optional() // Base64 image data
+});
+
 const assignBadgeSchema = z.object({
   userId: z.string(),
-  badgeRequirement: z.enum([
-    'MAJOR_PCEM1',
-    'MAJOR_PCEM2',
-    'MAJOR_DCEM1'
-  ] as const)
+  badgeId: z.string() // Maintenant on utilise l'ID du badge directement
 });
 
 const revokeBadgeSchema = z.object({
   userId: z.string(),
-  badgeRequirement: z.enum([
-    'MAJOR_PCEM1',
-    'MAJOR_PCEM2',
-    'MAJOR_DCEM1'
-  ] as const)
+  badgeId: z.string() // Maintenant on utilise l'ID du badge directement
 });
 
 // ============================================
@@ -48,7 +56,7 @@ const revokeBadgeSchema = z.object({
 adminBadgesRouter.get('/badges', requireAuth, requireAdmin, async (req: any, res: any) => {
   try {
     const badges = await prisma.badge.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: { createdAt: 'desc' },
       include: {
         _count: {
           select: { userBadges: true }
@@ -64,7 +72,8 @@ adminBadgesRouter.get('/badges', requireAuth, requireAdmin, async (req: any, res
         description: b.description,
         iconUrl: b.iconUrl,
         requirement: b.requirement,
-        usersCount: b._count.userBadges
+        usersCount: b._count.userBadges,
+        createdAt: b.createdAt
       }))
     });
   } catch (error: any) {
@@ -72,6 +81,159 @@ adminBadgesRouter.get('/badges', requireAuth, requireAdmin, async (req: any, res
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la récupération des badges'
+    });
+  }
+});
+
+// ============================================
+// CRÉER UN BADGE PERSONNALISÉ
+// ============================================
+
+/**
+ * POST /api/admin/badges/create
+ * Crée un nouveau badge personnalisé avec image
+ */
+adminBadgesRouter.post('/badges/create', requireAuth, requireAdmin, async (req: any, res: any) => {
+  try {
+    const validation = createBadgeSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        success: false,
+        error: 'Données invalides',
+        details: validation.error.issues
+      });
+    }
+
+    const { name, description, imageData } = validation.data;
+
+    // Vérifier si un badge avec ce nom existe déjà
+    const existingBadge = await prisma.badge.findUnique({
+      where: { name }
+    });
+
+    if (existingBadge) {
+      return res.status(400).json({
+        success: false,
+        error: 'Un badge avec ce nom existe déjà'
+      });
+    }
+
+    let iconUrl: string | null = null;
+
+    // Upload de l'image vers Cloudinary si fournie
+    if (imageData && imageData.startsWith('data:image/')) {
+      try {
+        const uploadResult = await cloudinary.uploader.upload(imageData, {
+          folder: 'facgame/badges',
+          public_id: `badge_${Date.now()}`,
+          transformation: [
+            { width: 200, height: 200, crop: 'fill' },
+            { quality: 'auto' }
+          ]
+        });
+        iconUrl = uploadResult.secure_url;
+      } catch (uploadError) {
+        console.error('Error uploading badge image:', uploadError);
+        return res.status(500).json({
+          success: false,
+          error: 'Erreur lors de l\'upload de l\'image'
+        });
+      }
+    }
+
+    // Créer le badge
+    const badge = await prisma.badge.create({
+      data: {
+        name,
+        description,
+        iconUrl,
+        requirement: 'CUSTOM' as any
+      }
+    });
+
+    console.log(`🏆 Badge "${name}" créé par admin ${req.userId}`);
+
+    res.json({
+      success: true,
+      message: `Badge "${name}" créé avec succès`,
+      badge: {
+        id: badge.id,
+        name: badge.name,
+        description: badge.description,
+        iconUrl: badge.iconUrl,
+        requirement: badge.requirement,
+        createdAt: badge.createdAt
+      }
+    });
+  } catch (error: any) {
+    console.error('Error creating badge:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la création du badge'
+    });
+  }
+});
+
+// ============================================
+// SUPPRIMER UN BADGE
+// ============================================
+
+/**
+ * DELETE /api/admin/badges/:id
+ * Supprime un badge et retire tous les badges attribués aux utilisateurs
+ */
+adminBadgesRouter.delete('/badges/:id', requireAuth, requireAdmin, async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+
+    // Vérifier que le badge existe
+    const badge = await prisma.badge.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { userBadges: true } }
+      }
+    });
+
+    if (!badge) {
+      return res.status(404).json({
+        success: false,
+        error: 'Badge non trouvé'
+      });
+    }
+
+    // Supprimer l'image de Cloudinary si elle existe
+    if (badge.iconUrl && badge.iconUrl.includes('cloudinary')) {
+      try {
+        // Extraire le public_id de l'URL Cloudinary
+        const urlParts = badge.iconUrl.split('/');
+        const publicIdWithExt = urlParts.slice(-2).join('/').replace('facgame/', '');
+        const publicId = 'facgame/' + publicIdWithExt.split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (err) {
+        console.error('Error deleting badge image from Cloudinary:', err);
+      }
+    }
+
+    // Supprimer d'abord les UserBadge associés, puis le badge
+    await prisma.userBadge.deleteMany({
+      where: { badgeId: id }
+    });
+
+    await prisma.badge.delete({
+      where: { id }
+    });
+
+    console.log(`🗑️ Badge "${badge.name}" supprimé par admin ${req.userId}`);
+
+    res.json({
+      success: true,
+      message: `Badge "${badge.name}" supprimé avec succès`
+    });
+  } catch (error: any) {
+    console.error('Error deleting badge:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la suppression du badge'
     });
   }
 });
@@ -98,7 +260,7 @@ adminBadgesRouter.get('/badges/majors', requireAuth, requireAdmin, async (req: a
         orderBy: {
           xpTotal: 'desc'
         },
-        take: 10,
+        take: 3, // Top 3 seulement
         select: {
           id: true,
           name: true,
@@ -122,12 +284,10 @@ adminBadgesRouter.get('/badges/majors', requireAuth, requireAdmin, async (req: a
         xpTotal: student.xpTotal,
         level: student.level,
         profilePicture: student.profilePicture,
-        hasMajorBadge: student.userBadges.some((ub: any) =>
-          ub.badge.requirement === `MAJOR_${semester}`
-        ),
         badges: student.userBadges.map((ub: any) => ({
           id: ub.badge.id,
           name: ub.badge.name,
+          iconUrl: ub.badge.iconUrl,
           requirement: ub.badge.requirement
         }))
       }));
@@ -147,12 +307,12 @@ adminBadgesRouter.get('/badges/majors', requireAuth, requireAdmin, async (req: a
 });
 
 // ============================================
-// ATTRIBUER UN BADGE MAJOR
+// ATTRIBUER UN BADGE
 // ============================================
 
 /**
  * POST /api/admin/badges/assign
- * Attribue un badge major à un utilisateur
+ * Attribue un badge à un utilisateur
  */
 adminBadgesRouter.post('/badges/assign', requireAuth, requireAdmin, async (req: any, res: any) => {
   try {
@@ -165,7 +325,7 @@ adminBadgesRouter.post('/badges/assign', requireAuth, requireAdmin, async (req: 
       });
     }
 
-    const { userId, badgeRequirement } = validation.data;
+    const { userId, badgeId } = validation.data;
 
     // Vérifier que l'utilisateur existe
     const user = await prisma.user.findUnique({
@@ -180,21 +340,15 @@ adminBadgesRouter.post('/badges/assign', requireAuth, requireAdmin, async (req: 
       });
     }
 
-    // Trouver ou créer le badge
-    let badge = await prisma.badge.findFirst({
-      where: { requirement: badgeRequirement as any }
+    // Vérifier que le badge existe
+    const badge = await prisma.badge.findUnique({
+      where: { id: badgeId }
     });
 
     if (!badge) {
-      // Créer le badge s'il n'existe pas
-      const badgeInfo = getMajorBadgeInfo(badgeRequirement);
-      badge = await prisma.badge.create({
-        data: {
-          name: badgeInfo.name,
-          description: badgeInfo.description,
-          iconUrl: badgeInfo.iconUrl,
-          requirement: badgeRequirement as any
-        }
+      return res.status(404).json({
+        success: false,
+        error: 'Badge non trouvé'
       });
     }
 
@@ -241,6 +395,7 @@ adminBadgesRouter.post('/badges/assign', requireAuth, requireAdmin, async (req: 
           id: userBadge.badge.id,
           name: userBadge.badge.name,
           description: userBadge.badge.description,
+          iconUrl: userBadge.badge.iconUrl,
           requirement: userBadge.badge.requirement
         },
         user: {
@@ -259,12 +414,12 @@ adminBadgesRouter.post('/badges/assign', requireAuth, requireAdmin, async (req: 
 });
 
 // ============================================
-// RETIRER UN BADGE MAJOR
+// RETIRER UN BADGE
 // ============================================
 
 /**
  * POST /api/admin/badges/revoke
- * Retire un badge major d'un utilisateur
+ * Retire un badge d'un utilisateur
  */
 adminBadgesRouter.post('/badges/revoke', requireAuth, requireAdmin, async (req: any, res: any) => {
   try {
@@ -277,11 +432,11 @@ adminBadgesRouter.post('/badges/revoke', requireAuth, requireAdmin, async (req: 
       });
     }
 
-    const { userId, badgeRequirement } = validation.data;
+    const { userId, badgeId } = validation.data;
 
     // Trouver le badge
-    const badge = await prisma.badge.findFirst({
-      where: { requirement: badgeRequirement as any }
+    const badge = await prisma.badge.findUnique({
+      where: { id: badgeId }
     });
 
     if (!badge) {
@@ -337,21 +492,16 @@ adminBadgesRouter.post('/badges/revoke', requireAuth, requireAdmin, async (req: 
 });
 
 // ============================================
-// UTILISATEURS AVEC BADGES MAJORS
+// UTILISATEURS AVEC BADGES
 // ============================================
 
 /**
- * GET /api/admin/badges/major-holders
- * Liste tous les utilisateurs qui ont un badge major
+ * GET /api/admin/badges/holders
+ * Liste tous les utilisateurs qui ont un badge
  */
-adminBadgesRouter.get('/badges/major-holders', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminBadgesRouter.get('/badges/holders', requireAuth, requireAdmin, async (req: any, res: any) => {
   try {
-    const majorBadges = await prisma.badge.findMany({
-      where: {
-        requirement: {
-          in: ['MAJOR_PCEM1', 'MAJOR_PCEM2', 'MAJOR_DCEM1'] as any[]
-        }
-      },
+    const badges = await prisma.badge.findMany({
       include: {
         userBadges: {
           include: {
@@ -371,10 +521,11 @@ adminBadgesRouter.get('/badges/major-holders', requireAuth, requireAdmin, async 
       }
     });
 
-    const holders = majorBadges.flatMap(badge =>
+    const holders = badges.flatMap(badge =>
       badge.userBadges.map((ub: any) => ({
         badgeId: badge.id,
         badgeName: badge.name,
+        badgeIconUrl: badge.iconUrl,
         badgeRequirement: badge.requirement,
         earnedAt: ub.earnedAt,
         user: ub.user
@@ -386,42 +537,12 @@ adminBadgesRouter.get('/badges/major-holders', requireAuth, requireAdmin, async 
       holders
     });
   } catch (error: any) {
-    console.error('Error fetching major holders:', error);
+    console.error('Error fetching badge holders:', error);
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la récupération des détenteurs de badges'
     });
   }
 });
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-function getMajorBadgeInfo(requirement: string): { name: string; description: string; iconUrl: string } {
-  const badgeInfoMap: Record<string, { name: string; description: string; iconUrl: string }> = {
-    'MAJOR_PCEM1': {
-      name: 'Major de Promo PCEM1',
-      description: 'Premier de la promotion PCEM1',
-      iconUrl: '/images/badges/major-pcem1.png'
-    },
-    'MAJOR_PCEM2': {
-      name: 'Major de Promo PCEM2',
-      description: 'Premier de la promotion PCEM2',
-      iconUrl: '/images/badges/major-pcem2.png'
-    },
-    'MAJOR_DCEM1': {
-      name: 'Major de Promo DCEM1',
-      description: 'Premier de la promotion DCEM1',
-      iconUrl: '/images/badges/major-dcem1.png'
-    }
-  };
-
-  return badgeInfoMap[requirement] || {
-    name: requirement,
-    description: 'Badge spécial',
-    iconUrl: '/images/badges/default.png'
-  };
-}
 
 export default adminBadgesRouter;

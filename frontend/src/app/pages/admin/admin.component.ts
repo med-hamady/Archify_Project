@@ -192,13 +192,13 @@ interface User {
           </div>
         </div>
 
-        <!-- Badges Majors Management -->
+        <!-- Badges Management -->
         <div *ngIf="activeTab() === 'badges'" class="space-y-6">
           <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-900">Gestion des Badges Majors</h2>
-            <button (click)="loadMajors()"
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Badges</h2>
+            <button (click)="loadBadgesData()"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Rafraîchir
+              Rafraichir
             </button>
           </div>
 
@@ -215,146 +215,214 @@ interface User {
             {{ badgeMessage()?.text }}
           </div>
 
-          <!-- Majors by Semester -->
-          <div *ngIf="!badgesLoading()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- PCEM1 -->
-            <div class="bg-white rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold text-blue-600 mb-4 flex items-center">
-                <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-                PCEM1 - Top 10
-              </h3>
-              <div class="space-y-3">
-                <div *ngFor="let student of majorsBySemester()?.['PCEM1'] || []; let i = index"
-                     class="flex items-center justify-between p-3 rounded-lg"
-                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
-                  <div class="flex items-center">
-                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
-                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
-                      {{ i + 1 }}
-                    </span>
-                    <div>
-                      <p class="font-medium text-gray-900">{{ student.name }}</p>
-                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
-                    </div>
+          <!-- Section 1: Create Badge -->
+          <div *ngIf="!badgesLoading()" class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Creer un Badge</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Image Upload -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image du Badge</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-50">
+                    <img *ngIf="newBadgeImagePreview()" [src]="newBadgeImagePreview()" class="w-full h-full object-cover" />
+                    <span *ngIf="!newBadgeImagePreview()" class="text-gray-400 text-3xl">+</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
-                    <button *ngIf="i === 0 && !student.hasMajorBadge"
-                            (click)="assignMajorBadge(student.id, 'MAJOR_PCEM1')"
-                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                      Attribuer
+                  <div>
+                    <input type="file" accept="image/*" (change)="onBadgeImageSelected($event)" class="hidden" #badgeImageInput />
+                    <button (click)="badgeImageInput.click()"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">
+                      Choisir une image
                     </button>
-                    <button *ngIf="student.hasMajorBadge"
-                            (click)="revokeMajorBadge(student.id, 'MAJOR_PCEM1')"
-                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
-                      Retirer
-                    </button>
+                    <p class="text-xs text-gray-500 mt-1">PNG, JPG (max 5MB)</p>
                   </div>
                 </div>
-                <p *ngIf="!majorsBySemester()?.['PCEM1']?.length" class="text-gray-500 text-center py-4">
-                  Aucun étudiant PCEM1
-                </p>
               </div>
-            </div>
-
-            <!-- PCEM2 -->
-            <div class="bg-white rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold text-green-600 mb-4 flex items-center">
-                <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                PCEM2 - Top 10
-              </h3>
-              <div class="space-y-3">
-                <div *ngFor="let student of majorsBySemester()?.['PCEM2'] || []; let i = index"
-                     class="flex items-center justify-between p-3 rounded-lg"
-                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
-                  <div class="flex items-center">
-                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
-                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
-                      {{ i + 1 }}
-                    </span>
-                    <div>
-                      <p class="font-medium text-gray-900">{{ student.name }}</p>
-                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
-                    <button *ngIf="i === 0 && !student.hasMajorBadge"
-                            (click)="assignMajorBadge(student.id, 'MAJOR_PCEM2')"
-                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                      Attribuer
-                    </button>
-                    <button *ngIf="student.hasMajorBadge"
-                            (click)="revokeMajorBadge(student.id, 'MAJOR_PCEM2')"
-                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
-                      Retirer
-                    </button>
-                  </div>
+              <!-- Badge Info -->
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nom du Badge</label>
+                  <input type="text" [(ngModel)]="newBadgeName"
+                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Ex: Major de Promo" />
                 </div>
-                <p *ngIf="!majorsBySemester()?.['PCEM2']?.length" class="text-gray-500 text-center py-4">
-                  Aucun étudiant PCEM2
-                </p>
-              </div>
-            </div>
-
-            <!-- DCEM1 -->
-            <div class="bg-white rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold text-purple-600 mb-4 flex items-center">
-                <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
-                DCEM1 - Top 10
-              </h3>
-              <div class="space-y-3">
-                <div *ngFor="let student of majorsBySemester()?.['DCEM1'] || []; let i = index"
-                     class="flex items-center justify-between p-3 rounded-lg"
-                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
-                  <div class="flex items-center">
-                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
-                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
-                      {{ i + 1 }}
-                    </span>
-                    <div>
-                      <p class="font-medium text-gray-900">{{ student.name }}</p>
-                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
-                    <button *ngIf="i === 0 && !student.hasMajorBadge"
-                            (click)="assignMajorBadge(student.id, 'MAJOR_DCEM1')"
-                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                      Attribuer
-                    </button>
-                    <button *ngIf="student.hasMajorBadge"
-                            (click)="revokeMajorBadge(student.id, 'MAJOR_DCEM1')"
-                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
-                      Retirer
-                    </button>
-                  </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <input type="text" [(ngModel)]="newBadgeDescription"
+                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Ex: Premier de la promotion" />
                 </div>
-                <p *ngIf="!majorsBySemester()?.['DCEM1']?.length" class="text-gray-500 text-center py-4">
-                  Aucun étudiant DCEM1
-                </p>
+                <button (click)="createBadge()"
+                        [disabled]="!newBadgeName || !newBadgeDescription || badgeCreating()"
+                        class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                  {{ badgeCreating() ? 'Creation...' : 'Creer le Badge' }}
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Current Badge Holders -->
-          <div class="bg-white rounded-lg shadow p-6 mt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Détenteurs actuels des badges Major</h3>
-            <div *ngIf="majorHolders().length === 0" class="text-gray-500 text-center py-4">
-              Aucun badge major attribué pour le moment
+          <!-- Section 2: Existing Badges -->
+          <div *ngIf="!badgesLoading()" class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Badges Existants</h3>
+            <div *ngIf="allBadges().length === 0" class="text-gray-500 text-center py-4">
+              Aucun badge cree pour le moment
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div *ngFor="let holder of majorHolders()"
-                   class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div *ngFor="let badge of allBadges()"
+                   class="relative p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                <button (click)="deleteBadge(badge.id, badge.name)"
+                        class="absolute top-2 right-2 w-6 h-6 bg-red-100 text-red-600 rounded-full hover:bg-red-200 flex items-center justify-center text-xs">
+                  X
+                </button>
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center mb-2">
+                    <img *ngIf="badge.iconUrl" [src]="badge.iconUrl" class="w-full h-full object-cover" />
+                    <span *ngIf="!badge.iconUrl" class="text-2xl">🏆</span>
+                  </div>
+                  <p class="font-medium text-gray-900 text-center text-sm">{{ badge.name }}</p>
+                  <p class="text-xs text-gray-500 text-center">{{ badge.description }}</p>
+                  <p class="text-xs text-blue-600 mt-1">{{ badge.usersCount }} utilisateur(s)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Top 3 by Semester -->
+          <div *ngIf="!badgesLoading()" class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 3 par Niveau - Attribution de Badges</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- PCEM1 -->
+              <div class="border border-blue-200 rounded-lg p-4">
+                <h4 class="text-md font-semibold text-blue-600 mb-3 flex items-center">
+                  <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                  PCEM1 - Top 3
+                </h4>
+                <div class="space-y-3">
+                  <div *ngFor="let student of majorsBySemester()?.['PCEM1'] || []; let i = index"
+                       class="flex items-center justify-between p-3 rounded-lg"
+                       [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : i === 1 ? 'bg-gray-100' : 'bg-orange-50'">
+                    <div class="flex items-center">
+                      <span class="text-xl mr-2">{{ i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉' }}</span>
+                      <img *ngIf="student.profilePicture" [src]="student.profilePicture" class="w-8 h-8 rounded-full mr-2 object-cover" />
+                      <div>
+                        <p class="font-medium text-gray-900 text-sm">{{ student.name }}</p>
+                        <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <select [(ngModel)]="selectedBadgeForStudent[student.id]"
+                              class="text-xs px-2 py-1 border border-gray-300 rounded">
+                        <option value="">Choisir badge</option>
+                        <option *ngFor="let badge of allBadges()" [value]="badge.id">{{ badge.name }}</option>
+                      </select>
+                      <button *ngIf="selectedBadgeForStudent[student.id]"
+                              (click)="assignBadge(student.id, selectedBadgeForStudent[student.id])"
+                              class="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">
+                        Attribuer
+                      </button>
+                    </div>
+                  </div>
+                  <p *ngIf="!majorsBySemester()?.['PCEM1']?.length" class="text-gray-500 text-center py-2 text-sm">
+                    Aucun etudiant PCEM1
+                  </p>
+                </div>
+              </div>
+
+              <!-- PCEM2 -->
+              <div class="border border-green-200 rounded-lg p-4">
+                <h4 class="text-md font-semibold text-green-600 mb-3 flex items-center">
+                  <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                  PCEM2 - Top 3
+                </h4>
+                <div class="space-y-3">
+                  <div *ngFor="let student of majorsBySemester()?.['PCEM2'] || []; let i = index"
+                       class="flex items-center justify-between p-3 rounded-lg"
+                       [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : i === 1 ? 'bg-gray-100' : 'bg-orange-50'">
+                    <div class="flex items-center">
+                      <span class="text-xl mr-2">{{ i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉' }}</span>
+                      <img *ngIf="student.profilePicture" [src]="student.profilePicture" class="w-8 h-8 rounded-full mr-2 object-cover" />
+                      <div>
+                        <p class="font-medium text-gray-900 text-sm">{{ student.name }}</p>
+                        <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <select [(ngModel)]="selectedBadgeForStudent[student.id]"
+                              class="text-xs px-2 py-1 border border-gray-300 rounded">
+                        <option value="">Choisir badge</option>
+                        <option *ngFor="let badge of allBadges()" [value]="badge.id">{{ badge.name }}</option>
+                      </select>
+                      <button *ngIf="selectedBadgeForStudent[student.id]"
+                              (click)="assignBadge(student.id, selectedBadgeForStudent[student.id])"
+                              class="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">
+                        Attribuer
+                      </button>
+                    </div>
+                  </div>
+                  <p *ngIf="!majorsBySemester()?.['PCEM2']?.length" class="text-gray-500 text-center py-2 text-sm">
+                    Aucun etudiant PCEM2
+                  </p>
+                </div>
+              </div>
+
+              <!-- DCEM1 -->
+              <div class="border border-purple-200 rounded-lg p-4">
+                <h4 class="text-md font-semibold text-purple-600 mb-3 flex items-center">
+                  <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                  DCEM1 - Top 3
+                </h4>
+                <div class="space-y-3">
+                  <div *ngFor="let student of majorsBySemester()?.['DCEM1'] || []; let i = index"
+                       class="flex items-center justify-between p-3 rounded-lg"
+                       [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : i === 1 ? 'bg-gray-100' : 'bg-orange-50'">
+                    <div class="flex items-center">
+                      <span class="text-xl mr-2">{{ i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉' }}</span>
+                      <img *ngIf="student.profilePicture" [src]="student.profilePicture" class="w-8 h-8 rounded-full mr-2 object-cover" />
+                      <div>
+                        <p class="font-medium text-gray-900 text-sm">{{ student.name }}</p>
+                        <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <select [(ngModel)]="selectedBadgeForStudent[student.id]"
+                              class="text-xs px-2 py-1 border border-gray-300 rounded">
+                        <option value="">Choisir badge</option>
+                        <option *ngFor="let badge of allBadges()" [value]="badge.id">{{ badge.name }}</option>
+                      </select>
+                      <button *ngIf="selectedBadgeForStudent[student.id]"
+                              (click)="assignBadge(student.id, selectedBadgeForStudent[student.id])"
+                              class="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">
+                        Attribuer
+                      </button>
+                    </div>
+                  </div>
+                  <p *ngIf="!majorsBySemester()?.['DCEM1']?.length" class="text-gray-500 text-center py-2 text-sm">
+                    Aucun etudiant DCEM1
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Current Badge Holders -->
+          <div *ngIf="!badgesLoading()" class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Detenteurs de Badges</h3>
+            <div *ngIf="badgeHolders().length === 0" class="text-gray-500 text-center py-4">
+              Aucun badge attribue pour le moment
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div *ngFor="let holder of badgeHolders()"
+                   class="flex items-center justify-between p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
                 <div class="flex items-center">
-                  <span class="text-2xl mr-3">🏆</span>
+                  <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center mr-3">
+                    <img *ngIf="holder.badgeIconUrl" [src]="holder.badgeIconUrl" class="w-full h-full object-cover" />
+                    <span *ngIf="!holder.badgeIconUrl" class="text-xl">🏆</span>
+                  </div>
                   <div>
-                    <p class="font-medium text-gray-900">{{ holder.user.name }}</p>
+                    <p class="font-medium text-gray-900 text-sm">{{ holder.user.name }}</p>
                     <p class="text-xs text-gray-500">{{ holder.badgeName }}</p>
                   </div>
                 </div>
-                <button (click)="revokeMajorBadge(holder.user.id, holder.badgeRequirement)"
+                <button (click)="revokeBadge(holder.user.id, holder.badgeId)"
                         class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
                   Retirer
                 </button>
@@ -1381,7 +1449,7 @@ export class AdminComponent implements OnInit {
   tabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'content-management', name: 'Gestion du Contenu' },
-    { id: 'badges', name: 'Badges Majors' },
+    { id: 'badges', name: 'Gestion Badges' },
     { id: 'subscriptions', name: 'Abonnements' },
     { id: 'qcm', name: 'Gestion des QCM' },
     { id: 'import-subject', name: 'Importer Matière' },
@@ -1403,9 +1471,16 @@ export class AdminComponent implements OnInit {
 
   // Badge Management
   majorsBySemester = signal<Record<string, any[]>>({});
-  majorHolders = signal<any[]>([]);
+  badgeHolders = signal<any[]>([]);
+  allBadges = signal<any[]>([]);
   badgesLoading = signal(false);
+  badgeCreating = signal(false);
   badgeMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  newBadgeName = '';
+  newBadgeDescription = '';
+  newBadgeImageData = signal<string | null>(null);
+  newBadgeImagePreview = signal<string | null>(null);
+  selectedBadgeForStudent: Record<string, string> = {};
 
   // Edit modals
   editSubjectModal = signal(false);
@@ -1426,7 +1501,7 @@ export class AdminComponent implements OnInit {
     this.loadStats();
     this.loadQcmSubjects();
     this.loadContentSubjects();
-    this.loadMajors();
+    this.loadBadgesData();
   }
 
   // Load data methods
@@ -2180,15 +2255,25 @@ export class AdminComponent implements OnInit {
   // BADGE MANAGEMENT METHODS
   // ============================================
 
-  loadMajors() {
+  loadBadgesData() {
     this.badgesLoading.set(true);
     this.badgeMessage.set(null);
+
+    // Load all badges
+    this.http.get<{ success: boolean; badges: any[] }>(`${this.API_URL}/admin/badges`).subscribe({
+      next: (response) => {
+        this.allBadges.set(response.badges);
+      },
+      error: (error) => {
+        console.error('Error loading badges:', error);
+      }
+    });
 
     // Load majors by semester
     this.http.get<{ success: boolean; majorsBySemester: Record<string, any[]> }>(`${this.API_URL}/admin/badges/majors`).subscribe({
       next: (response) => {
         this.majorsBySemester.set(response.majorsBySemester);
-        this.loadMajorHolders();
+        this.loadBadgeHolders();
       },
       error: (error) => {
         console.error('Error loading majors:', error);
@@ -2198,29 +2283,116 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  loadMajorHolders() {
-    this.http.get<{ success: boolean; holders: any[] }>(`${this.API_URL}/admin/badges/major-holders`).subscribe({
+  loadBadgeHolders() {
+    this.http.get<{ success: boolean; holders: any[] }>(`${this.API_URL}/admin/badges/holders`).subscribe({
       next: (response) => {
-        this.majorHolders.set(response.holders);
+        this.badgeHolders.set(response.holders);
         this.badgesLoading.set(false);
       },
       error: (error) => {
-        console.error('Error loading major holders:', error);
+        console.error('Error loading badge holders:', error);
         this.badgesLoading.set(false);
       }
     });
   }
 
-  assignMajorBadge(userId: string, badgeRequirement: string) {
+  onBadgeImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.badgeMessage.set({ type: 'error', text: 'L\'image ne doit pas depasser 5MB' });
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        this.badgeMessage.set({ type: 'error', text: 'Veuillez selectionner une image valide' });
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        this.newBadgeImagePreview.set(result);
+        this.newBadgeImageData.set(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  createBadge() {
+    if (!this.newBadgeName || !this.newBadgeDescription) {
+      this.badgeMessage.set({ type: 'error', text: 'Veuillez remplir tous les champs' });
+      setTimeout(() => this.badgeMessage.set(null), 5000);
+      return;
+    }
+
+    this.badgeCreating.set(true);
+    this.badgeMessage.set(null);
+
+    this.http.post<{ success: boolean; message: string; badge: any }>(`${this.API_URL}/admin/badges/create`, {
+      name: this.newBadgeName,
+      description: this.newBadgeDescription,
+      imageData: this.newBadgeImageData()
+    }).subscribe({
+      next: (response) => {
+        this.badgeMessage.set({ type: 'success', text: response.message });
+        // Reset form
+        this.newBadgeName = '';
+        this.newBadgeDescription = '';
+        this.newBadgeImageData.set(null);
+        this.newBadgeImagePreview.set(null);
+        this.badgeCreating.set(false);
+        // Refresh badges list
+        this.loadBadgesData();
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      },
+      error: (error) => {
+        console.error('Error creating badge:', error);
+        this.badgeMessage.set({ type: 'error', text: error.error?.error || 'Erreur lors de la creation du badge' });
+        this.badgeCreating.set(false);
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      }
+    });
+  }
+
+  deleteBadge(badgeId: string, badgeName: string) {
+    if (!confirm(`Etes-vous sur de vouloir supprimer le badge "${badgeName}" ?`)) {
+      return;
+    }
+
+    this.badgeMessage.set(null);
+
+    this.http.delete<{ success: boolean; message: string }>(`${this.API_URL}/admin/badges/${badgeId}`).subscribe({
+      next: (response) => {
+        this.badgeMessage.set({ type: 'success', text: response.message });
+        this.loadBadgesData(); // Refresh data
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      },
+      error: (error) => {
+        console.error('Error deleting badge:', error);
+        this.badgeMessage.set({ type: 'error', text: error.error?.error || 'Erreur lors de la suppression du badge' });
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      }
+    });
+  }
+
+  assignBadge(userId: string, badgeId: string) {
     this.badgeMessage.set(null);
 
     this.http.post<{ success: boolean; message: string }>(`${this.API_URL}/admin/badges/assign`, {
       userId,
-      badgeRequirement
+      badgeId
     }).subscribe({
       next: (response) => {
         this.badgeMessage.set({ type: 'success', text: response.message });
-        this.loadMajors(); // Refresh data
+        this.selectedBadgeForStudent[userId] = ''; // Reset selection
+        this.loadBadgesData(); // Refresh data
         setTimeout(() => this.badgeMessage.set(null), 5000);
       },
       error: (error) => {
@@ -2231,8 +2403,8 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  revokeMajorBadge(userId: string, badgeRequirement: string) {
-    if (!confirm('Êtes-vous sûr de vouloir retirer ce badge ?')) {
+  revokeBadge(userId: string, badgeId: string) {
+    if (!confirm('Etes-vous sur de vouloir retirer ce badge ?')) {
       return;
     }
 
@@ -2240,11 +2412,11 @@ export class AdminComponent implements OnInit {
 
     this.http.post<{ success: boolean; message: string }>(`${this.API_URL}/admin/badges/revoke`, {
       userId,
-      badgeRequirement
+      badgeId
     }).subscribe({
       next: (response) => {
         this.badgeMessage.set({ type: 'success', text: response.message });
-        this.loadMajors(); // Refresh data
+        this.loadBadgesData(); // Refresh data
         setTimeout(() => this.badgeMessage.set(null), 5000);
       },
       error: (error) => {

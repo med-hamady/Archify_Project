@@ -451,6 +451,8 @@ enum BadgeRequirement {
   MAJOR_PCEM1
   MAJOR_PCEM2
   MAJOR_DCEM1
+  // Badges personnalisés créés par l'admin
+  CUSTOM
 }
 
 enum CommentStatus {

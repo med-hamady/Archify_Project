@@ -102,11 +102,22 @@
           </div>
           <div class="stat-item">
             <span class="stat-value">{{ profile.consecutiveGoodAnswers }}</span>
-            <span class="stat-label">Série</span>
+            <span class="stat-label">Serie</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">{{ profile.legendQuestionsCompleted }}</span>
-            <span class="stat-label">Légendes</span>
+            <span class="stat-label">Legendes</span>
+          </div>
+        </div>
+
+        <!-- Badges Preview -->
+        <div *ngIf="badges.length > 0" class="badges-preview">
+          <div class="badges-preview-row">
+            <div *ngFor="let badge of badges.slice(0, 5)" class="badge-mini" [title]="badge.name">
+              <img *ngIf="badge.iconUrl" [src]="badge.iconUrl" [alt]="badge.name" class="badge-mini-image" />
+              <span *ngIf="!badge.iconUrl" class="badge-mini-emoji">🏆</span>
+            </div>
+            <span *ngIf="badges.length > 5" class="badges-more">+{{ badges.length - 5 }}</span>
           </div>
         </div>
 
@@ -154,7 +165,10 @@
           <h2>🎖️ Badges de Niveau</h2>
           <div class="badges-grid">
             <div class="badge-card" *ngFor="let badge of getBadgesByCategory('LEVEL')">
-              <div class="badge-icon">{{ badge.iconUrl || '🏆' }}</div>
+              <div class="badge-icon">
+                <img *ngIf="badge.iconUrl" [src]="badge.iconUrl" [alt]="badge.name" class="badge-image" />
+                <span *ngIf="!badge.iconUrl">🏆</span>
+              </div>
               <h3>{{ badge.name }}</h3>
               <p>{{ badge.description }}</p>
               <span class="earned-date" *ngIf="badge.earnedAt">
@@ -165,10 +179,13 @@
         </div>
 
         <div class="badge-category" *ngIf="getBadgesByCategory('ACHIEVEMENT').length > 0">
-          <h2>⭐ Badges de Succès</h2>
+          <h2>⭐ Badges de Succes</h2>
           <div class="badges-grid">
             <div class="badge-card" *ngFor="let badge of getBadgesByCategory('ACHIEVEMENT')">
-              <div class="badge-icon">{{ badge.iconUrl || '⭐' }}</div>
+              <div class="badge-icon">
+                <img *ngIf="badge.iconUrl" [src]="badge.iconUrl" [alt]="badge.name" class="badge-image" />
+                <span *ngIf="!badge.iconUrl">⭐</span>
+              </div>
               <h3>{{ badge.name }}</h3>
               <p>{{ badge.description }}</p>
               <span class="earned-date" *ngIf="badge.earnedAt">
@@ -179,10 +196,13 @@
         </div>
 
         <div class="badge-category" *ngIf="getBadgesByCategory('SPECIAL').length > 0">
-          <h2>💎 Badges Spéciaux</h2>
+          <h2>💎 Badges Speciaux</h2>
           <div class="badges-grid">
             <div class="badge-card" *ngFor="let badge of getBadgesByCategory('SPECIAL')">
-              <div class="badge-icon">{{ badge.iconUrl || '💎' }}</div>
+              <div class="badge-icon">
+                <img *ngIf="badge.iconUrl" [src]="badge.iconUrl" [alt]="badge.name" class="badge-image" />
+                <span *ngIf="!badge.iconUrl">💎</span>
+              </div>
               <h3>{{ badge.name }}</h3>
               <p>{{ badge.description }}</p>
               <span class="earned-date" *ngIf="badge.earnedAt">
@@ -194,7 +214,7 @@
 
         <div *ngIf="badges.length === 0" class="empty-state">
           <p>Aucun badge obtenu pour le moment</p>
-          <p class="hint">Continuez à répondre aux questions pour débloquer des badges!</p>
+          <p class="hint">Continuez a repondre aux questions pour debloquer des badges!</p>
         </div>
       </div>
 
