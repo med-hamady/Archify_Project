@@ -19,11 +19,12 @@ export interface UserProfile {
 
 export interface Badge {
   id: string;
-  code: string;
+  code?: string;
   name: string;
   description: string;
   iconUrl?: string;
   category: 'LEVEL' | 'ACHIEVEMENT' | 'SPECIAL';
+  requirement?: string;
   earnedAt?: string;
 }
 

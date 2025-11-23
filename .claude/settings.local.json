@@ -29,7 +29,9 @@
       "Bash(xcopy:*)",
       "Bash(cmd /c xcopy:*)",
       "Bash(powershell -Command:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "Bash(npx ng build)"
     ],
     "deny": [],
     "ask": []

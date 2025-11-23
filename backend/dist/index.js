@@ -66,7 +66,7 @@ const admin_content_1 = require("./modules/admin-content");
 const course_pdfs_1 = __importDefault(require("./modules/course-pdfs"));
 const course_videos_1 = __importDefault(require("./modules/course-videos"));
 const qrocs_1 = __importDefault(require("./modules/qrocs"));
-const time_tracking_1 = __importDefault(require("./modules/time-tracking"));
+const admin_badges_1 = require("./modules/admin-badges");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
@@ -542,7 +542,7 @@ app.use('/api/admin/content', strictLimiter, admin_content_1.adminContentRouter)
 app.use('/api/course-pdfs', generalLimiter, course_pdfs_1.default); // Course PDF management
 app.use('/api/course-videos', generalLimiter, course_videos_1.default); // Course video management
 app.use('/api/qrocs', generalLimiter, qrocs_1.default); // QROC flash cards management
-app.use('/api/time-tracking', generalLimiter, time_tracking_1.default); // Time tracking and XP rewards
+app.use('/api/admin', strictLimiter, admin_badges_1.adminBadgesRouter); // Admin badge management
 const port = process.env.PORT || 3000;
 // Auto-import quizzes si la base de données est vide
 async function autoImportQuizzes() {

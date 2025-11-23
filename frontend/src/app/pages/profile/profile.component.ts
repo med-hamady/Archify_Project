@@ -114,10 +114,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
   loadBadges() {
     this.profileService.getBadges().subscribe({
       next: (res) => {
-        this.badges = res.badges;
+        // Ajouter fallback pour category si non fourni par le backend
+        this.badges = res.badges.map(badge => ({
+          ...badge,
+          category: badge.category || this.mapRequirementToCategory(badge.requirement)
+        }));
       },
       error: (err) => console.error('Error loading badges:', err)
     });
+  }
+
+  // Fallback: mapper requirement vers category si le backend ne le fait pas
+  private mapRequirementToCategory(requirement?: string): 'LEVEL' | 'ACHIEVEMENT' | 'SPECIAL' {
+    if (!requirement) return 'SPECIAL';
+    if (requirement.startsWith('REACH_')) return 'LEVEL';
+    if (
+      requirement.startsWith('STREAK_') ||
+      requirement.startsWith('CHALLENGE_') ||
+      requirement.startsWith('PERFECT_') ||
+      requirement === 'FIRST_EXAM_PASSED' ||
+      requirement === 'COMPLETE_100_LEGEND_QCM'
+    ) {
+      return 'ACHIEVEMENT';
+    }
+    return 'SPECIAL';
   }
 
   loadActivity() {

@@ -147,14 +147,38 @@ exports.profileRouter.get('/me', auth_1.requireAuth, async (req, res) => {
 exports.profileRouter.get('/badges', auth_1.requireAuth, async (req, res) => {
     try {
         const userId = req.userId;
-        const badges = await (0, badge_service_1.getUserBadges)(userId);
+        // Récupérer les badges avec earnedAt directement depuis la base
+        const userBadges = await prisma.userBadge.findMany({
+            where: { userId },
+            include: { badge: true },
+            orderBy: { earnedAt: 'desc' }
+        });
+        // Fonction pour mapper requirement vers category
+        const getCategory = (requirement) => {
+            if (requirement.startsWith('REACH_')) {
+                return 'LEVEL';
+            }
+            else if (requirement.startsWith('STREAK_') ||
+                requirement.startsWith('CHALLENGE_') ||
+                requirement.startsWith('PERFECT_') ||
+                requirement === 'FIRST_EXAM_PASSED' ||
+                requirement === 'COMPLETE_100_LEGEND_QCM') {
+                return 'ACHIEVEMENT';
+            }
+            else {
+                // MAJOR_*, CUSTOM, et autres badges spéciaux
+                return 'SPECIAL';
+            }
+        };
         return res.json({
-            badges: badges.map(badge => ({
-                id: badge.id,
-                name: badge.name,
-                description: badge.description,
-                iconUrl: badge.iconUrl,
-                requirement: badge.requirement
+            badges: userBadges.map(ub => ({
+                id: ub.badge.id,
+                name: ub.badge.name,
+                description: ub.badge.description,
+                iconUrl: ub.badge.iconUrl,
+                requirement: ub.badge.requirement,
+                category: getCategory(ub.badge.requirement),
+                earnedAt: ub.earnedAt
             }))
         });
     }
