@@ -192,6 +192,177 @@ interface User {
           </div>
         </div>
 
+        <!-- Badges Majors Management -->
+        <div *ngIf="activeTab() === 'badges'" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-900">Gestion des Badges Majors</h2>
+            <button (click)="loadMajors()"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Rafraîchir
+            </button>
+          </div>
+
+          <!-- Loading -->
+          <div *ngIf="badgesLoading()" class="text-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p class="mt-2 text-gray-600">Chargement...</p>
+          </div>
+
+          <!-- Message -->
+          <div *ngIf="badgeMessage()"
+               [class]="badgeMessage()?.type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'"
+               class="border px-4 py-3 rounded relative">
+            {{ badgeMessage()?.text }}
+          </div>
+
+          <!-- Majors by Semester -->
+          <div *ngIf="!badgesLoading()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- PCEM1 -->
+            <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-blue-600 mb-4 flex items-center">
+                <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                PCEM1 - Top 10
+              </h3>
+              <div class="space-y-3">
+                <div *ngFor="let student of majorsBySemester()?.['PCEM1'] || []; let i = index"
+                     class="flex items-center justify-between p-3 rounded-lg"
+                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
+                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
+                      {{ i + 1 }}
+                    </span>
+                    <div>
+                      <p class="font-medium text-gray-900">{{ student.name }}</p>
+                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
+                    <button *ngIf="i === 0 && !student.hasMajorBadge"
+                            (click)="assignMajorBadge(student.id, 'MAJOR_PCEM1')"
+                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                      Attribuer
+                    </button>
+                    <button *ngIf="student.hasMajorBadge"
+                            (click)="revokeMajorBadge(student.id, 'MAJOR_PCEM1')"
+                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+                      Retirer
+                    </button>
+                  </div>
+                </div>
+                <p *ngIf="!majorsBySemester()?.['PCEM1']?.length" class="text-gray-500 text-center py-4">
+                  Aucun étudiant PCEM1
+                </p>
+              </div>
+            </div>
+
+            <!-- PCEM2 -->
+            <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-green-600 mb-4 flex items-center">
+                <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                PCEM2 - Top 10
+              </h3>
+              <div class="space-y-3">
+                <div *ngFor="let student of majorsBySemester()?.['PCEM2'] || []; let i = index"
+                     class="flex items-center justify-between p-3 rounded-lg"
+                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
+                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
+                      {{ i + 1 }}
+                    </span>
+                    <div>
+                      <p class="font-medium text-gray-900">{{ student.name }}</p>
+                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
+                    <button *ngIf="i === 0 && !student.hasMajorBadge"
+                            (click)="assignMajorBadge(student.id, 'MAJOR_PCEM2')"
+                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                      Attribuer
+                    </button>
+                    <button *ngIf="student.hasMajorBadge"
+                            (click)="revokeMajorBadge(student.id, 'MAJOR_PCEM2')"
+                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+                      Retirer
+                    </button>
+                  </div>
+                </div>
+                <p *ngIf="!majorsBySemester()?.['PCEM2']?.length" class="text-gray-500 text-center py-4">
+                  Aucun étudiant PCEM2
+                </p>
+              </div>
+            </div>
+
+            <!-- DCEM1 -->
+            <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-purple-600 mb-4 flex items-center">
+                <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                DCEM1 - Top 10
+              </h3>
+              <div class="space-y-3">
+                <div *ngFor="let student of majorsBySemester()?.['DCEM1'] || []; let i = index"
+                     class="flex items-center justify-between p-3 rounded-lg"
+                     [class]="i === 0 ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'">
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3"
+                          [class]="i === 0 ? 'bg-yellow-400 text-yellow-900' : i === 1 ? 'bg-gray-300 text-gray-700' : i === 2 ? 'bg-orange-300 text-orange-800' : 'bg-gray-200 text-gray-600'">
+                      {{ i + 1 }}
+                    </span>
+                    <div>
+                      <p class="font-medium text-gray-900">{{ student.name }}</p>
+                      <p class="text-xs text-gray-500">{{ student.xpTotal }} XP</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span *ngIf="student.hasMajorBadge" class="text-yellow-500 text-xl">🏆</span>
+                    <button *ngIf="i === 0 && !student.hasMajorBadge"
+                            (click)="assignMajorBadge(student.id, 'MAJOR_DCEM1')"
+                            class="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                      Attribuer
+                    </button>
+                    <button *ngIf="student.hasMajorBadge"
+                            (click)="revokeMajorBadge(student.id, 'MAJOR_DCEM1')"
+                            class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+                      Retirer
+                    </button>
+                  </div>
+                </div>
+                <p *ngIf="!majorsBySemester()?.['DCEM1']?.length" class="text-gray-500 text-center py-4">
+                  Aucun étudiant DCEM1
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Badge Holders -->
+          <div class="bg-white rounded-lg shadow p-6 mt-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Détenteurs actuels des badges Major</h3>
+            <div *ngIf="majorHolders().length === 0" class="text-gray-500 text-center py-4">
+              Aucun badge major attribué pour le moment
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div *ngFor="let holder of majorHolders()"
+                   class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🏆</span>
+                  <div>
+                    <p class="font-medium text-gray-900">{{ holder.user.name }}</p>
+                    <p class="text-xs text-gray-500">{{ holder.badgeName }}</p>
+                  </div>
+                </div>
+                <button (click)="revokeMajorBadge(holder.user.id, holder.badgeRequirement)"
+                        class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+                  Retirer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Subscription Management -->
         <div *ngIf="activeTab() === 'subscriptions'" class="space-y-6">
           <div class="flex justify-between items-center">
@@ -1210,6 +1381,7 @@ export class AdminComponent implements OnInit {
   tabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'content-management', name: 'Gestion du Contenu' },
+    { id: 'badges', name: 'Badges Majors' },
     { id: 'subscriptions', name: 'Abonnements' },
     { id: 'qcm', name: 'Gestion des QCM' },
     { id: 'import-subject', name: 'Importer Matière' },
@@ -1228,6 +1400,12 @@ export class AdminComponent implements OnInit {
   selectedContentChapter = signal<ChapterWithStats | null>(null);
   contentLoading = signal(false);
   contentMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Badge Management
+  majorsBySemester = signal<Record<string, any[]>>({});
+  majorHolders = signal<any[]>([]);
+  badgesLoading = signal(false);
+  badgeMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Edit modals
   editSubjectModal = signal(false);
@@ -1248,6 +1426,7 @@ export class AdminComponent implements OnInit {
     this.loadStats();
     this.loadQcmSubjects();
     this.loadContentSubjects();
+    this.loadMajors();
   }
 
   // Load data methods
@@ -1995,5 +2174,84 @@ export class AdminComponent implements OnInit {
   backToChapters() {
     this.selectedContentChapter.set(null);
     this.contentQuestions.set([]);
+  }
+
+  // ============================================
+  // BADGE MANAGEMENT METHODS
+  // ============================================
+
+  loadMajors() {
+    this.badgesLoading.set(true);
+    this.badgeMessage.set(null);
+
+    // Load majors by semester
+    this.http.get<{ success: boolean; majorsBySemester: Record<string, any[]> }>(`${this.API_URL}/admin/badges/majors`).subscribe({
+      next: (response) => {
+        this.majorsBySemester.set(response.majorsBySemester);
+        this.loadMajorHolders();
+      },
+      error: (error) => {
+        console.error('Error loading majors:', error);
+        this.badgeMessage.set({ type: 'error', text: 'Erreur lors du chargement des classements' });
+        this.badgesLoading.set(false);
+      }
+    });
+  }
+
+  loadMajorHolders() {
+    this.http.get<{ success: boolean; holders: any[] }>(`${this.API_URL}/admin/badges/major-holders`).subscribe({
+      next: (response) => {
+        this.majorHolders.set(response.holders);
+        this.badgesLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading major holders:', error);
+        this.badgesLoading.set(false);
+      }
+    });
+  }
+
+  assignMajorBadge(userId: string, badgeRequirement: string) {
+    this.badgeMessage.set(null);
+
+    this.http.post<{ success: boolean; message: string }>(`${this.API_URL}/admin/badges/assign`, {
+      userId,
+      badgeRequirement
+    }).subscribe({
+      next: (response) => {
+        this.badgeMessage.set({ type: 'success', text: response.message });
+        this.loadMajors(); // Refresh data
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      },
+      error: (error) => {
+        console.error('Error assigning badge:', error);
+        this.badgeMessage.set({ type: 'error', text: error.error?.error || 'Erreur lors de l\'attribution du badge' });
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      }
+    });
+  }
+
+  revokeMajorBadge(userId: string, badgeRequirement: string) {
+    if (!confirm('Êtes-vous sûr de vouloir retirer ce badge ?')) {
+      return;
+    }
+
+    this.badgeMessage.set(null);
+
+    this.http.post<{ success: boolean; message: string }>(`${this.API_URL}/admin/badges/revoke`, {
+      userId,
+      badgeRequirement
+    }).subscribe({
+      next: (response) => {
+        this.badgeMessage.set({ type: 'success', text: response.message });
+        this.loadMajors(); // Refresh data
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      },
+      error: (error) => {
+        console.error('Error revoking badge:', error);
+        this.badgeMessage.set({ type: 'error', text: error.error?.error || 'Erreur lors du retrait du badge' });
+        setTimeout(() => this.badgeMessage.set(null), 5000);
+      }
+    });
   }
 }

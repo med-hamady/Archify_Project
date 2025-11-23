@@ -447,6 +447,10 @@ enum BadgeRequirement {
   CHALLENGE_100_PERCENT
   FIRST_EXAM_PASSED
   PERFECT_CHAPTER
+  // Badges pour les majors de promotion (attribués par admin)
+  MAJOR_PCEM1
+  MAJOR_PCEM2
+  MAJOR_DCEM1
 }
 
 enum CommentStatus {

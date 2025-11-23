@@ -30,6 +30,7 @@ import { adminContentRouter } from './modules/admin-content';
 import coursePdfsRouter from './modules/course-pdfs';
 import courseVideosRouter from './modules/course-videos';
 import qrocsRouter from './modules/qrocs';
+import { adminBadgesRouter } from './modules/admin-badges';
 import { setupSubscriptionPlan } from './migrations/setup-subscription-plan';
 import { fixAnatomieChapterOrder } from './migrations/fix-anatomie-chapter-order';
 import { seedDCEM1 } from './seed-dcem1';
@@ -576,6 +577,7 @@ app.use('/api/admin/content', strictLimiter, adminContentRouter); // Admin conte
 app.use('/api/course-pdfs', generalLimiter, coursePdfsRouter); // Course PDF management
 app.use('/api/course-videos', generalLimiter, courseVideosRouter); // Course video management
 app.use('/api/qrocs', generalLimiter, qrocsRouter); // QROC flash cards management
+app.use('/api/admin', strictLimiter, adminBadgesRouter); // Admin badge management
 
 const port = process.env.PORT || 3000;
 
