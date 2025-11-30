@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { AdminContentService, SubjectWithStats, ChapterWithStats, Question } from '../../services/admin-content.service';
+import { AdminService } from '../../services/admin.service';
 import { environment } from '../../../environments/environment';
 
 
@@ -791,6 +792,147 @@ interface UserStats {
                 Retirer
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- XP Management Section -->
+      <div *ngIf="activeTab() === 'xp-management'" class="space-y-6">
+        <h2 class="text-2xl font-bold text-gray-900">🎯 Gestion des XP</h2>
+
+        <!-- Message de succès/erreur -->
+        <div *ngIf="xpMessage()"
+             [class]="xpMessage()!.type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'"
+             class="px-4 py-3 rounded-lg mb-4">
+          {{ xpMessage()!.text }}
+        </div>
+
+        <!-- Recherche utilisateur -->
+        <div class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <h3 class="text-lg font-semibold text-gray-900">📋 Rechercher un utilisateur</h3>
+
+          <div class="flex gap-4">
+            <input [(ngModel)]="searchUserQuery"
+                   type="text"
+                   placeholder="🔍 Recherche (nom ou email)"
+                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+            <select [(ngModel)]="filterSemester"
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option value="ALL">Tous les semestres</option>
+              <option value="PCEM1">PCEM1</option>
+              <option value="PCEM2">PCEM2</option>
+              <option value="DCEM1">DCEM1</option>
+              <option value="DCEM2">DCEM2</option>
+              <option value="DCEM3">DCEM3</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto max-h-96 overflow-y-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 sticky top-0">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Utilisateur</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Semestre</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">XP</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Niveau</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let user of filteredUsers" [class.bg-blue-50]="selectedUserId() === user.id">
+                  <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ user.name }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ user.email }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ user.semester }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-900 font-semibold">{{ user.xpTotal }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ user.level }}</td>
+                  <td class="px-4 py-3 text-sm">
+                    <button (click)="selectUserForXp(user.id)"
+                            [class.bg-blue-600]="selectedUserId() === user.id"
+                            [class.text-white]="selectedUserId() === user.id"
+                            [class.bg-gray-200]="selectedUserId() !== user.id"
+                            [class.text-gray-700]="selectedUserId() !== user.id"
+                            class="px-3 py-1 rounded-lg hover:opacity-80 transition-colors">
+                      {{ selectedUserId() === user.id ? 'Sélectionné' : 'Sélectionner' }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Formulaire de modification XP -->
+        <div *ngIf="getSelectedUser()" class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <h3 class="text-lg font-semibold text-gray-900">✏️ Modifier XP</h3>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-sm text-gray-600">Utilisateur sélectionné : <span class="font-semibold text-gray-900">{{ getSelectedUser()?.name }}</span></p>
+            <p class="text-sm text-gray-600">XP actuel : <span class="font-semibold text-gray-900">{{ getSelectedUser()?.xpTotal }}</span> | Niveau actuel : <span class="font-semibold text-gray-900">{{ getSelectedUser()?.level }}</span></p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Montant XP (+ pour ajouter, - pour retirer)</label>
+            <input [(ngModel)]="xpAmount"
+                   type="number"
+                   placeholder="100"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <p *ngIf="xpAmount !== 0 && getSelectedUser()" class="text-sm text-gray-600 mt-1">
+              Nouveau niveau prévu : <span class="font-semibold text-blue-600">{{ getProjectedLevel(getSelectedUser()!.xpTotal, xpAmount) }}</span>
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Raison (optionnel)</label>
+            <textarea [(ngModel)]="xpReason"
+                      rows="2"
+                      placeholder="Bonus pour participation exceptionnelle"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+          </div>
+
+          <div class="flex gap-3">
+            <button (click)="giveXp()"
+                    [disabled]="xpLoading() || xpAmount === 0"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              {{ xpAmount > 0 ? 'Donner XP' : xpAmount < 0 ? 'Retirer XP' : 'Modifier XP' }}
+            </button>
+            <button (click)="resetXpForm()"
+                    class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
+              Annuler
+            </button>
+          </div>
+        </div>
+
+        <!-- Historique -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">📜 Historique des modifications (50 dernières)</h3>
+
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Admin</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Utilisateur</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">XP</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Niveau</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Raison</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let entry of xpHistory()">
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ entry.date | date:'short' }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-900">{{ entry.admin.name }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-900">{{ entry.user.name }}</td>
+                  <td class="px-4 py-3 text-sm font-semibold" [class.text-green-600]="entry.xpAmount > 0" [class.text-red-600]="entry.xpAmount < 0">
+                    {{ entry.xpAmount > 0 ? '+' : '' }}{{ entry.xpAmount }}
+                  </td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ entry.oldLevel }} → {{ entry.newLevel }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ entry.reason }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -3342,6 +3484,17 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   newBadgeImagePreview = signal<string | null>(null);
   selectedBadgeForStudent: Record<string, string> = {};
 
+  // XP Management
+  xpUsers = signal<any[]>([]);
+  xpLoading = signal(false);
+  xpMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  xpHistory = signal<any[]>([]);
+  selectedUserId = signal<string | null>(null);
+  xpAmount = 0;
+  xpReason = '';
+  searchUserQuery = '';
+  filterSemester = 'ALL';
+
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
   addContentSaving = signal(false);
@@ -3474,6 +3627,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   tabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'badges', name: 'Gestion Badges' },
+    { id: 'xp-management', name: 'Gestion XP' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
@@ -3519,7 +3673,8 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     private router: Router,
     public authService: AuthService,
     private subscriptionService: SubscriptionService,
-    private adminContentService: AdminContentService
+    private adminContentService: AdminContentService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit() {
@@ -4189,6 +4344,13 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     if (tabId === 'subscriptions') {
       console.log('💳 Subscriptions tab activated - loading admin data...');
       this.loadAdminSubscriptionData();
+    }
+
+    // Load XP data when XP management tab is activated
+    if (tabId === 'xp-management') {
+      console.log('🎯 XP Management tab activated - loading users and history...');
+      this.loadXpUsers();
+      this.loadXpHistory();
     }
   }
 
@@ -5677,6 +5839,114 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
         setTimeout(() => this.badgeMessage.set(null), 5000);
       }
     });
+  }
+
+  // ========================================
+  // XP MANAGEMENT METHODS
+  // ========================================
+
+  loadXpUsers() {
+    this.xpLoading.set(true);
+    this.adminService.getUsers().subscribe({
+      next: (res) => {
+        this.xpUsers.set(res.users || res || []);
+        this.xpLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading users:', err);
+        this.xpMessage.set({ type: 'error', text: 'Erreur de chargement des utilisateurs' });
+        this.xpLoading.set(false);
+      }
+    });
+  }
+
+  get filteredUsers() {
+    let users = this.xpUsers();
+
+    // Filtre par semestre
+    if (this.filterSemester !== 'ALL') {
+      users = users.filter(u => u.semester === this.filterSemester);
+    }
+
+    // Recherche par nom/email
+    const query = this.searchUserQuery.toLowerCase();
+    if (query) {
+      users = users.filter(u =>
+        u.name.toLowerCase().includes(query) ||
+        u.email.toLowerCase().includes(query)
+      );
+    }
+
+    return users;
+  }
+
+  selectUserForXp(userId: string) {
+    this.selectedUserId.set(userId);
+  }
+
+  getSelectedUser() {
+    const userId = this.selectedUserId();
+    if (!userId) return null;
+    return this.xpUsers().find(u => u.id === userId);
+  }
+
+  giveXp() {
+    const userId = this.selectedUserId();
+    if (!userId || this.xpAmount === 0) {
+      this.xpMessage.set({ type: 'error', text: 'Sélectionnez un utilisateur et entrez un montant XP' });
+      return;
+    }
+
+    this.xpLoading.set(true);
+    this.xpMessage.set(null);
+
+    this.adminService.giveXp(userId, this.xpAmount, this.xpReason).subscribe({
+      next: (res) => {
+        this.xpMessage.set({
+          type: 'success',
+          text: `${this.xpAmount > 0 ? 'Ajouté' : 'Retiré'} ${Math.abs(this.xpAmount)} XP à ${res.user?.name || 'l\'utilisateur'}`
+        });
+        this.loadXpUsers();
+        this.loadXpHistory();
+        this.resetXpForm();
+        this.xpLoading.set(false);
+        setTimeout(() => this.xpMessage.set(null), 5000);
+      },
+      error: (err) => {
+        console.error('Error giving XP:', err);
+        this.xpMessage.set({ type: 'error', text: err.error?.error || 'Erreur lors de la modification XP' });
+        this.xpLoading.set(false);
+        setTimeout(() => this.xpMessage.set(null), 5000);
+      }
+    });
+  }
+
+  loadXpHistory() {
+    this.adminService.getXpHistory().subscribe({
+      next: (res) => {
+        this.xpHistory.set(res.history || []);
+      },
+      error: (err) => {
+        console.error('Error loading XP history:', err);
+      }
+    });
+  }
+
+  resetXpForm() {
+    this.selectedUserId.set(null);
+    this.xpAmount = 0;
+    this.xpReason = '';
+  }
+
+  getProjectedLevel(currentXp: number, xpChange: number): string {
+    const newXp = Math.max(0, currentXp + xpChange);
+    if (newXp <= 1200) return 'BOIS';
+    if (newXp <= 2600) return 'BRONZE';
+    if (newXp <= 4400) return 'ARGENT';
+    if (newXp <= 6500) return 'OR';
+    if (newXp <= 8500) return 'PLATINUM';
+    if (newXp <= 15000) return 'DIAMANT';
+    return 'MONDIAL';
   }
 
 }

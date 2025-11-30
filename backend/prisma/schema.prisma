@@ -51,6 +51,10 @@ model User {
   examResults       ExamResult[]
   chapterProgresses ChapterProgress[]
   subjectProgresses SubjectProgress[]
+
+  // Relations XP Transactions
+  xpTransactions      XpTransaction[] @relation("XpTransactions")
+  adminXpTransactions XpTransaction[] @relation("AdminXpTransactions")
 }
 
 // FacGame: Matières (Anatomie, Histologie, Physiologie)
@@ -410,6 +414,27 @@ model Qroc {
   updatedAt DateTime @updatedAt
 
   @@index([subjectId, orderIndex], map: "qrocs_subject_order_idx")
+}
+
+// FacGame: Transactions XP (historique des modifications admin)
+model XpTransaction {
+  id        String    @id @default(cuid())
+  userId    String
+  adminId   String
+  xpAmount  Int       // Positif pour ajout, négatif pour retrait
+  reason    String?   // Raison de l'attribution/retrait
+  oldXp     Int       // XP avant modification
+  newXp     Int       // XP après modification
+  oldLevel  GameLevel
+  newLevel  GameLevel
+  createdAt DateTime  @default(now())
+
+  user  User @relation("XpTransactions", fields: [userId], references: [id], onDelete: Cascade)
+  admin User @relation("AdminXpTransactions", fields: [adminId], references: [id])
+
+  @@index([userId])
+  @@index([adminId])
+  @@index([createdAt])
 }
 
 // ============================================
