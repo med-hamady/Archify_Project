@@ -937,6 +937,161 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Device Management Tab -->
+      <div *ngIf="activeTab() === 'device-management'" class="space-y-6">
+        <h2 class="text-2xl font-bold text-gray-900">📱 Gestion des Appareils</h2>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="text-sm text-blue-800">
+            <strong>Note:</strong> Cette interface permet aux administrateurs de gérer les appareils autorisés des utilisateurs.
+            Les demandes de suppression d'appareils doivent être reçues par téléphone ou email avant d'effectuer une action.
+          </p>
+        </div>
+
+        <!-- Success/Error Message -->
+        <div *ngIf="deviceMessage()"
+             [class]="deviceMessage()!.type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'"
+             class="px-4 py-3 rounded-lg mb-4">
+          {{ deviceMessage()!.text }}
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <h3 class="text-lg font-semibold text-gray-900">🔍 Rechercher un utilisateur</h3>
+
+          <div class="flex gap-4">
+            <input [(ngModel)]="searchDeviceQuery"
+                   type="text"
+                   placeholder="🔍 Recherche (nom ou email)"
+                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+            <select [(ngModel)]="filterDeviceSemester"
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option value="ALL">Tous les semestres</option>
+              <option value="PCEM1">PCEM1</option>
+              <option value="PCEM2">PCEM2</option>
+              <option value="DCEM1">DCEM1</option>
+              <option value="DCEM2">DCEM2</option>
+              <option value="DCEM3">DCEM3</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Users List -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Utilisateur</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Semestre</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Appareils</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">État</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let user of filteredDeviceUsers()">
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ user.name }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600">{{ user.email }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600">{{ user.semester }}</td>
+                  <td class="px-6 py-4 text-sm">
+                    <span [class]="user.role === 'ADMIN' || user.role === 'SUPERADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'"
+                          class="px-2 py-1 rounded-full text-xs font-medium">
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    <div class="space-y-1">
+                      <p class="font-semibold text-gray-900">{{ user.deviceCount }} / {{ user.deviceLimit }}</p>
+                      <div *ngIf="user.deviceCount > 0" class="space-y-1">
+                        <div *ngFor="let device of user.authorizedDevices"
+                             class="flex items-center justify-between bg-gray-50 px-2 py-1 rounded text-xs">
+                          <span class="font-mono text-gray-700">{{ device }}</span>
+                          <button (click)="openRemoveDeviceDialog(user, device)"
+                                  class="text-red-600 hover:text-red-800 ml-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <p *ngIf="user.deviceCount === 0" class="text-gray-400 text-xs">Aucun appareil</p>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    <span [class]="getDeviceStatusClass(user)"
+                          class="px-2 py-1 rounded-full text-xs font-medium">
+                      {{ user.hasReachedLimit ? 'Limite atteinte' : (user.deviceCount > 0 ? 'Actif' : 'Aucun') }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    <button *ngIf="user.deviceCount > 0"
+                            (click)="openRemoveAllDevicesDialog(user)"
+                            class="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-colors text-xs font-medium">
+                      Réinitialiser tout
+                    </button>
+                    <span *ngIf="user.deviceCount === 0" class="text-gray-400 text-xs">-</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div *ngIf="filteredDeviceUsers().length === 0" class="text-center py-8 text-gray-500">
+              Aucun utilisateur trouvé
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog -->
+      <div *ngIf="showDeviceConfirmDialog()"
+           class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">
+            {{ deviceActionType() === 'single' ? 'Confirmer la suppression' : 'Confirmer la réinitialisation' }}
+          </h3>
+
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+            <p class="text-sm text-yellow-800">
+              <strong>Attention:</strong> Cette action est irréversible.
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-sm text-gray-700 mb-2">
+              <strong>Utilisateur:</strong> {{ selectedUserForDevice()?.name }}
+            </p>
+            <p class="text-sm text-gray-700 mb-4">
+              <strong>Action:</strong>
+              {{ deviceActionType() === 'single' ? 'Supprimer un appareil' : 'Supprimer tous les appareils (' + selectedUserForDevice()?.deviceCount + ')' }}
+            </p>
+
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Raison de la suppression (optionnel)
+            </label>
+            <textarea [(ngModel)]="deviceRemovalReason"
+                      placeholder="Ex: Demande de l'utilisateur par téléphone..."
+                      rows="3"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </textarea>
+          </div>
+
+          <div class="flex gap-3">
+            <button (click)="cancelRemoveDevice()"
+                    class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium">
+              Annuler
+            </button>
+            <button (click)="confirmRemoveDevice()"
+                    class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium">
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Courses Management Section -->
       <div *ngIf="activeTab() === 'courses'" class="space-y-8">
         <!-- Header -->
@@ -3495,6 +3650,38 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   searchUserQuery = '';
   filterSemester = 'ALL';
 
+  // Device Management
+  deviceUsers = signal<any[]>([]);
+  deviceLoading = signal(false);
+  deviceMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  searchDeviceQuery = '';
+  filterDeviceSemester = 'ALL';
+  selectedUserForDevice = signal<any | null>(null);
+  showDeviceConfirmDialog = signal(false);
+  deviceActionType = signal<'single' | 'all'>('single');
+  deviceToRemove = signal<string | null>(null);
+  deviceRemovalReason = '';
+
+  filteredDeviceUsers = computed(() => {
+    let users = this.deviceUsers();
+
+    // Filter by search query
+    if (this.searchDeviceQuery.trim()) {
+      const query = this.searchDeviceQuery.toLowerCase();
+      users = users.filter(u =>
+        u.name?.toLowerCase().includes(query) ||
+        u.email?.toLowerCase().includes(query)
+      );
+    }
+
+    // Filter by semester
+    if (this.filterDeviceSemester !== 'ALL') {
+      users = users.filter(u => u.semester === this.filterDeviceSemester);
+    }
+
+    return users;
+  });
+
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
   addContentSaving = signal(false);
@@ -3628,6 +3815,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'overview', name: 'Vue d\'ensemble' },
     { id: 'badges', name: 'Gestion Badges' },
     { id: 'xp-management', name: 'Gestion XP' },
+    { id: 'device-management', name: 'Gestion Appareils' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
@@ -4351,6 +4539,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       console.log('🎯 XP Management tab activated - loading users and history...');
       this.loadXpUsers();
       this.loadXpHistory();
+    }
+
+    // Load Device data when Device management tab is activated
+    if (tabId === 'device-management') {
+      console.log('📱 Device Management tab activated - loading users with devices...');
+      this.loadDeviceUsers();
     }
   }
 
@@ -5947,6 +6141,144 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     if (newXp <= 8500) return 'PLATINUM';
     if (newXp <= 15000) return 'DIAMANT';
     return 'MONDIAL';
+  }
+
+  // ==========================================
+  // Device Management Methods
+  // ==========================================
+
+  loadDeviceUsers() {
+    this.deviceLoading.set(true);
+    this.deviceMessage.set(null);
+
+    this.adminService.getUsersWithDevices().subscribe({
+      next: (response) => {
+        if (response?.success) {
+          this.deviceUsers.set(response.users || []);
+        } else {
+          this.deviceMessage.set({
+            type: 'error',
+            text: 'Erreur lors du chargement des utilisateurs'
+          });
+        }
+        this.deviceLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading device users:', error);
+        this.deviceMessage.set({
+          type: 'error',
+          text: 'Erreur lors du chargement des utilisateurs'
+        });
+        this.deviceLoading.set(false);
+      }
+    });
+  }
+
+  openRemoveDeviceDialog(user: any, deviceId: string) {
+    this.selectedUserForDevice.set(user);
+    this.deviceToRemove.set(deviceId);
+    this.deviceActionType.set('single');
+    this.deviceRemovalReason = '';
+    this.showDeviceConfirmDialog.set(true);
+  }
+
+  openRemoveAllDevicesDialog(user: any) {
+    this.selectedUserForDevice.set(user);
+    this.deviceActionType.set('all');
+    this.deviceRemovalReason = '';
+    this.showDeviceConfirmDialog.set(true);
+  }
+
+  confirmRemoveDevice() {
+    const user = this.selectedUserForDevice();
+    const actionType = this.deviceActionType();
+
+    if (!user) return;
+
+    this.deviceLoading.set(true);
+    this.showDeviceConfirmDialog.set(false);
+
+    if (actionType === 'single') {
+      const deviceId = this.deviceToRemove();
+      if (!deviceId) return;
+
+      this.adminService.removeDevice(user.id, deviceId, this.deviceRemovalReason || undefined).subscribe({
+        next: (response) => {
+          if (response?.success) {
+            this.deviceMessage.set({
+              type: 'success',
+              text: response.message || 'Appareil supprimé avec succès'
+            });
+            this.loadDeviceUsers();
+          } else {
+            this.deviceMessage.set({
+              type: 'error',
+              text: response?.error || 'Erreur lors de la suppression'
+            });
+          }
+          this.deviceLoading.set(false);
+          this.resetDeviceForm();
+        },
+        error: (error) => {
+          console.error('Error removing device:', error);
+          this.deviceMessage.set({
+            type: 'error',
+            text: 'Erreur lors de la suppression de l\'appareil'
+          });
+          this.deviceLoading.set(false);
+          this.resetDeviceForm();
+        }
+      });
+    } else {
+      this.adminService.removeAllDevices(user.id, this.deviceRemovalReason || undefined).subscribe({
+        next: (response) => {
+          if (response?.success) {
+            this.deviceMessage.set({
+              type: 'success',
+              text: response.message || 'Tous les appareils ont été supprimés'
+            });
+            this.loadDeviceUsers();
+          } else {
+            this.deviceMessage.set({
+              type: 'error',
+              text: response?.error || 'Erreur lors de la suppression'
+            });
+          }
+          this.deviceLoading.set(false);
+          this.resetDeviceForm();
+        },
+        error: (error) => {
+          console.error('Error removing all devices:', error);
+          this.deviceMessage.set({
+            type: 'error',
+            text: 'Erreur lors de la suppression des appareils'
+          });
+          this.deviceLoading.set(false);
+          this.resetDeviceForm();
+        }
+      });
+    }
+  }
+
+  cancelRemoveDevice() {
+    this.showDeviceConfirmDialog.set(false);
+    this.resetDeviceForm();
+  }
+
+  resetDeviceForm() {
+    this.selectedUserForDevice.set(null);
+    this.deviceToRemove.set(null);
+    this.deviceRemovalReason = '';
+  }
+
+  getDeviceStatusClass(user: any): string {
+    if (user.hasReachedLimit) {
+      return 'bg-red-100 text-red-800';
+    } else if (user.deviceCount > 0) {
+      return 'bg-green-100 text-green-800';
+    } else {
+      return 'bg-gray-100 text-gray-800';
+    }
   }
 
 }

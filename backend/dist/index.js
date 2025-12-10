@@ -68,6 +68,7 @@ const course_videos_1 = __importDefault(require("./modules/course-videos"));
 const qrocs_1 = __importDefault(require("./modules/qrocs"));
 const admin_badges_1 = require("./modules/admin-badges");
 const admin_xp_1 = require("./modules/admin-xp");
+const admin_devices_1 = require("./modules/admin-devices");
 const setup_subscription_plan_1 = require("./migrations/setup-subscription-plan");
 const fix_anatomie_chapter_order_1 = require("./migrations/fix-anatomie-chapter-order");
 const seed_dcem1_1 = require("./seed-dcem1");
@@ -545,6 +546,7 @@ app.use('/api/course-videos', generalLimiter, course_videos_1.default); // Cours
 app.use('/api/qrocs', generalLimiter, qrocs_1.default); // QROC flash cards management
 app.use('/api/admin', strictLimiter, admin_badges_1.adminBadgesRouter); // Admin badge management
 app.use('/api/admin/xp', strictLimiter, admin_xp_1.adminXpRouter); // Admin XP management
+app.use('/api/admin/devices', strictLimiter, admin_devices_1.adminDevicesRouter); // Admin device management
 const port = process.env.PORT || 3000;
 // Auto-import quizzes si la base de données est vide
 async function autoImportQuizzes() {

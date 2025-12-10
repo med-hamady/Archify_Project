@@ -34,4 +34,29 @@ export class AdminService {
   getUsers(): Observable<{ users: any[] }> {
     return this.http.get<any>(`${environment.apiUrl}/users`);
   }
+
+  /**
+   * Obtenir tous les utilisateurs avec leurs appareils
+   */
+  getUsersWithDevices(): Observable<{ success: boolean; users: any[] }> {
+    return this.http.get<any>(`${this.baseUrl}/devices/users`);
+  }
+
+  /**
+   * Supprimer un appareil spécifique d'un utilisateur
+   */
+  removeDevice(userId: string, deviceId: string, reason?: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/devices/remove`, {
+      body: { userId, deviceId, reason }
+    });
+  }
+
+  /**
+   * Supprimer tous les appareils d'un utilisateur (réinitialisation)
+   */
+  removeAllDevices(userId: string, reason?: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/devices/remove-all`, {
+      body: { userId, reason }
+    });
+  }
 }
