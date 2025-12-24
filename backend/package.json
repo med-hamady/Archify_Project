@@ -10,7 +10,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/import-histo-nozha-pcem2.js && node dist/import-pcep2-qcm.js && node dist/index.js",
+    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/import-pcep2-qcm.js && node dist/index.js",
     "start:dev": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
