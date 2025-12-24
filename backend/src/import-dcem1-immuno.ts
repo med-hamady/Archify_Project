@@ -339,18 +339,9 @@ async function importImmunoDCEM1() {
       continue;
     }
 
-    // Importer les questions
+    // Importer les questions (inclure les duplicats)
     let chapterImported = 0;
     for (const question of chapterData.questions) {
-      const existing = await prisma.question.findFirst({
-        where: {
-          chapterId: chapter.id,
-          questionText: question.questionText
-        }
-      });
-
-      if (existing) continue;
-
       await prisma.question.create({
         data: {
           chapterId: chapter.id,
