@@ -1,0 +1,140 @@
+{
+  "semester": "PCEM2",
+  "subjectName": "Anatomie",
+  "qrocs": [
+    {
+      "question": "Les muscles masticateurs : origine, terminaison et action",
+      "answer": "Temporale\nOrigine : fosse temporale\nTerminaison : sommet de la face médiale du processus coronoïde de la mandibule\nAction : élévation et rétropulsion (fibres dorsales)\nMasséter\nOrigine : arcade et corps de l’os zygomatique\nTerminaison : face latérale de la branche montante et angle mandibulaire\nAction : élévation et rétropulsion\nPtérygoïde médiale\nOrigine : fosse ptérygoïde\nTerminaison : face médiale de l’angle mandibulaire\nAction : élévation, propulsion, diduction\nPtérygoïde latérale\nOrigine : processus ptérygoïde et grande aile du sphénoïde\nTerminaison : condyle mandibulaire et disque articulaire\nAction : ouverture buccale (starter), propulsion, diduction",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 0
+    },
+    {
+      "question": "Canal optique",
+      "answer": "Localisation : entre les deux racines de la petite aile du sphénoïde\nContenu : nerf optique et artère ophtalmique",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 1
+    },
+    {
+      "question": "Fissure orbitaire supérieure",
+      "answer": "Localisation : entre la petite et la grande aile du sphénoïde\nContenu : nerfs oculomoteurs (III, IV, VI), nerf V1, veine ophtalmique",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 2
+    },
+    {
+      "question": "Foramen jugulaire (déchiré postérieur)",
+      "answer": "Localisation : entre le rocher de l’os temporal et l’occipital\nContenu : veine jugulaire interne, nerfs IX, X, XI",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 3
+    },
+    {
+      "question": "Artères thyroïdiennes : origine et distribution",
+      "answer": "Supérieure : branche collatérale de l’artère carotide externe, vascularise le pôle supérieur de la thyroïde. Branches : médiale, antéro-externe, postérieure\nMoyenne : issue du deuxième segment de l’aorte\nInférieure : collatérale du tronc thyro-cervical (branche de l’artère sous-clavière), vascularise le larynx. Branches : médiale, postérieure, profonde",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 4
+    },
+    {
+      "question": "Osselets de l’oreille interne",
+      "answer": "marteau, enclume (uncus), étrier",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 5
+    },
+    {
+      "question": "Muscle sterno-cléido-mastoïdien",
+      "answer": "Origine : sternum et clavicule\nTerminaison : processus mastoïde\nAction : inclinaison homolatérale, rotation controlatérale\nInnervation : nerf accessoire (XI)",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 6
+    },
+    {
+      "question": "Muscles oculomoteurs : origine, terminaison et action",
+      "answer": "Origine : anneau de Zinn (sauf petite oblique)\nTerminaison : sclérotique (ou face inférieure de l’orbite pour petite oblique)\nActions :\nDroit supérieur : élève le globe\nDroit inférieur : abaisse le globe\nDroit interne : adduction\nDroit externe : abduction\nGrand oblique : abaisse et rotation interne\nPetite oblique : élévation et rotation externe",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 7
+    },
+    {
+      "question": "Conduit auditif externe",
+      "answer": "Segment externe : cartilagineux, 1/3 recouvert de peau avec poils et glandes cérumineuses\nSegment interne : osseux, muqueuse, sans poils ni glandes",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 8
+    },
+    {
+      "question": "Cartilages du larynx",
+      "answer": "thyroïde, cricoïde, 2 aryténoïdes, épiglotte",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 9
+    },
+    {
+      "question": "Substance grise centrale de la moelle épinière",
+      "answer": "Forme : en H autour du canal épendymaire\nCornes :\nAntérieure : motrice\nPostérieure : sensitive\nLatérale : végétative (présente seulement dans les segments thoraciques et sacrés)",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 10
+    },
+    {
+      "question": "Moelle épinière : description générale",
+      "answer": "Localisation : canal rachidien\nRôle : communication bidirectionnelle entre corps et cerveau\nExtent : du foramen magnum à L1-L2\nForme : tige cylindrique légèrement aplatie antéro-postérieurement\nLongueur : 30–40 cm",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 11
+    },
+    {
+      "question": "Rapports thoraciques de la moelle épinière",
+      "answer": "Antérieur : face postérieure du corps vertébral, ligament vertébral commun postérieur\nPostérieur : lames vertébrales, ligament jaune\nLatéral : pédicules vertébraux et trous de conjugaison",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 12
+    },
+    {
+      "question": "Face antérieure du tronc cérébral : étages et repères",
+      "answer": "Bulbaire : sillon ventral séparant les pyramides, sillon antérolatéral (nerf XII), sillon bulbo-pontique (nerf VI), olive bulbaire\nPont : noyaux propres du pont\nMésencéphale : substance noire, noyau rouge, tubercules quadrijumeaux",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 13
+    },
+    {
+      "question": "Noyaux propres du tronc cérébral",
+      "answer": "Bulbaire : gracile, cunéiforme, olive bulbaire\nPont : noyaux propres du pont\nMésencéphale : substance noire, noyau rouge, tubercules quadrijumeaux",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 14
+    },
+    {
+      "question": "Noyaux moteurs des nerfs crâniens",
+      "answer": "Organisation en 3 colonnes :\nParamédiane : noyaux somitomoteurs (III, IV, VI, XII)\nBranchiomotrice : noyaux V, VII, noyau ambigu\nViscérale : noyaux annexes (III, V, VII, IX, X)",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 15
+    },
+    {
+      "question": "4ᵉ ventricule",
+      "answer": "Forme : losangique\nLocalisation : derrière le tronc cérébral\nContour : plancher, toit et 4 bords\nRepères : bordé par les pédoncules cérébelleux",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 16
+    },
+    {
+      "question": "Cervelet : localisation et rôle",
+      "answer": "Localisation : fosse crânienne postérieure, plus volumineux du métencéphale\nConnexion : pédoncules cérébelleux\nRôle : régulation fonction motrice\nStructure : lamellaire, sillons visibles à la surface",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 17
+    },
+    {
+      "question": "Noyaux du cervelet et fonctions",
+      "answer": "Fastigial : équilibre\nGlobulus et embolus : tonus musculaire\nDentelé : coordination des mouvements",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 18
+    },
+    {
+      "question": "Artères cérébrales et territoires",
+      "answer": "Artère cérébrale antérieure :\nSuperficiel : lobe frontal (face interne et orbitaire), lobe pariétal (face interne)\nProfond : corps calleux, noyau caudé, capsule interne\nArtère cérébrale moyenne :\nSuperficiel : cortex latéral frontal, pariétal et temporal\nProfond : capsule externe et extrême, putamen, pallidum, noyau caudé, capsule interne\nArtère cérébrale postérieure :\nSuperficiel : cortex temporal, occipital, gyrus cingulaire postérieur\nProfond : thalamus, pédoncule, sous-thalamus, plexus choroïde, hippocampe",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 19
+    },
+    {
+      "question": "AVC : localisation probable selon l’artère",
+      "answer": "Cas 1 : artère cérébrale moyenne\nCas 2 : artère cérébrale antérieure",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 20
+    },
+    {
+      "question": "Sinus veineux de la dure-mère",
+      "answer": "Formation : dédoublement de la dure-mère aux replis ou insertions\nFonction : drainage de 95 % du sang veineux crânien\nSortie : trou déchiré postérieur vers la veine jugulaire interne",
+      "category": "Anatomie Ali Ghorbel",
+      "orderIndex": 21
+    }
+  ],
+  "exportedAt": "2025-12-24T22:36:27.386Z",
+  "totalQrocs": 22
+}

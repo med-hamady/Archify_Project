@@ -10,7 +10,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/import-pcep2-qcm.js && node dist/import-pcep2-qroc.js && node dist/index.js",
+    "start": "npx prisma db push --accept-data-loss --skip-generate && node dist/import-pcep2-qcm.js && node dist/import-pcep2-qroc.js && node dist/import-anatomie-ali-ghorbel-qroc.js && node dist/index.js",
     "start:dev": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
@@ -39,7 +39,8 @@
     "restore:all-histologie": "node dist/restore-all-histologie.js",
     "import:pcep2": "node dist/import-pcep2-qcm.js",
     "import:pcep2:qroc": "node dist/import-pcep2-qroc.js",
-    "clear:pcep2": "node dist/clear-pcep2.js"
+    "clear:pcep2": "node dist/clear-pcep2.js",
+    "import:pcem2:anatomie-qroc": "node dist/import-anatomie-ali-ghorbel-qroc.js"
   },
   "keywords": [],
   "author": "",
