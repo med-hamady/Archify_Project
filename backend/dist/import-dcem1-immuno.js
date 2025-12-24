@@ -146,11 +146,21 @@ function parseChapterFile(filePath, fileName) {
         }
         // Si on attend le texte de la question
         if (awaitingQuestionText && currentQuestion) {
-            // Ignorer les lignes vides ou de ponctuation seule
-            if (line.match(/^[.…]+$/) || line === '')
+            // Ignorer les lignes vides
+            if (line === '')
                 continue;
+            // Si c'est juste des points, utiliser un texte par défaut
+            if (line.match(/^[.…]+$/)) {
+                currentQuestion.questionText = 'Cochez la ou les propositions correctes :';
+                awaitingQuestionText = false;
+                continue;
+            }
             // Si c'est une option, le texte de la question est terminé
             if (line.match(/^[A-Ja-j][.\-)\]]/)) {
+                // Pas de texte de question trouvé, utiliser un texte par défaut
+                if (!currentQuestion.questionText) {
+                    currentQuestion.questionText = 'Cochez la ou les propositions correctes :';
+                }
                 awaitingQuestionText = false;
                 // Traiter cette ligne comme une option
             }

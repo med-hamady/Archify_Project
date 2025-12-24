@@ -88,7 +88,7 @@
         },
         {
           "questionNumber": 3,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "la plupart des antigènes (Ag) induisent une réponse constituée de plus d’un clone",
@@ -199,7 +199,7 @@
         },
         {
           "questionNumber": 6,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "la réaction Ag-Ac est une réaction spécifique et réversible",
@@ -1085,7 +1085,7 @@
         },
         {
           "questionNumber": 12,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "Les gènes du système HLA sont portés par le bras court du chromosome 6 (à l’exception du gène de la β2 microglobuline)",
@@ -2680,7 +2680,7 @@
         },
         {
           "questionNumber": 18,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "les CTL (lymphocytes T cytotoxiques) et les cellules NK libèrent de la perforine après interaction avec la cellule cible",
@@ -7036,7 +7036,7 @@
         },
         {
           "questionNumber": 9,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "Plus de 80 % des thymocytes immatures meurent par apoptose à la jonction corticomédullaire",
@@ -9085,7 +9085,7 @@
         },
         {
           "questionNumber": 2,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "Le TCR est constitué de 4 chaînes polypeptidiques : γ, δ, ε et ξ",
@@ -9196,7 +9196,7 @@
         },
         {
           "questionNumber": 5,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "La cellule T utilise le même groupe de segments géniques V, D et J que la cellule B",
@@ -9731,7 +9731,7 @@
         },
         {
           "questionNumber": 12,
-          "questionText": "",
+          "questionText": "Cochez la ou les propositions correctes :",
           "options": [
             {
               "text": "Le récepteur de haute affinité de l’IL-2 est constitué de 2 chaînes polypeptidiques",
@@ -13638,6 +13638,6 @@
       ]
     }
   ],
-  "exportedAt": "2025-12-24T23:41:28.665Z",
+  "exportedAt": "2025-12-24T23:52:20.250Z",
   "totalQuestions": 339
 }
