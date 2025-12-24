@@ -120,7 +120,7 @@ import { DeviceService } from '../../services/device.service';
                 </div>
               </div>
 
-              <!-- Semester (PCEM1, PCEM2, or DCEM1) -->
+              <!-- Semester (PCEM1, PCEM2, PCEP2, or DCEM1) -->
               <div>
                 <label for="semester" class="block text-sm font-medium text-gray-700 mb-2">
                   Niveau d'étude
@@ -134,6 +134,7 @@ import { DeviceService } from '../../services/device.service';
                   <option value="">Sélectionner votre niveau</option>
                   <option value="PCEM1">PCEM1 (Première année)</option>
                   <option value="PCEM2">PCEM2 (Deuxième année)</option>
+                  <option value="PCEP2">PCEP2 (Deuxième année - Externat)</option>
                   <option value="DCEM1">DCEM1 (Troisième année)</option>
                 </select>
                 <div *ngIf="authForm.get('semester')?.invalid && authForm.get('semester')?.touched"

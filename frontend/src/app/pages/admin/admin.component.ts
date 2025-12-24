@@ -783,7 +783,7 @@ interface User {
             <ul class="list-disc list-inside text-sm text-yellow-800 space-y-2 ml-4">
               <li>Vérifiez que toutes les questions ont au moins une option correcte (isCorrect: true)</li>
               <li>Les justifications sont optionnelles mais recommandées pour enrichir l'apprentissage</li>
-              <li>Le champ "semester" doit être "PCEM1", "PCEM2" ou "DCEM1"</li>
+              <li>Le champ "semester" doit être "PCEM1", "PCEM2", "PCEP2" ou "DCEM1"</li>
               <li>L'orderIndex détermine l'ordre d'affichage des chapitres et questions</li>
               <li>Le totalQCM est optionnel (valeur par défaut : 600)</li>
             </ul>

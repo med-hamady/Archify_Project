@@ -475,6 +475,7 @@ enum BadgeRequirement {
   // Badges pour les majors de promotion (attribués par admin)
   MAJOR_PCEM1
   MAJOR_PCEM2
+  MAJOR_PCEP2
   MAJOR_DCEM1
   // Badges personnalisés créés par l'admin
   CUSTOM

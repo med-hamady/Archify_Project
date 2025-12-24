@@ -241,7 +241,7 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   name: z.string().min(1),
-  semester: z.enum(['PCEM1', 'PCEM2', 'DCEM1']),
+  semester: z.enum(['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1']),
   deviceId: z.string().min(1), // ID de l'appareil pour lier le compte
 });
 

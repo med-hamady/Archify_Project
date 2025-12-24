@@ -244,11 +244,11 @@ adminBadgesRouter.delete('/badges/:id', requireAuth, requireAdmin, async (req: a
 
 /**
  * GET /api/admin/badges/majors
- * Récupère les top 3 étudiants de chaque classe (PCEM1, PCEM2, DCEM1)
+ * Récupère les top 3 étudiants de chaque classe (PCEM1, PCEM2, PCEP2, DCEM1)
  */
 adminBadgesRouter.get('/badges/majors', requireAuth, requireAdmin, async (req: any, res: any) => {
   try {
-    const semesters = ['PCEM1', 'PCEM2', 'DCEM1'];
+    const semesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
     const majorsBySemester: Record<string, any[]> = {};
 
     for (const semester of semesters) {
