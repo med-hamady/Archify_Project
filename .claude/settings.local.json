@@ -31,7 +31,13 @@
       "Bash(powershell -Command:*)",
       "Bash(npx tsc:*)",
       "Bash(find:*)",
-      "Bash(npx ng build)"
+      "Bash(npx ng build)",
+      "Bash(npx ng build:*)",
+      "Bash(git config:*)",
+      "Bash(npm run import:pcep2:*)",
+      "Bash(npm run clear:pcep2:*)",
+      "Bash(cat:*)",
+      "Bash(npm run import:pcep2:qroc:*)"
     ],
     "deny": [],
     "ask": []

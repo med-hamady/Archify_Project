@@ -263,7 +263,7 @@ const registerSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(8),
     name: zod_1.z.string().min(1),
-    semester: zod_1.z.enum(['PCEM1', 'PCEM2', 'DCEM1']),
+    semester: zod_1.z.enum(['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1']),
     deviceId: zod_1.z.string().min(1), // ID de l'appareil pour lier le compte
 });
 const loginSchema = zod_1.z.object({

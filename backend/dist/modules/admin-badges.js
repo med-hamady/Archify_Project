@@ -221,11 +221,11 @@ exports.adminBadgesRouter.delete('/badges/:id', auth_1.requireAuth, auth_1.requi
 // ============================================
 /**
  * GET /api/admin/badges/majors
- * Récupère les top 3 étudiants de chaque classe (PCEM1, PCEM2, DCEM1)
+ * Récupère les top 3 étudiants de chaque classe (PCEM1, PCEM2, PCEP2, DCEM1)
  */
 exports.adminBadgesRouter.get('/badges/majors', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
     try {
-        const semesters = ['PCEM1', 'PCEM2', 'DCEM1'];
+        const semesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
         const majorsBySemester = {};
         for (const semester of semesters) {
             const topStudents = await prisma.user.findMany({
