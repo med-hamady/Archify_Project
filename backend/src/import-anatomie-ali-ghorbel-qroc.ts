@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 // ============================================
 
 const SEMESTER = 'PCEM2';
-const SUBJECT_NAME = 'Anatomie'; // Matière existante
+const SUBJECT_NAME = 'Anatomie Ali Ghorbel'; // Matière séparée d'Anatomie
 const SOURCE_FILE = 'C:\\Users\\pc\\Desktop\\FAC GAME\\pcem2\\Anatomie Ali Ghorbel\\QROC Ali ghorbel\\QROC Ali ghorbel.txt';
 const SEED_FILE = path.join(__dirname, '..', 'data', 'pcem2', 'anatomie-ali-ghorbel-qroc-seed.json');
 
