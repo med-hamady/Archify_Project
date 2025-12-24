@@ -36,7 +36,9 @@
     "clear:histologie:pcem2": "node dist/clear-histologie-pcem2.js",
     "export:histo:sql": "node dist/export-histo-pcem2-sql.js",
     "restore:histologie": "node dist/restore-histologie-v2.js",
-    "restore:all-histologie": "node dist/restore-all-histologie.js"
+    "restore:all-histologie": "node dist/restore-all-histologie.js",
+    "import:pcep2": "node dist/import-pcep2-qcm.js",
+    "clear:pcep2": "node dist/clear-pcep2.js"
   },
   "keywords": [],
   "author": "",
