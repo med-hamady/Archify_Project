@@ -131,6 +131,77 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
+/* Skeleton Loader Styles */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.skeleton-pdf-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.skeleton-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.skeleton-tool-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-page-indicator {
+  width: 100px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  margin: 0 auto;
+}
+
+.skeleton-pdf-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #e5e7eb;
+}
+
+.skeleton-pdf-page {
+  width: 100%;
+  max-width: 800px;
+  height: calc(100vh - 200px);
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.75rem 1rem;

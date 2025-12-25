@@ -5,10 +5,20 @@
     <h1 *ngIf="subject"><img src="/matiere.png" alt="Matière" class="header-icon"/> {{ subject.title }}</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-options-grid">
+      <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-option-card">
+        <div class="skeleton-option-icon"></div>
+        <div class="skeleton-text skeleton-option-title"></div>
+        <div class="skeleton-text skeleton-option-desc"></div>
+        <div class="skeleton-option-stats">
+          <div class="skeleton-text skeleton-stat-item"></div>
+          <div class="skeleton-text skeleton-stat-item"></div>
+        </div>
+        <div class="skeleton-text skeleton-cta"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->

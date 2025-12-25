@@ -508,6 +508,185 @@
   backdrop-filter: blur(8px);
 }
 
+/* Skeleton Loader Styles */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-container {
+  padding: 1rem 0;
+}
+
+.skeleton-stats-section {
+  margin-bottom: 2rem;
+}
+
+.skeleton-user-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.skeleton-user-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-user-info {
+  flex: 1;
+}
+
+.skeleton-text {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+.skeleton-name {
+  width: 200px;
+  height: 28px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-semester {
+  width: 120px;
+  height: 18px;
+}
+
+.skeleton-level-badge {
+  width: 180px;
+  height: 180px;
+  margin: 2rem auto;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-xp-section {
+  margin: 1.5rem 0;
+}
+
+.skeleton-xp-header {
+  width: 150px;
+  height: 16px;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-progress-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.skeleton-stat-item {
+  height: 80px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.skeleton-btn {
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-subjects-section {
+  margin-top: 2rem;
+}
+
+.skeleton-section-title {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.skeleton-subject-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-subject-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.skeleton-subject-name {
+  width: 180px;
+  height: 24px;
+}
+
+.skeleton-badge {
+  width: 50px;
+  height: 28px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-subject-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-stat {
+  width: 60%;
+  height: 16px;
+}
+
+.skeleton-btn-start {
+  width: 100%;
+  height: 44px;
+  margin-top: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .dashboard-container {

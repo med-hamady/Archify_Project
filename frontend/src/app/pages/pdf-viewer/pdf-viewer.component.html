@@ -10,10 +10,21 @@
     <h1>{{ pdfTitle }}</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement du PDF...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-pdf-viewer">
+      <div class="skeleton-toolbar">
+        <div class="skeleton-tool-btn"></div>
+        <div class="skeleton-tool-btn"></div>
+        <div class="skeleton-tool-btn"></div>
+        <div class="skeleton-page-indicator"></div>
+        <div class="skeleton-tool-btn"></div>
+        <div class="skeleton-tool-btn"></div>
+      </div>
+      <div class="skeleton-pdf-content">
+        <div class="skeleton-pdf-page"></div>
+      </div>
+    </div>
   </div>
 
   <!-- PDF Viewer -->

@@ -144,6 +144,77 @@
   box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
 }
 
+/* Skeleton Loader Styles */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.skeleton-video-viewer {
+  width: 100%;
+  max-width: 1400px;
+}
+
+.skeleton-video-player {
+  position: relative;
+  padding-top: 56.25%;
+  background: linear-gradient(90deg, rgba(79, 172, 254, 0.1) 25%, rgba(79, 172, 254, 0.2) 50%, rgba(79, 172, 254, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.skeleton-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.skeleton-video-controls {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.skeleton-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, rgba(79, 172, 254, 0.1) 25%, rgba(79, 172, 254, 0.2) 50%, rgba(79, 172, 254, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-control-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.skeleton-control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(79, 172, 254, 0.1) 25%, rgba(79, 172, 254, 0.2) 50%, rgba(79, 172, 254, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.75rem 1rem;

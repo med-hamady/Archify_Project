@@ -10,10 +10,21 @@
     <h1>{{ videoTitle }}</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement de la vidéo...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-video-viewer">
+      <div class="skeleton-video-player">
+        <div class="skeleton-play-button"></div>
+      </div>
+      <div class="skeleton-video-controls">
+        <div class="skeleton-progress-bar"></div>
+        <div class="skeleton-control-buttons">
+          <div class="skeleton-control-btn"></div>
+          <div class="skeleton-control-btn"></div>
+          <div class="skeleton-control-btn"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- YouTube Player -->

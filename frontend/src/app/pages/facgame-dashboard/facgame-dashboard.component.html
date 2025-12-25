@@ -8,10 +8,53 @@
     <p class="subtitle">Plateforme d'apprentissage médical gamifiée</p>
   </header>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement de votre profil...</p>
+  <!-- Loading - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton User Card -->
+    <section class="skeleton-stats-section">
+      <div class="skeleton-user-card">
+        <div class="skeleton-user-header">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-user-info">
+            <div class="skeleton-text skeleton-name"></div>
+            <div class="skeleton-text skeleton-semester"></div>
+          </div>
+        </div>
+        <div class="skeleton-level-badge"></div>
+        <div class="skeleton-xp-section">
+          <div class="skeleton-text skeleton-xp-header"></div>
+          <div class="skeleton-progress-bar"></div>
+        </div>
+        <div class="skeleton-quick-stats">
+          <div class="skeleton-stat-item"></div>
+          <div class="skeleton-stat-item"></div>
+        </div>
+        <div class="skeleton-action-buttons">
+          <div class="skeleton-btn"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skeleton Subjects -->
+    <section class="skeleton-subjects-section">
+      <div class="skeleton-text skeleton-section-title"></div>
+      <div class="skeleton-subjects-grid">
+        <div *ngFor="let i of [1, 2, 3]" class="skeleton-subject-card">
+          <div class="skeleton-subject-header">
+            <div class="skeleton-text skeleton-subject-name"></div>
+            <div class="skeleton-badge"></div>
+          </div>
+          <div class="skeleton-subject-stats">
+            <div class="skeleton-text skeleton-stat"></div>
+            <div class="skeleton-text skeleton-stat"></div>
+            <div class="skeleton-text skeleton-stat"></div>
+          </div>
+          <div class="skeleton-progress-bar"></div>
+          <div class="skeleton-btn skeleton-btn-start"></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- Error -->

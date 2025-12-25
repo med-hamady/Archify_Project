@@ -1,8 +1,31 @@
 <div class="subscription-container">
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Vérification de votre abonnement...</p>
+  <!-- Loading - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-content-card">
+      <div class="skeleton-icon"></div>
+      <div class="skeleton-text skeleton-title"></div>
+      <div class="skeleton-text skeleton-message"></div>
+      <div class="skeleton-plans">
+        <div class="skeleton-plan-item">
+          <div class="skeleton-plan-icon"></div>
+          <div class="skeleton-plan-details">
+            <div class="skeleton-text skeleton-plan-title"></div>
+            <div class="skeleton-text skeleton-plan-desc"></div>
+          </div>
+        </div>
+        <div class="skeleton-plan-item">
+          <div class="skeleton-plan-icon"></div>
+          <div class="skeleton-plan-details">
+            <div class="skeleton-text skeleton-plan-title"></div>
+            <div class="skeleton-text skeleton-plan-desc"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-buttons">
+        <div class="skeleton-btn skeleton-btn-primary"></div>
+        <div class="skeleton-btn skeleton-btn-secondary"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Contenu principal -->

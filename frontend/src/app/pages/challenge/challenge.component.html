@@ -1,8 +1,26 @@
 <div class="challenge-container">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>{{ currentState === 'playing' ? 'Soumission en cours...' : 'Chargement du challenge...' }}</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-challenge-card">
+      <div class="skeleton-challenge-icon"></div>
+      <div class="skeleton-text skeleton-title"></div>
+      <div class="skeleton-text skeleton-subtitle"></div>
+
+      <div class="skeleton-challenge-info">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-info-item"></div>
+      </div>
+
+      <div class="skeleton-rules-box"></div>
+
+      <div class="skeleton-timer-section">
+        <div class="skeleton-text skeleton-timer-title"></div>
+        <div class="skeleton-time-options">
+          <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-time-option"></div>
+        </div>
+      </div>
+
+      <div class="skeleton-btn skeleton-btn-start"></div>
+    </div>
   </div>
 
   <!-- Error State -->

@@ -1,8 +1,26 @@
 <div class="exam-container">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>{{ currentState === 'playing' ? 'Soumission en cours...' : currentState === 'correction' ? 'Chargement de la correction...' : 'Chargement de l\'examen...' }}</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-exam-card">
+      <div class="skeleton-exam-icon"></div>
+      <div class="skeleton-text skeleton-title"></div>
+      <div class="skeleton-text skeleton-subtitle"></div>
+
+      <div class="skeleton-exam-info">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-info-item"></div>
+      </div>
+
+      <div class="skeleton-rules-box"></div>
+
+      <div class="skeleton-options-section">
+        <div class="skeleton-text skeleton-option-title"></div>
+        <div class="skeleton-option-buttons">
+          <div *ngFor="let i of [1, 2, 3]" class="skeleton-option-btn"></div>
+        </div>
+      </div>
+
+      <div class="skeleton-btn skeleton-btn-start"></div>
+    </div>
   </div>
 
   <!-- Error State -->

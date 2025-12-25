@@ -5,18 +5,38 @@
     <h1 *ngIf="subject"><img src="/video.png" alt="Vidéos" class="header-icon"/> Vidéos - {{ subject.title }}</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-videos-grid">
+      <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-video-card">
+        <div class="skeleton-thumbnail">
+          <div class="skeleton-play-icon"></div>
+        </div>
+        <div class="skeleton-video-content">
+          <div class="skeleton-text skeleton-video-title"></div>
+          <div class="skeleton-text skeleton-video-desc"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Content -->
   <div *ngIf="!loading" class="content">
-    <!-- Loading Videos -->
-    <div *ngIf="loadingVideos" class="loading">
-      <div class="spinner"></div>
-      <p>Chargement des vidéos...</p>
+    <!-- Loading Videos - Skeleton -->
+    <div *ngIf="loadingVideos" class="skeleton-container">
+      <div class="skeleton-videos-grid">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-video-card">
+          <div class="skeleton-thumbnail">
+            <div class="skeleton-play-icon"></div>
+          </div>
+          <div class="skeleton-video-content">
+            <div class="skeleton-text skeleton-video-title"></div>
+            <div class="skeleton-text skeleton-video-desc"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- No Videos Available -->

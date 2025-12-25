@@ -5,18 +5,34 @@
     <h1 *ngIf="subject"><img src="/cours-matiere.png" alt="Cours" class="header-icon"/> Cours - {{ subject.title }}</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-pdfs-grid">
+      <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-pdf-card">
+        <div class="skeleton-pdf-icon"></div>
+        <div class="skeleton-pdf-content">
+          <div class="skeleton-text skeleton-pdf-title"></div>
+          <div class="skeleton-text skeleton-pdf-desc"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Content -->
   <div *ngIf="!loading" class="content">
-    <!-- Loading PDFs -->
-    <div *ngIf="loadingPdfs" class="loading">
-      <div class="spinner"></div>
-      <p>Chargement des cours...</p>
+    <!-- Loading PDFs - Skeleton -->
+    <div *ngIf="loadingPdfs" class="skeleton-container">
+      <div class="skeleton-pdfs-grid">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-pdf-card">
+          <div class="skeleton-pdf-icon"></div>
+          <div class="skeleton-pdf-content">
+            <div class="skeleton-text skeleton-pdf-title"></div>
+            <div class="skeleton-text skeleton-pdf-desc"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- No PDFs Available -->
