@@ -239,7 +239,8 @@ interface UserStats {
                 <p class="text-sm text-gray-600">Créer un compte utilisateur</p>
               </button>
 
-              <button (click)="showAddPlanModal.set(true)"
+              <button *ngIf="authService.isSuperAdmin()"
+                      (click)="showAddPlanModal.set(true)"
                       class="group p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                 <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +251,8 @@ interface UserStats {
                 <p class="text-sm text-gray-600">Modifier les abonnements</p>
               </button>
 
-              <button (click)="goToPaymentsManagement()"
+              <button *ngIf="authService.isSuperAdmin()"
+                      (click)="goToPaymentsManagement()"
                       class="group p-6 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border border-amber-200 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                 <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,7 +263,8 @@ interface UserStats {
                 <p class="text-sm text-gray-600">Valider les paiements manuels</p>
               </button>
 
-              <button (click)="activeTab.set('analytics')"
+              <button *ngIf="authService.isSuperAdmin()"
+                      (click)="activeTab.set('analytics')"
                       class="group p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                 <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1279,12 +1282,7 @@ interface UserStats {
                     (change)="onQcmSemesterChange()"
                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
               <option value="">Sélectionner un niveau</option>
-              <option value="PCEM1">PCEM1</option>
-              <option value="PCEM2">PCEM2</option>
-              <option value="DCEM1">DCEM1</option>
-              <option value="DCEM2">DCEM2</option>
-              <option value="DCEM3">DCEM3</option>
-              <option value="DCEM4">DCEM4</option>
+              <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
             </select>
           </div>
 
@@ -1542,12 +1540,7 @@ interface UserStats {
                     (change)="onQrocSemesterChange()"
                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all">
               <option value="">Sélectionner un niveau</option>
-              <option value="PCEM1">PCEM1</option>
-              <option value="PCEM2">PCEM2</option>
-              <option value="DCEM1">DCEM1</option>
-              <option value="DCEM2">DCEM2</option>
-              <option value="DCEM3">DCEM3</option>
-              <option value="DCEM4">DCEM4</option>
+              <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
             </select>
           </div>
 
@@ -1969,12 +1962,7 @@ interface UserStats {
                       (change)="onPdfSemesterChange()"
                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                 <option value="">Sélectionner un niveau</option>
-                <option value="PCEM1">PCEM1</option>
-                <option value="PCEM2">PCEM2</option>
-                <option value="DCEM1">DCEM1</option>
-                <option value="DCEM2">DCEM2</option>
-                <option value="DCEM3">DCEM3</option>
-                <option value="DCEM4">DCEM4</option>
+                <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
               </select>
             </div>
 
@@ -2126,12 +2114,7 @@ interface UserStats {
                       (change)="onVideoSemesterChange()"
                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                 <option value="">Sélectionner un niveau</option>
-                <option value="PCEM1">PCEM1</option>
-                <option value="PCEM2">PCEM2</option>
-                <option value="DCEM1">DCEM1</option>
-                <option value="DCEM2">DCEM2</option>
-                <option value="DCEM3">DCEM3</option>
-                <option value="DCEM4">DCEM4</option>
+                <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
               </select>
             </div>
 
@@ -2329,12 +2312,7 @@ interface UserStats {
               <select [(ngModel)]="newSubjectForm.semester"
                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                 <option value="">Sélectionner un niveau</option>
-                <option value="PCEM1">PCEM1</option>
-                <option value="PCEM2">PCEM2</option>
-                <option value="DCEM1">DCEM1</option>
-                <option value="DCEM2">DCEM2</option>
-                <option value="DCEM3">DCEM3</option>
-                <option value="DCEM4">DCEM4</option>
+                <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
               </select>
             </div>
 
@@ -2414,12 +2392,7 @@ interface UserStats {
                         (change)="onAddChapterSemesterChange()"
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                   <option value="">Sélectionner un niveau</option>
-                  <option value="PCEM1">PCEM1</option>
-                  <option value="PCEM2">PCEM2</option>
-                  <option value="DCEM1">DCEM1</option>
-                  <option value="DCEM2">DCEM2</option>
-                  <option value="DCEM3">DCEM3</option>
-                  <option value="DCEM4">DCEM4</option>
+                  <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
                 </select>
               </div>
 
@@ -2511,12 +2484,7 @@ interface UserStats {
                         (change)="onAddQuizSemesterChange()"
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                   <option value="">Sélectionner un niveau</option>
-                  <option value="PCEM1">PCEM1</option>
-                  <option value="PCEM2">PCEM2</option>
-                  <option value="DCEM1">DCEM1</option>
-                  <option value="DCEM2">DCEM2</option>
-                  <option value="DCEM3">DCEM3</option>
-                  <option value="DCEM4">DCEM4</option>
+                  <option *ngFor="let sem of availableSemesters()" [value]="sem">{{ sem }}</option>
                 </select>
               </div>
 
@@ -3594,7 +3562,7 @@ interface UserStats {
           </div>
 
           <div class="space-y-3 mb-6">
-            <label *ngFor="let semester of availableSemesters"
+            <label *ngFor="let semester of allSemesters"
                    class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
               <input type="checkbox"
                      [checked]="selectedSemestersForAdmin().includes(semester)"
@@ -3838,7 +3806,18 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   selectedSemestersForAdmin = signal<string[]>([]);
   assignSemestersLoading = signal(false);
   assignSemestersMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
-  availableSemesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
+
+  // Liste complète des semestres (pour le modal d'assignation SUPERADMIN)
+  allSemesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
+
+  // Semestres disponibles selon le rôle (filtrés pour Level Admin)
+  availableSemesters = computed(() => {
+    if (this.authService.isSuperAdmin()) {
+      return this.allSemesters;
+    }
+    // Level Admin: seulement ses semestres assignés
+    return this.authService.assignedSemesters() || [];
+  });
 
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
