@@ -66,25 +66,22 @@
   transform: translateX(-3px);
 }
 
-.progress-info {
+.header-center {
   flex: 1;
+  text-align: center;
+}
+
+.chapter-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.progress-info {
   text-align: right;
 }
 
-.subchapter-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #4f6ef7, #3b5bdb);
-  color: white;
-  padding: 0.4rem 0.9rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 2px 10px rgba(79, 110, 247, 0.25);
-}
-
 .question-counter {
-  display: block;
   font-size: 0.85rem;
   font-weight: 600;
   color: #4f6ef7;
@@ -141,18 +138,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Chapter Info */
-.chapter-info {
-  font-size: 0.85rem;
-  color: #4f6ef7;
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  background: white;
-  border-radius: 10px;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.1);
 }
 
 /* Question Text */

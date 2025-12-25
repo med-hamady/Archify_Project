@@ -15,10 +15,10 @@
       </svg>
       Retour
     </button>
+    <div *ngIf="currentQuestion" class="header-center">
+      <span class="chapter-title">{{ currentQuestion.chapterTitle }}</span>
+    </div>
     <div *ngIf="currentQuestion" class="progress-info">
-      <div *ngIf="currentQuestion.subchapterTitle" class="subchapter-badge">
-        {{ currentQuestion.subchapterTitle }}
-      </div>
       <span class="question-counter">
         Question {{ (currentQuestion.position || currentQuestion.orderIndex || 0) + 1 }} / {{ currentQuestion.totalQuestions || 0 }}
       </span>
@@ -60,11 +60,6 @@
     <!-- Replay Mode Badge -->
     <div *ngIf="currentQuestion.isReplay" class="replay-badge">
       🔄 Mode Révision - Pas d'XP
-    </div>
-
-    <!-- Chapter Info -->
-    <div class="chapter-info">
-      📖 {{ currentQuestion.chapterTitle }}
     </div>
 
     <!-- Question Text -->
