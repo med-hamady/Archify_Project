@@ -7,7 +7,9 @@ export interface Qroc {
   id: string;
   subjectId: string;
   question: string;
+  questionImageUrl?: string;
   answer: string;
+  answerImageUrl?: string;
   category?: string;
   orderIndex: number;
   createdAt: string;
@@ -22,14 +24,18 @@ export interface Qroc {
 export interface CreateQrocData {
   subjectId: string;
   question: string;
+  questionImageUrl?: string;
   answer: string;
+  answerImageUrl?: string;
   category?: string;
   orderIndex?: number;
 }
 
 export interface UpdateQrocData {
   question?: string;
+  questionImageUrl?: string;
   answer?: string;
+  answerImageUrl?: string;
   category?: string;
   orderIndex?: number;
 }

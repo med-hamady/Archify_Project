@@ -2,6 +2,9 @@ import express from 'express';
 import { z } from 'zod';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth, requireAdmin } from './auth';
+import { imageUpload, getFileUrl, deleteFile } from '../middleware/upload';
+import path from 'path';
+import fs from 'fs';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -10,7 +13,9 @@ const prisma = new PrismaClient();
 const createQrocSchema = z.object({
   subjectId: z.string(),
   question: z.string().min(3, 'La question doit contenir au moins 3 caractères'),
+  questionImageUrl: z.string().nullable().optional(),
   answer: z.string().min(1, 'La réponse est requise'),
+  answerImageUrl: z.string().nullable().optional(),
   category: z.string().nullable().optional(),
   orderIndex: z.number().int().min(0).optional()
 });
@@ -18,7 +23,9 @@ const createQrocSchema = z.object({
 const updateQrocSchema = z.object({
   subjectId: z.string().optional(),
   question: z.string().min(3).optional(),
+  questionImageUrl: z.string().nullable().optional(),
   answer: z.string().min(1).optional(),
+  answerImageUrl: z.string().nullable().optional(),
   category: z.string().nullable().optional(),
   orderIndex: z.number().int().min(0).optional()
 });
@@ -115,7 +122,9 @@ router.post('/', requireAuth, requireAdmin, async (req: any, res) => {
       data: {
         subjectId: validatedData.subjectId,
         question: validatedData.question,
+        questionImageUrl: validatedData.questionImageUrl,
         answer: validatedData.answer,
+        answerImageUrl: validatedData.answerImageUrl,
         category: validatedData.category,
         orderIndex: validatedData.orderIndex ?? 0
       },
@@ -225,6 +234,16 @@ router.delete('/:id', requireAuth, requireAdmin, async (req: any, res) => {
       });
     }
 
+    // Delete associated images if they exist
+    if (existingQroc.questionImageUrl) {
+      const questionImagePath = path.join(__dirname, '../../', existingQroc.questionImageUrl);
+      deleteFile(questionImagePath);
+    }
+    if (existingQroc.answerImageUrl) {
+      const answerImagePath = path.join(__dirname, '../../', existingQroc.answerImageUrl);
+      deleteFile(answerImagePath);
+    }
+
     await prisma.qroc.delete({
       where: { id }
     });
@@ -238,6 +257,161 @@ router.delete('/:id', requireAuth, requireAdmin, async (req: any, res) => {
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la suppression du QROC'
+    });
+  }
+});
+
+// POST /api/qrocs/:id/upload-image - Upload image for QROC (Admin only)
+router.post('/:id/upload-image', requireAuth, requireAdmin, imageUpload.single('image'), async (req: any, res) => {
+  try {
+    const { id } = req.params;
+    const { imageType } = req.body; // 'question' or 'answer'
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'Aucune image fournie'
+      });
+    }
+
+    if (!imageType || !['question', 'answer'].includes(imageType)) {
+      // Delete uploaded file if imageType is invalid
+      if (req.file.path) {
+        deleteFile(req.file.path);
+      }
+      return res.status(400).json({
+        success: false,
+        error: 'Type d\'image invalide. Utilisez "question" ou "answer"'
+      });
+    }
+
+    // Check if QROC exists
+    const existingQroc = await prisma.qroc.findUnique({
+      where: { id }
+    });
+
+    if (!existingQroc) {
+      // Delete uploaded file if QROC doesn't exist
+      if (req.file.path) {
+        deleteFile(req.file.path);
+      }
+      return res.status(404).json({
+        success: false,
+        error: 'QROC non trouvé'
+      });
+    }
+
+    // Delete old image if exists
+    const oldImageField = imageType === 'question' ? 'questionImageUrl' : 'answerImageUrl';
+    const oldImageUrl = existingQroc[oldImageField];
+    if (oldImageUrl) {
+      const oldImagePath = path.join(__dirname, '../../', oldImageUrl);
+      deleteFile(oldImagePath);
+    }
+
+    // Get the new image URL
+    const imageUrl = getFileUrl(req.file.path);
+
+    // Update QROC with new image URL
+    const updateData = imageType === 'question'
+      ? { questionImageUrl: imageUrl }
+      : { answerImageUrl: imageUrl };
+
+    const updatedQroc = await prisma.qroc.update({
+      where: { id },
+      data: updateData,
+      include: {
+        subject: {
+          select: {
+            id: true,
+            title: true,
+            semester: true
+          }
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      message: `Image ${imageType === 'question' ? 'de la question' : 'de la réponse'} uploadée avec succès`,
+      imageUrl,
+      qroc: updatedQroc
+    });
+  } catch (error: any) {
+    console.error('Error uploading QROC image:', error);
+    // Delete uploaded file on error
+    if (req.file?.path) {
+      deleteFile(req.file.path);
+    }
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de l\'upload de l\'image'
+    });
+  }
+});
+
+// DELETE /api/qrocs/:id/image/:imageType - Delete image from QROC (Admin only)
+router.delete('/:id/image/:imageType', requireAuth, requireAdmin, async (req: any, res) => {
+  try {
+    const { id, imageType } = req.params;
+
+    if (!['question', 'answer'].includes(imageType)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Type d\'image invalide. Utilisez "question" ou "answer"'
+      });
+    }
+
+    // Check if QROC exists
+    const existingQroc = await prisma.qroc.findUnique({
+      where: { id }
+    });
+
+    if (!existingQroc) {
+      return res.status(404).json({
+        success: false,
+        error: 'QROC non trouvé'
+      });
+    }
+
+    // Get and delete the image file
+    const imageField = imageType === 'question' ? 'questionImageUrl' : 'answerImageUrl';
+    const imageUrl = existingQroc[imageField];
+
+    if (imageUrl) {
+      const imagePath = path.join(__dirname, '../../', imageUrl);
+      deleteFile(imagePath);
+    }
+
+    // Update QROC to remove image URL
+    const updateData = imageType === 'question'
+      ? { questionImageUrl: null }
+      : { answerImageUrl: null };
+
+    const updatedQroc = await prisma.qroc.update({
+      where: { id },
+      data: updateData,
+      include: {
+        subject: {
+          select: {
+            id: true,
+            title: true,
+            semester: true
+          }
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      message: `Image ${imageType === 'question' ? 'de la question' : 'de la réponse'} supprimée avec succès`,
+      qroc: updatedQroc
+    });
+  } catch (error: any) {
+    console.error('Error deleting QROC image:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la suppression de l\'image'
     });
   }
 });

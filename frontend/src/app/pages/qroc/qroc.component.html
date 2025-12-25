@@ -48,6 +48,7 @@
           <div class="card-label">Question</div>
           <div class="card-content">
             <p>{{ currentQroc?.question }}</p>
+            <img *ngIf="currentQroc?.questionImageUrl" [src]="currentQroc?.questionImageUrl" alt="Image question" class="qroc-image">
           </div>
           <div class="card-hint">
             Cliquez pour voir la réponse
@@ -59,6 +60,7 @@
           <div class="card-label">Réponse</div>
           <div class="card-content">
             <p>{{ currentQroc?.answer }}</p>
+            <img *ngIf="currentQroc?.answerImageUrl" [src]="currentQroc?.answerImageUrl" alt="Image réponse" class="qroc-image">
           </div>
           <div class="card-hint">
             Cliquez pour voir la question

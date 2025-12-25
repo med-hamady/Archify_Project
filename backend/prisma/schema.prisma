@@ -406,10 +406,12 @@ model Qroc {
   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId String
 
-  question   String @db.Text // La question affichée sur le recto de la carte
-  answer     String @db.Text // La réponse affichée sur le verso de la carte
-  category   String? // Catégorie optionnelle (ex: "Anatomie du crâne", "Physiologie cardiaque")
-  orderIndex Int    @default(0) // Ordre d'affichage
+  question         String  @db.Text // La question affichée sur le recto de la carte
+  questionImageUrl String? // Image optionnelle pour la question
+  answer           String  @db.Text // La réponse affichée sur le verso de la carte
+  answerImageUrl   String? // Image optionnelle pour la réponse
+  category         String? // Catégorie optionnelle (ex: "Anatomie du crâne", "Physiologie cardiaque")
+  orderIndex       Int     @default(0) // Ordre d'affichage
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

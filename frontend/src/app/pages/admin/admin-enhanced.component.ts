@@ -1588,9 +1588,17 @@ interface UserStats {
                     <span *ngIf="qroc.category" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">
                       {{ qroc.category }}
                     </span>
+                    <span *ngIf="qroc.questionImageUrl || qroc.answerImageUrl" class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs flex items-center gap-1">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                      {{ qroc.questionImageUrl && qroc.answerImageUrl ? '2 images' : '1 image' }}
+                    </span>
                   </div>
                   <p class="font-semibold text-gray-900 mb-2">{{ qroc.question }}</p>
+                  <img *ngIf="qroc.questionImageUrl" [src]="qroc.questionImageUrl" alt="Question image" class="max-h-24 rounded-lg mb-2 border border-gray-200">
                   <p class="text-gray-600 text-sm">{{ qroc.answer }}</p>
+                  <img *ngIf="qroc.answerImageUrl" [src]="qroc.answerImageUrl" alt="Answer image" class="max-h-24 rounded-lg mt-2 border border-gray-200">
                 </div>
                 <div class="flex gap-2">
                   <button (click)="editQroc(qroc)"
@@ -1640,7 +1648,7 @@ interface UserStats {
 
       <!-- Add/Edit QROC Modal -->
       <div *ngIf="showAddQrocModal() || showEditQrocModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 transform transition-all duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all duration-300 max-h-[90vh] overflow-y-auto">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-gray-900">{{ showEditQrocModal() ? 'Modifier le QROC' : 'Ajouter un QROC' }}</h3>
             <button (click)="closeQrocModal()" class="text-gray-400 hover:text-gray-600">
@@ -1650,6 +1658,7 @@ interface UserStats {
             </button>
           </div>
           <div class="space-y-4">
+            <!-- Question Section -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">Question</label>
               <textarea [(ngModel)]="qrocFormData.question"
@@ -1657,6 +1666,33 @@ interface UserStats {
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Entrez la question"></textarea>
             </div>
+
+            <!-- Question Image Upload -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Image de la question (optionnel)</label>
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-orange-400 transition-colors">
+                <div *ngIf="!qrocQuestionImagePreview()" class="text-center">
+                  <svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <p class="mt-1 text-sm text-gray-500">Cliquez pour ajouter une image</p>
+                  <input type="file" accept="image/*" (change)="onQrocImageSelected($event, 'question')"
+                         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                         style="position: relative;">
+                </div>
+                <div *ngIf="qrocQuestionImagePreview()" class="relative">
+                  <img [src]="qrocQuestionImagePreview()" alt="Preview" class="max-h-40 mx-auto rounded-lg">
+                  <button (click)="removeQrocImage('question')" type="button"
+                          class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Answer Section -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">Réponse</label>
               <textarea [(ngModel)]="qrocFormData.answer"
@@ -1664,6 +1700,33 @@ interface UserStats {
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Entrez la réponse"></textarea>
             </div>
+
+            <!-- Answer Image Upload -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Image de la réponse (optionnel)</label>
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-orange-400 transition-colors">
+                <div *ngIf="!qrocAnswerImagePreview()" class="text-center">
+                  <svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <p class="mt-1 text-sm text-gray-500">Cliquez pour ajouter une image</p>
+                  <input type="file" accept="image/*" (change)="onQrocImageSelected($event, 'answer')"
+                         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                         style="position: relative;">
+                </div>
+                <div *ngIf="qrocAnswerImagePreview()" class="relative">
+                  <img [src]="qrocAnswerImagePreview()" alt="Preview" class="max-h-40 mx-auto rounded-lg">
+                  <button (click)="removeQrocImage('answer')" type="button"
+                          class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category Section -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie (optionnel)</label>
               <input type="text"
@@ -3703,11 +3766,20 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   showEditQrocModal = signal(false);
   qrocFormData = {
     question: '',
+    questionImageUrl: '' as string | null,
     answer: '',
+    answerImageUrl: '' as string | null,
     category: ''
   };
 
-  // Image upload signals
+  // QROC Image upload signals
+  uploadingQrocImage = signal(false);
+  qrocQuestionImageFile = signal<File | null>(null);
+  qrocQuestionImagePreview = signal<string | null>(null);
+  qrocAnswerImageFile = signal<File | null>(null);
+  qrocAnswerImagePreview = signal<string | null>(null);
+
+  // Image upload signals (for other purposes)
   questionImageFile = signal<File | null>(null);
   questionImagePreview = signal<string | null>(null);
   uploadingQuestionImage = signal(false);
@@ -5203,9 +5275,15 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   openAddQrocModal() {
     this.qrocFormData = {
       question: '',
+      questionImageUrl: null,
       answer: '',
+      answerImageUrl: null,
       category: ''
     };
+    this.qrocQuestionImageFile.set(null);
+    this.qrocQuestionImagePreview.set(null);
+    this.qrocAnswerImageFile.set(null);
+    this.qrocAnswerImagePreview.set(null);
     this.selectedQroc.set(null);
     this.showAddQrocModal.set(true);
     this.qrocSuccessMessage.set('');
@@ -5215,9 +5293,15 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   editQroc(qroc: any) {
     this.qrocFormData = {
       question: qroc.question,
+      questionImageUrl: qroc.questionImageUrl || null,
       answer: qroc.answer,
+      answerImageUrl: qroc.answerImageUrl || null,
       category: qroc.category || ''
     };
+    this.qrocQuestionImageFile.set(null);
+    this.qrocQuestionImagePreview.set(qroc.questionImageUrl || null);
+    this.qrocAnswerImageFile.set(null);
+    this.qrocAnswerImagePreview.set(qroc.answerImageUrl || null);
     this.selectedQroc.set(qroc);
     this.showEditQrocModal.set(true);
     this.qrocSuccessMessage.set('');
@@ -5230,12 +5314,99 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     this.selectedQroc.set(null);
     this.qrocFormData = {
       question: '',
+      questionImageUrl: null,
       answer: '',
+      answerImageUrl: null,
       category: ''
     };
+    this.qrocQuestionImageFile.set(null);
+    this.qrocQuestionImagePreview.set(null);
+    this.qrocAnswerImageFile.set(null);
+    this.qrocAnswerImagePreview.set(null);
   }
 
-  saveQroc() {
+  // Handle QROC image selection
+  onQrocImageSelected(event: Event, imageType: 'question' | 'answer') {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.qrocErrorMessage.set('Format d\'image non supporté. Utilisez JPEG, PNG, GIF ou WebP.');
+        setTimeout(() => this.qrocErrorMessage.set(''), 5000);
+        return;
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        this.qrocErrorMessage.set('L\'image est trop grande. Maximum 10MB.');
+        setTimeout(() => this.qrocErrorMessage.set(''), 5000);
+        return;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (imageType === 'question') {
+          this.qrocQuestionImageFile.set(file);
+          this.qrocQuestionImagePreview.set(e.target?.result as string);
+        } else {
+          this.qrocAnswerImageFile.set(file);
+          this.qrocAnswerImagePreview.set(e.target?.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Remove QROC image
+  removeQrocImage(imageType: 'question' | 'answer') {
+    if (imageType === 'question') {
+      this.qrocQuestionImageFile.set(null);
+      this.qrocQuestionImagePreview.set(null);
+      this.qrocFormData.questionImageUrl = null;
+    } else {
+      this.qrocAnswerImageFile.set(null);
+      this.qrocAnswerImagePreview.set(null);
+      this.qrocFormData.answerImageUrl = null;
+    }
+  }
+
+  // Upload QROC image to server
+  uploadQrocImage(qrocId: string, imageType: 'question' | 'answer', file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('imageType', imageType);
+
+      this.http.post<any>(`${this.API_URL}/qrocs/${qrocId}/upload-image`, formData).subscribe({
+        next: (response) => {
+          resolve(response.imageUrl);
+        },
+        error: (error) => {
+          console.error('Error uploading QROC image:', error);
+          reject(error);
+        }
+      });
+    });
+  }
+
+  // Delete QROC image from server
+  deleteQrocImage(qrocId: string, imageType: 'question' | 'answer'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.http.delete<any>(`${this.API_URL}/qrocs/${qrocId}/image/${imageType}`).subscribe({
+        next: () => resolve(),
+        error: (error) => {
+          console.error('Error deleting QROC image:', error);
+          reject(error);
+        }
+      });
+    });
+  }
+
+  async saveQroc() {
     if (!this.qrocFormData.question || !this.qrocFormData.answer) {
       this.qrocErrorMessage.set('La question et la réponse sont obligatoires');
       return;
@@ -5250,43 +5421,66 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     this.qrocSuccessMessage.set('');
     this.qrocErrorMessage.set('');
 
-    const qrocData = {
-      subjectId: this.selectedQrocSubject,
-      question: this.qrocFormData.question,
-      answer: this.qrocFormData.answer,
-      category: this.qrocFormData.category || null,
-      orderIndex: this.qrocList().length
-    };
+    try {
+      const isEditing = !!this.selectedQroc();
+      let qrocId = isEditing ? this.selectedQroc().id : null;
 
-    const request = this.selectedQroc()
-      ? this.http.put<any>(`${this.API_URL}/qrocs/${this.selectedQroc().id}`, qrocData)
-      : this.http.post<any>(`${this.API_URL}/qrocs`, qrocData);
+      // Prepare QROC data
+      const qrocData: any = {
+        subjectId: this.selectedQrocSubject,
+        question: this.qrocFormData.question,
+        answer: this.qrocFormData.answer,
+        category: this.qrocFormData.category || null,
+        orderIndex: isEditing ? this.selectedQroc().orderIndex : this.qrocList().length
+      };
 
-    request.subscribe({
-      next: (data) => {
-        this.qrocSaving.set(false);
-        this.qrocSuccessMessage.set(
-          this.selectedQroc()
-            ? 'QROC modifié avec succès'
-            : 'QROC ajouté avec succès'
-        );
-        this.closeQrocModal();
-        this.onQrocSubjectChange(); // Reload QROCs
-
-        setTimeout(() => {
-          this.qrocSuccessMessage.set('');
-        }, 3000);
-      },
-      error: (error) => {
-        this.qrocSaving.set(false);
-        console.error('Error saving QROC:', error);
-        this.qrocErrorMessage.set('Erreur lors de l\'enregistrement du QROC');
-
-        setTimeout(() => {
-          this.qrocErrorMessage.set('');
-        }, 5000);
+      // If editing and we're removing images (preview is null but original had image)
+      if (isEditing) {
+        // Check if question image should be removed
+        if (!this.qrocQuestionImagePreview() && this.selectedQroc().questionImageUrl) {
+          await this.deleteQrocImage(qrocId, 'question');
+        }
+        // Check if answer image should be removed
+        if (!this.qrocAnswerImagePreview() && this.selectedQroc().answerImageUrl) {
+          await this.deleteQrocImage(qrocId, 'answer');
+        }
       }
-    });
+
+      // Create or update QROC
+      const request = isEditing
+        ? this.http.put<any>(`${this.API_URL}/qrocs/${qrocId}`, qrocData)
+        : this.http.post<any>(`${this.API_URL}/qrocs`, qrocData);
+
+      const response = await request.toPromise();
+      qrocId = response.qroc.id;
+
+      // Upload images if selected
+      if (this.qrocQuestionImageFile()) {
+        await this.uploadQrocImage(qrocId, 'question', this.qrocQuestionImageFile()!);
+      }
+      if (this.qrocAnswerImageFile()) {
+        await this.uploadQrocImage(qrocId, 'answer', this.qrocAnswerImageFile()!);
+      }
+
+      this.qrocSaving.set(false);
+      this.qrocSuccessMessage.set(
+        isEditing ? 'QROC modifié avec succès' : 'QROC ajouté avec succès'
+      );
+      this.closeQrocModal();
+      this.onQrocSubjectChange(); // Reload QROCs
+
+      setTimeout(() => {
+        this.qrocSuccessMessage.set('');
+      }, 3000);
+    } catch (error) {
+      this.qrocSaving.set(false);
+      console.error('Error saving QROC:', error);
+      this.qrocErrorMessage.set('Erreur lors de l\'enregistrement du QROC');
+
+      setTimeout(() => {
+        this.qrocErrorMessage.set('');
+      }, 5000);
+    }
   }
 
   deleteQroc(qrocId: string) {
