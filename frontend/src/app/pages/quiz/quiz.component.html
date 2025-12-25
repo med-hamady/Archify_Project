@@ -83,26 +83,31 @@
         [class.partial]="showResult && result?.options?.[i]?.isPartial"
         [class.disabled]="answered"
         (click)="selectAnswer(i)">
-        <span class="option-checkbox">
-          <span *ngIf="isSelected(i)" class="checkbox-check">✓</span>
-        </span>
         <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E'][i] }}</span>
         <span class="option-text">{{ option.text }}</span>
 
         <!-- Result Icons -->
         <span *ngIf="showResult && result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial" class="result-icon correct-icon">
-          ✓
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
         </span>
         <span *ngIf="showResult && result?.options?.[i]?.wasSelected && !result?.options?.[i]?.isCorrect && !result?.options?.[i]?.isPartial" class="result-icon incorrect-icon">
-          ✗
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </span>
         <span *ngIf="showResult && result?.options?.[i]?.isPartial" class="result-icon partial-icon">
-          ⚠
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
         </span>
 
         <!-- Justification pour les réponses fausses ou partielles -->
         <div *ngIf="showResult && result?.options?.[i]?.justification" class="justification">
-          <span class="justification-icon">💡</span>
           <span class="justification-text">{{ result?.options?.[i]?.justification }}</span>
         </div>
       </button>
