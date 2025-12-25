@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { QrocService, Qroc } from '../../services/qroc.service';
 import { SubjectsService, Subject } from '../../services/subjects.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-qroc',
@@ -16,6 +17,7 @@ export class QrocComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private qrocService = inject(QrocService);
   private subjectsService = inject(SubjectsService);
+  private backendUrl = environment.backendUrl;
 
   subjectId: string = '';
   subject: Subject | null = null;
@@ -117,5 +119,14 @@ export class QrocComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/subject-options', this.subjectId]);
+  }
+
+  // Get full image URL for QROC images
+  getImageUrl(imageUrl: string | null | undefined): string {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http') || imageUrl.startsWith('data:')) {
+      return imageUrl;
+    }
+    return `${this.backendUrl}${imageUrl}`;
   }
 }

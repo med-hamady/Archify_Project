@@ -1596,9 +1596,9 @@ interface UserStats {
                     </span>
                   </div>
                   <p class="font-semibold text-gray-900 mb-2">{{ qroc.question }}</p>
-                  <img *ngIf="qroc.questionImageUrl" [src]="qroc.questionImageUrl" alt="Question image" class="max-h-24 rounded-lg mb-2 border border-gray-200">
+                  <img *ngIf="qroc.questionImageUrl" [src]="getImageUrl(qroc.questionImageUrl)" alt="Question image" class="max-h-24 rounded-lg mb-2 border border-gray-200">
                   <p class="text-gray-600 text-sm">{{ qroc.answer }}</p>
-                  <img *ngIf="qroc.answerImageUrl" [src]="qroc.answerImageUrl" alt="Answer image" class="max-h-24 rounded-lg mt-2 border border-gray-200">
+                  <img *ngIf="qroc.answerImageUrl" [src]="getImageUrl(qroc.answerImageUrl)" alt="Answer image" class="max-h-24 rounded-lg mt-2 border border-gray-200">
                 </div>
                 <div class="flex gap-2">
                   <button (click)="editQroc(qroc)"
@@ -3658,6 +3658,7 @@ interface UserStats {
 })
 export class AdminEnhancedComponent implements OnInit, OnDestroy {
   readonly API_URL = environment.apiUrl;
+  readonly BACKEND_URL = environment.backendUrl;
 
   // Signals
   activeTab = signal('overview');
@@ -5297,9 +5298,9 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
       category: qroc.category || ''
     };
     this.qrocQuestionImageFile.set(null);
-    this.qrocQuestionImagePreview.set(qroc.questionImageUrl || null);
+    this.qrocQuestionImagePreview.set(qroc.questionImageUrl ? this.getImageUrl(qroc.questionImageUrl) : null);
     this.qrocAnswerImageFile.set(null);
-    this.qrocAnswerImagePreview.set(qroc.answerImageUrl || null);
+    this.qrocAnswerImagePreview.set(qroc.answerImageUrl ? this.getImageUrl(qroc.answerImageUrl) : null);
     this.selectedQroc.set(qroc);
     this.showEditQrocModal.set(true);
     this.qrocSuccessMessage.set('');
@@ -5879,6 +5880,15 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     }
     const baseUrl = environment.apiUrl.replace('/api', '');
     return `${baseUrl}${pdfUrl}`;
+  }
+
+  // Get full image URL (for QROC images, etc.)
+  getImageUrl(imageUrl: string | null | undefined): string {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http') || imageUrl.startsWith('data:')) {
+      return imageUrl;
+    }
+    return `${this.BACKEND_URL}${imageUrl}`;
   }
 
   deleteCoursePdf(id: string) {

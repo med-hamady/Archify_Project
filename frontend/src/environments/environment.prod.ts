@@ -2,5 +2,6 @@
 // Backend API deployed on Render
 export const environment = {
   production: true,
-  apiUrl: 'https://archify-backend.onrender.com/api'
+  apiUrl: 'https://archify-backend.onrender.com/api',
+  backendUrl: 'https://archify-backend.onrender.com'
 };
