@@ -127,10 +127,8 @@
 
 /* Question Card */
 .question-card {
-  background: white;
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 0 4px 24px rgba(79, 110, 247, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: transparent;
+  padding: 0;
   animation: slideIn 0.35s ease-out;
 }
 
@@ -148,13 +146,13 @@
 /* Chapter Info */
 .chapter-info {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: #4f6ef7;
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #f8faff, #f0f4ff);
+  background: white;
   border-radius: 10px;
   display: inline-block;
-  border: 1px solid rgba(79, 110, 247, 0.1);
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.1);
 }
 
 /* Question Text */
@@ -184,7 +182,7 @@
 
 .question-text h2 {
   font-size: 1.35rem;
-  color: #1f2937;
+  color: #1e293b;
   line-height: 1.6;
   margin: 0;
   font-weight: 600;
@@ -203,8 +201,8 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: #fafbff;
-  border: 2px solid #e8ecf4;
+  background: white;
+  border: 2px solid transparent;
   border-radius: 14px;
   font-size: 1rem;
   cursor: pointer;
@@ -212,19 +210,20 @@
   position: relative;
   text-align: left;
   flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.08);
 }
 
 .answer-option:hover:not(.disabled) {
   border-color: #4f6ef7;
-  background: #f0f4ff;
-  transform: translateX(4px);
-  box-shadow: 0 2px 12px rgba(79, 110, 247, 0.12);
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(79, 110, 247, 0.15);
 }
 
 .answer-option.selected {
   border-color: #4f6ef7;
-  background: linear-gradient(135deg, #eef2ff, #e8f0ff);
-  box-shadow: 0 2px 16px rgba(79, 110, 247, 0.18);
+  background: white;
+  box-shadow: 0 4px 16px rgba(79, 110, 247, 0.2);
 }
 
 .answer-option.correct {
@@ -422,6 +421,7 @@
   padding: 1.5rem;
   border-radius: 18px;
   animation: slideUp 0.35s ease-out;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 @keyframes slideUp {
@@ -436,13 +436,15 @@
 }
 
 .correct-result {
-  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  background: white;
   border: 2px solid #22c55e;
+  border-left: 4px solid #22c55e;
 }
 
 .incorrect-result {
-  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  background: white;
   border: 2px solid #ef4444;
+  border-left: 4px solid #ef4444;
 }
 
 .result-header {
