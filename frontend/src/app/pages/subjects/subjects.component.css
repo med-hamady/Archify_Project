@@ -100,7 +100,7 @@
   backdrop-filter: blur(10px);
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 @keyframes fadeIn {
@@ -115,8 +115,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-  border-right: 1px solid rgba(59, 130, 246, 0.15);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
+  border-right: 1px solid rgba(59, 130, 246, 0.06);
 }
 
 /* Bordure colorée à gauche selon la progression */
@@ -125,7 +125,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
   background: linear-gradient(180deg, #3b82f6, #1e40af);
 }
@@ -581,7 +581,7 @@
   backdrop-filter: blur(10px);
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 .skeleton-subject-card {
@@ -589,8 +589,8 @@
   padding: 1.5rem 2rem;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-  border-right: 1px solid rgba(59, 130, 246, 0.15);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
+  border-right: 1px solid rgba(59, 130, 246, 0.06);
 }
 
 .skeleton-subject-card::before {
@@ -598,7 +598,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
   background: linear-gradient(180deg, rgba(59, 130, 246, 0.3), rgba(30, 64, 175, 0.3));
 }
