@@ -9,9 +9,9 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function createSuperAdmin() {
-  const email = 'admin@archify.com';
-  const password = 'Admin@123';
-  const name = 'Super Admin';
+  const email = 'babaadmin@facgame.com';
+  const password = 'babaadminfacgame';
+  const name = 'Baba Admin';
 
   console.log('🔐 Création du SUPERADMIN...');
   console.log(`   Email: ${email}`);
