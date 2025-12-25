@@ -105,6 +105,7 @@ function getUserPublic(user) {
         name: user.name,
         role: user.role,
         semester: user.semester,
+        assignedSemesters: user.assignedSemesters || [], // Pour les Level Admins
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
         subscription: subscriptionData,
