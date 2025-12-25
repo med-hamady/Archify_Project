@@ -1,61 +1,63 @@
 .chapters-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
-  padding: 2rem;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 50%, #f5f0ff 100%);
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 /* Header */
 .header {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .back-btn {
-  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
   background: white;
-  color: #3b82f6;
+  color: #4f6ef7;
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.1);
 }
 
 .back-btn:hover {
-  transform: translateX(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 16px rgba(79, 110, 247, 0.2);
+  background: #f8faff;
 }
 
 .subject-info {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .subject-info h1 {
-  font-size: 2rem;
-  color: #1e40af;
+  font-size: 1.5rem;
+  color: #1e293b;
   margin: 0;
   font-weight: 700;
-  text-shadow: 0 2px 10px rgba(30, 64, 175, 0.3);
 }
 
 .semester-badge {
   display: inline-block;
-  padding: 0.5rem 1.25rem;
+  padding: 0.4rem 0.9rem;
   background: white;
-  color: #3b82f6;
+  color: #4f6ef7;
   border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.1);
 }
 
 /* Loading & Error */
@@ -64,16 +66,21 @@
   margin: 4rem auto;
   padding: 3rem;
   background: white;
-  border-radius: 20px;
+  border-radius: 18px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(79, 110, 247, 0.08);
+}
+
+.loading p {
+  color: #374151;
+  font-weight: 500;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid rgba(79, 110, 247, 0.1);
+  border-top: 4px solid #4f6ef7;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
@@ -85,91 +92,91 @@
 }
 
 .error-message {
-  background: #fee;
-  color: #c33;
-  border: 2px solid #fcc;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 2px solid #fecaca;
 }
 
 .error-message p {
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* Chapters Content */
 .chapters-content {
-  max-width: 1000px;
-  margin: 0 auto;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.35s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* Subject Progress Card */
 .subject-progress-card {
   background: white;
-  border-radius: 20px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(79, 110, 247, 0.08);
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .progress-header h2 {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.1rem;
+  color: #374151;
   margin: 0;
+  font-weight: 600;
 }
 
 .progress-percent {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #3b82f6;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4f6ef7;
 }
 
 .progress-bar-large {
-  height: 14px;
-  background: #e9ecef;
-  border-radius: 7px;
+  height: 8px;
+  background: rgba(79, 110, 247, 0.1);
+  border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .progress-fill-large {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #1e40af);
-  border-radius: 7px;
-  transition: width 0.8s ease;
+  background: linear-gradient(90deg, #4f6ef7, #7c5dfa);
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .progress-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: #f8f9fa;
-  border-radius: 10px;
-  border: 2px solid #e9ecef;
-  transition: all 0.3s ease;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  background: #fafbff;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(79, 110, 247, 0.06);
 }
 
 .stat.unlocked {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  border-color: #28a745;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-color: #22c55e;
 }
 
 /* Badge Mode Examen - Design premium doré */
@@ -284,17 +291,18 @@
 .chapters-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .chapter-card {
   background: white;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-  transition: all 0.3s ease;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(79, 110, 247, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  border: 2px solid transparent;
 }
 
 .chapter-card::before {
@@ -302,53 +310,54 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 6px;
+  width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #3b82f6, #1e40af);
+  background: linear-gradient(180deg, #4f6ef7, #3b5bdb);
 }
 
 .chapter-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(79, 110, 247, 0.15);
+  border-color: rgba(79, 110, 247, 0.1);
 }
 
 .chapter-card.complete::before {
-  background: linear-gradient(180deg, #28a745, #20c997);
+  background: linear-gradient(180deg, #22c55e, #16a34a);
 }
 
 .chapter-card.high::before {
-  background: linear-gradient(180deg, #17a2b8, #138496);
+  background: linear-gradient(180deg, #0ea5e9, #0284c7);
 }
 
 .chapter-card.medium::before {
-  background: linear-gradient(180deg, #ffc107, #ff9800);
+  background: linear-gradient(180deg, #f59e0b, #d97706);
 }
 
 .chapter-card.low::before {
-  background: linear-gradient(180deg, #ff5722, #f44336);
+  background: linear-gradient(180deg, #ef4444, #dc2626);
 }
 
 /* Chapter Header */
 .chapter-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .chapter-position {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #3b82f6, #1e40af);
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #4f6ef7, #3b5bdb);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 1.3rem;
+  font-weight: 600;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.3);
 }
 
 .chapter-info {
@@ -356,23 +365,24 @@
 }
 
 .chapter-info h3 {
-  font-size: 1.4rem;
-  color: #333;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin: 0 0 0.4rem 0;
+  font-weight: 600;
 }
 
 .chapter-meta {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.95rem;
-  color: #666;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #6b7280;
   font-weight: 500;
 }
 
@@ -387,47 +397,48 @@
 }
 
 .meta-item.challenge {
-  padding: 0.25rem 0.75rem;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
-  color: #999;
+  padding: 0.2rem 0.6rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 0.8rem;
 }
 
 .meta-item.challenge.unlocked {
-  background: linear-gradient(135deg, #fff3cd, #fff0b3);
-  border-color: #ffc107;
-  color: #856404;
-  font-weight: 700;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #f59e0b;
+  color: #92400e;
+  font-weight: 600;
 }
 
 .meta-item.challenge.clickable {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .meta-item.challenge.clickable:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 /* Subchapters List */
 .subchapters-list {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: #f8f9fa;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: #f8faff;
   border-radius: 12px;
-  border-left: 4px solid #3b82f6;
+  border-left: 3px solid #4f6ef7;
 }
 
 .subchapter-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.95rem;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .subchapter-item.clickable {
@@ -437,88 +448,89 @@
 .subchapter-item.clickable:hover {
   background: white;
   transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 2px 8px rgba(79, 110, 247, 0.12);
 }
 
 .subchapter-item.clickable:hover .subchapter-bullet {
-  color: #1e40af;
-  transform: scale(1.2);
+  color: #4f6ef7;
+  transform: scale(1.1);
 }
 
 .subchapter-item.clickable:hover .subchapter-title {
-  color: #1e40af;
+  color: #4f6ef7;
   font-weight: 600;
 }
 
 .subchapter-bullet {
-  color: #3b82f6;
-  font-size: 1.2rem;
+  color: #4f6ef7;
+  font-size: 1rem;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .subchapter-title {
   flex: 1;
-  color: #333;
+  color: #374151;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .subchapter-count {
-  color: #666;
-  font-size: 0.85rem;
+  color: #6b7280;
+  font-size: 0.8rem;
   background: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
 /* Chapter Progress */
 .chapter-progress {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .progress-label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #666;
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #6b7280;
 }
 
 .progress-value {
-  color: #3b82f6;
+  color: #4f6ef7;
+  font-weight: 600;
 }
 
 .progress-bar {
-  height: 8px;
-  background: #e9ecef;
-  border-radius: 4px;
+  height: 6px;
+  background: rgba(79, 110, 247, 0.1);
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #1e40af);
-  border-radius: 4px;
-  transition: width 0.8s ease;
+  background: linear-gradient(90deg, #4f6ef7, #7c5dfa);
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chapter-card.complete .progress-fill {
-  background: linear-gradient(90deg, #28a745, #20c997);
+  background: linear-gradient(90deg, #22c55e, #16a34a);
 }
 
 .chapter-card.high .progress-fill {
-  background: linear-gradient(90deg, #17a2b8, #138496);
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
 }
 
 .chapter-card.medium .progress-fill {
-  background: linear-gradient(90deg, #ffc107, #ff9800);
+  background: linear-gradient(90deg, #f59e0b, #d97706);
 }
 
 .chapter-card.low .progress-fill {
-  background: linear-gradient(90deg, #ff5722, #f44336);
+  background: linear-gradient(90deg, #ef4444, #dc2626);
 }
 
 /* Chapter Actions */
@@ -565,28 +577,28 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1e40af);
+  background: linear-gradient(135deg, #4f6ef7, #3b5bdb);
   color: white;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(79, 110, 247, 0.4);
 }
 
 .btn-challenge {
-  background: linear-gradient(135deg, #ffc107, #ff9800);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
   color: white;
 }
 
 .btn-challenge:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
 }
 
 .btn-disabled {
-  background: #e9ecef;
-  color: #999;
+  background: #f1f5f9;
+  color: #94a3b8;
   cursor: not-allowed;
 }
 
@@ -601,20 +613,20 @@
   margin: 4rem auto;
   padding: 3rem;
   background: white;
-  border-radius: 20px;
+  border-radius: 18px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(79, 110, 247, 0.08);
 }
 
 .empty-state p {
-  font-size: 1.2rem;
-  color: #333;
+  font-size: 1.1rem;
+  color: #374151;
   margin-bottom: 0.5rem;
 }
 
 .empty-state .hint {
-  font-size: 1rem;
-  color: #888;
+  font-size: 0.95rem;
+  color: #6b7280;
 }
 
 /* Buttons */
@@ -625,17 +637,17 @@
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1e40af);
+.btn.btn-primary {
+  background: linear-gradient(135deg, #4f6ef7, #3b5bdb);
   color: white;
 }
 
-.btn-primary:hover {
+.btn.btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(79, 110, 247, 0.4);
 }
 
 /* Responsive Design */
