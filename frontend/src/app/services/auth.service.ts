@@ -11,6 +11,7 @@ export interface User {
   email: string;
   name: string;
   role: 'student' | 'admin' | 'superadmin' | 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
+  assignedSemesters?: string[]; // Niveaux assignés pour les Level Admins
   subscription?: {
     type: 'PREMIUM';
     expiresAt: Date | null;
@@ -32,6 +33,7 @@ export interface BackendUser {
   email: string;
   name: string;
   role: 'STUDENT' | 'ADMIN' | 'SUPERADMIN';
+  assignedSemesters?: string[]; // Niveaux assignés pour les Level Admins
   subscription?: {
     type: 'PREMIUM';
     expiresAt: Date | null;
@@ -83,6 +85,13 @@ export class AuthService {
   isAuthenticated = computed(() => this.user() !== null);
   isPremium = computed(() => this.user()?.subscription?.isActive === true);
   isAdmin = computed(() => this.user()?.role === 'admin' || this.user()?.role === 'ADMIN' || this.user()?.role === 'superadmin' || this.user()?.role === 'SUPERADMIN');
+  isSuperAdmin = computed(() => this.user()?.role === 'superadmin' || this.user()?.role === 'SUPERADMIN');
+  isLevelAdmin = computed(() => {
+    const user = this.user();
+    const isAdmin = user?.role === 'admin' || user?.role === 'ADMIN';
+    return isAdmin && (user?.assignedSemesters?.length ?? 0) > 0;
+  });
+  assignedSemesters = computed(() => this.user()?.assignedSemesters || []);
 
   constructor(
     private http: HttpClient,

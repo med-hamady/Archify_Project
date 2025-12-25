@@ -9,34 +9,56 @@ const client_1 = require("@prisma/client");
 const auth_1 = require("./auth");
 const prisma = new client_1.PrismaClient();
 exports.adminContentRouter = express_1.default.Router();
-// Middleware to check admin role
-async function requireAdmin(req, res, next) {
-    try {
-        const user = await prisma.user.findUnique({
-            where: { id: req.userId }
+// Helper pour vérifier l'accès à un subject via son semester
+async function checkSubjectAccess(req, res, subjectId) {
+    const subject = await prisma.subject.findUnique({
+        where: { id: subjectId },
+        select: { semester: true }
+    });
+    if (!subject) {
+        res.status(404).json({
+            error: { code: 'NOT_FOUND', message: 'Subject not found' }
         });
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
-            return res.status(403).json({
-                error: { code: 'FORBIDDEN', message: 'Admin access required' }
-            });
-        }
-        req.user = user;
-        next();
+        return false;
     }
-    catch (error) {
-        return res.status(500).json({
-            error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+    if (!(0, auth_1.canAccessSemester)(req, subject.semester)) {
+        res.status(403).json({
+            error: { code: 'FORBIDDEN', message: 'Vous n\'avez pas accès à ce niveau' }
         });
+        return false;
     }
+    return true;
+}
+// Helper pour vérifier l'accès à un chapter via son subject
+async function checkChapterAccess(req, res, chapterId) {
+    const chapter = await prisma.chapter.findUnique({
+        where: { id: chapterId },
+        include: { subject: { select: { semester: true } } }
+    });
+    if (!chapter) {
+        res.status(404).json({
+            error: { code: 'NOT_FOUND', message: 'Chapter not found' }
+        });
+        return false;
+    }
+    if (!(0, auth_1.canAccessSemester)(req, chapter.subject.semester)) {
+        res.status(403).json({
+            error: { code: 'FORBIDDEN', message: 'Vous n\'avez pas accès à ce niveau' }
+        });
+        return false;
+    }
+    return true;
 }
 // ==================== SUBJECTS ====================
 /**
  * GET /api/admin/content/subjects
- * Liste toutes les matières avec leurs stats
+ * Liste les matières avec leurs stats (filtrées par niveau pour Level Admin)
  */
-exports.adminContentRouter.get('/subjects', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.get('/subjects', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
+        const semesterFilter = (0, auth_1.getSemesterFilter)(req);
         const subjects = await prisma.subject.findMany({
+            where: semesterFilter,
             include: {
                 _count: { select: { chapters: true } },
                 chapters: {
@@ -67,12 +89,15 @@ exports.adminContentRouter.get('/subjects', auth_1.requireAuth, requireAdmin, as
 });
 /**
  * PUT /api/admin/content/subjects/:id
- * Modifier une matière
+ * Modifier une matière (vérification d'accès au niveau)
  */
-exports.adminContentRouter.put('/subjects/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.put('/subjects/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, totalQCM } = req.body;
+        // Vérifier l'accès au niveau de cette matière
+        if (!await checkSubjectAccess(req, res, id))
+            return;
         const updated = await prisma.subject.update({
             where: { id },
             data: {
@@ -81,7 +106,7 @@ exports.adminContentRouter.put('/subjects/:id', auth_1.requireAuth, requireAdmin
                 ...(totalQCM !== undefined && { totalQCM })
             }
         });
-        console.log(`✅ Subject "${updated.title}" updated by admin ${req.user.email}`);
+        console.log(`Subject "${updated.title}" updated by admin ${req.userId}`);
         return res.json({ success: true, subject: updated });
     }
     catch (error) {
@@ -93,11 +118,14 @@ exports.adminContentRouter.put('/subjects/:id', auth_1.requireAuth, requireAdmin
 });
 /**
  * DELETE /api/admin/content/subjects/:id
- * Supprimer une matière (et tous ses chapitres/questions)
+ * Supprimer une matière (et tous ses chapitres/questions) - vérification d'accès au niveau
  */
-exports.adminContentRouter.delete('/subjects/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.delete('/subjects/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
+        // Vérifier l'accès au niveau de cette matière
+        if (!await checkSubjectAccess(req, res, id))
+            return;
         // Récupérer la matière et ses stats avant suppression
         const subject = await prisma.subject.findUnique({
             where: { id },
@@ -122,7 +150,7 @@ exports.adminContentRouter.delete('/subjects/:id', auth_1.requireAuth, requireAd
         await prisma.chapter.deleteMany({ where: { subjectId: id } });
         // Supprimer la matière
         await prisma.subject.delete({ where: { id } });
-        console.log(`🗑️ Subject "${subject.title}" deleted by admin ${req.user.email} (${chaptersCount} chapters, ${questionsCount} questions)`);
+        console.log(`Subject "${subject.title}" deleted by admin ${req.userId} (${chaptersCount} chapters, ${questionsCount} questions)`);
         return res.json({
             success: true,
             message: `Subject "${subject.title}" deleted successfully`,
@@ -139,11 +167,14 @@ exports.adminContentRouter.delete('/subjects/:id', auth_1.requireAuth, requireAd
 // ==================== CHAPTERS ====================
 /**
  * GET /api/admin/content/subjects/:subjectId/chapters
- * Liste les chapitres d'une matière
+ * Liste les chapitres d'une matière (vérification d'accès au niveau)
  */
-exports.adminContentRouter.get('/subjects/:subjectId/chapters', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.get('/subjects/:subjectId/chapters', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { subjectId } = req.params;
+        // Vérifier l'accès au niveau de cette matière
+        if (!await checkSubjectAccess(req, res, subjectId))
+            return;
         const chapters = await prisma.chapter.findMany({
             where: { subjectId },
             include: {
@@ -179,12 +210,15 @@ exports.adminContentRouter.get('/subjects/:subjectId/chapters', auth_1.requireAu
 });
 /**
  * PUT /api/admin/content/chapters/:id
- * Modifier un chapitre
+ * Modifier un chapitre (vérification d'accès au niveau)
  */
-exports.adminContentRouter.put('/chapters/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.put('/chapters/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, orderIndex, pdfUrl } = req.body;
+        // Vérifier l'accès au niveau via le subject parent
+        if (!await checkChapterAccess(req, res, id))
+            return;
         const updated = await prisma.chapter.update({
             where: { id },
             data: {
@@ -194,7 +228,7 @@ exports.adminContentRouter.put('/chapters/:id', auth_1.requireAuth, requireAdmin
                 ...(pdfUrl !== undefined && { pdfUrl })
             }
         });
-        console.log(`✅ Chapter "${updated.title}" updated by admin ${req.user.email}`);
+        console.log(`Chapter "${updated.title}" updated by admin ${req.userId}`);
         return res.json({ success: true, chapter: updated });
     }
     catch (error) {
@@ -206,11 +240,14 @@ exports.adminContentRouter.put('/chapters/:id', auth_1.requireAuth, requireAdmin
 });
 /**
  * DELETE /api/admin/content/chapters/:id
- * Supprimer un chapitre (et toutes ses questions/sous-chapitres)
+ * Supprimer un chapitre (et toutes ses questions/sous-chapitres) - vérification d'accès au niveau
  */
-exports.adminContentRouter.delete('/chapters/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.delete('/chapters/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
+        // Vérifier l'accès au niveau via le subject parent
+        if (!await checkChapterAccess(req, res, id))
+            return;
         const chapter = await prisma.chapter.findUnique({
             where: { id },
             include: {
@@ -238,7 +275,7 @@ exports.adminContentRouter.delete('/chapters/:id', auth_1.requireAuth, requireAd
         await prisma.question.deleteMany({ where: { chapterId: id } });
         // Supprimer le chapitre
         await prisma.chapter.delete({ where: { id } });
-        console.log(`🗑️ Chapter "${chapter.title}" deleted by admin ${req.user.email}`);
+        console.log(`Chapter "${chapter.title}" deleted by admin ${req.userId}`);
         return res.json({
             success: true,
             message: `Chapter "${chapter.title}" deleted successfully`,
@@ -254,12 +291,15 @@ exports.adminContentRouter.delete('/chapters/:id', auth_1.requireAuth, requireAd
 });
 /**
  * POST /api/admin/content/subjects/:subjectId/chapters
- * Créer un nouveau chapitre
+ * Créer un nouveau chapitre (vérification d'accès au niveau)
  */
-exports.adminContentRouter.post('/subjects/:subjectId/chapters', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.post('/subjects/:subjectId/chapters', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { subjectId } = req.params;
         const { title, description, orderIndex, pdfUrl } = req.body;
+        // Vérifier l'accès au niveau de cette matière
+        if (!await checkSubjectAccess(req, res, subjectId))
+            return;
         if (!title) {
             return res.status(400).json({
                 error: { code: 'INVALID_DATA', message: 'Title is required' }
@@ -283,7 +323,7 @@ exports.adminContentRouter.post('/subjects/:subjectId/chapters', auth_1.requireA
                 subjectId
             }
         });
-        console.log(`✨ Chapter "${chapter.title}" created by admin ${req.user.email}`);
+        console.log(`Chapter "${chapter.title}" created by admin ${req.userId}`);
         return res.json({ success: true, chapter });
     }
     catch (error) {
@@ -296,11 +336,14 @@ exports.adminContentRouter.post('/subjects/:subjectId/chapters', auth_1.requireA
 // ==================== QUESTIONS ====================
 /**
  * GET /api/admin/content/chapters/:chapterId/questions
- * Liste les questions d'un chapitre
+ * Liste les questions d'un chapitre (vérification d'accès au niveau)
  */
-exports.adminContentRouter.get('/chapters/:chapterId/questions', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.get('/chapters/:chapterId/questions', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { chapterId } = req.params;
+        // Vérifier l'accès au niveau via le chapter
+        if (!await checkChapterAccess(req, res, chapterId))
+            return;
         const questions = await prisma.question.findMany({
             where: { chapterId },
             orderBy: { orderIndex: 'asc' }
@@ -316,12 +359,22 @@ exports.adminContentRouter.get('/chapters/:chapterId/questions', auth_1.requireA
 });
 /**
  * PUT /api/admin/content/questions/:id
- * Modifier une question
+ * Modifier une question (vérification d'accès au niveau via chapter)
  */
-exports.adminContentRouter.put('/questions/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.put('/questions/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { questionText, options, explanation, orderIndex } = req.body;
+        // Récupérer la question pour vérifier l'accès
+        const question = await prisma.question.findUnique({
+            where: { id },
+            select: { chapterId: true }
+        });
+        if (!question) {
+            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Question not found' } });
+        }
+        if (!await checkChapterAccess(req, res, question.chapterId))
+            return;
         const updated = await prisma.question.update({
             where: { id },
             data: {
@@ -331,7 +384,7 @@ exports.adminContentRouter.put('/questions/:id', auth_1.requireAuth, requireAdmi
                 ...(orderIndex !== undefined && { orderIndex })
             }
         });
-        console.log(`✅ Question updated by admin ${req.user.email}`);
+        console.log(`Question updated by admin ${req.userId}`);
         return res.json({ success: true, question: updated });
     }
     catch (error) {
@@ -343,19 +396,25 @@ exports.adminContentRouter.put('/questions/:id', auth_1.requireAuth, requireAdmi
 });
 /**
  * DELETE /api/admin/content/questions/:id
- * Supprimer une question
+ * Supprimer une question (vérification d'accès au niveau via chapter)
  */
-exports.adminContentRouter.delete('/questions/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.delete('/questions/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
-        const question = await prisma.question.findUnique({ where: { id } });
+        const question = await prisma.question.findUnique({
+            where: { id },
+            select: { id: true, chapterId: true }
+        });
         if (!question) {
             return res.status(404).json({
                 error: { code: 'NOT_FOUND', message: 'Question not found' }
             });
         }
+        // Vérifier l'accès au niveau via le chapter
+        if (!await checkChapterAccess(req, res, question.chapterId))
+            return;
         await prisma.question.delete({ where: { id } });
-        console.log(`🗑️ Question deleted by admin ${req.user.email}`);
+        console.log(`Question deleted by admin ${req.userId}`);
         return res.json({ success: true, message: 'Question deleted successfully' });
     }
     catch (error) {
@@ -367,12 +426,15 @@ exports.adminContentRouter.delete('/questions/:id', auth_1.requireAuth, requireA
 });
 /**
  * POST /api/admin/content/chapters/:chapterId/questions
- * Créer une nouvelle question
+ * Créer une nouvelle question (vérification d'accès au niveau via chapter)
  */
-exports.adminContentRouter.post('/chapters/:chapterId/questions', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.post('/chapters/:chapterId/questions', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { chapterId } = req.params;
         const { questionText, options, explanation, orderIndex } = req.body;
+        // Vérifier l'accès au niveau via le chapter
+        if (!await checkChapterAccess(req, res, chapterId))
+            return;
         if (!questionText || !options || !Array.isArray(options)) {
             return res.status(400).json({
                 error: { code: 'INVALID_DATA', message: 'questionText and options array are required' }
@@ -396,7 +458,7 @@ exports.adminContentRouter.post('/chapters/:chapterId/questions', auth_1.require
                 chapterId
             }
         });
-        console.log(`✨ Question created by admin ${req.user.email}`);
+        console.log(`Question created by admin ${req.userId}`);
         return res.json({ success: true, question });
     }
     catch (error) {
@@ -409,12 +471,22 @@ exports.adminContentRouter.post('/chapters/:chapterId/questions', auth_1.require
 // ==================== SUBCHAPTERS ====================
 /**
  * PUT /api/admin/content/subchapters/:id
- * Modifier un sous-chapitre
+ * Modifier un sous-chapitre (vérification d'accès au niveau via chapter)
  */
-exports.adminContentRouter.put('/subchapters/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.put('/subchapters/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, orderIndex } = req.body;
+        // Récupérer le sous-chapitre pour vérifier l'accès
+        const subchapter = await prisma.subchapter.findUnique({
+            where: { id },
+            select: { chapterId: true }
+        });
+        if (!subchapter) {
+            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Subchapter not found' } });
+        }
+        if (!await checkChapterAccess(req, res, subchapter.chapterId))
+            return;
         const updated = await prisma.subchapter.update({
             where: { id },
             data: {
@@ -423,7 +495,7 @@ exports.adminContentRouter.put('/subchapters/:id', auth_1.requireAuth, requireAd
                 ...(orderIndex !== undefined && { orderIndex })
             }
         });
-        console.log(`✅ Subchapter "${updated.title}" updated by admin ${req.user.email}`);
+        console.log(`Subchapter "${updated.title}" updated by admin ${req.userId}`);
         return res.json({ success: true, subchapter: updated });
     }
     catch (error) {
@@ -435,9 +507,9 @@ exports.adminContentRouter.put('/subchapters/:id', auth_1.requireAuth, requireAd
 });
 /**
  * DELETE /api/admin/content/subchapters/:id
- * Supprimer un sous-chapitre
+ * Supprimer un sous-chapitre (vérification d'accès au niveau via chapter)
  */
-exports.adminContentRouter.delete('/subchapters/:id', auth_1.requireAuth, requireAdmin, async (req, res) => {
+exports.adminContentRouter.delete('/subchapters/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const subchapter = await prisma.subchapter.findUnique({
@@ -449,12 +521,15 @@ exports.adminContentRouter.delete('/subchapters/:id', auth_1.requireAuth, requir
                 error: { code: 'NOT_FOUND', message: 'Subchapter not found' }
             });
         }
+        // Vérifier l'accès au niveau via le chapter
+        if (!await checkChapterAccess(req, res, subchapter.chapterId))
+            return;
         const questionsCount = subchapter._count.questions;
         // Supprimer les questions du sous-chapitre
         await prisma.question.deleteMany({ where: { subchapterId: id } });
         // Supprimer le sous-chapitre
         await prisma.subchapter.delete({ where: { id } });
-        console.log(`🗑️ Subchapter "${subchapter.title}" deleted by admin ${req.user.email}`);
+        console.log(`Subchapter "${subchapter.title}" deleted by admin ${req.userId}`);
         return res.json({
             success: true,
             message: `Subchapter "${subchapter.title}" deleted successfully`,

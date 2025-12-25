@@ -47,7 +47,7 @@ const revokeBadgeSchema = zod_1.z.object({
  * GET /api/admin/badges
  * Liste tous les badges du système
  */
-exports.adminBadgesRouter.get('/badges', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.get('/badges', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const badges = await prisma.badge.findMany({
             orderBy: { createdAt: 'desc' },
@@ -85,7 +85,7 @@ exports.adminBadgesRouter.get('/badges', auth_1.requireAuth, auth_1.requireAdmin
  * POST /api/admin/badges/create
  * Crée un nouveau badge personnalisé avec image
  */
-exports.adminBadgesRouter.post('/badges/create', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.post('/badges/create', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = createBadgeSchema.safeParse(req.body);
         if (!validation.success) {
@@ -166,7 +166,7 @@ exports.adminBadgesRouter.post('/badges/create', auth_1.requireAuth, auth_1.requ
  * DELETE /api/admin/badges/:id
  * Supprime un badge et retire tous les badges attribués aux utilisateurs
  */
-exports.adminBadgesRouter.delete('/badges/:id', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.delete('/badges/:id', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         // Vérifier que le badge existe
@@ -223,7 +223,7 @@ exports.adminBadgesRouter.delete('/badges/:id', auth_1.requireAuth, auth_1.requi
  * GET /api/admin/badges/majors
  * Récupère les top 3 étudiants de chaque classe (PCEM1, PCEM2, PCEP2, DCEM1)
  */
-exports.adminBadgesRouter.get('/badges/majors', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.get('/badges/majors', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const semesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
         const majorsBySemester = {};
@@ -287,7 +287,7 @@ exports.adminBadgesRouter.get('/badges/majors', auth_1.requireAuth, auth_1.requi
  * POST /api/admin/badges/assign
  * Attribue un badge à un utilisateur
  */
-exports.adminBadgesRouter.post('/badges/assign', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.post('/badges/assign', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = assignBadgeSchema.safeParse(req.body);
         if (!validation.success) {
@@ -383,7 +383,7 @@ exports.adminBadgesRouter.post('/badges/assign', auth_1.requireAuth, auth_1.requ
  * POST /api/admin/badges/revoke
  * Retire un badge d'un utilisateur
  */
-exports.adminBadgesRouter.post('/badges/revoke', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.post('/badges/revoke', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = revokeBadgeSchema.safeParse(req.body);
         if (!validation.success) {
@@ -452,7 +452,7 @@ exports.adminBadgesRouter.post('/badges/revoke', auth_1.requireAuth, auth_1.requ
  * GET /api/admin/badges/holders
  * Liste tous les utilisateurs qui ont un badge
  */
-exports.adminBadgesRouter.get('/badges/holders', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminBadgesRouter.get('/badges/holders', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const badges = await prisma.badge.findMany({
             include: {

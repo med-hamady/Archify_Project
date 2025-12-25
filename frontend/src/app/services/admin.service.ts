@@ -59,4 +59,22 @@ export class AdminService {
       body: { userId, reason }
     });
   }
+
+  // ============================================
+  // GESTION DES ADMINS DE NIVEAU (SUPERADMIN ONLY)
+  // ============================================
+
+  /**
+   * Obtenir la liste des admins avec leurs niveaux assignés
+   */
+  getAdmins(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admins`);
+  }
+
+  /**
+   * Assigner des niveaux à un admin (SUPERADMIN only)
+   */
+  assignSemesters(userId: string, semesters: string[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/users/${userId}/semesters`, { semesters });
+  }
 }

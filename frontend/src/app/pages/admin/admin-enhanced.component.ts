@@ -96,7 +96,7 @@ interface UserStats {
         <!-- Enhanced Navigation Tabs -->
         <div class="mb-8">
           <nav class="flex space-x-2 bg-white/60 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-gray-200/50">
-            <button *ngFor="let tab of tabs"
+            <button *ngFor="let tab of tabs()"
                     (click)="onTabClick(tab.id)"
                     [class]="activeTab() === tab.id ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'"
                     class="whitespace-nowrap py-3 px-6 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105">
@@ -2745,7 +2745,8 @@ interface UserStats {
               <h2 class="text-2xl font-bold text-gray-900">Gestion des Abonnements</h2>
               <p class="text-gray-600 mt-1">Gérez les plans d'abonnement et les souscriptions</p>
             </div>
-            <button (click)="showAddPlanModal.set(true)" 
+            <button *ngIf="authService.isSuperAdmin()"
+                    (click)="showAddPlanModal.set(true)"
                     class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -2753,6 +2754,14 @@ interface UserStats {
               Ajouter un Plan
             </button>
           </div>
+        </div>
+
+        <!-- Info pour Level Admin -->
+        <div *ngIf="!authService.isSuperAdmin()" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="text-sm text-blue-800">
+            <strong>Mode lecture seule:</strong> Vous pouvez voir les abonnements de vos niveaux assignés mais vous ne pouvez pas les modifier.
+            Contactez un SUPERADMIN pour toute modification.
+          </p>
         </div>
 
         <!-- Debug Info -->
@@ -2785,7 +2794,8 @@ interface UserStats {
                     class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
               Utilisateurs
             </button>
-            <button (click)="subscriptionSubTab.set('payments')"
+            <button *ngIf="authService.isSuperAdmin()"
+                    (click)="subscriptionSubTab.set('payments')"
                     [class]="subscriptionSubTab() === 'payments' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                     class="px-6 py-2 rounded-lg font-medium text-sm transition-all">
               Paiements
@@ -2821,7 +2831,8 @@ interface UserStats {
               <p class="text-3xl font-bold text-gray-900">{{ adminStats().subscriptions.active }}</p>
               <p class="text-sm text-gray-500 mt-1">{{ adminStats().subscriptions.expired }} expirés</p>
             </div>
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <!-- Paiements et Revenus: SUPERADMIN uniquement -->
+            <div *ngIf="authService.isSuperAdmin()" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-medium text-gray-600">Paiements en Attente</h4>
                 <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2831,7 +2842,7 @@ interface UserStats {
               <p class="text-3xl font-bold text-gray-900">{{ adminStats().payments.pending }}</p>
               <p class="text-sm text-gray-500 mt-1">{{ adminStats().payments.completed }} complétés</p>
             </div>
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div *ngIf="authService.isSuperAdmin()" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-medium text-gray-600">Revenu Total</h4>
                 <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2865,7 +2876,7 @@ interface UserStats {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
                   </svg>
                 </div>
-                <div class="flex space-x-2">
+                <div *ngIf="authService.isSuperAdmin()" class="flex space-x-2">
                   <button (click)="editPlanItem(plan)"
                           class="text-blue-600 hover:text-blue-900 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2930,21 +2941,26 @@ interface UserStats {
                       {{ user.subscription ? (user.subscription.endAt | date:'dd/MM/yyyy') : '-' }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button *ngIf="!user.subscription && subscriptionPlans().length > 0"
-                              (click)="activateUserSubscription(user.id, subscriptionPlans()[0].id, 12)"
-                              class="text-green-600 hover:text-green-900">
-                        Activer
-                      </button>
-                      <button *ngIf="user.subscription"
-                              (click)="extendUserSubscription(user.subscription.id, 1)"
-                              class="text-blue-600 hover:text-blue-900">
-                        Prolonger
-                      </button>
-                      <button *ngIf="user.subscription"
-                              (click)="deactivateUserSubscription(user.subscription.id)"
-                              class="text-red-600 hover:text-red-900">
-                        Désactiver
-                      </button>
+                      <ng-container *ngIf="authService.isSuperAdmin()">
+                        <button *ngIf="!user.subscription && subscriptionPlans().length > 0"
+                                (click)="activateUserSubscription(user.id, subscriptionPlans()[0].id, 12)"
+                                class="text-green-600 hover:text-green-900">
+                          Activer
+                        </button>
+                        <button *ngIf="user.subscription"
+                                (click)="extendUserSubscription(user.subscription.id, 1)"
+                                class="text-blue-600 hover:text-blue-900">
+                          Prolonger
+                        </button>
+                        <button *ngIf="user.subscription"
+                                (click)="deactivateUserSubscription(user.subscription.id)"
+                                class="text-red-600 hover:text-red-900">
+                          Désactiver
+                        </button>
+                      </ng-container>
+                      <span *ngIf="!authService.isSuperAdmin()" class="text-gray-400 italic text-xs">
+                        Lecture seule
+                      </span>
                     </td>
                   </tr>
                 </tbody>
@@ -3476,6 +3492,138 @@ interface UserStats {
         </div>
       </div>
 
+      <!-- Admin Management Tab (SUPERADMIN only) -->
+      <div *ngIf="activeTab() === 'admin-management'" class="space-y-6">
+        <h2 class="text-2xl font-bold text-gray-900">👥 Gestion des Admins</h2>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="text-sm text-blue-800">
+            <strong>Note:</strong> Cette interface permet d'assigner des niveaux (semestres) aux administrateurs.
+            Un Level Admin ne peut voir et gérer que le contenu et les utilisateurs de ses niveaux assignés.
+          </p>
+        </div>
+
+        <!-- Admins List -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Liste des Administrateurs</h3>
+          </div>
+
+          <div *ngIf="adminManagementLoading()" class="flex items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+
+          <div *ngIf="!adminManagementLoading()" class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Niveaux Assignés</th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let admin of adminsList()" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                        {{ admin.name?.charAt(0)?.toUpperCase() || 'A' }}
+                      </div>
+                      <span class="text-sm font-medium text-gray-900">{{ admin.name }}</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ admin.email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="admin.role === 'SUPERADMIN' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'"
+                          class="inline-flex px-2 py-1 text-xs font-semibold rounded-full">
+                      {{ admin.role }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex flex-wrap gap-1">
+                      <span *ngFor="let sem of admin.assignedSemesters || []"
+                            class="bg-green-100 text-green-800 px-2 py-0.5 text-xs rounded-full">
+                        {{ sem }}
+                      </span>
+                      <span *ngIf="!admin.assignedSemesters?.length && admin.role !== 'SUPERADMIN'"
+                            class="text-gray-400 text-xs italic">Aucun niveau</span>
+                      <span *ngIf="admin.role === 'SUPERADMIN'"
+                            class="text-gray-500 text-xs italic">Tous (SUPERADMIN)</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <button *ngIf="admin.role !== 'SUPERADMIN'"
+                            (click)="openAssignSemestersModal(admin)"
+                            class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                      Modifier niveaux
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="adminsList().length === 0">
+                  <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                    Aucun administrateur trouvé
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assign Semesters Modal -->
+      <div *ngIf="showAssignSemestersModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Assigner des Niveaux</h3>
+            <button (click)="showAssignSemestersModal.set(false)" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-sm text-gray-600 mb-2">
+              Admin: <span class="font-semibold text-gray-900">{{ selectedAdminForSemesters()?.name }}</span>
+            </p>
+            <p class="text-xs text-gray-500">
+              Sélectionnez les niveaux que cet admin peut gérer.
+            </p>
+          </div>
+
+          <div class="space-y-3 mb-6">
+            <label *ngFor="let semester of availableSemesters"
+                   class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+              <input type="checkbox"
+                     [checked]="selectedSemestersForAdmin().includes(semester)"
+                     (change)="toggleSemesterSelection(semester)"
+                     class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-3">
+              <span class="text-sm font-medium text-gray-700">{{ semester }}</span>
+            </label>
+          </div>
+
+          <div *ngIf="assignSemestersMessage()"
+               [class]="assignSemestersMessage()!.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+               class="p-3 rounded-lg mb-4 text-sm">
+            {{ assignSemestersMessage()!.text }}
+          </div>
+
+          <div class="flex gap-3">
+            <button (click)="showAssignSemestersModal.set(false)"
+                    class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+              Annuler
+            </button>
+            <button (click)="saveAssignedSemesters()"
+                    [disabled]="assignSemestersLoading()"
+                    class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50">
+              {{ assignSemestersLoading() ? 'Sauvegarde...' : 'Sauvegarder' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   `
 })
@@ -3682,6 +3830,16 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     return users;
   });
 
+  // Admin Management (SUPERADMIN only)
+  adminsList = signal<any[]>([]);
+  adminManagementLoading = signal(false);
+  showAssignSemestersModal = signal(false);
+  selectedAdminForSemesters = signal<any | null>(null);
+  selectedSemestersForAdmin = signal<string[]>([]);
+  assignSemestersLoading = signal(false);
+  assignSemestersMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  availableSemesters = ['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1'];
+
   // Add Content Management
   addContentSubTab = 'subject'; // 'subject', 'chapter', 'quiz'
   addContentSaving = signal(false);
@@ -3810,12 +3968,10 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
   };
 
 
-  // Navigation tabs
-  tabs = [
+  // Navigation tabs - dynamiques selon le rôle
+  // Onglets de base pour tous les admins (Level Admin et SUPERADMIN)
+  private baseTabs = [
     { id: 'overview', name: 'Vue d\'ensemble' },
-    { id: 'badges', name: 'Gestion Badges' },
-    { id: 'xp-management', name: 'Gestion XP' },
-    { id: 'device-management', name: 'Gestion Appareils' },
     { id: 'courses', name: 'Cours' },
     { id: 'lessons', name: 'Leçons' },
     { id: 'qcm', name: 'Gestion des QCM' },
@@ -3825,9 +3981,33 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     { id: 'course-videos', name: 'Gestion Vidéos' },
     { id: 'add-content', name: 'Ajouter Contenu' },
     { id: 'users', name: 'Utilisateurs' },
-    { id: 'subscriptions', name: 'Abonnements' },
-    { id: 'analytics', name: 'Analytiques' }
+    { id: 'subscriptions', name: 'Abonnements' } // Level Admin: lecture seule
   ];
+
+  // Onglets réservés au SUPERADMIN uniquement
+  private superAdminTabs = [
+    { id: 'badges', name: 'Gestion Badges' },
+    { id: 'xp-management', name: 'Gestion XP' },
+    { id: 'device-management', name: 'Gestion Appareils' },
+    { id: 'analytics', name: 'Analytiques' },
+    { id: 'admin-management', name: 'Gestion Admins' }
+  ];
+
+  // Computed tabs basés sur le rôle
+  tabs = computed(() => {
+    if (this.authService.isSuperAdmin()) {
+      // SUPERADMIN: tous les onglets
+      return [
+        this.baseTabs[0], // Overview
+        ...this.superAdminTabs.slice(0, 3), // Badges, XP, Devices
+        ...this.baseTabs.slice(1), // Cours, Leçons, etc.
+        ...this.superAdminTabs.slice(3) // Analytics, Admin Management
+      ];
+    } else {
+      // Level Admin: onglets de base + abonnements (lecture seule)
+      return this.baseTabs;
+    }
+  });
 
   // Mock data for charts
   revenueData = [
@@ -3875,7 +4055,7 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
 
     // Check for URL hash to set active tab
     const hash = window.location.hash.substring(1);
-    if (hash && this.tabs.some(tab => tab.id === hash)) {
+    if (hash && this.tabs().some(tab => tab.id === hash)) {
       this.activeTab.set(hash);
     }
   }
@@ -4545,6 +4725,12 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     if (tabId === 'device-management') {
       console.log('📱 Device Management tab activated - loading users with devices...');
       this.loadDeviceUsers();
+    }
+
+    // Load Admin data when Admin management tab is activated
+    if (tabId === 'admin-management') {
+      console.log('👥 Admin Management tab activated - loading admins list...');
+      this.loadAdminsList();
     }
   }
 
@@ -6279,6 +6465,74 @@ export class AdminEnhancedComponent implements OnInit, OnDestroy {
     } else {
       return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  // ==================== ADMIN MANAGEMENT (SUPERADMIN only) ====================
+
+  loadAdminsList() {
+    this.adminManagementLoading.set(true);
+    this.adminService.getAdmins().subscribe({
+      next: (admins) => {
+        console.log('👥 Admins list loaded:', admins);
+        this.adminsList.set(admins);
+        this.adminManagementLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading admins:', err);
+        this.adminManagementLoading.set(false);
+      }
+    });
+  }
+
+  openAssignSemestersModal(admin: any) {
+    this.selectedAdminForSemesters.set(admin);
+    this.selectedSemestersForAdmin.set([...(admin.assignedSemesters || [])]);
+    this.assignSemestersMessage.set(null);
+    this.showAssignSemestersModal.set(true);
+  }
+
+  toggleSemesterSelection(semester: string) {
+    const current = this.selectedSemestersForAdmin();
+    if (current.includes(semester)) {
+      this.selectedSemestersForAdmin.set(current.filter(s => s !== semester));
+    } else {
+      this.selectedSemestersForAdmin.set([...current, semester]);
+    }
+  }
+
+  saveAssignedSemesters() {
+    const admin = this.selectedAdminForSemesters();
+    if (!admin) return;
+
+    this.assignSemestersLoading.set(true);
+    this.assignSemestersMessage.set(null);
+
+    this.adminService.assignSemesters(admin.id, this.selectedSemestersForAdmin()).subscribe({
+      next: (res) => {
+        console.log('✅ Semesters assigned:', res);
+        this.assignSemestersMessage.set({
+          type: 'success',
+          text: 'Niveaux assignés avec succès!'
+        });
+        this.assignSemestersLoading.set(false);
+
+        // Refresh the admins list
+        this.loadAdminsList();
+
+        // Close modal after a short delay
+        setTimeout(() => {
+          this.showAssignSemestersModal.set(false);
+        }, 1500);
+      },
+      error: (err) => {
+        console.error('Error assigning semesters:', err);
+        this.assignSemestersMessage.set({
+          type: 'error',
+          text: err.error?.error?.message || 'Erreur lors de l\'assignation des niveaux'
+        });
+        this.assignSemestersLoading.set(false);
+      }
+    });
   }
 
 }

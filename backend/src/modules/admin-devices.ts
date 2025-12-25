@@ -10,7 +10,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-import { requireAuth, requireAdmin } from './auth';
+import { requireAuth, requireSuperAdmin } from './auth';
 
 const prisma = new PrismaClient();
 export const adminDevicesRouter = Router();
@@ -31,7 +31,7 @@ const removeAllDevicesSchema = z.object({
  * GET /api/admin/devices/users
  * Get all users with their authorized devices
  */
-adminDevicesRouter.get('/users', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminDevicesRouter.get('/users', requireAuth, requireSuperAdmin, async (req: any, res: any) => {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -72,7 +72,7 @@ adminDevicesRouter.get('/users', requireAuth, requireAdmin, async (req: any, res
  * DELETE /api/admin/devices/remove
  * Remove a specific device from a user
  */
-adminDevicesRouter.delete('/remove', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminDevicesRouter.delete('/remove', requireAuth, requireSuperAdmin, async (req: any, res: any) => {
   try {
     const validation = removeDeviceSchema.safeParse(req.body);
 
@@ -146,7 +146,7 @@ adminDevicesRouter.delete('/remove', requireAuth, requireAdmin, async (req: any,
  * DELETE /api/admin/devices/remove-all
  * Remove all devices from a user (device reset)
  */
-adminDevicesRouter.delete('/remove-all', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminDevicesRouter.delete('/remove-all', requireAuth, requireSuperAdmin, async (req: any, res: any) => {
   try {
     const validation = removeAllDevicesSchema.safeParse(req.body);
 

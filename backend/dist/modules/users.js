@@ -26,13 +26,12 @@ function getUserPublic(user) {
         lastLoginAt: user.lastLoginAt,
     };
 }
-// GET /api/users - Get all users (Admin only)
-exports.usersRouter.get('/', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
-    }
+// GET /api/users - Get all users (filtered by level for Level Admins)
+exports.usersRouter.get('/', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
+        const semesterFilter = (0, auth_1.getSemesterFilter)(req);
         const users = await prisma.user.findMany({
+            where: semesterFilter,
             orderBy: { createdAt: 'desc' },
         });
         return res.json(users.map(getUserPublic));
@@ -42,11 +41,8 @@ exports.usersRouter.get('/', auth_1.requireAuth, async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// GET /api/users/:id - Get a single user by ID (Admin only)
-exports.usersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
-    }
+// GET /api/users/:id - Get a single user by ID (filtered by level for Level Admins)
+exports.usersRouter.get('/:id', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const user = await prisma.user.findUnique({
@@ -60,6 +56,10 @@ exports.usersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'User not found' } });
         }
+        // Vérifier l'accès au niveau de cet utilisateur
+        if (!(0, auth_1.canAccessSemester)(req, user.semester)) {
+            return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Vous n\'avez pas accès à ce niveau' } });
+        }
         return res.json(getUserPublic(user));
     }
     catch (err) {
@@ -67,10 +67,11 @@ exports.usersRouter.get('/:id', auth_1.requireAuth, async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// PUT /api/users/:id - Update a user (Admin only)
+// PUT /api/users/:id - Update a user (SUPERADMIN only - can change roles)
 exports.usersRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+    // Seul le SUPERADMIN peut modifier les utilisateurs (changement de rôle, etc.)
+    if (req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Superadmin access required' } });
     }
     try {
         const { id } = req.params;
@@ -96,10 +97,11 @@ exports.usersRouter.put('/:id', auth_1.requireAuth, async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// DELETE /api/users/:id - Delete a user (Admin only)
+// DELETE /api/users/:id - Delete a user (SUPERADMIN only)
 exports.usersRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
+    // Seul le SUPERADMIN peut supprimer des utilisateurs
+    if (req.userRole !== 'SUPERADMIN') {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Superadmin access required' } });
     }
     try {
         const { id } = req.params;
@@ -133,25 +135,26 @@ exports.usersRouter.delete('/:id', auth_1.requireAuth, async (req, res) => {
         return res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal error' } });
     }
 });
-// GET /api/users/stats - Get user statistics (Admin only)
-exports.usersRouter.get('/stats/overview', auth_1.requireAuth, async (req, res) => {
-    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
-        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Forbidden' } });
-    }
+// GET /api/users/stats/overview - Get user statistics (filtered by level for Level Admins)
+exports.usersRouter.get('/stats/overview', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
-        const [totalUsers, totalStudents, totalAdmins, recentUsers] = await Promise.all([
-            prisma.user.count(),
-            prisma.user.count({ where: { role: 'STUDENT' } }),
-            prisma.user.count({ where: { role: { in: ['ADMIN', 'SUPERADMIN'] } } }),
+        const semesterFilter = (0, auth_1.getSemesterFilter)(req);
+        const [totalUsers, totalStudents, recentUsers] = await Promise.all([
+            prisma.user.count({ where: semesterFilter }),
+            prisma.user.count({ where: { role: 'STUDENT', ...semesterFilter } }),
             prisma.user.count({
                 where: {
                     createdAt: {
                         gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
-                    }
+                    },
+                    ...semesterFilter
                 }
-            }),
-            prisma.user.count()
+            })
         ]);
+        // Admins seulement visibles pour SUPERADMIN
+        const totalAdmins = req.isSuperAdmin
+            ? await prisma.user.count({ where: { role: { in: ['ADMIN', 'SUPERADMIN'] } } })
+            : 0;
         return res.json({
             totalUsers,
             totalStudents,

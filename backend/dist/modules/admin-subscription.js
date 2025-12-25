@@ -30,60 +30,166 @@ const validatePaymentSchema = zod_1.z.object({
     status: zod_1.z.enum(['COMPLETED', 'FAILED']),
     adminNotes: zod_1.z.string().optional()
 });
+const assignSemestersSchema = zod_1.z.object({
+    semesters: zod_1.z.array(zod_1.z.enum(['PCEM1', 'PCEM2', 'PCEP2', 'DCEM1']))
+});
+// ============================================
+// GESTION DES ADMINS DE NIVEAU (SUPERADMIN ONLY)
+// ============================================
+/**
+ * GET /api/admin/admins
+ * Liste tous les admins avec leurs niveaux assignés (SUPERADMIN only)
+ */
+exports.adminSubscriptionRouter.get('/admins', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
+    try {
+        const admins = await prisma.user.findMany({
+            where: {
+                role: { in: ['ADMIN', 'SUPERADMIN'] }
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                assignedSemesters: true,
+                createdAt: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return res.json(admins);
+    }
+    catch (error) {
+        console.error('[admin/admins] Error:', error);
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de la récupération des admins' }
+        });
+    }
+});
+/**
+ * POST /api/admin/users/:userId/semesters
+ * Assigne des niveaux à un admin (SUPERADMIN only)
+ */
+exports.adminSubscriptionRouter.post('/users/:userId/semesters', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { semesters } = assignSemestersSchema.parse(req.body);
+        // Vérifier que l'utilisateur existe et est un admin
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { id: true, email: true, role: true }
+        });
+        if (!user) {
+            return res.status(404).json({
+                error: { code: 'USER_NOT_FOUND', message: 'Utilisateur non trouvé' }
+            });
+        }
+        if (user.role !== 'ADMIN') {
+            return res.status(400).json({
+                error: { code: 'NOT_AN_ADMIN', message: 'Cet utilisateur n\'est pas un admin. Seuls les admins peuvent avoir des niveaux assignés.' }
+            });
+        }
+        // Mettre à jour les niveaux assignés
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { assignedSemesters: semesters },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                assignedSemesters: true
+            }
+        });
+        console.log(`[admin] Semesters assigned to admin ${user.email}:`, semesters);
+        return res.json({
+            success: true,
+            message: `Niveaux assignés: ${semesters.join(', ')}`,
+            user: updatedUser
+        });
+    }
+    catch (error) {
+        console.error('[admin/users/:userId/semesters] Error:', error);
+        if (error.name === 'ZodError') {
+            return res.status(400).json({
+                error: { code: 'VALIDATION_ERROR', message: 'Niveaux invalides', details: error.errors }
+            });
+        }
+        return res.status(500).json({
+            error: { code: 'SERVER_ERROR', message: 'Erreur lors de l\'assignation des niveaux' }
+        });
+    }
+});
 // ============================================
 // STATISTIQUES GLOBALES
 // ============================================
 /**
  * GET /api/admin/dashboard-stats
- * Récupère les statistiques globales du dashboard admin
+ * Récupère les statistiques du dashboard admin (filtrées par niveau pour Level Admin)
  */
-exports.adminSubscriptionRouter.get('/dashboard-stats', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.get('/dashboard-stats', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
-        // Compter les utilisateurs
-        const totalUsers = await prisma.user.count();
-        const totalStudents = await prisma.user.count({ where: { role: 'STUDENT' } });
-        const totalAdmins = await prisma.user.count({ where: { role: { in: ['ADMIN', 'SUPERADMIN'] } } });
-        // Compter les abonnements actifs
+        const semesterFilter = (0, auth_1.getSemesterFilter)(req);
         const now = new Date();
+        // Compter les utilisateurs (filtrés par niveau pour Level Admin)
+        const totalUsers = await prisma.user.count({ where: semesterFilter });
+        const totalStudents = await prisma.user.count({ where: { role: 'STUDENT', ...semesterFilter } });
+        // Admins visibles seulement pour SUPERADMIN
+        const totalAdmins = req.isSuperAdmin
+            ? await prisma.user.count({ where: { role: { in: ['ADMIN', 'SUPERADMIN'] } } })
+            : 0;
+        // Compter les abonnements actifs (filtrés par niveau)
         const activeSubscriptions = await prisma.subscription.count({
             where: {
                 status: 'ACTIVE',
-                endAt: { gte: now }
+                endAt: { gte: now },
+                user: semesterFilter
             }
         });
-        // Compter les abonnements expirés
+        // Compter les abonnements expirés (filtrés par niveau)
         const expiredSubscriptions = await prisma.subscription.count({
             where: {
                 OR: [
                     { status: 'EXPIRED' },
                     { status: 'ACTIVE', endAt: { lt: now } }
-                ]
+                ],
+                user: semesterFilter
             }
         });
-        // Compter les paiements
-        const pendingPayments = await prisma.payment.count({ where: { status: 'PENDING' } });
-        const completedPayments = await prisma.payment.count({ where: { status: 'COMPLETED' } });
-        const failedPayments = await prisma.payment.count({ where: { status: 'FAILED' } });
-        // Calculer le revenu total (paiements complétés)
-        const revenueResult = await prisma.payment.aggregate({
-            where: { status: 'COMPLETED' },
-            _sum: { amountCents: true }
-        });
-        const totalRevenueMRU = (revenueResult._sum.amountCents || 0) / 100;
-        // Revenu du mois en cours
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const monthlyRevenueResult = await prisma.payment.aggregate({
-            where: {
-                status: 'COMPLETED',
-                validatedAt: { gte: startOfMonth }
-            },
-            _sum: { amountCents: true }
-        });
-        const monthlyRevenueMRU = (monthlyRevenueResult._sum.amountCents || 0) / 100;
-        // Utilisateurs récents (derniers 30 jours)
+        // Paiements et revenus visibles uniquement pour SUPERADMIN
+        let paymentsStats = { pending: 0, completed: 0, failed: 0, total: 0 };
+        let revenueStats = { total: 0, monthly: 0, currency: 'MRU' };
+        if (req.isSuperAdmin) {
+            const pendingPayments = await prisma.payment.count({ where: { status: 'PENDING' } });
+            const completedPayments = await prisma.payment.count({ where: { status: 'COMPLETED' } });
+            const failedPayments = await prisma.payment.count({ where: { status: 'FAILED' } });
+            const revenueResult = await prisma.payment.aggregate({
+                where: { status: 'COMPLETED' },
+                _sum: { amountCents: true }
+            });
+            const totalRevenueMRU = (revenueResult._sum.amountCents || 0) / 100;
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthlyRevenueResult = await prisma.payment.aggregate({
+                where: {
+                    status: 'COMPLETED',
+                    validatedAt: { gte: startOfMonth }
+                },
+                _sum: { amountCents: true }
+            });
+            const monthlyRevenueMRU = (monthlyRevenueResult._sum.amountCents || 0) / 100;
+            paymentsStats = {
+                pending: pendingPayments,
+                completed: completedPayments,
+                failed: failedPayments,
+                total: pendingPayments + completedPayments + failedPayments
+            };
+            revenueStats = { total: totalRevenueMRU, monthly: monthlyRevenueMRU, currency: 'MRU' };
+        }
+        // Utilisateurs récents (derniers 30 jours, filtrés par niveau)
         const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         const recentUsers = await prisma.user.count({
-            where: { createdAt: { gte: thirtyDaysAgo } }
+            where: { createdAt: { gte: thirtyDaysAgo }, ...semesterFilter }
         });
         return res.json({
             users: {
@@ -97,17 +203,11 @@ exports.adminSubscriptionRouter.get('/dashboard-stats', auth_1.requireAuth, auth
                 expired: expiredSubscriptions,
                 total: activeSubscriptions + expiredSubscriptions
             },
-            payments: {
-                pending: pendingPayments,
-                completed: completedPayments,
-                failed: failedPayments,
-                total: pendingPayments + completedPayments + failedPayments
-            },
-            revenue: {
-                total: totalRevenueMRU,
-                monthly: monthlyRevenueMRU,
-                currency: 'MRU'
-            }
+            payments: paymentsStats,
+            revenue: revenueStats,
+            // Indiquer au frontend les restrictions
+            isLevelAdmin: !req.isSuperAdmin,
+            assignedSemesters: req.assignedSemesters
         });
     }
     catch (error) {
@@ -122,12 +222,13 @@ exports.adminSubscriptionRouter.get('/dashboard-stats', auth_1.requireAuth, auth
 // ============================================
 /**
  * GET /api/admin/users-subscriptions
- * Récupère la liste des utilisateurs avec leurs abonnements
+ * Récupère la liste des utilisateurs avec leurs abonnements (filtrée par niveau pour Level Admin)
  */
-exports.adminSubscriptionRouter.get('/users-subscriptions', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.get('/users-subscriptions', auth_1.requireAuth, auth_1.requireLevelAdmin, async (req, res) => {
     try {
+        const semesterFilter = (0, auth_1.getSemesterFilter)(req);
         const users = await prisma.user.findMany({
-            where: { role: 'STUDENT' },
+            where: { role: 'STUDENT', ...semesterFilter },
             select: {
                 id: true,
                 email: true,
@@ -205,9 +306,9 @@ exports.adminSubscriptionRouter.get('/users-subscriptions', auth_1.requireAuth, 
 // ============================================
 /**
  * GET /api/admin/payments
- * Récupère la liste des paiements (avec filtres optionnels)
+ * Récupère la liste des paiements (SUPERADMIN only)
  */
-exports.adminSubscriptionRouter.get('/payments', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.get('/payments', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { status, limit } = req.query;
         const whereClause = {};
@@ -274,9 +375,9 @@ exports.adminSubscriptionRouter.get('/payments', auth_1.requireAuth, auth_1.requ
 // ============================================
 /**
  * POST /api/admin/subscription/activate
- * Crée et active un abonnement pour un utilisateur
+ * Crée et active un abonnement pour un utilisateur (SUPERADMIN only)
  */
-exports.adminSubscriptionRouter.post('/subscription/activate', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.post('/subscription/activate', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { userId, planId, durationMonths } = activateSubscriptionSchema.parse(req.body);
         // Vérifier que l'utilisateur existe
@@ -346,9 +447,9 @@ exports.adminSubscriptionRouter.post('/subscription/activate', auth_1.requireAut
 // ============================================
 /**
  * POST /api/admin/subscription/extend
- * Prolonge un abonnement existant
+ * Prolonge un abonnement existant (SUPERADMIN only)
  */
-exports.adminSubscriptionRouter.post('/subscription/extend', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.post('/subscription/extend', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { subscriptionId, additionalMonths } = extendSubscriptionSchema.parse(req.body);
         // Récupérer l'abonnement
@@ -414,9 +515,9 @@ exports.adminSubscriptionRouter.post('/subscription/extend', auth_1.requireAuth,
 // ============================================
 /**
  * POST /api/admin/payment/validate
- * Valide ou rejette un paiement et crée l'abonnement si validé
+ * Valide ou rejette un paiement et crée l'abonnement si validé (SUPERADMIN only)
  */
-exports.adminSubscriptionRouter.post('/payment/validate', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.post('/payment/validate', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { paymentId, status, adminNotes } = validatePaymentSchema.parse(req.body);
         const adminId = req.userId;
@@ -509,9 +610,9 @@ exports.adminSubscriptionRouter.post('/payment/validate', auth_1.requireAuth, au
 // ============================================
 /**
  * POST /api/admin/subscription/deactivate
- * Désactive un abonnement
+ * Désactive un abonnement (SUPERADMIN only)
  */
-exports.adminSubscriptionRouter.post('/subscription/deactivate', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminSubscriptionRouter.post('/subscription/deactivate', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const { subscriptionId } = req.body;
         if (!subscriptionId) {

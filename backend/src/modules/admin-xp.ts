@@ -9,7 +9,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-import { requireAuth, requireAdmin } from './auth';
+import { requireAuth, requireSuperAdmin } from './auth';
 import { getLevelInfo } from '../services/level.service';
 
 const prisma = new PrismaClient();
@@ -33,7 +33,7 @@ const giveXpSchema = z.object({
  * POST /api/admin/xp/give
  * Donner ou retirer des XP à un utilisateur
  */
-adminXpRouter.post('/give', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminXpRouter.post('/give', requireAuth, requireSuperAdmin, async (req: any, res: any) => {
   try {
     const validation = giveXpSchema.safeParse(req.body);
 
@@ -120,7 +120,7 @@ adminXpRouter.post('/give', requireAuth, requireAdmin, async (req: any, res: any
  * GET /api/admin/xp/history
  * Obtenir l'historique des modifications XP
  */
-adminXpRouter.get('/history', requireAuth, requireAdmin, async (req: any, res: any) => {
+adminXpRouter.get('/history', requireAuth, requireSuperAdmin, async (req: any, res: any) => {
   try {
     const limit = parseInt(req.query.limit as string) || 50;
 

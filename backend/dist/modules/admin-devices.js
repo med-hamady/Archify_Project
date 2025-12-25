@@ -29,7 +29,7 @@ const removeAllDevicesSchema = zod_1.z.object({
  * GET /api/admin/devices/users
  * Get all users with their authorized devices
  */
-exports.adminDevicesRouter.get('/users', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminDevicesRouter.get('/users', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const users = await prisma.user.findMany({
             select: {
@@ -68,7 +68,7 @@ exports.adminDevicesRouter.get('/users', auth_1.requireAuth, auth_1.requireAdmin
  * DELETE /api/admin/devices/remove
  * Remove a specific device from a user
  */
-exports.adminDevicesRouter.delete('/remove', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminDevicesRouter.delete('/remove', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = removeDeviceSchema.safeParse(req.body);
         if (!validation.success) {
@@ -134,7 +134,7 @@ exports.adminDevicesRouter.delete('/remove', auth_1.requireAuth, auth_1.requireA
  * DELETE /api/admin/devices/remove-all
  * Remove all devices from a user (device reset)
  */
-exports.adminDevicesRouter.delete('/remove-all', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminDevicesRouter.delete('/remove-all', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = removeAllDevicesSchema.safeParse(req.body);
         if (!validation.success) {

@@ -30,7 +30,7 @@ const giveXpSchema = zod_1.z.object({
  * POST /api/admin/xp/give
  * Donner ou retirer des XP à un utilisateur
  */
-exports.adminXpRouter.post('/give', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminXpRouter.post('/give', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const validation = giveXpSchema.safeParse(req.body);
         if (!validation.success) {
@@ -106,7 +106,7 @@ exports.adminXpRouter.post('/give', auth_1.requireAuth, auth_1.requireAdmin, asy
  * GET /api/admin/xp/history
  * Obtenir l'historique des modifications XP
  */
-exports.adminXpRouter.get('/history', auth_1.requireAuth, auth_1.requireAdmin, async (req, res) => {
+exports.adminXpRouter.get('/history', auth_1.requireAuth, auth_1.requireSuperAdmin, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 50;
         const history = await prisma.xpTransaction.findMany({

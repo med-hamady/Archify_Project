@@ -19,6 +19,7 @@ model User {
   role            UserRole @default(STUDENT)
   profilePicture  String?  // URL de la photo de profil
   authorizedDevices String[] @default([]) // Liste des appareils autorisés (max 2: PC et téléphone)
+  assignedSemesters String[] @default([]) // Niveaux assignés pour les Level Admins (PCEM1, PCEM2, etc.)
   activeDeviceId    String?  // ID de l'appareil actuellement connecté
   activeToken       String?  // Token de session actif
   createdAt       DateTime @default(now())

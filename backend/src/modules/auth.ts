@@ -216,6 +216,89 @@ export function requireAdmin(req: any, res: any, next: any) {
   return next();
 }
 
+// SUPERADMIN only middleware - must be used after requireAuth
+export function requireSuperAdmin(req: any, res: any, next: any) {
+  if (req.userRole !== 'SUPERADMIN') {
+    console.log('[requireSuperAdmin] Access denied for role:', req.userRole);
+    return res.status(403).json({
+      error: { code: 'FORBIDDEN', message: 'Superadmin access required' }
+    });
+  }
+  console.log('[requireSuperAdmin] Superadmin access granted');
+  return next();
+}
+
+// Level Admin middleware - checks admin role and loads assigned semesters
+// Must be used after requireAuth
+export async function requireLevelAdmin(req: any, res: any, next: any) {
+  // First check basic admin access
+  if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPERADMIN') {
+    console.log('[requireLevelAdmin] Access denied for role:', req.userRole);
+    return res.status(403).json({
+      error: { code: 'FORBIDDEN', message: 'Admin access required' }
+    });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: {
+        id: true,
+        role: true,
+        assignedSemesters: true
+      }
+    });
+
+    if (!user) {
+      return res.status(403).json({
+        error: { code: 'USER_NOT_FOUND', message: 'User not found' }
+      });
+    }
+
+    // SUPERADMIN has full access (no semester restrictions)
+    req.isSuperAdmin = user.role === 'SUPERADMIN';
+    req.assignedSemesters = user.assignedSemesters || [];
+
+    // If regular ADMIN with no assigned semesters, deny access
+    if (!req.isSuperAdmin && req.assignedSemesters.length === 0) {
+      console.log('[requireLevelAdmin] No semesters assigned to admin:', req.userId);
+      return res.status(403).json({
+        error: { code: 'NO_SEMESTERS_ASSIGNED', message: 'Aucun niveau assigné à cet admin' }
+      });
+    }
+
+    console.log('[requireLevelAdmin] Access granted:', {
+      userId: req.userId,
+      isSuperAdmin: req.isSuperAdmin,
+      assignedSemesters: req.assignedSemesters
+    });
+
+    return next();
+  } catch (error) {
+    console.error('[requireLevelAdmin] Error:', error);
+    return res.status(500).json({
+      error: { code: 'SERVER_ERROR', message: 'Internal server error' }
+    });
+  }
+}
+
+// Helper function to get semester filter for queries
+// Returns empty object for SUPERADMIN (no filter), or semester filter for Level Admin
+export function getSemesterFilter(req: any): { semester?: { in: string[] } } {
+  if (req.isSuperAdmin) {
+    return {}; // No filter for superadmin - full access
+  }
+  return {
+    semester: { in: req.assignedSemesters }
+  };
+}
+
+// Helper to check if a specific semester is accessible by the admin
+export function canAccessSemester(req: any, semester: string): boolean {
+  if (req.isSuperAdmin) return true;
+  return req.assignedSemesters.includes(semester);
+}
+
 // Optional auth middleware - does not block if no token
 export function optionalAuth(req: any, res: any, next: any) {
   const token = req.cookies?.access_token || (req.headers.authorization?.split(' ')[1] ?? '');
