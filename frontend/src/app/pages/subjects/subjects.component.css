@@ -94,13 +94,8 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 0;
+  gap: 1.5rem;
   animation: fadeIn 0.5s ease;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 @keyframes fadeIn {
@@ -110,13 +105,13 @@
 
 /* Subject Card */
 .subject-card {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
   padding: 1.5rem 2rem;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
-  border-right: 1px solid rgba(59, 130, 246, 0.06);
 }
 
 /* Bordure colorée à gauche selon la progression */
@@ -125,13 +120,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 3px;
+  width: 4px;
   height: 100%;
+  border-radius: 16px 0 0 16px;
   background: linear-gradient(180deg, #3b82f6, #1e40af);
 }
 
 .subject-card:hover {
-  background: rgba(59, 130, 246, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
 }
 
 .subject-card.complete::before {
@@ -150,16 +148,6 @@
   background: linear-gradient(180deg, #ff5722, #f44336);
 }
 
-/* Supprimer la bordure droite pour les derniers éléments de chaque ligne */
-.subject-card:nth-child(3n) {
-  border-right: none;
-}
-
-/* Supprimer la bordure du bas pour les derniers éléments */
-.subject-card:last-child,
-.subject-card:nth-last-child(-n+3) {
-  border-bottom: none;
-}
 
 /* Subject Header */
 .subject-header {
@@ -515,15 +503,11 @@
 
   .subjects-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .subject-card {
     padding: 1.5rem;
-    border-right: none;
-  }
-
-  .subject-card:nth-child(3n) {
-    border-right: none;
   }
 
   .subject-header {
@@ -576,21 +560,16 @@
 .skeleton-subjects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(59, 130, 246, 0.08);
+  gap: 1.5rem;
 }
 
 .skeleton-subject-card {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
   padding: 1.5rem 2rem;
+  border-radius: 16px;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
-  border-right: 1px solid rgba(59, 130, 246, 0.06);
 }
 
 .skeleton-subject-card::before {
@@ -598,18 +577,10 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 3px;
+  width: 4px;
   height: 100%;
+  border-radius: 16px 0 0 16px;
   background: linear-gradient(180deg, rgba(59, 130, 246, 0.3), rgba(30, 64, 175, 0.3));
-}
-
-.skeleton-subject-card:nth-child(3n) {
-  border-right: none;
-}
-
-.skeleton-subject-card:last-child,
-.skeleton-subject-card:nth-last-child(-n+3) {
-  border-bottom: none;
 }
 
 .skeleton-subject-header {
@@ -687,15 +658,11 @@
 @media (max-width: 768px) {
   .skeleton-subjects-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .skeleton-subject-card {
     padding: 1.5rem;
-    border-right: none;
-  }
-
-  .skeleton-subject-card:nth-child(3n) {
-    border-right: none;
   }
 
   .skeleton-subject-header {
