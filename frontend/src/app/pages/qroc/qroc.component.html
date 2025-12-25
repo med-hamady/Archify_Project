@@ -2,7 +2,11 @@
   <!-- Header -->
   <div class="header">
     <button class="back-btn" (click)="goBack()">← Retour</button>
-    <h1 *ngIf="subject"><img src="/question.png" alt="QROC" class="header-icon"/> QROC - {{ subject.title }}</h1>
+    <h1 *ngIf="subject">
+      <img src="/question.png" alt="QROC" class="header-icon"/>
+      QROC - {{ subject.title }}
+      <span *ngIf="selectedCategory" class="chapter-title">/ {{ selectedCategory }}</span>
+    </h1>
   </div>
 
   <!-- Loading State -->

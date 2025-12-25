@@ -1,0 +1,66 @@
+<div class="qroc-chapters-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      ← Retour
+    </button>
+    <h1>
+      <img src="assets/qroc-icon.svg" alt="" class="header-icon" onerror="this.style.display='none'">
+      QROC - {{ subject?.title || 'Chargement...' }}
+    </h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des chapitres...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadData()">Réessayer</button>
+  </div>
+
+  <!-- No Categories -->
+  <div *ngIf="!loading && !error && categories.length === 0" class="placeholder-card">
+    <img src="assets/empty-state.svg" alt="" class="placeholder-img" onerror="this.style.display='none'">
+    <h2>Aucun QROC disponible</h2>
+    <p>Il n'y a pas encore de QROCs pour cette matière.</p>
+  </div>
+
+  <!-- Categories List -->
+  <div *ngIf="!loading && !error && categories.length > 0" class="chapters-content">
+    <!-- All QROCs Card -->
+    <div class="all-qrocs-card" (click)="viewAllQrocs()">
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </div>
+      <div class="card-info">
+        <h3>Tous les QROCs</h3>
+        <p>{{ totalCount }} carte{{ totalCount > 1 ? 's' : '' }}</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <!-- Chapter Cards -->
+    <div class="chapters-grid">
+      <div
+        *ngFor="let category of categories; let i = index"
+        class="chapter-card"
+        (click)="selectCategory(category)"
+      >
+        <div class="chapter-number">{{ i + 1 }}</div>
+        <div class="chapter-info">
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.count }} carte{{ category.count > 1 ? 's' : '' }}</p>
+        </div>
+        <div class="chapter-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>

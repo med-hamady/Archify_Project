@@ -61,7 +61,7 @@ export class SubjectOptionsComponent implements OnInit {
   }
 
   navigateToQroc() {
-    this.router.navigate(['/qroc', this.subjectId]);
+    this.router.navigate(['/qroc-chapters', this.subjectId]);
   }
 
   goBack() {

@@ -50,6 +50,12 @@
   object-fit: contain;
 }
 
+.chapter-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
 /* Loading & Error States */
 .loading, .error-message {
   text-align: center;

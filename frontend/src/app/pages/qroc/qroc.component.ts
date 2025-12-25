@@ -26,9 +26,12 @@ export class QrocComponent implements OnInit {
   isFlipped: boolean = false;
   loading: boolean = true;
   error: string | null = null;
+  selectedCategory: string | null = null;
 
   ngOnInit() {
     this.subjectId = this.route.snapshot.paramMap.get('subjectId') || '';
+    this.selectedCategory = this.route.snapshot.queryParamMap.get('category');
+
     if (this.subjectId) {
       this.loadData();
     } else {
@@ -51,8 +54,8 @@ export class QrocComponent implements OnInit {
       }
     });
 
-    // Load QROCs
-    this.qrocService.getQrocsBySubject(this.subjectId).subscribe({
+    // Load QROCs (optionally filtered by category)
+    this.qrocService.getQrocsBySubject(this.subjectId, this.selectedCategory || undefined).subscribe({
       next: (res) => {
         this.qrocs = res.qrocs;
         this.loading = false;
@@ -118,7 +121,12 @@ export class QrocComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/subject-options', this.subjectId]);
+    // If we came from a category, go back to chapter selection
+    if (this.selectedCategory) {
+      this.router.navigate(['/qroc-chapters', this.subjectId]);
+    } else {
+      this.router.navigate(['/qroc-chapters', this.subjectId]);
+    }
   }
 
   // Get full image URL for QROC images

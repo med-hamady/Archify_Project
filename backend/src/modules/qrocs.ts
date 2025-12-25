@@ -30,13 +30,19 @@ const updateQrocSchema = z.object({
   orderIndex: z.number().int().min(0).optional()
 });
 
-// GET /api/qrocs/subject/:subjectId - Get all QROCs for a subject
+// GET /api/qrocs/subject/:subjectId - Get all QROCs for a subject (optionally filtered by category)
 router.get('/subject/:subjectId', async (req, res) => {
   try {
     const { subjectId } = req.params;
+    const { category } = req.query;
+
+    const whereClause: any = { subjectId };
+    if (category && typeof category === 'string') {
+      whereClause.category = category;
+    }
 
     const qrocs = await prisma.qroc.findMany({
-      where: { subjectId },
+      where: whereClause,
       orderBy: { orderIndex: 'asc' }
     });
 
@@ -49,6 +55,44 @@ router.get('/subject/:subjectId', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la récupération des QROCs'
+    });
+  }
+});
+
+// GET /api/qrocs/subject/:subjectId/categories - Get all unique categories (chapters) for a subject
+router.get('/subject/:subjectId/categories', async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+
+    // Get all unique categories with their QROC counts
+    const qrocs = await prisma.qroc.findMany({
+      where: { subjectId },
+      select: { category: true }
+    });
+
+    // Group by category and count
+    const categoryMap = new Map<string, number>();
+    qrocs.forEach(qroc => {
+      const cat = qroc.category || 'Sans catégorie';
+      categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
+    });
+
+    // Convert to array of objects
+    const categories = Array.from(categoryMap.entries()).map(([name, count]) => ({
+      name,
+      count
+    }));
+
+    res.json({
+      success: true,
+      categories,
+      totalCount: qrocs.length
+    });
+  } catch (error: any) {
+    console.error('Error fetching QROC categories:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la récupération des catégories'
     });
   }
 });

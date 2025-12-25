@@ -40,6 +40,11 @@ export interface UpdateQrocData {
   orderIndex?: number;
 }
 
+export interface QrocCategory {
+  name: string;
+  count: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -47,9 +52,18 @@ export class QrocService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/qrocs`;
 
-  // Get all QROCs for a subject
-  getQrocsBySubject(subjectId: string): Observable<{ success: boolean; qrocs: Qroc[] }> {
-    return this.http.get<{ success: boolean; qrocs: Qroc[] }>(`${this.apiUrl}/subject/${subjectId}`);
+  // Get all QROCs for a subject (optionally filtered by category)
+  getQrocsBySubject(subjectId: string, category?: string): Observable<{ success: boolean; qrocs: Qroc[] }> {
+    let url = `${this.apiUrl}/subject/${subjectId}`;
+    if (category) {
+      url += `?category=${encodeURIComponent(category)}`;
+    }
+    return this.http.get<{ success: boolean; qrocs: Qroc[] }>(url);
+  }
+
+  // Get all unique categories (chapters) for a subject
+  getCategories(subjectId: string): Observable<{ success: boolean; categories: QrocCategory[]; totalCount: number }> {
+    return this.http.get<{ success: boolean; categories: QrocCategory[]; totalCount: number }>(`${this.apiUrl}/subject/${subjectId}/categories`);
   }
 
   // Get QROC count for a subject
