@@ -321,38 +321,48 @@
 }
 
 .chapter-position {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, #4f6ef7, #3b5bdb);
-  color: white;
+  width: 48px;
+  height: 48px;
+  background: white;
+  color: #4f6ef7;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   flex-shrink: 0;
-  box-shadow: 0 2px 10px rgba(79, 110, 247, 0.35);
+  box-shadow: 0 2px 10px rgba(79, 110, 247, 0.15);
+  border: 3px solid #4f6ef7;
+  position: relative;
 }
 
 .chapter-card.complete .chapter-position {
   background: linear-gradient(135deg, #22c55e, #16a34a);
-  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.35);
+  color: white;
+  border-color: #22c55e;
+  box-shadow: 0 3px 12px rgba(34, 197, 94, 0.4);
 }
 
 .chapter-card.high .chapter-position {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.35);
+  background: white;
+  color: #0ea5e9;
+  border-color: #0ea5e9;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.2);
 }
 
 .chapter-card.medium .chapter-position {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+  background: white;
+  color: #f59e0b;
+  border-color: #f59e0b;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
 }
 
 .chapter-card.low .chapter-position {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  box-shadow: 0 2px 10px rgba(239, 68, 68, 0.35);
+  background: white;
+  color: #ef4444;
+  border-color: #ef4444;
+  box-shadow: 0 2px 10px rgba(239, 68, 68, 0.2);
 }
 
 .chapter-info {
