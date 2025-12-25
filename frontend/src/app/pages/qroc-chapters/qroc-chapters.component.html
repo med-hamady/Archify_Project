@@ -9,10 +9,27 @@
     </h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement des chapitres...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton All QROCs Card -->
+    <div class="skeleton-all-qrocs-card">
+      <div class="skeleton-card-icon"></div>
+      <div class="skeleton-card-info">
+        <div class="skeleton-text skeleton-title"></div>
+        <div class="skeleton-text skeleton-count"></div>
+      </div>
+    </div>
+
+    <!-- Skeleton Chapter Cards -->
+    <div class="skeleton-chapters-grid">
+      <div *ngFor="let i of [1, 2, 3, 4, 5]" class="skeleton-chapter-card">
+        <div class="skeleton-chapter-number"></div>
+        <div class="skeleton-chapter-info">
+          <div class="skeleton-text skeleton-chapter-title"></div>
+          <div class="skeleton-text skeleton-chapter-count"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->

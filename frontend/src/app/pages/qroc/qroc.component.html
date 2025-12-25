@@ -9,10 +9,42 @@
     </h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement des cartes...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton Progress -->
+    <div class="skeleton-progress-section">
+      <div class="skeleton-progress-info">
+        <div class="skeleton-text skeleton-progress-text"></div>
+        <div class="skeleton-text skeleton-category-badge"></div>
+      </div>
+      <div class="skeleton-progress-bar"></div>
+    </div>
+
+    <!-- Skeleton Flip Card -->
+    <div class="skeleton-flip-card">
+      <div class="skeleton-card-label"></div>
+      <div class="skeleton-card-content">
+        <div class="skeleton-text skeleton-question-line"></div>
+        <div class="skeleton-text skeleton-question-line short"></div>
+        <div class="skeleton-text skeleton-question-line medium"></div>
+      </div>
+      <div class="skeleton-card-hint"></div>
+    </div>
+
+    <!-- Skeleton Navigation -->
+    <div class="skeleton-navigation">
+      <div class="skeleton-nav-btn"></div>
+      <div class="skeleton-action-buttons">
+        <div class="skeleton-action-btn"></div>
+        <div class="skeleton-action-btn"></div>
+      </div>
+      <div class="skeleton-nav-btn"></div>
+    </div>
+
+    <!-- Skeleton Indicators -->
+    <div class="skeleton-indicators">
+      <div *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]" class="skeleton-indicator"></div>
+    </div>
   </div>
 
   <!-- Error State -->

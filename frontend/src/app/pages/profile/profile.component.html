@@ -1,8 +1,43 @@
 <div class="profile-container">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement du profil...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton Header -->
+    <div class="skeleton-profile-header">
+      <div class="skeleton-avatar-section">
+        <div class="skeleton-avatar-circle"></div>
+        <div class="skeleton-level-badge"></div>
+      </div>
+      <div class="skeleton-profile-info">
+        <div class="skeleton-text skeleton-name"></div>
+        <div class="skeleton-text skeleton-email"></div>
+        <div class="skeleton-text skeleton-semester"></div>
+        <div class="skeleton-quick-stats">
+          <div class="skeleton-stat-item"></div>
+          <div class="skeleton-stat-item"></div>
+          <div class="skeleton-stat-item"></div>
+          <div class="skeleton-stat-item"></div>
+        </div>
+        <div class="skeleton-xp-progress"></div>
+      </div>
+    </div>
+
+    <!-- Skeleton Tabs -->
+    <div class="skeleton-tabs">
+      <div class="skeleton-tab"></div>
+      <div class="skeleton-tab"></div>
+      <div class="skeleton-tab"></div>
+    </div>
+
+    <!-- Skeleton Tab Content -->
+    <div class="skeleton-tab-content">
+      <div class="skeleton-badges-grid">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-badge-card">
+          <div class="skeleton-badge-icon"></div>
+          <div class="skeleton-text skeleton-badge-title"></div>
+          <div class="skeleton-text skeleton-badge-desc"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->

@@ -25,10 +25,16 @@
     </div>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement de la question...</p>
+  <!-- Loading - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-question-text"></div>
+    <div class="skeleton-options">
+      <div *ngFor="let i of [1, 2, 3, 4, 5]" class="skeleton-option">
+        <div class="skeleton-option-circle"></div>
+        <div class="skeleton-option-text"></div>
+      </div>
+    </div>
+    <div class="skeleton-button"></div>
   </div>
 
   <!-- Error -->

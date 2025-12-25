@@ -5,10 +5,64 @@
     <h1>🏆 Classement</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement du classement...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton Filters -->
+    <div class="skeleton-filters">
+      <div class="skeleton-filter-group">
+        <div class="skeleton-text skeleton-label"></div>
+        <div class="skeleton-filter-buttons">
+          <div class="skeleton-filter-btn"></div>
+          <div class="skeleton-filter-btn"></div>
+        </div>
+      </div>
+      <div class="skeleton-filter-group">
+        <div class="skeleton-text skeleton-label"></div>
+        <div class="skeleton-filter-buttons">
+          <div class="skeleton-filter-btn"></div>
+          <div class="skeleton-filter-btn"></div>
+          <div class="skeleton-filter-btn"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skeleton Podium -->
+    <div class="skeleton-leaderboard-table">
+      <div class="skeleton-podium">
+        <div class="skeleton-podium-place second">
+          <div class="skeleton-podium-avatar"></div>
+          <div class="skeleton-text skeleton-name"></div>
+          <div class="skeleton-text skeleton-xp"></div>
+        </div>
+        <div class="skeleton-podium-place first">
+          <div class="skeleton-podium-avatar large"></div>
+          <div class="skeleton-text skeleton-name"></div>
+          <div class="skeleton-text skeleton-xp"></div>
+        </div>
+        <div class="skeleton-podium-place third">
+          <div class="skeleton-podium-avatar"></div>
+          <div class="skeleton-text skeleton-name"></div>
+          <div class="skeleton-text skeleton-xp"></div>
+        </div>
+      </div>
+
+      <!-- Skeleton Rankings -->
+      <div class="skeleton-rankings">
+        <div *ngFor="let i of [1, 2, 3, 4, 5]" class="skeleton-ranking-row">
+          <div class="skeleton-rank"></div>
+          <div class="skeleton-user-avatar"></div>
+          <div class="skeleton-user-info">
+            <div class="skeleton-text skeleton-user-name"></div>
+            <div class="skeleton-text skeleton-semester"></div>
+          </div>
+          <div class="skeleton-stats-group">
+            <div class="skeleton-stat-item"></div>
+            <div class="skeleton-stat-item"></div>
+            <div class="skeleton-stat-item"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->

@@ -612,3 +612,241 @@
     top: -15px;
   }
 }
+
+/* ========== SKELETON LOADER ========== */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.skeleton-text {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+/* Skeleton Filters */
+.skeleton-filters {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.skeleton-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-label {
+  width: 60px;
+  height: 20px;
+}
+
+.skeleton-filter-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.skeleton-filter-btn {
+  flex: 1;
+  min-width: 120px;
+  height: 48px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 10px;
+}
+
+/* Skeleton Leaderboard Table */
+.skeleton-leaderboard-table {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+/* Skeleton Podium */
+.skeleton-podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 20px;
+}
+
+.skeleton-podium-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
+  background: white;
+  border-radius: 16px;
+  min-width: 180px;
+}
+
+.skeleton-podium-place.first {
+  order: 2;
+}
+
+.skeleton-podium-place.second {
+  order: 1;
+}
+
+.skeleton-podium-place.third {
+  order: 3;
+}
+
+.skeleton-podium-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-podium-avatar.large {
+  width: 100px;
+  height: 100px;
+}
+
+.skeleton-name {
+  width: 100px;
+  height: 20px;
+}
+
+.skeleton-xp {
+  width: 70px;
+  height: 18px;
+}
+
+/* Skeleton Rankings */
+.skeleton-rankings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-ranking-row {
+  display: grid;
+  grid-template-columns: 60px 60px 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.skeleton-rank {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-user-name {
+  width: 120px;
+  height: 20px;
+}
+
+.skeleton-semester {
+  width: 80px;
+  height: 16px;
+}
+
+.skeleton-stats-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.skeleton-stat-item {
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(59, 130, 246, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .skeleton-filters {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .skeleton-filter-buttons {
+    flex-direction: column;
+  }
+
+  .skeleton-podium {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .skeleton-podium-place {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .skeleton-podium-place.first,
+  .skeleton-podium-place.second,
+  .skeleton-podium-place.third {
+    order: initial;
+  }
+
+  .skeleton-ranking-row {
+    grid-template-columns: 50px 50px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .skeleton-stats-group {
+    grid-column: 1 / -1;
+    justify-content: space-around;
+    margin-top: 0.5rem;
+  }
+
+  .skeleton-user-avatar {
+    width: 50px;
+    height: 50px;
+  }
+}

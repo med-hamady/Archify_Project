@@ -5,10 +5,25 @@
     <h1><img src="/chapitres.png" alt="Matières" class="header-icon"/> Choisissez une matière</h1>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement des matières...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <div class="skeleton-subjects-grid">
+      <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="skeleton-subject-card">
+        <div class="skeleton-subject-header">
+          <div class="skeleton-text skeleton-subject-title"></div>
+          <div class="skeleton-text skeleton-semester"></div>
+        </div>
+        <div class="skeleton-progress-section">
+          <div class="skeleton-progress-label"></div>
+          <div class="skeleton-progress-bar"></div>
+        </div>
+        <div class="skeleton-stats">
+          <div class="skeleton-stat"></div>
+          <div class="skeleton-stat"></div>
+        </div>
+        <div class="skeleton-btn"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
