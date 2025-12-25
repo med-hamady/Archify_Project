@@ -69,83 +69,100 @@
     <!-- User Stats Section -->
     <section class="stats-section">
       <div class="user-card">
-        <div class="user-header">
-          <div class="avatar" (click)="triggerFileInput()" [class.has-picture]="profile.profilePicture">
-            <img *ngIf="profile.profilePicture" [src]="profile.profilePicture" alt="Profile Picture" class="profile-picture">
-            <span *ngIf="!profile.profilePicture" class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
-            <div class="avatar-overlay">
-              <span class="camera-icon">📷</span>
+        <div class="user-card-grid">
+          <!-- Left Column: Avatar, Name, Level Badge -->
+          <div class="user-card-left">
+            <div class="user-header">
+              <div class="avatar" (click)="triggerFileInput()" [class.has-picture]="profile.profilePicture" [style.border-color]="getLevelInfo()?.color">
+                <img *ngIf="profile.profilePicture" [src]="profile.profilePicture" alt="Profile Picture" class="profile-picture">
+                <span *ngIf="!profile.profilePicture" class="avatar-initial">{{ profile.name.charAt(0).toUpperCase() }}</span>
+                <div class="avatar-overlay">
+                  <span class="camera-icon">📷</span>
+                </div>
+                <!-- Level mini badge on avatar -->
+                <div class="avatar-level-badge" [style.background]="getLevelInfo()?.color">
+                  {{ getLevelInfo()?.label?.charAt(0) }}
+                </div>
+              </div>
+              <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+              <div class="user-info">
+                <h2>{{ profile.name }}</h2>
+                <p class="semester">{{ profile.semester }}</p>
+              </div>
+            </div>
+
+            <!-- Level Badge with Glow Effect -->
+            <div class="level-badge-container">
+              <div class="level-badge-glow" [style.--glow-color]="getLevelInfo()?.color"></div>
+              <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-badge-image">
+              <span class="level-badge-label" [style.background]="getLevelInfo()?.color">{{ getLevelInfo()?.label }}</span>
             </div>
           </div>
-          <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
-          <div class="user-info">
-            <h2>{{ profile.name }}</h2>
-            <p class="semester">{{ profile.semester }}</p>
-          </div>
-        </div>
 
-        <!-- Level Badge -->
-        <div class="level-badge-container">
-          <img [src]="getLevelInfo()?.image" [alt]="getLevelInfo()?.label" class="level-badge-image">
-          <span class="level-badge-label" [style.background]="getLevelInfo()?.color">{{ getLevelInfo()?.label }}</span>
-        </div>
+          <!-- Right Column: XP, Stats, Buttons -->
+          <div class="user-card-right">
+            <!-- XP Progress Enhanced -->
+            <div class="xp-section">
+              <div class="xp-header">
+                <div class="xp-level-info">
+                  <span class="current-level-badge" [style.background]="getLevelInfo()?.color">{{ getLevelInfo()?.label }}</span>
+                  <span class="xp-arrow">→</span>
+                  <span class="next-level-text" *ngIf="getLevelInfo()?.nextLevel !== 'MAX'">{{ getLevelInfo()?.nextLevel }}</span>
+                  <span class="next-level-text max" *ngIf="getLevelInfo()?.nextLevel === 'MAX'">MAX</span>
+                </div>
+                <span class="xp-value">{{ profile.xpTotal }} XP</span>
+              </div>
+              <div class="progress-bar-enhanced">
+                <div
+                  class="progress-fill-enhanced"
+                  [style.width.%]="getLevelInfo()?.progressPercent"
+                  [style.--progress-color]="getLevelInfo()?.color">
+                  <div class="progress-shine"></div>
+                </div>
+              </div>
+              <div class="xp-info">
+                <span class="xp-current">{{ getLevelInfo()?.xpInLevel }} XP</span>
+                <span class="xp-needed">{{ getLevelInfo()?.xpNeeded }} XP</span>
+              </div>
+            </div>
 
-        <!-- XP Progress -->
-        <div class="xp-section">
-          <div class="xp-header">
-            <span class="xp-label">XP Total</span>
-            <span class="xp-value">{{ profile.xpTotal }} XP</span>
-          </div>
-          <div class="progress-bar">
-            <div
-              class="progress-fill"
-              [style.width.%]="getLevelInfo()?.progressPercent"
-              [style.background]="getLevelInfo()?.color">
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <img width="32" height="32" src="https://img.icons8.com/ios-filled/50/chain.png" alt="chain" style="filter: brightness(0) saturate(100%) invert(39%) sepia(93%) saturate(1851%) hue-rotate(202deg) brightness(98%) contrast(101%);"/>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value">{{ profile.consecutiveGoodAnswers }}</span>
+                  <span class="stat-label">Série</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                  <span class="stat-value">{{ profile.bestStreak }}</span>
+                  <span class="stat-label">Meilleur série</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button (click)="navigateToProfile()" class="btn btn-secondary">
+                <img width="24" height="24" src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="user" style="filter: brightness(0) invert(1);"/> Mon Profil
+              </button>
+              <button (click)="navigateToLeaderboard()" class="btn btn-primary">
+                <img width="24" height="24" src="https://img.icons8.com/ios/50/ratings.png" alt="ratings" style="filter: brightness(0) invert(1);"/> Classement
+              </button>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="logout-section">
+              <button (click)="logout()" class="btn btn-logout">
+                <img width="24" height="24" src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="logout" style="filter: brightness(0) invert(1);"/> Se déconnecter
+              </button>
             </div>
           </div>
-          <div class="xp-info">
-            <span>{{ getLevelInfo()?.xpInLevel }} / {{ getLevelInfo()?.xpNeeded }} XP</span>
-            <span *ngIf="getLevelInfo()?.nextLevel !== 'MAX'">
-              Prochain: {{ getLevelInfo()?.nextLevel }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="quick-stats">
-          <div class="stat-item">
-            <div class="stat-icon">
-              <img width="32" height="32" src="https://img.icons8.com/ios-filled/50/chain.png" alt="chain" style="filter: brightness(0) saturate(100%) invert(39%) sepia(93%) saturate(1851%) hue-rotate(202deg) brightness(98%) contrast(101%);"/>
-            </div>
-            <div class="stat-info">
-              <span class="stat-value">{{ profile.consecutiveGoodAnswers }}</span>
-              <span class="stat-label">Série</span>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-info">
-              <span class="stat-value">{{ profile.bestStreak }}</span>
-              <span class="stat-label">Meilleur série</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-          <button (click)="navigateToProfile()" class="btn btn-secondary">
-            <img width="24" height="24" src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="user" style="filter: brightness(0) invert(1);"/> Mon Profil
-          </button>
-          <button (click)="navigateToLeaderboard()" class="btn btn-primary">
-            <img width="24" height="24" src="https://img.icons8.com/ios/50/ratings.png" alt="ratings" style="filter: brightness(0) invert(1);"/> Classement
-          </button>
-        </div>
-
-        <!-- Logout Button -->
-        <div class="logout-section">
-          <button (click)="logout()" class="btn btn-logout">
-            <img width="24" height="24" src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="logout" style="filter: brightness(0) invert(1);"/> Se déconnecter
-          </button>
         </div>
       </div>
     </section>
