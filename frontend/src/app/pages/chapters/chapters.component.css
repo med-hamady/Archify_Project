@@ -60,38 +60,14 @@
   box-shadow: 0 2px 8px rgba(79, 110, 247, 0.1);
 }
 
-/* Loading & Error */
-.loading, .error-message {
+/* Error State */
+.error-message {
   max-width: 600px;
   margin: 4rem auto;
   padding: 3rem;
-  background: white;
   border-radius: 18px;
   text-align: center;
   box-shadow: 0 2px 12px rgba(79, 110, 247, 0.08);
-}
-
-.loading p {
-  color: #374151;
-  font-weight: 500;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(79, 110, 247, 0.1);
-  border-top: 4px solid #4f6ef7;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-message {
   background: #fef2f2;
   color: #dc2626;
   border: 2px solid #fecaca;
@@ -733,5 +709,159 @@
 
   .meta-item.challenge {
     align-self: flex-start;
+  }
+}
+
+/* ==================== SKELETON LOADER ==================== */
+.skeleton-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Skeleton Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-text,
+.skeleton-progress-bar,
+.skeleton-stat,
+.skeleton-circle,
+.skeleton-chapter-progress,
+.skeleton-btn {
+  background: linear-gradient(
+    90deg,
+    rgba(79, 110, 247, 0.08) 25%,
+    rgba(79, 110, 247, 0.15) 50%,
+    rgba(79, 110, 247, 0.08) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+/* Skeleton Progress Card */
+.skeleton-progress-card {
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-title {
+  width: 140px;
+  height: 20px;
+}
+
+.skeleton-percent {
+  width: 50px;
+  height: 28px;
+}
+
+.skeleton-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.skeleton-stat {
+  height: 52px;
+  border-radius: 12px;
+}
+
+/* Skeleton Chapters */
+.skeleton-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-chapter {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(79, 110, 247, 0.1);
+}
+
+.skeleton-chapter:last-child {
+  border-bottom: none;
+}
+
+.skeleton-chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-chapter-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-chapter-title {
+  width: 70%;
+  height: 18px;
+}
+
+.skeleton-chapter-meta {
+  width: 40%;
+  height: 14px;
+}
+
+.skeleton-chapter-progress {
+  height: 6px;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+}
+
+.skeleton-chapter-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.skeleton-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 14px;
+}
+
+/* Responsive Skeleton */
+@media (max-width: 768px) {
+  .skeleton-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-chapter-actions {
+    flex-direction: column;
+  }
+
+  .skeleton-chapter-title {
+    width: 90%;
+  }
+
+  .skeleton-chapter-meta {
+    width: 60%;
   }
 }

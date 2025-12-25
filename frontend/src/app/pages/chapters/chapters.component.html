@@ -8,10 +8,39 @@
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Chargement des chapitres...</p>
+  <!-- Loading State - Skeleton -->
+  <div *ngIf="loading" class="skeleton-container">
+    <!-- Skeleton Progress Card -->
+    <div class="skeleton-progress-card">
+      <div class="skeleton-header">
+        <div class="skeleton-text skeleton-title"></div>
+        <div class="skeleton-text skeleton-percent"></div>
+      </div>
+      <div class="skeleton-progress-bar"></div>
+      <div class="skeleton-stats">
+        <div class="skeleton-stat"></div>
+        <div class="skeleton-stat"></div>
+        <div class="skeleton-stat"></div>
+      </div>
+    </div>
+
+    <!-- Skeleton Chapters -->
+    <div class="skeleton-chapters">
+      <div *ngFor="let i of [1, 2, 3, 4]" class="skeleton-chapter">
+        <div class="skeleton-chapter-header">
+          <div class="skeleton-circle"></div>
+          <div class="skeleton-chapter-info">
+            <div class="skeleton-text skeleton-chapter-title"></div>
+            <div class="skeleton-text skeleton-chapter-meta"></div>
+          </div>
+        </div>
+        <div class="skeleton-chapter-progress"></div>
+        <div class="skeleton-chapter-actions">
+          <div class="skeleton-btn"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
